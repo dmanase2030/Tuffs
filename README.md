@@ -16,7 +16,7 @@ any source project.
   filterable via the **Self-hosted** chip)
 - Search, category filters, sorting, favorites, recently played, random pick
 - Dedicated player pages with fullscreen, reload and favorite controls
-- A Browse tab running the Scramjet client over your own Wisp backend
+- The Tuffx browser tab (Scramjet client over your own Wisp backend)
 - Settings (accent color, motion, card density) and clear privacy information
 - No trackers, no third-party fonts, no frameworks, no build step
 
@@ -82,11 +82,11 @@ for a community-maintained proxy config reference.
 |---|---|---|
 | Portal UI, catalog, settings, favorites, recently played | Yes | Pure static files; history lives in localStorage |
 | Game files | Yes | Served as-is from `public/games/` |
-| Browse tab (Scramjet) | **No** | Needs the Node backend: it serves `/scram/`, `/libcurl/`, `/baremux/` and the `/wisp/` websocket backend |
+| Tuffx browser tab (Scramjet) | **No** | Needs the Node backend: it serves `/scram/`, `/libcurl/`, `/baremux/` and the `/wisp/` websocket backend |
 | Auth, rate limiting, destination policy | **No** | Server-side features |
 
 If you host only the static files (GitHub Pages, plain nginx), the arcade
-works fully; the Browse tab detects the missing backend and shows a setup
+works fully; the Tuffx tab detects the missing backend and shows a setup
 notice instead of a fake browser. This project does not rely on any public
 third-party relay.
 

@@ -339,7 +339,7 @@
         ]),
         el("div", { class: "hero-actions" }, [
           el("a", { class: "btn btn-primary", href: "#/games" }, ["Browse all games"]),
-          el("a", { class: "btn btn-ghost", href: "/browse.html" }, ["Open the browser"])
+          el("a", { class: "btn btn-ghost", href: "/browse.html" }, ["Open Tuffx"])
         ])
       ])
     ]));
@@ -668,7 +668,7 @@
         el("a", { href: "https://github.com/beforeblazergithub/BlazerGames", target: "_blank", rel: "noopener" }, ["BlazerGames"]),
         " and ",
         el("a", { href: "https://github.com/BlueDonuts/unblocked-games", target: "_blank", rel: "noopener" }, ["BlueDonuts/unblocked-games (NettleWeb)"]),
-        " repositories (entries marked 'external' are streamed from third-party CDNs and are not self-hosted), and the Browse tab is powered by ",
+        " repositories (entries marked 'external' are streamed from third-party CDNs and are not self-hosted), and the Tuffx browser is powered by ",
         el("a", { href: "https://github.com/MercuryWorkshop/scramjet", target: "_blank", rel: "_blank noopener" }, ["Scramjet"]),
         " from Mercury Workshop. Tuffs is an independent portal and is not affiliated with either project."
       ]),
@@ -680,9 +680,9 @@
         "listed here and want it removed from your self-hosted copy, delete its folder under games/ and its catalog entry in ",
         el("code", {}, ["public/data/games.json"]), "."
       ]),
-      el("h2", {}, ["Proxy: Scramjet"]),
+      el("h2", {}, ["Proxy: Tuffx"]),
       el("p", {}, [
-        "The Browse tab uses the Scramjet client (MIT) with the libcurl transport over a Wisp backend, following the official ",
+        "Tuffx uses the Scramjet client (MIT) with the libcurl transport over a Wisp backend, following the official ",
         el("a", { href: "https://github.com/MercuryWorkshop/Scramjet-App", target: "_blank", rel: "noopener" }, ["Scramjet-App"]),
         " reference implementation. The backend that ships with Tuffs can restrict destinations, rate-limit requests and ",
         "block private/internal network ranges — see the README for what it can and cannot enforce. ",
