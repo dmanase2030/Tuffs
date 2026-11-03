@@ -1,0 +1,482 @@
+
+Theme name: Popcorn
+Theme data:
+button_component {
+  property_set {
+    key {
+      section_style: EMPHASIS_2
+      button_style: "filled"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_1
+      button_style: "filled"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: REGULAR
+      button_style: "filled"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: REGULAR
+      button_style: "outlined"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: REGULAR
+      button_style: "text"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_1
+      button_style: "text"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_2
+      button_style: "text"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_1
+      button_style: "outlined"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_2
+      button_style: "outlined"
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+}
+divider_component {
+  property_set {
+    key {
+      section_style: REGULAR
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_1
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_2
+    }
+    color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+}
+image_carousel_component {
+  property_set {
+    key {
+      section_style: REGULAR
+    }
+    active_dot_color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_1
+    }
+    active_dot_color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_2
+    }
+    active_dot_color {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+}
+navigation_component {
+  property_set {
+    side_selection_style: SIDE_BOLD
+    top_nav_separator: NONE
+    top_selection_style: TOP_BOLD
+    transparent_at_top: true
+  }
+}
+scheme_color_component {
+  property_set {
+    key {
+      section_style: REGULAR
+    }
+    accent1 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    accent2 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    accent3 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    link {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_1
+    }
+    accent1 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    accent2 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    accent3 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    link {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_2
+    }
+    accent1 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    accent2 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    accent3 {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+    link {
+      red: 0.9764706
+      green: 0.9764706
+      blue: 0.9764706
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+}
+section_component {
+  property_set {
+    key {
+      section_style: REGULAR
+    }
+    background_color {
+      red: 0.03137255
+      green: 0.05882353
+      blue: 0.07450981
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_1
+    }
+    background_color {
+      red: 0.11764706
+      green: 0.13725491
+      blue: 0.15686275
+      alpha {
+        value: 1.0
+      }
+    }
+  }
+  property_set {
+    key {
+      section_style: EMPHASIS_2
+    }
+  }
+}
+site_component {
+  property_set {
+    primary_color {
+      red: 0.15686275
+      green: 0.2
+      blue: 0.20784314
+      alpha {
+        value: 1.0
+      }
+    }
+    header_background {
+      resource_id: "1DqnxxF4gHrLZnPWT1O8WkvvWjVrE-QXwE5FDHuc3H4PujE2f8w"
+      image_rotation: 0
+      overlay_color_style: "DISABLED_LIGHT"
+      overlay_color_opacity: 0.2
+      anchor: "center center"
+    }
+    unsafe_favicon_image {
+      resource_id: "1Ia3HeSsY6AisA-oAC4o3LskeK8e2LQAC6dVe5Fd7GGVCUZpA3w"
+      size: 204
+    }
+    unsafe_logo_image {
+      resource_id: "1AChuXg0L60AGRM1HgPZhZ7CuHxO2823U6youMrAOjWpC2xQfCA"
+    }
+  }
+}
+text_component {
+  heading_style {
+    heading: 0
+    paragraph_style {
+      line_spacing: 1.25
+      ltr: true
+      spacing_before: 12.0
+    }
+    text_style {
+      bold: false
+      font_size: 12.0
+      foreground {
+        scheme: 0
+      }
+      weighted_font_family: "Lexend;500"
+    }
+  }
+  heading_style {
+    heading: 1
+    paragraph_style {
+      ltr: true
+      spacing_before: 34.0
+    }
+    text_style {
+      bold: false
+      foreground {
+        scheme: 4
+      }
+      weighted_font_family: "Lexend;500"
+    }
+  }
+  heading_style {
+    heading: 2
+    paragraph_style {
+      line_spacing: 1.25
+      ltr: true
+      spacing_before: 18.0
+    }
+    text_style {
+      bold: false
+      font_size: 18.0
+      foreground {
+        scheme: 5
+      }
+      weighted_font_family: "Lexend;500"
+    }
+  }
+  heading_style {
+    heading: 3
+    paragraph_style {
+      line_spacing: 1.25
+      ltr: true
+      spacing_before: 14.0
+    }
+    text_style {
+      bold: false
+      font_size: 14.0
+      foreground {
+        scheme: 6
+      }
+      weighted_font_family: "Lexend;500"
+    }
+  }
+  heading_style {
+    heading: 102
+    paragraph_style {
+      line_spacing: 1.25
+      ltr: true
+      spacing_before: 8.0
+    }
+    text_style {
+      bold: false
+      font_size: 8.0
+      foreground {
+        scheme: 2
+      }
+      weighted_font_family: "Lexend;500"
+    }
+  }
+}
+name: "Popcorn"
+id: "29e40e234767be81_0"
+spacing_component {
+  property_set {
+    frame_selected: false
+  }
+}
+
+----------------------------------------------------
