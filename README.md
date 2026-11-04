@@ -10,10 +10,12 @@ browse tab, following the official
 implementation. Tuffs is an independent project and is not affiliated with
 any source project.
 
-- **1,207 games**: 95 self-hosted (13 from BlazerGames, 82 from NettleWeb,
-  folders under `public/games/`) and 1,112 external catalog entries that
-  stream from third-party CDNs (marked "external" on their cards and
-  filterable via the **Self-hosted** chip)
+- **11,291 games**: 95 self-hosted (13 from BlazerGames, 82 from NettleWeb,
+  folders under `public/games/`) and 11,196 external catalog entries that
+  stream from third-party CDNs — 1,112 from NettleWeb, 135 from
+  Interstellar, and 9,949 from the GameMonetize publisher feed — each
+  verified to load and allow embedding at integration time (marked
+  "external" on their cards and filterable via the **Self-hosted** chip)
 - Search, category filters, sorting, favorites, recently played, random pick
 - Dedicated player pages with fullscreen, reload and favorite controls
 - The Tuffx browser tab (Scramjet client over your own Wisp backend)
@@ -264,13 +266,13 @@ Automated (run via `npm test`, all passing at delivery time):
 
 ```
 Tuffs catalog verification
-  games:  1207
-  ok: ids unique and present (1207)
-  ok: entry points exist (1112 external URL entries validated by format)
-  ok: thumbnails verified (1080 with files, fallback used for the rest)
+  games:  11291
+  ok: ids unique and present (11291)
+  ok: entry points exist (external URL entries validated by format)
+  ok: thumbnails verified (local files + hotlinked CDN thumbnails)
   ok: categories present
   ok: flags well-formed
-  license summary: 1206 unresolved, 1 with a license on file
+  license summary: 11290 unresolved, 1 with a license on file
 
 Tuffs smoke test (server + routes)
   ok: server started
@@ -286,12 +288,14 @@ Tuffs smoke test (server + routes)
 What automated tests prove and what they don't:
 
 - **Path exists** — verified for every local catalog entry, thumbnail and
-  portal asset. The 1,112 external (`nwx-`) entries are validated as URL
-  format only; they live on third-party servers.
+  portal asset. The external (`nwx-`/`intx-`/`gmx-`) entries are validated as URL
+  format only; they live on third-party servers (Interstellar and GameMonetize
+  links were each individually verified to load and allow embedding at
+  integration time).
 - **Page loads** — verified over HTTP for local entry points and portal
   routes. External entries were spot-checked (the htmlgames CDN serves real
   games and does not block embedding).
-- **Manually playable** — **not** verified for all 1,207 games. The original
+- **Manually playable** — **not** verified for all 11,291 games. The original
   13 BlazerGames entries were confirmed to load and be self-contained, but
   full playthroughs were not performed. The 82 NettleWeb folders were
   checked for a self-contained `index.html`, not played. Caveats discovered

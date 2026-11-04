@@ -83,6 +83,11 @@ for (const g of games) {
     else warn(g.id + ": no thumbnail in catalog");
     continue;
   }
+  if (/^https?:\/\//.test(g.thumb)) {
+    if (g.external) { thumbsChecked++; continue; } // hotlinked CDN thumbnail on an external entry
+    fail(g.id + ": remote thumbnail on a local game: " + g.thumb);
+    continue;
+  }
   const abs = path.resolve(publicDir, g.thumb);
   if (!abs.startsWith(publicDir + path.sep)) { fail(g.id + ": thumb escapes root: " + g.thumb); continue; }
   try {
