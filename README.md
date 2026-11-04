@@ -10,13 +10,9 @@ browse tab, following the official
 implementation. Tuffs is an independent project and is not affiliated with
 any source project.
 
-- **11,283 games**: 96 self-hosted (13 from BlazerGames, 82 from NettleWeb
-  plus Tuff Client, folders under `public/games/`) and 11,187 external
-  catalog entries that stream from third-party CDNs — 1,103 from
-  NettleWeb, 135 from Interstellar, and 9,949 from the GameMonetize
-  publisher feed — each verified to load and allow embedding at
-  integration time (marked "external" on their cards and filterable via
-  the **Self-hosted** chip)
+- **96 games**: 13 from BlazerGames and 82 self-hosted from NettleWeb
+  (plus Tuff Client), all stored under `public/games/` — every game
+  runs from your own server, no third-party CDNs
 - Search, category filters, sorting, favorites, recently played, random pick
 - Dedicated player pages with fullscreen, reload and favorite controls
 - The Tuffx browser tab (Scramjet client over your own Wisp backend)
@@ -218,7 +214,7 @@ functions. Proxy browsing history is not recorded by the portal.
 |---|---|---|
 | Tuffs portal code | Unlicensed (all rights reserved by the operator) | Written for this project |
 | BlazerGames (games) | **No license file** | Third-party games redistributed by that repo without permission terms; see below |
-| BlueDonuts/unblocked-games (NettleWeb) | MIT (software only) | Grants no rights to the games themselves; self-hosted folders copied here, external entries link to third-party CDNs |
+| BlueDonuts/unblocked-games (NettleWeb) | MIT (software only) | Grants no rights to the games themselves; self-hosted folders copied here |
 | 2048 | MIT | Gabriele Cirulli, LICENSE.txt inside the game folder |
 | Scramjet client (`@mercuryworkshop/scramjet`) | AGPL-3.0 (per its LICENSE file) | Served as an npm dependency, unmodified |
 | wisp-js | LGPL-3.0-or-later | Backend |
@@ -240,15 +236,14 @@ and its catalog entry.
 **About the NettleWeb additions:** the BlueDonuts/unblocked-games repository
 (NettleWeb) ships 4,133 catalog entries in three kinds: self-contained HTML5
 folders, external CDN links, and Flash/DOS games stored inside a 4.4 GB chunk
-archive. Tuffs includes the first two — 82 self-hosted folders (ids prefixed
-`nw-`, e.g. Minecraft Classic, Super Mario 64, Cookie Clicker, Run 3, the Vex
-and Slope sequels, BitLife, Bitburner, HexGL, Shapez and more) and 1,112
-external entries (ids prefixed `nwx-`) that stream from third-party servers
-such as `cdn.htmlgames.com` — those are clearly labeled "external", load in
-the player from their CDN, and depend entirely on that server being up (the
-NettleWeb index did not carry thumbnails for the self-hosted folders, so
-those thumbnails were later sourced from the NettleWeb repository's `d/`
-image library by title match — see section 7). The Flash and DOS entries were
+archive. Tuffs includes only the first kind — 82 self-hosted folders (ids
+prefixed `nw-`, e.g. Minecraft Classic, Super Mario 64, Cookie Clicker, Run 3,
+the Vex and Slope sequels, BitLife, Bitburner, HexGL, Shapez and more). The
+catalog is self-hosted only: every game streams from this server and nothing
+depends on third-party CDNs (the NettleWeb index did not carry thumbnails for
+the self-hosted folders, so those thumbnails were later sourced from the
+NettleWeb repository's `d/` image library by title match — see section 7).
+External CDN entries from that index are not listed. The Flash and DOS entries were
 **not** included: their payload lives inside a custom 4.4 GB chunk archive
 that is impractical to self-host here. Entries duplicating existing
 BlazerGames titles (Vex 3–7, 2048, Slope) and one unindexed folder
@@ -271,13 +266,13 @@ Automated (run via `npm test`, all passing at delivery time):
 
 ```
 Tuffs catalog verification
-  games:  11291
-  ok: ids unique and present (11291)
-  ok: entry points exist (external URL entries validated by format)
-  ok: thumbnails verified (local files + hotlinked CDN thumbnails)
+  games:  96
+  ok: ids unique and present (96)
+  ok: entry points exist (0 external URL entries validated by format)
+  ok: thumbnails verified (96 with files, fallback used for the rest)
   ok: categories present
   ok: flags well-formed
-  license summary: 11290 unresolved, 1 with a license on file
+  license summary: 94 unresolved, 2 with a license on file
 
 Tuffs smoke test (server + routes)
   ok: server started
@@ -293,14 +288,10 @@ Tuffs smoke test (server + routes)
 What automated tests prove and what they don't:
 
 - **Path exists** — verified for every local catalog entry, thumbnail and
-  portal asset. The external (`nwx-`/`intx-`/`gmx-`) entries are validated as URL
-  format only; they live on third-party servers (Interstellar and GameMonetize
-  links were each individually verified to load and allow embedding at
-  integration time).
+  portal asset.
 - **Page loads** — verified over HTTP for local entry points and portal
-  routes. External entries were spot-checked (the htmlgames CDN serves real
-  games and does not block embedding).
-- **Manually playable** — **not** verified for all 11,291 games. The original
+  routes.
+- **Manually playable** — **not** verified for all 96 games. The original
   13 BlazerGames entries were confirmed to load and be self-contained, but
   full playthroughs were not performed. The 82 NettleWeb folders were
   checked for a self-contained `index.html`, not played. Caveats discovered
