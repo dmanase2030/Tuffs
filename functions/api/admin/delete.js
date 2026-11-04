@@ -16,6 +16,7 @@ export async function onRequestPost(context) {
   if (!target) return json({ error: "No such account" }, 404);
   if (target.is_admin) return json({ error: "Admin accounts cannot be deleted here" }, 400);
 
+  await env.DB.prepare("DELETE FROM chat_messages WHERE username_key = ?1").bind(key).run();
   await env.DB.prepare("DELETE FROM sessions WHERE username_key = ?1").bind(key).run();
   await env.DB.prepare("DELETE FROM users WHERE username_key = ?1").bind(key).run();
   return json({ ok: true, deleted: target.username });

@@ -1,4 +1,4 @@
-import { json, guard, readBody, sessionUser } from "../auth/_shared.js";
+import { json, guard, readBody, sessionUser, getSettings } from "../auth/_shared.js";
 
 const ROOMS = new Set(["General", "Games", "Random"]);
 
@@ -24,6 +24,8 @@ export async function onRequestGet(context) {
 
   const user = await sessionUser(request, env);
   if (!user) return json({ error: "Sign in to use chat." }, 401);
+  const settings = await getSettings(env.DB);
+  if (!settings.chatEnabled && !user.is_admin) return json({ error: "Chat is turned off by an admin right now." }, 403);
 
   const url = new URL(request.url);
   const room = cleanRoom(url.searchParams.get("room"));
@@ -55,6 +57,8 @@ export async function onRequestPost(context) {
 
   const user = await sessionUser(request, env);
   if (!user) return json({ error: "Sign in to use chat." }, 401);
+  const settings = await getSettings(env.DB);
+  if (!settings.chatEnabled && !user.is_admin) return json({ error: "Chat is turned off by an admin right now." }, 403);
 
   const body = await readBody(request);
   const room = cleanRoom(body.room);

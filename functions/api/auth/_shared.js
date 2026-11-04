@@ -73,9 +73,33 @@ export async function sessionUser(request, env) {
   const token = bearer(request);
   if (!token || !env.DB) return null;
   const row = await env.DB.prepare(
-    "SELECT u.username, u.username_key, u.is_admin FROM sessions s JOIN users u ON u.username_key = s.username_key WHERE s.token_hash = ?1 AND s.expires_at > ?2"
+    "SELECT u.username, u.username_key, u.is_admin, u.is_banned FROM sessions s JOIN users u ON u.username_key = s.username_key WHERE s.token_hash = ?1 AND s.expires_at > ?2"
   ).bind(await sha256hex(token), Date.now()).first();
-  return row || null;
+  if (!row || row.is_banned) return null;
+  return row;
+}
+
+/* Site-wide admin settings (site_settings key/value table). Reads tolerate a
+ * missing table so the site keeps working with defaults before migration. */
+export async function getSettings(db) {
+  const d = { announcement: "", signupsOpen: true, chatEnabled: true, maintenance: false };
+  if (!db) return d;
+  try {
+    const res = await db.prepare("SELECT key, value FROM site_settings").all();
+    for (const row of res.results || []) {
+      if (row.key === "announcement") d.announcement = row.value || "";
+      else if (row.key === "signups_open") d.signupsOpen = row.value !== "0";
+      else if (row.key === "chat_enabled") d.chatEnabled = row.value !== "0";
+      else if (row.key === "maintenance") d.maintenance = row.value === "1";
+    }
+  } catch { /* table not created yet — defaults apply */ }
+  return d;
+}
+
+export async function setSetting(db, key, value) {
+  await db.prepare(
+    "INSERT INTO site_settings (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = excluded.value"
+  ).bind(key, String(value)).run();
 }
 
 /* The signed-in user, only if their account is flagged admin in the database. */

@@ -1,9 +1,13 @@
-import { json, guard, readBody, hashPassword, createSession, USERNAME_RE } from "./_shared.js";
+import { json, guard, readBody, hashPassword, createSession, USERNAME_RE, getSettings } from "./_shared.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
   const blocked = guard(request, env);
   if (blocked) return blocked;
+
+  const settings = await getSettings(env.DB);
+  if (settings.maintenance) return json({ error: "Lumio is under maintenance — please try again later." }, 503);
+  if (!settings.signupsOpen) return json({ error: "Signups are closed right now." }, 403);
 
   const body = await readBody(request);
   const username = String(body.username || "").trim();
