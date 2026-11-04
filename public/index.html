@@ -765,8 +765,8 @@ const dock=$("#dock"),grid=$("#grid");
 function entry(it,cls){const b=document.createElement("button");b.className=cls;b.title=it.n;b.setAttribute("aria-label",it.n);
 const svg=it.g?icon(it.g,it.b):cover(it);b.innerHTML=cls==="ic"?svg:svg+`<span>${it.n}</span>`;b.onclick=()=>{closeOv();it.g?openApp(it):playGame(it)};return b}
 APPS.filter(a=>a.d).forEach((a,i)=>{if(i===3)dock.append(Object.assign(document.createElement("i"),{className:"sep"}));dock.append(entry(a,"ic"))});
-function render(f=""){f=(f||'').trim();grid.innerHTML='';ROFI=[];
-if(!f){grid.classList.remove('list');const rec=st.get('recent',[]).map(r=>r.t==='g'?((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games).find(g=>g.id===r.id):APPS.find(a=>a.n===r.id)).filter(Boolean).slice(0,5);
+function render(f=""){f=(f||'').trim();grid.innerHTML='';try{ROFI=[]}catch(e){}
+if(!f){grid.classList.remove('list');let rec=[];try{rec=st.get('recent',[]).map(r=>r.t==='g'?((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games).find(g=>g.id===r.id):APPS.find(a=>a.n===r.id)).filter(Boolean).slice(0,5)}catch(e){}
 if(rec.length){grid.append(el('div','rofi-h','Recent'));const row=el('div','rofi-row');rec.forEach(it=>row.append(entry(it,'app')));grid.append(row)}
 APPS.filter(a=>a.n!=='Admin'||ISADMIN).forEach(a=>grid.append(entry(a,'app')));return}
 grid.classList.add('list');const res=[];
