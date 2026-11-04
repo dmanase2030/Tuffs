@@ -9,6 +9,14 @@
  },
  "games": [
   {
+   "id": "tuffclient",
+   "title": "Tuff Client",
+   "entry": "games/tuffclient/index.html",
+   "thumb": null,
+   "category": "Sandbox",
+   "external": false
+  },
+  {
    "id": "1v1lol",
    "slug": "1v1lol",
    "title": "1v1.LOL",
