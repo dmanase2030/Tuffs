@@ -600,6 +600,11 @@ input[type=range]{accent-color:#3584e4}
 .og{background:#17171a;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:5px;display:flex;flex-direction:column;gap:2px}
 .og .oi{min-height:0;padding:9px 10px;border-radius:9px}
 .btn.danger{color:#ff7b72;border-color:rgba(255,123,114,.45)}
+
+/* ===== entry + builtin games pass ===== */
+#boot{display:none!important}
+#sn{margin:auto;border-radius:10px}
+.win .body>canvas{border-radius:10px}
 </style>
 </head>
 <body>
@@ -817,15 +822,15 @@ const c=b.querySelector("canvas"),x=c.getContext("2d"),h=Array(60).fill(3);
 const iv=setInterval(()=>{if(!w.isConnected)return clearInterval(iv);h.push(Math.max(1,Math.min(60,h.at(-1)+(Math.random()-.5)*8)));h.shift();c.width=c.clientWidth;c.height=150;
 x.strokeStyle="rgba(47,123,255,.15)";for(let i=1;i<10;i++){x.beginPath();x.moveTo(i*c.width/10,0);x.lineTo(i*c.width/10,150);x.stroke()}
 x.beginPath();x.moveTo(0,150);h.forEach((v,i)=>x.lineTo(i*c.width/59,150-v*2));x.lineTo(c.width,150);x.fillStyle="rgba(47,123,255,.45)";x.fill();b.querySelector("#u").textContent=navigator.platform||"Web browser"},800)}
-function snake(){const{w,body:b}=win("Snake","",360,420);const c=document.createElement("canvas");c.id="sn";c.width=c.height=300;b.append(c);const x=c.getContext("2d");
+function snake(){const{w,body:b}=win("Snake","",360,420);const c=document.createElement("canvas");c.id="sn";c.width=c.height=300;b.append(c);const x=c.getContext("2d");const sc=document.createElement("p");sc.style.cssText="text-align:center;margin:6px;font:600 12px Inter;color:#a7a7ad";sc.textContent="Length 1";b.prepend(sc);
 let s=[[7,7]],d=[1,0],nd=d,f=[3,3],go=true;const R=n=>Math.floor(Math.random()*n);
 const dir=k=>{const m={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[k];if(m&&(m[0]+d[0]||m[1]+d[1]))nd=m};
 const kd=e=>{if(w.isConnected&&w.style.zIndex==z){dir(e.key);if(e.key.startsWith("Arrow"))e.preventDefault()}};addEventListener("keydown",kd);
 let tx,ty;c.ontouchstart=e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY};c.ontouchend=e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;dir(Math.abs(dx)>Math.abs(dy)?(dx>0?"d":"a"):(dy>0?"s":"w"))};
 const iv=setInterval(()=>{if(!w.isConnected){clearInterval(iv);removeEventListener("keydown",kd);return}
 d=nd;const h=[s[0][0]+d[0],s[0][1]+d[1]];if(h[0]<0||h[1]<0||h[0]>14||h[1]>14||s.some(p=>p[0]==h[0]&&p[1]==h[1])){s=[[7,7]];d=nd=[1,0];return}
-s.unshift(h);if(h[0]==f[0]&&h[1]==f[1])f=[R(15),R(15)];else s.pop();
-x.fillStyle="#0c0c0e";x.fillRect(0,0,300,300);x.fillStyle="#ff6b6b";x.fillRect(f[0]*20+2,f[1]*20+2,16,16);x.fillStyle="#4fd67a";s.forEach(p=>x.fillRect(p[0]*20+1,p[1]*20+1,18,18))},120)}
+s.unshift(h);if(h[0]==f[0]&&h[1]==f[1]){f=[R(15),R(15)];sc.textContent="Length "+s.length}else s.pop();
+x.fillStyle="#0c0c0e";x.fillRect(0,0,300,300);x.fillStyle="#f7768e";x.fillRect(f[0]*20+2,f[1]*20+2,16,16);x.fillStyle="#4aa3ff";s.forEach(p=>x.fillRect(p[0]*20+1,p[1]*20+1,18,18))},120)}
 
 /* ===== server accounts (Lumio) ===== */
 async function authPost(path,body){try{const r=await fetch(path,{method:'POST',headers:{'content-type':'application/json',...(SESSION?{authorization:'Bearer '+SESSION.t}:{})},body:JSON.stringify(body||{})});const d=await r.json().catch(()=>({}));if(!r.ok)return{error:d.error||('Request failed ('+r.status+')')};return d}catch(e){return{error:'Network error — try again.'}}}
@@ -1113,7 +1118,7 @@ const saveBtn=el('button','btn p','Save site controls');saveBtn.type='button';sa
 async function loadSettings(){try{const s=await api('/api/admin/settings');ann.value=s.announcement||'';cSg.checked=!!s.signupsOpen;cCh.checked=!!s.chatEnabled;cMt.checked=!!s.maintenance}catch(e){err.textContent=e.message}}
 loadOverview();loadUsers();loadGames();loadChat();loadSettings()}
 
-function notesApp(){const{body:b}=win('Notes','',480,380);b.style.padding='0';const t=el('textarea','note');t.value=st.get('notes','');t.placeholder='Write something...';t.setAttribute('aria-label','Notes');t.oninput=()=>st.set('notes',t.value);b.append(t);t.focus()}
+function notesApp(){const{body:b}=win('Notes','',480,380);b.style.padding='0';const t=el('textarea','note');t.value=st.get('notes','');t.placeholder='Write something...';t.setAttribute('aria-label','Notes');const ft=el('div');ft.style.cssText='display:flex;justify-content:space-between;padding:7px 12px;font:11px Inter;color:#8e8e96;border-top:1px solid rgba(255,255,255,.07)';const cnt=el('span'),svd=el('span','','Saved');const upd=()=>{const v=t.value;cnt.textContent=v.trim()?v.trim().split(/\s+/).length+' words · '+v.length+' chars':'Empty'};t.oninput=()=>{st.set('notes',t.value);svd.textContent='Saving…';clearTimeout(t._sv);t._sv=setTimeout(()=>svd.textContent='Saved',350);upd()};ft.append(cnt,svd);b.append(t,ft);upd();t.focus()}
 function calcApp(){const{body:b}=win('Calculator','',300,420);b.style.fontFamily='Inter';let cur='0',acc=null,op=null,fresh=true;const out=el('div','cout','0'),g=el('div','cgrid');b.append(out,g);
 const ap=(a,o,v)=>o==='+'?a+v:o==='-'?a-v:o==='x'?a*v:o==='/'?(v?a/v:NaN):v,fmt=n=>String(+(+n).toFixed(10));
 ['C','+/-','%','/','7','8','9','x','4','5','6','-','1','2','3','+','0','.','='].forEach(k=>{const x=el('button','ck'+(/[\/x+=-]/.test(k)&&k.length==1?' o':'')+(k==='0'?' z':''),k);x.onclick=()=>{
@@ -1512,11 +1517,11 @@ if(matchMedia('(prefers-color-scheme: light)').addEventListener){
 }
 
 const BUILTIN={snake,"2048":g2048,tictactoe:ttt,mines,breakout};
-start();
+applyS();initAuth().then(ok=>{if(ok)enter();else if(RESET_TOKEN)lock();else if(S.setup)lock();else wizard(true)});
 function g2048(){const{w,body:b}=win("2048","",360,460);let g=Array(16).fill(0);const add=()=>{const e=g.map((v,i)=>v?-1:i).filter(i=>i>=0);if(e.length)g[e[Math.floor(Math.random()*e.length)]]=Math.random()<.9?2:4};
 const box=document.createElement("div");box.style.cssText="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:min(300px,100%);margin:auto;touch-action:none";b.append(box);
-const C={0:"#2a2a2e",2:"#4aa3ff",4:"#2f7bff",8:"#9a7bff",16:"#5a38d0",32:"#ffb04a",64:"#e5602a",128:"#4fd67a",256:"#1c8f48",512:"#ff6b6b",1024:"#c52a3a"};
-const draw=()=>{box.innerHTML=g.map(v=>`<div style="aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font:700 ${v>100?18:24}px Inter;background:${C[v]||"#fff"};color:${v>=2048?"#000":"#fff"}">${v||""}</div>`).join("")};
+const C={0:"#26262a",2:"#2e4a66",4:"#2f6db3",8:"#3584e4",16:"#4a9be0",32:"#6cb2ff",64:"#8ec9ff",128:"#b7dcff",256:"#d6ecff",512:"#eaf6ff",1024:"#ffffff"};
+const draw=()=>{box.innerHTML=g.map(v=>`<div style="aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font:700 ${v>100?18:24}px Inter;background:${C[v]||"#fff"};color:${v>=128?"#10233a":"#fff"}">${v||""}</div>`).join("")};
 const mv=d=>{const o=g.join();for(let i=0;i<4;i++){const ix=d<2?[i,i+4,i+8,i+12]:[i*4,i*4+1,i*4+2,i*4+3];if(d%2)ix.reverse();const v=ix.map(k=>g[k]).filter(Boolean);for(let j=0;j<v.length-1;j++)if(v[j]==v[j+1]){v[j]*=2;v.splice(j+1,1)}ix.forEach((k,j)=>g[k]=v[j]||0)}if(o!==g.join())add();draw()};
 const kd=e=>{const d=["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.key);if(d>=0&&w.isConnected&&w.style.zIndex==z){e.preventDefault();mv(d)}};addEventListener("keydown",kd);
 let tx,ty;box.ontouchstart=e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY};box.ontouchend=e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;mv(Math.abs(dx)>Math.abs(dy)?(dx>0?3:2):(dy>0?1:0))};
@@ -1524,19 +1529,19 @@ add();add();draw()}
 function ttt(){const{body:b}=win("Tic Tac Toe","",320,400);let s=Array(9).fill(""),done=false;const L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];const W=p=>L.some(l=>l.every(i=>s[i]==p));
 const st=document.createElement("p"),bd=document.createElement("div");st.style.cssText="text-align:center;margin:8px;cursor:pointer";bd.style.cssText="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(240px,100%);margin:auto";b.append(st,bd);
 const cpu=()=>{if(W("X")||!s.includes("")){done=true;return}const f=p=>{for(const l of L){const e=l.filter(i=>s[i]==""),m=l.filter(i=>s[i]==p);if(e.length==1&&m.length==2)return e[0]}};let m=f("O");if(m==null)m=f("X");if(m==null)m=s[4]==""?4:s.map((v,i)=>v?-1:i).filter(i=>i>=0)[0];s[m]="O";if(W("O")||!s.includes(""))done=true};
-const draw=()=>{bd.innerHTML="";s.forEach((v,i)=>{const c=document.createElement("button");c.style.cssText="aspect-ratio:1;border-radius:8px;background:#2a2a2e;font:700 30px Inter;color:"+(v=="X"?"#4aa3ff":"#ff6b6b");c.textContent=v;c.onclick=()=>{if(v||done)return;s[i]="X";cpu();draw()};bd.append(c)});st.textContent=done?(W("X")?"You win":W("O")?"Computer wins":"Draw")+". Tap to restart":"Your move (X)"};
+const draw=()=>{bd.innerHTML="";s.forEach((v,i)=>{const c=document.createElement("button");c.style.cssText="aspect-ratio:1;border-radius:8px;background:#2a2a2e;font:700 30px Inter;color:"+(v=="X"?"#4aa3ff":"#f7768e");c.textContent=v;c.onclick=()=>{if(v||done)return;s[i]="X";cpu();draw()};bd.append(c)});st.textContent=done?(W("X")?"You win":W("O")?"Computer wins":"Draw")+". Tap to restart":"Your move (X)"};
 st.onclick=()=>{if(done){s.fill("");done=false;draw()}};draw()}
 function mines(){const{body:b}=win("Minesweeper","",340,430),N=9;let m,r,f,over;const bd=document.createElement("div"),st=document.createElement("p");st.style.cssText="text-align:center;margin:8px;cursor:pointer";bd.style.cssText="display:grid;grid-template-columns:repeat(9,1fr);gap:2px;width:min(288px,100%);margin:auto";b.append(st,bd);
 const nb=i=>{const x=i%N,y=(i-x)/N,o=[];for(let a=-1;a<2;a++)for(let c=-1;c<2;c++){const X=x+a,Y=y+c;if((a||c)&&X>=0&&Y>=0&&X<N&&Y<N)o.push(Y*N+X)}return o},cnt=i=>nb(i).filter(j=>m[j]).length;
 const rev=i=>{if(r[i]||f[i]||over)return;r[i]=1;if(m[i]){over=1;m.forEach((v,j)=>v&&(r[j]=1))}else if(!cnt(i))nb(i).forEach(rev)};
 const draw=()=>{if(!over&&r.filter(Boolean).length==71)over=2;st.textContent=over==1?"Boom. Tap to restart":over==2?"Cleared. Tap to restart":"Tap to reveal, hold or right click to flag";bd.innerHTML="";
-for(let i=0;i<81;i++){const c=document.createElement("button");c.style.cssText=`aspect-ratio:1;border-radius:4px;font:700 13px Inter;color:#4aa3ff;background:${r[i]?(m[i]?"#c52a3a":"#1b1b1e"):"#3a3a40"}`;c.textContent=r[i]?(m[i]?"x":cnt(i)||""):f[i]?"F":"";
+for(let i=0;i<81;i++){const c=document.createElement("button");c.style.cssText=`aspect-ratio:1;border-radius:4px;font:700 13px Inter;color:#4aa3ff;background:${r[i]?(m[i]?"#c52a3a":"#1b1b1e"):"#3a3a40"}`;c.textContent=r[i]?(m[i]?"x":cnt(i)||""):f[i]?"⚑":"";
 const fl=()=>{if(!r[i]&&!over){f[i]^=1;draw()}};c.onclick=()=>{rev(i);draw()};c.oncontextmenu=e=>{e.preventDefault();fl()};let t;c.onpointerdown=()=>t=setTimeout(fl,500);c.onpointerup=()=>clearTimeout(t);bd.append(c)}};
 const init=()=>{m=Array(81).fill(0);r=Array(81).fill(0);f=Array(81).fill(0);over=0;let k=0;while(k<10){const i=Math.floor(Math.random()*81);if(!m[i]){m[i]=1;k++}}draw()};st.onclick=()=>over&&init();init()}
 function breakout(){const{w,body:b}=win("Breakout","",360,460);const c=document.createElement("canvas");c.width=320;c.height=400;c.style.cssText="background:#0c0c0e;margin:auto;max-width:100%;touch-action:none;display:block";b.append(c);const x=c.getContext("2d");
 let px=130,bx,by,vx,vy,br;const rs=()=>{bx=160;by=300;vx=2.6;vy=-3.2;br=[];for(let r=0;r<5;r++)for(let k=0;k<8;k++)br.push([k*40+2,r*18+30,36,14,r])};rs();
 const mvp=e=>{const R=c.getBoundingClientRect();px=Math.max(0,Math.min(260,(e.clientX-R.left)*320/R.width-30))};c.onpointermove=mvp;c.onpointerdown=mvp;
-const kd=e=>{if(w.style.zIndex==z){if(e.key=="ArrowLeft")px=Math.max(0,px-24);if(e.key=="ArrowRight")px=Math.min(260,px+24)}};addEventListener("keydown",kd);const col=["#ff6b6b","#ffb04a","#4fd67a","#4aa3ff","#9a7bff"];
+const kd=e=>{if(w.style.zIndex==z){if(e.key=="ArrowLeft")px=Math.max(0,px-24);if(e.key=="ArrowRight")px=Math.min(260,px+24)}};addEventListener("keydown",kd);const col=["#8ec9ff","#5aa9ff","#3584e4","#2f6db3","#26466b"];
 const iv=setInterval(()=>{if(!w.isConnected){clearInterval(iv);removeEventListener("keydown",kd);return}
 bx+=vx;by+=vy;if(bx<4||bx>316)vx=-vx;if(by<4)vy=-vy;if(by>380&&by<396&&bx>px&&bx<px+60&&vy>0){vy=-vy;vx=(bx-px-30)/9}if(by>410)rs();
 br=br.filter(k=>{if(bx>k[0]&&bx<k[0]+k[2]&&by>k[1]&&by<k[1]+k[3]){vy=-vy;return false}return true});if(!br.length)rs();
