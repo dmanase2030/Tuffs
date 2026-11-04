@@ -4,7 +4,7 @@ import { json, guard, readBody, sessionUser } from "./auth/_shared.js";
  * settings, custom games, calendar events, code drafts...).
  * The table is created on first use so no dashboard migration is needed. */
 
-const KEYS = ["S", "notes", "files", "ug", "events", "codeDraft", "rec", "cfg", "fmview", "fmorder"];
+const KEYS = ["S", "notes", "files", "ug", "events", "codeDraft", "rec", "cfg", "fmview", "fmorder", "fav"];
 const MAXV = 900000; // chars per stored value
 
 async function ensure(db) {
