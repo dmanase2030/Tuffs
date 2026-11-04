@@ -650,6 +650,27 @@ input[type=range]{accent-color:#3584e4}
 #ov{background:rgba(10,10,14,.5)}
 [data-preset=tokyo] #ov{background:rgba(26,27,38,.52)}
 [data-preset=catppuccin] #ov{background:rgba(30,30,46,.52)}
+
+/* ===== kitty/tokyo-night terminal ===== */
+.term2{background:#16161e!important;color:#c0caf5;font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;font-size:13px;line-height:1.55;user-select:text;-webkit-user-select:text;padding:12px 14px}
+.term2 .tl{white-space:pre-wrap;word-break:break-word}
+.term2 .tline{display:flex;gap:7px;align-items:baseline;position:relative;margin-top:2px;min-height:20px}
+.term2 .tpr{color:#bb9af7;font-weight:700;white-space:nowrap}
+.term2 .tpa{color:#7aa2f7;white-space:nowrap}
+.term2 .tin{white-space:pre;overflow:hidden}
+.term2 .tcur{display:inline-block;min-width:8px;background:#bb9af7;color:#16161e;text-align:center;animation:tblink 1.06s steps(1) infinite}
+@keyframes tblink{50%{opacity:0}}
+.term2 .treal{position:absolute;inset:0;opacity:0;font-size:16px;border:0;background:transparent;color:transparent;width:100%}
+.term2 .fetch{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:6px}
+.term2 .ascii{color:#bb9af7;font-size:10px;line-height:1.3;white-space:pre;font-family:inherit}
+.term2 .fhead{color:#c0caf5;font-weight:700}
+.term2 .frule{color:#565f89}
+.term2 .fk{color:#bb9af7;font-weight:700}
+.term2 .fv{color:#c0caf5}
+.term2 .swrow{margin-top:7px}
+.term2 .swatch{display:inline-block;width:16px;height:16px;border-radius:4px;margin-right:5px}
+.win[data-app="Terminal"].top{background:linear-gradient(#16161e,#16161e) padding-box,linear-gradient(45deg,#bb9af7,#7aa2f7) border-box}
+@media(max-width:560px){.term2 .ascii{font-size:6px}.term2{font-size:12px}}
 </style>
 </head>
 <body>
@@ -766,12 +787,12 @@ function entry(it,cls){const b=document.createElement("button");b.className=cls;
 const svg=it.g?icon(it.g,it.b):cover(it);b.innerHTML=cls==="ic"?svg:svg+`<span>${it.n}</span>`;b.onclick=()=>{closeOv();it.g?openApp(it):playGame(it)};return b}
 APPS.filter(a=>a.d).forEach((a,i)=>{if(i===3)dock.append(Object.assign(document.createElement("i"),{className:"sep"}));dock.append(entry(a,"ic"))});
 function render(f=""){f=(f||'').trim();grid.innerHTML='';try{ROFI=[]}catch(e){}
-if(!f){grid.classList.remove('list');let rec=[];try{rec=st.get('recent',[]).map(r=>r.t==='g'?((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games).find(g=>g.id===r.id):APPS.find(a=>a.n===r.id)).filter(Boolean).slice(0,5)}catch(e){}
-if(rec.length){grid.append(el('div','rofi-h','Recent'));const row=el('div','rofi-row');rec.forEach(it=>row.append(entry(it,'app')));grid.append(row)}
+if(!f){grid.classList.remove('list');let rec=[];try{rec=st.get('recent',[]).map(r=>r.t==='g'?((typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games)).find(g=>g.id===r.id):APPS.find(a=>a.n===r.id)).filter(Boolean).slice(0,5)}catch(e){}
+if(rec.length){grid.append(el('div','rofi-h','Recent'));const row=el('div','rofi-row');rec.forEach(it=>{try{row.append(entry(it,'app'))}catch(e){}});grid.append(row)}
 APPS.filter(a=>a.n!=='Admin'||ISADMIN).forEach(a=>grid.append(entry(a,'app')));return}
 grid.classList.add('list');const res=[];
 APPS.filter(a=>a.n!=='Admin'||ISADMIN).forEach(a=>{const s=fzScore(f,a.n);if(s>=0)res.push({s,k:'App',label:a.n,ic:icon(a.g,a.b),run:()=>openApp(a)})});
-const pool=(typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games;
+const pool=(typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games);
 pool.forEach(g=>{const nm=g.name||g.title||'';const s=fzScore(f,nm);if(s>=0)res.push({s:s-2,k:'Game',label:nm,ic:tileIcon(nm,g.c||'#444'),img:g.thumb||'',run:()=>playGame(g)})});
 CONFIG.quick.forEach(([n,u])=>{const s=fzScore(f,n);if(s>=0)res.push({s:s-4,k:'Bookmark',label:n,ic:tileIcon(n,'#3584e4'),run:()=>window.open(u,'_blank','noopener')})});
 SETL.forEach(([n,pane])=>{const s=fzScore(f,n);if(s>=0)res.push({s:s-3,k:'Settings',label:n,ic:tileIcon(n,'#55555c'),run:()=>openSettings(pane)})});
@@ -861,19 +882,72 @@ const TREE=`<span class="dr">.</span>
 │   └── ...
 ├── <span class="dr">proxy</span>
 └── notes.md`;
-function terminal(){const{w,body:b}=win("Terminal");b.style.fontFamily="'JetBrains Mono',monospace";const _ts=w.querySelector('.tsub');if(_ts)_ts.textContent='~';const out=document.createElement("div"),f=document.createElement("div");f.className="tin";
-f.innerHTML=`<span class="pr">❯</span><input aria-label="Command" autocomplete="off" spellcheck="false">`;b.append(out,f);const inp=f.querySelector("input");
-const esc=s=>s.replace(/</g,"&lt;"),say=h=>{const l=document.createElement("div");l.className="t-line";l.innerHTML=h;out.append(l)};
-say(`<span class="cy">user@linux</span> ~ type <b>help</b>`);
-const C={help:()=>"help · games · play &lt;name&gt; · open &lt;url&gt; · tree · fastfetch · date · clear",games:()=>CONFIG.games.map(g=>g.name).join("  "),tree:()=>TREE,date:()=>new Date().toString(),whoami:()=>"user",
-fastfetch:()=>`<span class="cy">user@linux</span>\n----------\nShell: zsh\nDE: GNOME (Wayland)\nTheme: WhiteSur-Dark\nGames: ${CONFIG.games.length}`};
-inp.onkeydown=e=>{if(e.key!=="Enter")return;const v=inp.value.trim();say(`<span class="pr">❯</span> ${esc(v)}`);inp.value="";if(!v)return;
-if(v==="clear"){out.innerHTML="";return}
-const[c,...r]=v.split(" "),arg=r.join(" ");
-if(c==="play"){const g=CONFIG.games.find(g=>g.name.toLowerCase()===arg.toLowerCase());g?(say("starting "+g.name),playGame(g)):say("no game named "+esc(arg))}
-else if(c==="open"&&arg){const{body}=win("Browser","f",760,480),fr=document.createElement("iframe");fr.src=proxify(/^https?:/.test(arg)?arg:"https://"+arg);body.append(fr)}
-else if(C[c])say(C[c]());else say("zsh: command not found: "+esc(c));b.scrollTop=b.scrollHeight};
-setTimeout(()=>inp.focus(),60);b.onclick=()=>inp.focus()}
+function terminal(){const{w,body:b}=win("Terminal","term",720,460);const _ts=w.querySelector('.tsub');if(_ts)_ts.textContent='~';b.classList.add('term2');
+const HIST=[];let hi=-1,draft='',cwd='~';
+const out=el('div','tout'),line=el('div','tline'),pr=el('span','tpr'),tin=el('span','tin'),mir=el('span',''),cur=el('span','tcur'),aft=el('span',''),inp=el('input','treal');
+inp.setAttribute('aria-label','Terminal input');inp.setAttribute('autocomplete','off');inp.setAttribute('autocapitalize','none');inp.spellcheck=false;
+tin.append(mir,cur,aft);line.append(pr,tin,inp);b.append(out,line);
+const pool=()=> (typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games));
+const presetName=()=>({hypr:'Hyprland',tokyo:'Tokyo Night',catppuccin:'Catppuccin',midnight:'Midnight'})[S.preset||'hypr']||'Hyprland';
+const upStr=()=>{const s=Math.floor(performance.now()/1000);return Math.floor(s/3600)+'h '+Math.floor(s%3600/60)+'m '+(s%60)+'s'};
+function scroll(){requestAnimationFrame(()=>{b.scrollTop=b.scrollHeight})}
+function print(txt,cls){const d=el('div','tl '+(cls||''));d.textContent=txt;out.append(d);scroll()}
+function printEl(n){out.append(n);scroll()}
+function echoLine(v){const d=el('div','tl');const p=el('span','tpr');p.textContent=(USER||'guest')+'@web ';const pa=el('span','tpa');pa.textContent=cwd+' $ ';const t=el('span','',v);d.append(p,pa,t);out.append(d)}
+const LOGO=['████████╗██╗   ██╗███████╗███████╗███████╗','╚══██╔══╝██║   ██║██╔════╝██╔════╝██╔════╝','   ██║   ██║   ██║█████╗  █████╗  ███████╗','   ██║   ██║   ██║██╔══╝  ██╔══╝  ╚════██║','   ██║   ╚██████╔╝██║     ██║     ███████║','   ╚═╝    ╚═════╝ ╚═╝     ╚═╝     ╚══════╝'].join('\n');
+function fetchEl(){const wrap=el('div','fetch');const pre=el('pre','ascii');pre.textContent=LOGO;const info=el('div','finfo');const who=(USER||'guest')+'@web';info.append(el('div','fhead',who),el('div','frule','─'.repeat(who.length)));
+[['OS','Tuffs OS (Web)'],['DE','Hyprland'],['WM','Hyprland (Web)'],['Theme',presetName()],['Browser','Scramjet (host pending) · basic proxy on'],['Games',String(pool().length)],['Shell','tuffs-sh'],['Uptime',upStr()]].forEach(([k,v])=>{const r=el('div','frow');r.append(el('span','fk',k+': '),el('span','fv',v));info.append(r)});
+const sw=el('div','swrow');['#f7768e','#ff9e64','#e0af68','#9ece6a','#7aa2f7','#bb9af7','#7dcfff','#c0caf5'].forEach(c=>{const s=el('span','swatch');s.style.background=c;sw.append(s)});info.append(sw);wrap.append(pre,info);return wrap}
+function gameSlug(g){return (g.name||g.title||'game').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.game'}
+function kids(path){if(path==='~')return['about.txt','readme.txt','notes.txt','games/'];if(path==='~/games')return pool().slice(0,40).map(gameSlug);return[]}
+function fileText(path){if(path==='~/about.txt')return 'Tuffs is a Hyprland-inspired desktop that runs entirely in your browser.\nGames, a web browser, chat, files and notes — one tab, no installs.';
+if(path==='~/readme.txt')return "Type 'help' to list commands.\nTry: neofetch · ls · cd games · theme tokyo · play slope";
+if(path==='~/notes.txt'){try{const n=st.get('notes',[]);if(n&&n.length){const f=n[0];const t=(f&&(f.text||f.body||f.content||f.title))||'';if(t)return String(t).slice(0,400)}}catch(e){}return '(no notes yet — open the Notes app and write one)'};
+if(path.startsWith('~/games/')){const slug=path.slice(8);const g=pool().find(g=>gameSlug(g)===slug);if(g)return (g.name||g.title)+' — launch it with: play '+(g.name||g.title);return null}
+return null}
+function resolve(arg){if(!arg)return cwd;let p=arg.replace(/\/+$/,'');if(p==='~'||p==='/'||p==='')return '~';if(p==='..')return cwd==='~'?'~':'~';if(p==='games'||p==='~/games')return '~/games';if(p.startsWith('~/'))return p;return cwd+'/'+p}
+function isDir(path){return path==='~'||path==='~/games'}
+function parse(v){const m=v.match(/"([^"]*)"|'([^']*)'|\S+/g)||[];return m.map(t=>t.replace(/^["']|["']$/g,''))}
+const CMDS=['help','clear','neofetch','fastfetch','whoami','pwd','ls','cd','cat','echo','date','uptime','history','theme','games','browser','settings','play','open','clearhistory','exit'];
+function exec(raw){const parts=parse(raw);if(!parts.length)return;const c=parts[0].toLowerCase(),args=parts.slice(1),argStr=args.join(' ');
+if(c==='clear'){out.textContent='';return}
+if(c==='help'){['help — this list','neofetch / fastfetch — system information','whoami · pwd · date · uptime','ls [dir] · cd <dir> · cat <file> — virtual filesystem','echo <text> — print text','games — open the game launcher','play <name> — launch a game','browser — open the browser','settings — open settings','open <app> — open any app by name','theme [name] — view or change the desktop theme','history · clearhistory','exit — close the terminal'].forEach(l=>print(l));return}
+if(c==='neofetch'||c==='fastfetch'){printEl(fetchEl());return}
+if(c==='whoami'){print(USER||'guest');return}
+if(c==='pwd'){print(cwd==='~'?'/home/'+(USER||'guest'):'/home/'+(USER||'guest')+'/games');return}
+if(c==='date'){print(new Date().toString());return}
+if(c==='uptime'){print('up '+upStr());return}
+if(c==='echo'){print(argStr);return}
+if(c==='history'){HIST.forEach((h,x)=>print('  '+(x+1)+'  '+h));return}
+if(c==='clearhistory'){HIST.length=0;print('history cleared');return}
+if(c==='ls'){const p=resolve(args[0]);if(!isDir(p)){print('ls: no such directory: '+(args[0]||''));return}const k=kids(p);print(k.length?k.join('   '):'(empty)');return}
+if(c==='cd'){const p=resolve(args[0]);if(isDir(p)){cwd=p;setPr()}else print('cd: no such directory: '+(args[0]||''));return}
+if(c==='cat'){if(!args[0]){print('cat: missing file');return}const p=resolve(args[0]);if(isDir(p)){print('cat: '+args[0]+': is a directory');return}const t=fileText(p);if(t==null)print('cat: no such file: '+args[0]);else t.split('\n').forEach(l=>print(l));return}
+if(c==='theme'){const map={hyprland:'hypr',hypr:'hypr','tokyo':'tokyo','tokyo-night':'tokyo',catppuccin:'catppuccin',midnight:'midnight'};if(!args[0]){print('Theme: '+presetName()+' — available: hyprland, tokyo-night, catppuccin, midnight');return}const v=map[args[0].toLowerCase()];if(!v){print('theme: unknown theme: '+args[0]);return}S.preset=v;S.accent={hypr:'#3584e4',tokyo:'#7aa2f7',catppuccin:'#cba6f7',midnight:'#89b4fa'}[v];applyS();saveS();print('Theme set to '+presetName());return}
+if(c==='games'){const a=APPS.find(x=>x.n==='Games');if(a)openApp(a);print('opening games…');return}
+if(c==='browser'){const a=APPS.find(x=>x.n==='Browser');if(a)openApp(a);print('opening browser…');return}
+if(c==='settings'){const a=APPS.find(x=>x.n==='Settings');if(a)openApp(a);print('opening settings…');return}
+if(c==='open'){const a=APPS.find(x=>x.n.toLowerCase()===(argStr||'').toLowerCase());if(a){openApp(a);print('opening '+a.n+'…')}else print('open: no app named '+argStr);return}
+if(c==='play'){const g=pool().find(g=>(g.name||g.title||'').toLowerCase()===(argStr||'').toLowerCase());if(g){print('starting '+(g.name||g.title)+'…');playGame(g)}else print('play: no game named '+argStr);return}
+if(c==='exit'){w.dispatchEvent(new Event('appclose'));w.remove();dockSync();return}
+print('tuffs-sh: command not found: '+c)}
+function setPr(){pr.textContent=(USER||'guest')+'@web ';let pa=line.querySelector('.tpa');if(!pa){pa=el('span','tpa');line.insertBefore(pa,tin)}pa.textContent=cwd+' $ '}
+function drawMir(){const v=inp.value;let p=inp.selectionStart;if(p==null)p=v.length;mir.textContent=v.slice(0,p);cur.textContent=v[p]||' ';aft.textContent=v.slice(p+1)}
+function complete(){const v=inp.value;const endsSpace=/\s$/.test(v);const parts=parse(v);let cand=[],base='';
+if(parts.length<=1&&!endsSpace){base=(parts[0]||'').toLowerCase();cand=CMDS.filter(x=>x.startsWith(base))}
+else{const cmd=(parts[0]||'').toLowerCase();base=endsSpace?'':(parts[parts.length-1]||'').toLowerCase();if(cmd==='cd')cand=kids(cwd).filter(k=>k.endsWith('/'));else if(cmd==='cat'||cmd==='ls')cand=kids(cwd);else if(cmd==='theme')cand=['hyprland','tokyo-night','catppuccin','midnight'];else if(cmd==='play')cand=pool().map(g=>(g.name||g.title||''));else if(cmd==='open')cand=APPS.map(a=>a.n);cand=cand.filter(x=>x.toLowerCase().startsWith(base))}
+if(!cand.length)return;if(cand.length===1){const done=cand[0];if(parts.length<=1&&!endsSpace)inp.value=done+' ';else inp.value=v.slice(0,v.length-base.length)+done+(done.endsWith('/')?'':' ')}
+else{let lcp=cand[0];for(const x of cand){let k=0;while(k<lcp.length&&k<x.length&&lcp[k].toLowerCase()===x[k].toLowerCase())k++;lcp=lcp.slice(0,k)}if(lcp.length>base.length){inp.value=v.slice(0,v.length-base.length)+lcp}else{echoLine(v);print(cand.join('   '))}}
+drawMir()}
+inp.addEventListener('input',drawMir);inp.addEventListener('keyup',drawMir);inp.addEventListener('click',drawMir);
+inp.onkeydown=e=>{if(e.key==='Enter'){const v=inp.value;echoLine(v);inp.value='';drawMir();const t=v.trim();if(t){HIST.push(t);hi=-1;draft='';exec(t)}scroll()}
+else if(e.key==='ArrowUp'){e.preventDefault();if(!HIST.length)return;if(hi===-1){draft=inp.value;hi=HIST.length}hi=Math.max(0,hi-1);inp.value=HIST[hi];drawMir()}
+else if(e.key==='ArrowDown'){e.preventDefault();if(hi===-1)return;hi++;if(hi>=HIST.length){hi=-1;inp.value=draft}else inp.value=HIST[hi];drawMir()}
+else if(e.key==='Tab'){e.preventDefault();complete()}
+else if(e.ctrlKey&&(e.key==='l'||e.key==='L')){e.preventDefault();out.textContent=''}
+else if(e.ctrlKey&&(e.key==='c'||e.key==='C')){if(String(getSelection()).length)return;e.preventDefault();echoLine(inp.value+'^C');inp.value='';hi=-1;drawMir()}};
+setPr();printEl(fetchEl());print("Type 'help' to list commands.");drawMir();setTimeout(()=>inp.focus(),60);b.onclick=()=>inp.focus()}
+
 function monitor(){const{w,body:b}=win("System monitor","",620,380);b.style.fontFamily="'JetBrains Mono',monospace";b.innerHTML=`<div class="mon"><b>Activity demo</b><canvas></canvas><dl><dt>Graph</dt><dd>Simulated visualization, not live CPU data</dd><dt>Platform</dt><dd id="u">Browser only</dd></dl></div>`;
 const c=b.querySelector("canvas"),x=c.getContext("2d"),h=Array(60).fill(3);
 const iv=setInterval(()=>{if(!w.isConnected)return clearInterval(iv);h.push(Math.max(1,Math.min(60,h.at(-1)+(Math.random()-.5)*8)));h.shift();c.width=c.clientWidth;c.height=150;
@@ -927,13 +1001,14 @@ function pushRecent(t,id){if(!id)return;const r=st.get('recent',[]).filter(x=>!(
 function openSettings(pane){const a=APPS.find(x=>x.n==='Settings');if(!a)return;openApp(a);setTimeout(()=>{const w=document.querySelector('.win[data-app="Settings"]');if(!w)return;const bs=w.querySelectorAll('.seg>button');if(pane==='app'&&bs[1])bs[1].click();if(pane==='gen'&&bs[0])bs[0].click()},90)}
 function rofiSel(){document.querySelectorAll('.rofi-it').forEach((b,i)=>{b.classList.toggle('sel',i===RSEL);if(i===RSEL)b.scrollIntoView({block:'nearest'})})}
 function rofiGo(i){const r=ROFI[i];if(!r)return;closeOv();r.run()}
-function saveWSMap(){const m={};document.querySelectorAll('.win').forEach(w=>{const n=w.dataset.ws||'1';const a=w.dataset.app;if(!a)return;const pool=(typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games;const g=pool.find(x=>(x.name||x.title)===a);const e2=g?{t:'g',id:g.id}:(APPS.some(x=>x.n===a)?{t:'a',id:a}:null);if(!e2)return;(m[n]=m[n]||[]);if(!m[n].some(x=>x.t===e2.t&&x.id===e2.id))m[n].push(e2)});st.set('wsm',{cur:WS,m})}
+function saveWSMap(){const m={};document.querySelectorAll('.win').forEach(w=>{const n=w.dataset.ws||'1';const a=w.dataset.app;if(!a)return;const pool=(typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games);const g=pool.find(x=>(x.name||x.title)===a);const e2=g?{t:'g',id:g.id}:(APPS.some(x=>x.n===a)?{t:'a',id:a}:null);if(!e2)return;(m[n]=m[n]||[]);if(!m[n].some(x=>x.t===e2.t&&x.id===e2.id))m[n].push(e2)});st.set('wsm',{cur:WS,m})}
 let _wsRestored=false;
-function restoreWS(){if(_wsRestored)return;_wsRestored=true;let data=null;try{data=st.get('wsm',null)}catch(e){}if(!data||!data.m)return;const cur=data.cur||1;for(let n=1;n<=WS_N;n++){const list=data.m[String(n)]||[];if(!list.length)continue;setWS(n);list.forEach(e2=>{try{if(e2.t==='a'){if(GUEST&&e2.id!=='Games')return;if(e2.id==='Admin'&&!ISADMIN)return;const a=APPS.find(x=>x.n===e2.id);if(a)openApp(a)}else{const pool=(typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games;const g=pool.find(x=>x.id===e2.id);if(g)playGame(g)}}catch(err){}})}setWS(cur)}
+function restoreWS(){if(_wsRestored)return;_wsRestored=true;let data=null;try{data=st.get('wsm',null)}catch(e){}if(!data||!data.m)return;const cur=data.cur||1;for(let n=1;n<=WS_N;n++){const list=data.m[String(n)]||[];if(!list.length)continue;setWS(n);list.forEach(e2=>{try{if(e2.t==='a'){if(GUEST&&e2.id!=='Games')return;if(e2.id==='Admin'&&!ISADMIN)return;const a=APPS.find(x=>x.n===e2.id);if(a)openApp(a)}else{const pool=(typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games);const g=pool.find(x=>x.id===e2.id);if(g)playGame(g)}}catch(err){}})}setWS(cur)}
 (function(){let tries=0;const iv=setInterval(()=>{tries++;if(tries>40){clearInterval(iv);return}if(!document.querySelector('.scr.on')&&(SESSION||GUEST)&&document.querySelector('.win')===null){clearInterval(iv);restoreWS()}else if(!document.querySelector('.scr.on')&&(SESSION||GUEST)){clearInterval(iv)}},800)})();
 let _tx=0,_ty=0,_tt=null;
 addEventListener('touchstart',e=>{const t=e.changedTouches[0];_tx=t.clientX;_ty=t.clientY;_tt=e.target},{passive:true});
 addEventListener('touchend',e=>{if(!_tt||!_tt.closest||_tt.closest('.win,.bar,#dock,#qs,#ov,.scr,.ctx'))return;const t=e.changedTouches[0],dx=t.clientX-_tx,dy=t.clientY-_ty;if(Math.abs(dx)>70&&Math.abs(dy)<50)setWS(WS+(dx<0?1:-1))},{passive:true});
+addEventListener('keydown',e=>{if(e.ctrlKey&&e.altKey&&(e.key==='t'||e.key==='T')){e.preventDefault();const a=APPS.find(x=>x.n==='Terminal');if(a)openApp(a)}});
 $('#q').addEventListener('keydown',e=>{if(!ROFI.length)return;if(e.key==='ArrowDown'){e.preventDefault();RSEL=Math.min(ROFI.length-1,RSEL+1);rofiSel()}else if(e.key==='ArrowUp'){e.preventDefault();RSEL=Math.max(0,RSEL-1);rofiSel()}else if(e.key==='Enter'){e.preventDefault();rofiGo(RSEL)}});
 let USER='user',mode='in';const W0=$('#wall').innerHTML;
 const WALLS=[{n:'Silk',s:'Gray silk waves',l:1,img:'/images/wall-grey.jpg'},
