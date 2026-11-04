@@ -617,6 +617,9 @@ $("#clk").textContent=p2(d.getDate())+" "+M[d.getMonth()].toLowerCase()+"  "+p2(
 $("#ram").textContent="HYPR / WEB";$("#tmp").textContent=navigator.onLine?"Online":"Offline"}
 tick();setInterval(()=>{if(!document.hidden)tick()},15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
 
+let SESSION=null,ISADMIN=false,GUEST=false,RESET_TOKEN=null;
+try{SESSION=JSON.parse(localStorage.getItem('lumio_session')||'null')}catch(e){SESSION=null}
+const _rm=location.hash.match(/#reset=([0-9a-f]{64})/);if(_rm)RESET_TOKEN=_rm[1];
 const dock=$("#dock"),grid=$("#grid");
 function entry(it,cls){const b=document.createElement("button");b.className=cls;b.title=it.n;b.setAttribute("aria-label",it.n);
 const svg=it.g?icon(it.g,it.b):cover(it);b.innerHTML=cls==="ic"?svg:svg+`<span>${it.n}</span>`;b.onclick=()=>{closeOv();it.g?openApp(it):playGame(it)};return b}
@@ -733,9 +736,6 @@ s.unshift(h);if(h[0]==f[0]&&h[1]==f[1])f=[R(15),R(15)];else s.pop();
 x.fillStyle="#0c0c0e";x.fillRect(0,0,300,300);x.fillStyle="#ff6b6b";x.fillRect(f[0]*20+2,f[1]*20+2,16,16);x.fillStyle="#4fd67a";s.forEach(p=>x.fillRect(p[0]*20+1,p[1]*20+1,18,18))},120)}
 
 /* ===== server accounts (Lumio) ===== */
-let SESSION=null,ISADMIN=false,GUEST=false,RESET_TOKEN=null;
-try{SESSION=JSON.parse(localStorage.getItem('lumio_session')||'null')}catch(e){SESSION=null}
-const _rm=location.hash.match(/#reset=([0-9a-f]{64})/);if(_rm)RESET_TOKEN=_rm[1];
 async function authPost(path,body){try{const r=await fetch(path,{method:'POST',headers:{'content-type':'application/json',...(SESSION?{authorization:'Bearer '+SESSION.t}:{})},body:JSON.stringify(body||{})});const d=await r.json().catch(()=>({}));if(!r.ok)return{error:d.error||('Request failed ('+r.status+')')};return d}catch(e){return{error:'Network error — try again.'}}}
 async function initAuth(){if(!SESSION)return false;try{const r=await fetch('/api/auth/me',{headers:{authorization:'Bearer '+SESSION.t}});if(!r.ok)throw 0;const d=await r.json();USER=d.username;ISADMIN=!!d.isAdmin;GUEST=false;return true}catch(e){SESSION=null;try{localStorage.removeItem('lumio_session')}catch(_){}return false}}
 function saveSession(u,t){SESSION={u,t};try{localStorage.setItem('lumio_session',JSON.stringify(SESSION))}catch(e){}}
