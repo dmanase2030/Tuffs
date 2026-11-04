@@ -605,6 +605,17 @@ input[type=range]{accent-color:#3584e4}
 #boot{display:none!important}
 #sn{margin:auto;border-radius:10px}
 .win .body>canvas{border-radius:10px}
+
+/* ===== cloud + selector pass ===== */
+.fm-inspector-empty .fm-svg{color:#5aa9ff}
+.fm-inspector-empty b{color:#e8e8ea}
+.fm-preview-symbol{color:#5aa9ff}
+.fm-preview{background:#141416}
+.fm-preview-name{color:#ececf1}
+.fm-empty .fm-svg{color:#5aa9ff}
+.fm-empty h3{color:#e8e8ea}
+.wall-card{transform:skewX(-8deg)}
+.wall-card.active{transform:skewX(-8deg) scale(1.06)}
 </style>
 </head>
 <body>
@@ -843,7 +854,11 @@ async function loadSiteConfig(){try{const r=await fetch('/api/site-config');cons
 $('#annx').onclick=()=>{$('#annbar').style.display='none';try{sessionStorage.setItem('annd','1')}catch(e){}};
 /* ===== setup wizard, lock screen, accounts ===== */
 const sleep=ms=>new Promise(r=>setTimeout(r,ms)),mem={};
-const st={get(k,d){try{const v=localStorage.getItem('lx:'+k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},set(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}}};
+const SYNC_KEYS=['S','notes','files','ug','events','codeDraft','rec','cfg','fmview','fmorder'];
+const _pt={};
+function cloudPush(k,v,now){if(!SESSION||GUEST)return;const send=()=>{fetch('/api/data',{method:'PUT',headers:{'content-type':'application/json',authorization:'Bearer '+SESSION.t},body:JSON.stringify({k,v})}).catch(()=>{})};if(now){send();return}clearTimeout(_pt[k]);_pt[k]=setTimeout(send,700)}
+async function cloudPull(){try{const r=await Promise.race([fetch('/api/data',{headers:{authorization:'Bearer '+SESSION.t}}),new Promise((_,rj)=>setTimeout(rj,2500))]);if(!r.ok)return;const d=await r.json(),data=d.data||{};for(const k of Object.keys(data)){if(!SYNC_KEYS.includes(k))continue;if(k==='S'){Object.assign(S,data[k]);st.hydrate('S',S)}else if(k==='cfg'){Object.assign(CONFIG,data[k]);st.hydrate('cfg',CONFIG)}else st.hydrate(k,data[k])}for(const k of SYNC_KEYS){if(!(k in data)){let lv;try{const raw=localStorage.getItem('lx:'+k);lv=raw===null?undefined:JSON.parse(raw)}catch(e){}if(lv!==undefined)cloudPush(k,lv,true)}}}catch(e){}}
+const st={get(k,d){try{const v=localStorage.getItem('lx:'+k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},set(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}if(SYNC_KEYS.includes(k))cloudPush(k,v)},hydrate(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}}};
 const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false},st.get('S',{})),saveS=()=>st.set('S',S);
 if(S.accent==='#a78bfa')S.accent='#3584e4';
 try{if(!localStorage.getItem('lx:silkwall1')){S.wall=0;saveS();localStorage.setItem('lx:silkwall1','1')}}catch(e){}
@@ -871,7 +886,7 @@ const show=id=>document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('
 /* Accounts are a local convenience stored in this browser, not real security. */
 async function hash(p){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('lx'+p));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return btoa(unescape(encodeURIComponent('lx'+p)))}}
 async function makeUser(u,p,c){u=u.trim().toLowerCase();const us=st.get('users',{});if(!/^[a-z0-9_-]{2,20}$/.test(u))return 'Username must be 2 to 20 letters, numbers, - or _';if(us[u])return 'That username is taken';if(p.length<4)return 'Password needs at least 4 characters';if(p!==c)return 'Passwords do not match';us[u]=await hash(p);st.set('users',us);USER=u;return null}
-async function enter(){st.set('last',GUEST?'Guest':USER);applyS();$('#wn').textContent='Welcome, '+USER;$('#wav').textContent=(USER[0]||'?').toUpperCase();show(null);loadSiteConfig()}
+async function enter(){st.set('last',GUEST?'Guest':USER);if(SESSION&&!GUEST)await cloudPull();applyS();$('#wn').textContent='Welcome, '+USER;$('#wav').textContent=(USER[0]||'?').toUpperCase();show(null);loadSiteConfig()}
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 function field(ph,type,ac){const i=el('input','oin');i.placeholder=ph;i.type=type;i.autocomplete=ac||'off';i.setAttribute('aria-label',ph);return i}
 function opts(b,list,key){list.forEach(([v,t,sub])=>{const x=el('button','oi'+(S[key]==v?' on':''));x.type='button';x.append(el('b','',t),el('small','',sub));x.onclick=()=>{S[key]=v;applyS();saveS();b.querySelectorAll('.oi').forEach(y=>y.classList.toggle('on',y===x))};b.append(x)})}
@@ -1055,7 +1070,7 @@ const wu=field('Image address (https://...)','text'),wb=el('button','btn','Use a
 wb.onclick=()=>wu.value.trim()&&setWall(wu.value.trim());wf.onchange=()=>wf.files[0]&&pickWall(wf.files[0]);R(wu,wb,wf);
 cur=pA;H('Device');const dn=field('Device name','text');dn.value=S.device;dn.oninput=()=>{S.device=dn.value.trim()||'linux-pc';saveS();applyS()};R(dn);
 H('Proxy and browser');const px=field('Proxy path','text'),se=field('Search engine address','text'),sv=el('button','btn p','Save');px.value=CONFIG.proxyPrefix;se.value=CONFIG.searchEngine;
-sv.onclick=()=>{CONFIG.proxyPrefix=px.value.trim();CONFIG.searchEngine=se.value.trim();st.set('cfg',{proxyPrefix:CONFIG.proxyPrefix,searchEngine:CONFIG.searchEngine});toast('Saved')};R(px,se,sv);
+const esel=el('select','oin');esel.setAttribute('aria-label','Search engine');[['Google','https://www.google.com/search?q='],['DuckDuckGo','https://duckduckgo.com/?q='],['Bing','https://www.bing.com/search?q='],['Brave','https://search.brave.com/search?q=']].forEach(([n,u])=>{const o=el('option','',n);o.value=u;esel.append(o)});const eCus=el('option','','Custom address');eCus.value='';esel.append(eCus);esel.value=['https://www.google.com/search?q=','https://duckduckgo.com/?q=','https://www.bing.com/search?q=','https://search.brave.com/search?q='].includes(se.value)?se.value:'';esel.onchange=()=>{if(esel.value)se.value=esel.value};sv.onclick=()=>{CONFIG.proxyPrefix=px.value.trim();CONFIG.searchEngine=se.value.trim();st.set('cfg',{proxyPrefix:CONFIG.proxyPrefix,searchEngine:CONFIG.searchEngine});toast('Saved')};R(esel,px,se,sv);
 H('Add a game');const gt=field('Title','text'),gu=field('Game address or path','text'),gi=field('Cover image address (optional)','text'),ga=el('button','btn p','Add game'),ul=el('div','srow');
 const lu=()=>{ul.innerHTML='';st.get('ug',[]).forEach(g=>{const r=el('div','urow');r.append(el('span','',g.title));const x=el('button','btn','Remove');x.onclick=()=>{st.set('ug',st.get('ug',[]).filter(y=>y.id!==g.id));CONFIG.games=CONFIG.games.filter(y=>y.id!==g.id);render();lu()};r.append(x);ul.append(r)})};
 ga.onclick=()=>{const t=gt.value.trim(),u=gu.value.trim();if(!t||!u)return toast('Enter a title and an address');const ug=st.get('ug',[]),g={id:'u'+Date.now(),title:t,tags:['Custom'],url:u,thumb:gi.value.trim()};ug.push(g);st.set('ug',ug);CONFIG.games.push(UGp(g));render();gt.value=gu.value=gi.value='';toast(t+' added');lu()};R(gt,gu,gi,ga);b.append(ul);lu();
