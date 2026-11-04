@@ -47,7 +47,7 @@
     "entryPoint": true,
     "manualPlay": "partial"
    },
-   "featured": false
+   "featured": true
   },
   {
    "id": "bob-the-robber-2",
@@ -66,7 +66,7 @@
     "entryPoint": true,
     "manualPlay": "partial"
    },
-   "featured": false
+   "featured": true
   },
   {
    "id": "drive-mad",
@@ -87,7 +87,7 @@
     "entryPoint": true,
     "manualPlay": "partial"
    },
-   "featured": true
+   "featured": false
   },
   {
    "id": "moto-x3m",
@@ -184,7 +184,7 @@
     "entryPoint": true,
     "manualPlay": "partial"
    },
-   "featured": false
+   "featured": true
   },
   {
    "id": "vex4",
@@ -205,7 +205,7 @@
     "entryPoint": true,
     "manualPlay": "partial"
    },
-   "featured": false
+   "featured": true
   },
   {
    "id": "vex5",
@@ -224,7 +224,7 @@
     "entryPoint": true,
     "manualPlay": "partial"
    },
-   "featured": false
+   "featured": true
   },
   {
    "id": "vex6",
@@ -243,7 +243,7 @@
     "entryPoint": true,
     "manualPlay": "partial"
    },
-   "featured": false
+   "featured": true
   },
   {
    "id": "vex7",
@@ -1463,7 +1463,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -2161,7 +2161,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -2465,7 +2465,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -4189,7 +4189,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -5571,7 +5571,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -9641,7 +9641,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -11223,7 +11223,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -11265,7 +11265,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -12755,7 +12755,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -14397,7 +14397,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -16503,7 +16503,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -16585,7 +16585,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -20367,7 +20367,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -21023,7 +21023,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -21265,7 +21265,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -21305,7 +21305,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -21327,7 +21327,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -21369,7 +21369,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -21717,7 +21717,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -22765,7 +22765,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -22785,7 +22785,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -23217,7 +23217,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -23303,7 +23303,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -24827,7 +24827,7 @@
     "entryPoint": true,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": false
   },
   {
@@ -27157,7 +27157,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -27289,7 +27289,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -27311,7 +27311,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -27707,7 +27707,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -27883,7 +27883,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -28653,7 +28653,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -28895,7 +28895,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {
@@ -127323,7 +127323,7 @@
     "entryPoint": false,
     "manualPlay": "no"
    },
-   "featured": false,
+   "featured": true,
    "external": true
   },
   {

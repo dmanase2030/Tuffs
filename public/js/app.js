@@ -344,14 +344,14 @@
       ])
     ]));
 
+    if (featured.length) {
+      view.appendChild(section("Popular games", "Well-known favorites, curated in the portal config", featured, "#/games"));
+    }
     if (history.length) {
       view.appendChild(section("Continue playing", "Your recent games", history.slice(0, 6), "#/recent"));
     }
     if (favs.length) {
       view.appendChild(section("Favorites", "Games you starred", favs.slice(0, 6), "#/favorites"));
-    }
-    if (featured.length) {
-      view.appendChild(section("Featured", "Picked in portal configuration", featured, "#/games"));
     }
     view.appendChild(section("All games", null, sortOptions(games).slice(0, 12), "#/games"));
   }
