@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "source": "https://github.com/beforeblazergithub/BlazerGames",
- "sourceNote": "Catalog entries were derived from the BlazerGames repository's index.html links and on-disk game directories. Only files present in that repository are listed. The original 'minecraft' card in the source site linked to the games directory itself (broken link) and is therefore excluded. Additional entries from github.com/BlueDonuts/unblocked-games (NettleWeb): 82 self-hosted HTML5 games (folders prefixed nw-) and 1,112 external-catalog HTML5 games (ids prefixed nwx-, loaded from third-party CDNs). Flash and DOS entries from that repository were not included: they live inside a 4.4 GB chunk archive that is not practical to self-host. Entries duplicating existing titles (Vex 3-7, 2048, Slope) and one unindexed folder (m890avdt) were skipped.",
+ "sourceNote": "Catalog entries were derived from the BlazerGames repository's index.html links and on-disk game directories. Only files present in that repository are listed. The original 'minecraft' card in the source site linked to the games directory itself (broken link) and is therefore excluded. Additional entries from github.com/BlueDonuts/unblocked-games (NettleWeb): 82 self-hosted HTML5 games (folders prefixed nw-) and 1,112 external-catalog HTML5 games (ids prefixed nwx-, loaded from third-party CDNs). Flash and DOS entries from that repository were not included: they live inside a 4.4 GB chunk archive that is not practical to self-host. Entries duplicating existing titles (Vex 3-7, 2048, Slope) and one unindexed folder (m890avdt) were skipped. Additional external entries from the Interstellar project (github.com/UseInterstellar/Interstellar): 153 links verified to load and allow embedding at integration time; thumbnails copied from that repository.",
  "verification": {
   "entryPoint": "All local entry points verified on disk by scripts/verify-catalog.js. External (nwx-) entries point at third-party servers and are validated as URL format only.",
   "manual": "Not every game has been manually played end-to-end. Playability beyond page load is not guaranteed; see README.",
@@ -26360,6 +26360,2976 @@
    "source": "NettleWeb (external)",
    "knownDependencies": [
     "Loaded from an external server: cdn.htmlgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fancade",
+   "slug": "intx-fancade",
+   "title": "Fancade",
+   "entry": "https://play.fancade.com",
+   "thumb": null,
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: play.fancade.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-gartic-phone",
+   "slug": "intx-gartic-phone",
+   "title": "Gartic Phone",
+   "entry": "https://garticphone.com",
+   "thumb": "images/thumbs/int/garticphone.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: garticphone.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-swordbattle-io",
+   "slug": "intx-swordbattle-io",
+   "title": "Swordbattle.io",
+   "entry": "https://swordbattle.io/",
+   "thumb": "images/thumbs/int/swordbattle.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: swordbattle.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-stabfish-io",
+   "slug": "intx-stabfish-io",
+   "title": "Stabfish.io",
+   "entry": "https://stabfish.io/",
+   "thumb": "images/thumbs/int/stabfish.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: stabfish.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-dynast-io",
+   "slug": "intx-dynast-io",
+   "title": "Dynast.io",
+   "entry": "https://dynast.io",
+   "thumb": "images/thumbs/int/dynast-io.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: dynast.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-twisted-cooking-mama",
+   "slug": "intx-twisted-cooking-mama",
+   "title": "Twisted Cooking Mama",
+   "entry": "https://twisted-cooking-mama.game-files.crazygames.com/ruffle/twisted-cooking-mama/1/twistedcookingmama.html?v=1.273",
+   "thumb": "images/thumbs/int/twistedcookingmama.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: twisted-cooking-mama.game-files.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fancy-pants-adventure",
+   "slug": "intx-fancy-pants-adventure",
+   "title": "Fancy Pants Adventure",
+   "entry": "https://games.crazygames.com/en_US/fancy-pants-adventure-world/index.html?v=1.273",
+   "thumb": "images/thumbs/int/fancypantsadventures.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fancy-pants-adventure-2",
+   "slug": "intx-fancy-pants-adventure-2",
+   "title": "Fancy Pants Adventure 2",
+   "entry": "https://games.crazygames.com/en_US/fancy-pants-adventure-world/index.html?v=1.273",
+   "thumb": "images/thumbs/int/fancypantsadventures2.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-stickman-archero-fight",
+   "slug": "intx-stickman-archero-fight",
+   "title": "Stickman Archero Fight",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/3f4c166817ad4fd4b5b05d9adba22fcd/index.html",
+   "thumb": "images/thumbs/int/stickman-archero-fight.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-earn-to-die-2012-part-2",
+   "slug": "intx-earn-to-die-2012-part-2",
+   "title": "Earn to Die 2012 Part 2",
+   "entry": "https://games-online.io/game/EarnToDie/index.html",
+   "thumb": "images/thumbs/int/earntodie2012part2.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games-online.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-thisissand",
+   "slug": "intx-thisissand",
+   "title": "Thisissand",
+   "entry": "https://thisissand.com/",
+   "thumb": "images/thumbs/int/thisissand.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: thisissand.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-digdig-io",
+   "slug": "intx-digdig-io",
+   "title": "digdig.io",
+   "entry": "https://digdig.io/",
+   "thumb": "images/thumbs/int/digdigio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: digdig.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-the-impossible-quiz",
+   "slug": "intx-the-impossible-quiz",
+   "title": "The Impossible Quiz",
+   "entry": "https://the-impossible-quiz.game-files.crazygames.com/ruffle/theimpossiblequiz.html",
+   "thumb": "images/thumbs/int/theimpossiblequiz.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: the-impossible-quiz.game-files.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-skribbl",
+   "slug": "intx-skribbl",
+   "title": "skribbl",
+   "entry": "https://skribbl.io/",
+   "thumb": "images/thumbs/int/skribblio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: skribbl.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-wings",
+   "slug": "intx-wings",
+   "title": "Wings!",
+   "entry": "https://wings.io/",
+   "thumb": "images/thumbs/int/wingsio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: wings.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-stomped-io",
+   "slug": "intx-stomped-io",
+   "title": "Stomped.io",
+   "entry": "https://stomped.io",
+   "thumb": "images/thumbs/int/stompedio.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: stomped.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-snow-rider-3d",
+   "slug": "intx-snow-rider-3d",
+   "title": "Snow Rider 3D",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/3b79a8537ebc414fb4f9672a9b8c68c8/index.html?gd_zone_config=eyJwYXJlbnRVUkwiOiJodHRwczovL3Nub3dyaWRlcjNkLmNvbS8iLCJwYXJlbnREb21haW4iOiJzbm93cmlkZXIzZC5jb20iLCJ0b3BEb21haW4iOiJzbm93cmlkZXIzZC5jb20iLCJoYXNJbXByZXNzaW9uIjpmYWxzZSwibG9hZGVyRW5hYmxlZCI6dHJ1ZSwiaG9zdCI6Imh0bWw1LmdhbWVkaXN0cmlidXRpb24uY29tIiwidmVyc2lvbiI6IjEuNS4xNiJ9",
+   "thumb": "images/thumbs/int/snowrider3d.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-buckshot-roulette",
+   "slug": "intx-buckshot-roulette",
+   "title": "Buckshot Roulette",
+   "entry": "https://buckshotroulette.online/game/v11/",
+   "thumb": "images/thumbs/int/buckshotroulette.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: buckshotroulette.online"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-starblast",
+   "slug": "intx-starblast",
+   "title": "Starblast",
+   "entry": "https://starblast.io",
+   "thumb": "images/thumbs/int/starblastio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: starblast.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-parkour-block-3d",
+   "slug": "intx-parkour-block-3d",
+   "title": "Parkour Block 3D",
+   "entry": "https://html5.gamedistribution.com/1461d40bb77f48e6be72489959a1ac04/",
+   "thumb": "images/thumbs/int/parkourblock3d.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-jelly-mario",
+   "slug": "intx-jelly-mario",
+   "title": "Jelly Mario",
+   "entry": "https://jellymar.io",
+   "thumb": "images/thumbs/int/jellymario.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: jellymar.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-tyran-io",
+   "slug": "intx-tyran-io",
+   "title": "Tyran.io",
+   "entry": "https://tyran.io",
+   "thumb": "images/thumbs/int/tyranio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: tyran.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-arras-io",
+   "slug": "intx-arras-io",
+   "title": "Arras.io",
+   "entry": "https://arras.io/",
+   "thumb": "images/thumbs/int/arrasio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: arras.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-mk48-io",
+   "slug": "intx-mk48-io",
+   "title": "mk48.io",
+   "entry": "https://mk48.io/",
+   "thumb": "images/thumbs/int/mk48io.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: mk48.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-bandit-rip",
+   "slug": "intx-bandit-rip",
+   "title": "Bandit.RIP",
+   "entry": "https://bandit.rip/",
+   "thumb": "images/thumbs/int/banditrip.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: bandit.rip"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-brain-test-2",
+   "slug": "intx-brain-test-2",
+   "title": "Brain Test 2",
+   "entry": "https://games.poki.com/458768/df221093-aae9-4c0d-b458-efb16ae8e3ab",
+   "thumb": "images/thumbs/int/braintest2.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.poki.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-brain-test-3",
+   "slug": "intx-brain-test-3",
+   "title": "Brain Test 3",
+   "entry": "https://games.poki.com/458768/1f3ae540-a95f-4f20-a000-29512612e341",
+   "thumb": "images/thumbs/int/braintest3.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.poki.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-territorial-io",
+   "slug": "intx-territorial-io",
+   "title": "Territorial.io",
+   "entry": "https://territorial.io",
+   "thumb": "images/thumbs/int/territorialio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: territorial.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-candy-jump",
+   "slug": "intx-candy-jump",
+   "title": "Candy Jump",
+   "entry": "https://candyjump.games235.com/",
+   "thumb": "images/thumbs/int/candyjump.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: candyjump.games235.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-google-feud",
+   "slug": "intx-google-feud",
+   "title": "Google Feud",
+   "entry": "https://googlefeud.com/",
+   "thumb": "images/thumbs/int/googlefeud.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: googlefeud.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-yohoho-io",
+   "slug": "intx-yohoho-io",
+   "title": "YoHoHo.io",
+   "entry": "https://yohoho.io/",
+   "thumb": "images/thumbs/int/yohoho.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: yohoho.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-antwar-io",
+   "slug": "intx-antwar-io",
+   "title": "AntWar.io",
+   "entry": "https://antwar.io/",
+   "thumb": "images/thumbs/int/antwario.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: antwar.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-merge-fruit",
+   "slug": "intx-merge-fruit",
+   "title": "Merge Fruit",
+   "entry": "https://html5.gamedistribution.com/2dee9d404697435aa76111eb4015e1d5/",
+   "thumb": "images/thumbs/int/mergefruit.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-florr-io",
+   "slug": "intx-florr-io",
+   "title": "florr.io",
+   "entry": "https://florr.io",
+   "thumb": "images/thumbs/int/florr.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: florr.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-rocket-bot-royale",
+   "slug": "intx-rocket-bot-royale",
+   "title": "Rocket Bot Royale",
+   "entry": "https://rocketbotroyale2.winterpixel.io/",
+   "thumb": "images/thumbs/int/rocketbotroyale.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: rocketbotroyale2.winterpixel.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fireboy-and-watergirl-2-in-the-light-tem",
+   "slug": "intx-fireboy-and-watergirl-2-in-the-light-tem",
+   "title": "Fireboy And Watergirl 2 In The Light Temple",
+   "entry": "https://www.coolmathgames.com/sites/default/files/public_games/40210/",
+   "thumb": "images/thumbs/int/fireboyandwatergirllighttemple.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.coolmathgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fireboy-and-watergirl-4-in-the-crystal-t",
+   "slug": "intx-fireboy-and-watergirl-4-in-the-crystal-t",
+   "title": "Fireboy And Watergirl 4 In The Crystal Temple",
+   "entry": "https://www.coolmathgames.com/sites/default/files/public_games/40212/",
+   "thumb": "images/thumbs/int/fireboyandwatergirlcrystaltemple.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.coolmathgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fireboy-and-watergirl-6-fairy-tales",
+   "slug": "intx-fireboy-and-watergirl-6-fairy-tales",
+   "title": "Fireboy And Watergirl 6: Fairy Tales",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/be3cff113c4e4f069b7614851825ffe9/index.html",
+   "thumb": "images/thumbs/int/fireboyandwatergirlfairytales.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fireboy-and-watergirl-in-the-forest-temp",
+   "slug": "intx-fireboy-and-watergirl-in-the-forest-temp",
+   "title": "Fireboy And Watergirl In The Forest Temple",
+   "entry": "https://www.coolmathgames.com/sites/default/files/public_games/40034/",
+   "thumb": "images/thumbs/int/fireboyandwatergirlforesttemple.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.coolmathgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-gunspin",
+   "slug": "intx-gunspin",
+   "title": "Gunspin",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/917cce8c44c44638a8cdc2a1794b65c8/index.html",
+   "thumb": "images/thumbs/int/gunspin.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-johnny-upgrade",
+   "slug": "intx-johnny-upgrade",
+   "title": "Johnny Upgrade",
+   "entry": "https://lagged.com/api/play2/johnny-upgrade3/",
+   "thumb": "images/thumbs/int/johnnyupgrade.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: lagged.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-bloxd-io",
+   "slug": "intx-bloxd-io",
+   "title": "bloxd.io",
+   "entry": "https://bloxd.io",
+   "thumb": "images/thumbs/int/bloxd-io.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: bloxd.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-duck-life-1",
+   "slug": "intx-duck-life-1",
+   "title": "Duck Life 1",
+   "entry": "https://www.hoodamath.com/mobile/games/duck-life/game.html",
+   "thumb": "images/thumbs/int/ducklife.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.hoodamath.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-duck-life-2",
+   "slug": "intx-duck-life-2",
+   "title": "Duck Life 2",
+   "entry": "https://www.hoodamath.com/mobile/games/duck-life-2-world-champion/game.html",
+   "thumb": "images/thumbs/int/ducklife.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.hoodamath.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-duck-life-3",
+   "slug": "intx-duck-life-3",
+   "title": "Duck Life 3",
+   "entry": "https://www.hoodamath.com/mobile/games/duck-life-3-evolution/game.html",
+   "thumb": "images/thumbs/int/ducklife.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.hoodamath.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-evades",
+   "slug": "intx-evades",
+   "title": "Evades",
+   "entry": "https://evades.io",
+   "thumb": "images/thumbs/int/evadesio.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: evades.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fnaf-2",
+   "slug": "intx-fnaf-2",
+   "title": "FNAF 2",
+   "entry": "https://sussygamedeveloper.github.io/FNAF2/",
+   "thumb": "images/thumbs/int/FNAF2.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: sussygamedeveloper.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fnaf-3",
+   "slug": "intx-fnaf-3",
+   "title": "FNAF 3",
+   "entry": "https://sussygamedeveloper.github.io/fnaf3/",
+   "thumb": "images/thumbs/int/FNAF3.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: sussygamedeveloper.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-riddle-school-4",
+   "slug": "intx-riddle-school-4",
+   "title": "Riddle School 4",
+   "entry": "https://riddle-school-4.game-files.crazygames.com/ruffle/riddleschool4.html",
+   "thumb": "images/thumbs/int/rs4.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: riddle-school-4.game-files.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-riddle-school-5",
+   "slug": "intx-riddle-school-5",
+   "title": "Riddle School 5",
+   "entry": "https://riddle-school-5.game-files.crazygames.com/ruffle/riddleschool5.html",
+   "thumb": "images/thumbs/int/rs5.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: riddle-school-5.game-files.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-gba-emulator",
+   "slug": "intx-gba-emulator",
+   "title": "GBA Emulator",
+   "entry": "https://ds.44670.org/gba/",
+   "thumb": "images/thumbs/int/gba.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: ds.44670.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-nintendo-ds-emulator",
+   "slug": "intx-nintendo-ds-emulator",
+   "title": "Nintendo DS Emulator",
+   "entry": "https://ds.44670.org/",
+   "thumb": "images/thumbs/int/ds.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: ds.44670.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-playstation-2-emulator",
+   "slug": "intx-playstation-2-emulator",
+   "title": "Playstation 2 Emulator",
+   "entry": "https://playjs.purei.org/",
+   "thumb": "images/thumbs/int/PS2.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: playjs.purei.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-survivor-io",
+   "slug": "intx-survivor-io",
+   "title": "Survivor.io",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/f1c451e586c04b4c8cba01b0c50d9090/index.html",
+   "thumb": "images/thumbs/int/SVI.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-bomb-party",
+   "slug": "intx-bomb-party",
+   "title": "Bomb Party",
+   "entry": "https://jklm.fun",
+   "thumb": "images/thumbs/int/BP.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: jklm.fun"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-2d-rocket-league",
+   "slug": "intx-2d-rocket-league",
+   "title": "2D Rocket League",
+   "entry": "https://script.google.com/macros/s/AKfycbzxpyljaqvmqRShvfh_XpN8ZRRpLRCeYHZ0V-9ZoC4wf0pFHWFfgQQM-o1o-Q7pc3qAwg/exec",
+   "thumb": "images/thumbs/int/2D-Rocket-League.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: script.google.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-3d-dino-game",
+   "slug": "intx-3d-dino-game",
+   "title": "3D Dino Game",
+   "entry": "https://lagged.com/api/play2/t-rex-3d2/",
+   "thumb": "images/thumbs/int/trex-run-3D.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: lagged.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-ace-attorney",
+   "slug": "intx-ace-attorney",
+   "title": "Ace Attorney",
+   "entry": "https://f.kbhgames.com/r/gba/?r=ace-attorney",
+   "thumb": "images/thumbs/int/aa.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: f.kbhgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-animal-crossing-wild-world",
+   "slug": "intx-animal-crossing-wild-world",
+   "title": "Animal Crossing: Wild World",
+   "entry": "https://gamesfrog.com/games/nds/animal-crossing-wild-world/iframe",
+   "thumb": "images/thumbs/int/acww.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: gamesfrog.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-adventure-capitalist",
+   "slug": "intx-adventure-capitalist",
+   "title": "Adventure Capitalist",
+   "entry": "https://than1089.github.io/adventure-capitalist/",
+   "thumb": "images/thumbs/int/adventure-capitalist.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: than1089.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-basket-random",
+   "slug": "intx-basket-random",
+   "title": "Basket Random",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/bf1268dccb5d43e7970bb3edaa54afc8/index.html",
+   "thumb": "images/thumbs/int/br.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-basketball-bros",
+   "slug": "intx-basketball-bros",
+   "title": "Basketball Bros",
+   "entry": "https://basketbros-unblocked.github.io/a7/basket-bros/",
+   "thumb": "images/thumbs/int/basket-bros.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: basketbros-unblocked.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-basketball-legends",
+   "slug": "intx-basketball-legends",
+   "title": "Basketball Legends",
+   "entry": "https://www.basketballlegends.fun/gamedata/basketball-legends-2020",
+   "thumb": "images/thumbs/int/basketball-legends.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.basketballlegends.fun"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-btd-4",
+   "slug": "intx-btd-4",
+   "title": "BTD 4",
+   "entry": "https://en.gameslol.net/data/bloons-td-4/index.html",
+   "thumb": "images/thumbs/int/btd4.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: en.gameslol.net"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-buildnow-gg",
+   "slug": "intx-buildnow-gg",
+   "title": "BuildNow.GG",
+   "entry": "https://games.crazygames.com/en_US/buildnow-gg/index.html",
+   "thumb": "images/thumbs/int/build-now.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-celeste-pico-8",
+   "slug": "intx-celeste-pico-8",
+   "title": "Celeste PICO-8",
+   "entry": "https://exok.com/minigames/celeste.html",
+   "thumb": "images/thumbs/int/celeste.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: exok.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-diep-io",
+   "slug": "intx-diep-io",
+   "title": "Diep.io",
+   "entry": "https://diep.io/",
+   "thumb": "images/thumbs/int/diep.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: diep.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fnaf-2-scratch",
+   "slug": "intx-fnaf-2-scratch",
+   "title": "FNAF 2 (Scratch)",
+   "entry": "https://scratch.mit.edu/projects/469219637/embed/",
+   "thumb": "images/thumbs/int/FNAF2.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: scratch.mit.edu"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-friday-night-funkin",
+   "slug": "intx-friday-night-funkin",
+   "title": "Friday Night Funkin'",
+   "entry": "https://w8.snokido.com/games/html5/friday-night-funkin/0281/index.html",
+   "thumb": "images/thumbs/int/fnf.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: w8.snokido.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fnf-lofi-mod",
+   "slug": "intx-fnf-lofi-mod",
+   "title": "FNF - Lofi Mod",
+   "entry": "https://fnf.kdata1.com/lofi-funkin/2/",
+   "thumb": "images/thumbs/int/lofi.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: fnf.kdata1.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-fnf-vs-snorlax",
+   "slug": "intx-fnf-vs-snorlax",
+   "title": "FNF VS. Snorlax",
+   "entry": "https://fnf.kdata1.com/snorlax/1/",
+   "thumb": "images/thumbs/int/snorlax.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: fnf.kdata1.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-golden-eye-007",
+   "slug": "intx-golden-eye-007",
+   "title": "Golden Eye 007",
+   "entry": "https://f.kbhgames.com/r/n64/game.php?file=007-golden-eye.zip",
+   "thumb": "images/thumbs/int/golden-eye-007.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: f.kbhgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-gba-games-2",
+   "slug": "intx-gba-games-2",
+   "title": "GBA Games 2",
+   "entry": "https://cattn.github.io/gba/",
+   "thumb": "images/thumbs/int/gba.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: cattn.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-haunted-school-1",
+   "slug": "intx-haunted-school-1",
+   "title": "Haunted School 1",
+   "entry": "https://games.crazygames.com/en_US/haunted-school---horror-game/index.html",
+   "thumb": "images/thumbs/int/na.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-hexarena",
+   "slug": "intx-hexarena",
+   "title": "HexArena",
+   "entry": "https://hexarena.io/",
+   "thumb": "images/thumbs/int/hexarena.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: hexarena.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-isleward",
+   "slug": "intx-isleward",
+   "title": "Isleward",
+   "entry": "https://play.isleward.com",
+   "thumb": "images/thumbs/int/isleward.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: play.isleward.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-ngu-idle",
+   "slug": "intx-ngu-idle",
+   "title": "NGU Idle",
+   "entry": "https://cache.armorgames.com/files/games/ngu-idle-18444/index.html?v=1559319416",
+   "thumb": "images/thumbs/int/nguidle.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: cache.armorgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-learn-to-fly-idle",
+   "slug": "intx-learn-to-fly-idle",
+   "title": "Learn To Fly Idle",
+   "entry": "https://www.gameslol.net/data/waflash/index.php?g=635",
+   "thumb": "images/thumbs/int/ltf_idle.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.gameslol.net"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-lordz-io",
+   "slug": "intx-lordz-io",
+   "title": "Lordz.io",
+   "entry": "https://lordz.io/",
+   "thumb": "images/thumbs/int/lordz.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: lordz.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-masked-io",
+   "slug": "intx-masked-io",
+   "title": "Masked IO",
+   "entry": "https://unblocked-games.s3.amazonaws.com/games/masked-io/index.html",
+   "thumb": "images/thumbs/int/masked-forces.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: unblocked-games.s3.amazonaws.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-mortal-kombat-4",
+   "slug": "intx-mortal-kombat-4",
+   "title": "Mortal Kombat 4",
+   "entry": "https://f.kbhgames.com/r/n64/game.php?file=Mortal-Kombat-4-U.zip",
+   "thumb": "images/thumbs/int/mortal-kombat-4.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: f.kbhgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-mx3m-spooky-land",
+   "slug": "intx-mx3m-spooky-land",
+   "title": "MX3M: Spooky Land",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/b8a342904608470a9f3382337aca3558/index.html",
+   "thumb": "images/thumbs/int/mx3m-spooky.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-ninja-cat-exploit",
+   "slug": "intx-ninja-cat-exploit",
+   "title": "Ninja Cat Exploit",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/903ba9346b9d437e9c7e81d672cead44/index.html",
+   "thumb": "images/thumbs/int/ninja-cat.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-online-racing-game",
+   "slug": "intx-online-racing-game",
+   "title": "Online Racing Game!",
+   "entry": "https://jchabin.github.io/cars/",
+   "thumb": "images/thumbs/int/OR.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: jchabin.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-paper-mario-64",
+   "slug": "intx-paper-mario-64",
+   "title": "Paper Mario 64",
+   "entry": "https://f.kbhgames.com/r/n64/game.php?file=Paper%20Mario%20(USA).zip",
+   "thumb": "images/thumbs/int/paper-mario-64.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: f.kbhgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-pokemon-showdown",
+   "slug": "intx-pokemon-showdown",
+   "title": "Pokemon Showdown",
+   "entry": "https://play.pokemonshowdown.com",
+   "thumb": "images/thumbs/int/showdown.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: play.pokemonshowdown.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-deal-or-no-deal",
+   "slug": "intx-deal-or-no-deal",
+   "title": "Deal or No Deal",
+   "entry": "https://f.kbhgames.com/RS/game.php?r=//f.kbhgames.com/2018/swf/dondeal2.swf&w=640&h=480&warnsupport=true",
+   "thumb": "images/thumbs/int/deal-or-no-deal.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: f.kbhgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-deadshot",
+   "slug": "intx-deadshot",
+   "title": "Deadshot",
+   "entry": "https://deadshot.io",
+   "thumb": "images/thumbs/int/deadshot.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: deadshot.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-madalin-stunt-cars-multiplayer",
+   "slug": "intx-madalin-stunt-cars-multiplayer",
+   "title": "Madalin Stunt Cars Multiplayer",
+   "entry": "https://games.crazygames.com/en_US/madalin-cars-multiplayer/index.html",
+   "thumb": "images/thumbs/int/madalinmultiplayer.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-madalin-stunt-cars-2",
+   "slug": "intx-madalin-stunt-cars-2",
+   "title": "Madalin Stunt Cars 2",
+   "entry": "https://games.crazygames.com/en_US/madalin-stunt-cars-2/index.html",
+   "thumb": "images/thumbs/int/madalinstuntcars2.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-madalin-stunt-cars-3",
+   "slug": "intx-madalin-stunt-cars-3",
+   "title": "Madalin Stunt Cars 3",
+   "entry": "https://games.crazygames.com/en_US/madalin-stunt-cars-3/index.html",
+   "thumb": "images/thumbs/int/madalinstuntcars3.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-precision-client",
+   "slug": "intx-precision-client",
+   "title": "Precision Client",
+   "entry": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/precision-client/index.html",
+   "thumb": "images/thumbs/int/precision.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: glcdn.githack.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-riddle-school-3",
+   "slug": "intx-riddle-school-3",
+   "title": "Riddle School 3",
+   "entry": "https://riddle-school-3.game-files.crazygames.com/ruffle/riddleschool3.html",
+   "thumb": "images/thumbs/int/rs3.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: riddle-school-3.game-files.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-rooftop-snipers",
+   "slug": "intx-rooftop-snipers",
+   "title": "Rooftop Snipers",
+   "entry": "https://html5.gamedistribution.com/rvvASMiM/c3a70ae98547407a92ebedca8b79fdfa/index.html",
+   "thumb": "images/thumbs/int/rooftop.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: html5.gamedistribution.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-sand-spiel",
+   "slug": "intx-sand-spiel",
+   "title": "Sand Spiel",
+   "entry": "https://sandspiel.club/",
+   "thumb": "images/thumbs/int/sand.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: sandspiel.club"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-shapez-io",
+   "slug": "intx-shapez-io",
+   "title": "Shapez.IO",
+   "entry": "https://shapez.io",
+   "thumb": "images/thumbs/int/shapezio.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: shapez.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-snowball-io",
+   "slug": "intx-snowball-io",
+   "title": "Snowball.io",
+   "entry": "https://games.crazygames.com/en_US/snowball-io/index.html",
+   "thumb": "images/thumbs/int/snowball.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.crazygames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-stumble-guys-clone",
+   "slug": "intx-stumble-guys-clone",
+   "title": "Stumble Guys Clone",
+   "entry": "https://stumble-guys.io/stumble-guys.embed",
+   "thumb": "images/thumbs/int/stumble-guys.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: stumble-guys.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-super-smash-flash",
+   "slug": "intx-super-smash-flash",
+   "title": "Super Smash Flash",
+   "entry": "https://f.kbhgames.com/RS/game.php?r=//f.kbhgames.com/2018/swf/smashflash.swf&w=1521&h=753",
+   "thumb": "images/thumbs/int/ssf1.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: f.kbhgames.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-supply-chain-idle",
+   "slug": "intx-supply-chain-idle",
+   "title": "Supply Chain Idle",
+   "entry": "https://chat.kongregate.com/gamez/0027/1653/live/index.html?kongregate_game_version=1554392772",
+   "thumb": "images/thumbs/int/supplychainlogo.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: chat.kongregate.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-taming-io",
+   "slug": "intx-taming-io",
+   "title": "Taming.io",
+   "entry": "https://taming.io/",
+   "thumb": "images/thumbs/int/tamingio.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: taming.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-twitch-tetris",
+   "slug": "intx-twitch-tetris",
+   "title": "Twitch Tetris",
+   "entry": "https://www.rossipotti.de/ausgabe28/tetris/controls.html",
+   "thumb": "images/thumbs/int/na.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.rossipotti.de"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-zombs-io",
+   "slug": "intx-zombs-io",
+   "title": "Zombs.io",
+   "entry": "https://zombs.io/",
+   "thumb": "images/thumbs/int/zombs-io.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: zombs.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-zombs-royale",
+   "slug": "intx-zombs-royale",
+   "title": "Zombs Royale",
+   "entry": "https://zombsroyale.io",
+   "thumb": "images/thumbs/int/zombs-royale.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: zombsroyale.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-gba-games",
+   "slug": "intx-gba-games",
+   "title": "GBA Games",
+   "entry": "https://real-sgs.vercel.app/Tools/GBA-Emulator",
+   "thumb": "images/thumbs/int/gba.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: real-sgs.vercel.app"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-roblox-now-gg",
+   "slug": "intx-roblox-now-gg",
+   "title": "Roblox (Now.GG)",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.roblox.client&partner=interstellar",
+   "thumb": "images/thumbs/int/roblox.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-madden-nfl-24",
+   "slug": "intx-madden-nfl-24",
+   "title": "Madden NFL 24",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.ea.gp.maddennfl21mobile&partner=interstellar",
+   "thumb": "images/thumbs/int/maddennfl24.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-android",
+   "slug": "intx-android",
+   "title": "Android",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.uncube.launcher3&partner=interstellar",
+   "thumb": "images/thumbs/int/android.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-genshin-impact",
+   "slug": "intx-genshin-impact",
+   "title": "Genshin Impact",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.miHoYo.GenshinImpact&partner=interstellar",
+   "thumb": "images/thumbs/int/genshinimpact.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-ea-sports-fc-mobile-24-soccer",
+   "slug": "intx-ea-sports-fc-mobile-24-soccer",
+   "title": "EA SPORTS FC\u2122 MOBILE 24 SOCCER",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.ea.gp.fifamobile&partner=interstellar",
+   "thumb": "images/thumbs/int/easports-fcmobile24.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-ea-sports-ufc-mobile-2",
+   "slug": "intx-ea-sports-ufc-mobile-2",
+   "title": "EA SPORTS\u2122 UFC\u00ae Mobile 2",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.ea.gp.easportsufc2&partner=interstellar",
+   "thumb": "images/thumbs/int/easports-ufc.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-melon-playground",
+   "slug": "intx-melon-playground",
+   "title": "Melon Playground",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.studio27.MelonPlayground&partner=interstellar",
+   "thumb": "images/thumbs/int/melonplayground.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-solar-smash",
+   "slug": "intx-solar-smash",
+   "title": "Solar Smash",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.paradyme.solarsmash&partner=interstellar",
+   "thumb": "images/thumbs/int/solarsmash.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-bloons-td-battles-2",
+   "slug": "intx-bloons-td-battles-2",
+   "title": "Bloons TD Battles 2",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.ninjakiwi.bloonstdbattles2&partner=interstellar",
+   "thumb": "images/thumbs/int/bloonstd2.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-worldbox",
+   "slug": "intx-worldbox",
+   "title": "WorldBox",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.mkarpenko.worldbox&partner=interstellar",
+   "thumb": "images/thumbs/int/worldbox.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-free-fire",
+   "slug": "intx-free-fire",
+   "title": "Free Fire",
+   "entry": "https://now.gg/iframe/snippet?app_pkg=com.dts.freefireth&partner=interstellar",
+   "thumb": "images/thumbs/int/freefire.webp",
+   "category": "Classic",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: now.gg"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-half-life",
+   "slug": "intx-half-life",
+   "title": "Half-Life",
+   "entry": "https://x8bitrain.github.io/webXash/",
+   "thumb": "images/thumbs/int/half-life.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: x8bitrain.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-kiomet",
+   "slug": "intx-kiomet",
+   "title": "Kiomet",
+   "entry": "https://kiomet.com",
+   "thumb": "images/thumbs/int/kiomet.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: kiomet.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-tribals-io",
+   "slug": "intx-tribals-io",
+   "title": "Tribals.io",
+   "entry": "https://tribals.io/",
+   "thumb": "images/thumbs/int/tribalsio.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: tribals.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-counter-strike-1-6",
+   "slug": "intx-counter-strike-1-6",
+   "title": "Counter Strike 1.6",
+   "entry": "https://play-cs.com/en/servers",
+   "thumb": "images/thumbs/int/cs16.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: play-cs.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-narrow-one",
+   "slug": "intx-narrow-one",
+   "title": "Narrow One",
+   "entry": "https://narrow.one",
+   "thumb": "images/thumbs/int/narrowone.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: narrow.one"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-kirka",
+   "slug": "intx-kirka",
+   "title": "Kirka",
+   "entry": "https://kirka.io",
+   "thumb": "images/thumbs/int/kirka.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: kirka.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-cryzen",
+   "slug": "intx-cryzen",
+   "title": "Cryzen",
+   "entry": "https://cryzen.io",
+   "thumb": "images/thumbs/int/cryzen.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: cryzen.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-venge",
+   "slug": "intx-venge",
+   "title": "Venge",
+   "entry": "https://venge.io",
+   "thumb": "images/thumbs/int/venge.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: venge.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-getaway-s",
+   "slug": "intx-getaway-s",
+   "title": "Getaway S.",
+   "entry": "https://www.twoplayergames.org/embed/getaway-shootout",
+   "thumb": "images/thumbs/int/getaway.webp",
+   "category": "Multiplayer",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.twoplayergames.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-windows-96",
+   "slug": "intx-windows-96",
+   "title": "Windows 96",
+   "entry": "https://windows96.net",
+   "thumb": "images/thumbs/int/windows96.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: windows96.net"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-wrassling",
+   "slug": "intx-wrassling",
+   "title": "Wrassling",
+   "entry": "https://games.poki.com/458768/wrassling",
+   "thumb": "images/thumbs/int/wrassling.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games.poki.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-happy-wheels",
+   "slug": "intx-happy-wheels",
+   "title": "Happy Wheels",
+   "entry": "https://games-online.io/game/HappyWheels/",
+   "thumb": "images/thumbs/int/hw.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: games-online.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-google-snake-modded",
+   "slug": "intx-google-snake-modded",
+   "title": "Google Snake Modded",
+   "entry": "https://googlesnakemods.com/v/current/",
+   "thumb": "images/thumbs/int/snake.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: googlesnakemods.com"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-two-player-games",
+   "slug": "intx-two-player-games",
+   "title": "Two Player Games",
+   "entry": "https://www.twoplayergames.org/",
+   "thumb": "images/thumbs/int/tpg.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: www.twoplayergames.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-goomy-clicker-2",
+   "slug": "intx-goomy-clicker-2",
+   "title": "Goomy Clicker 2",
+   "entry": "https://idle-js-games.github.io/goomyClicker2/",
+   "thumb": "images/thumbs/int/gc2.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: idle-js-games.github.io"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-wordle-unlimited",
+   "slug": "intx-wordle-unlimited",
+   "title": "Wordle Unlimited",
+   "entry": "https://wordleunlimited.org/",
+   "thumb": "images/thumbs/int/w.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: wordleunlimited.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-wordly",
+   "slug": "intx-wordly",
+   "title": "Wordly",
+   "entry": "https://wordly.org/",
+   "thumb": "images/thumbs/int/w.webp",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: wordly.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-globle",
+   "slug": "intx-globle",
+   "title": "Globle",
+   "entry": "https://globle.org/?",
+   "thumb": "images/thumbs/int/cn.png",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: globle.org"
+   ],
+   "verified": {
+    "entryPoint": false,
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": true
+  },
+  {
+   "id": "intx-shipcraft-io",
+   "slug": "intx-shipcraft-io",
+   "title": "ShipCraft.io",
+   "entry": "https://shipcraft.io/",
+   "thumb": null,
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "External entry from the Interstellar catalog (github.com/UseInterstellar/Interstellar): served from a third-party server, not self-hosted. Availability depends on that server."
+   },
+   "source": "Interstellar (external)",
+   "knownDependencies": [
+    "Loaded from an external server: shipcraft.io"
    ],
    "verified": {
     "entryPoint": false,
