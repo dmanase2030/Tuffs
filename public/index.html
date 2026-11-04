@@ -787,12 +787,12 @@ function entry(it,cls){const b=document.createElement("button");b.className=cls;
 const svg=it.g?icon(it.g,it.b):cover(it);b.innerHTML=cls==="ic"?svg:svg+`<span>${it.n}</span>`;b.onclick=()=>{closeOv();it.g?openApp(it):playGame(it)};return b}
 APPS.filter(a=>a.d).forEach((a,i)=>{if(i===3)dock.append(Object.assign(document.createElement("i"),{className:"sep"}));dock.append(entry(a,"ic"))});
 function render(f=""){f=(f||'').trim();grid.innerHTML='';try{ROFI=[]}catch(e){}
-if(!f){grid.classList.remove('list');let rec=[];try{rec=st.get('recent',[]).map(r=>r.t==='g'?((typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games)).find(g=>g.id===r.id):APPS.find(a=>a.n===r.id)).filter(Boolean).slice(0,5)}catch(e){}
+if(!f){grid.classList.remove('list');let rec=[];try{rec=st.get('recent',[]).map(r=>r.t==='g'?CONFIG.games.find(g=>g.id===r.id):APPS.find(a=>a.n===r.id)).filter(Boolean).slice(0,5)}catch(e){}
 if(rec.length){grid.append(el('div','rofi-h','Recent'));const row=el('div','rofi-row');rec.forEach(it=>{try{row.append(entry(it,'app'))}catch(e){}});grid.append(row)}
 APPS.filter(a=>a.n!=='Admin'||ISADMIN).forEach(a=>grid.append(entry(a,'app')));return}
 grid.classList.add('list');const res=[];
 APPS.filter(a=>a.n!=='Admin'||ISADMIN).forEach(a=>{const s=fzScore(f,a.n);if(s>=0)res.push({s,k:'App',label:a.n,ic:icon(a.g,a.b),run:()=>openApp(a)})});
-const pool=(typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games);
+const pool=CONFIG.games;
 pool.forEach(g=>{const nm=g.name||g.title||'';const s=fzScore(f,nm);if(s>=0)res.push({s:s-2,k:'Game',label:nm,ic:tileIcon(nm,g.c||'#444'),img:g.thumb||'',run:()=>playGame(g)})});
 CONFIG.quick.forEach(([n,u])=>{const s=fzScore(f,n);if(s>=0)res.push({s:s-4,k:'Bookmark',label:n,ic:tileIcon(n,'#3584e4'),run:()=>window.open(u,'_blank','noopener')})});
 SETL.forEach(([n,pane])=>{const s=fzScore(f,n);if(s>=0)res.push({s:s-3,k:'Settings',label:n,ic:tileIcon(n,'#55555c'),run:()=>openSettings(pane)})});
@@ -887,7 +887,7 @@ const HIST=[];let hi=-1,draft='',cwd='~';
 const out=el('div','tout'),line=el('div','tline'),pr=el('span','tpr'),tin=el('span','tin'),mir=el('span',''),cur=el('span','tcur'),aft=el('span',''),inp=el('input','treal');
 inp.setAttribute('aria-label','Terminal input');inp.setAttribute('autocomplete','off');inp.setAttribute('autocapitalize','none');inp.spellcheck=false;
 tin.append(mir,cur,aft);line.append(pr,tin,inp);b.append(out,line);
-const pool=()=> (typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games));
+const pool=()=> CONFIG.games;
 const presetName=()=>({hypr:'Hyprland',tokyo:'Tokyo Night',catppuccin:'Catppuccin',midnight:'Midnight'})[S.preset||'hypr']||'Hyprland';
 const upStr=()=>{const s=Math.floor(performance.now()/1000);return Math.floor(s/3600)+'h '+Math.floor(s%3600/60)+'m '+(s%60)+'s'};
 function scroll(){requestAnimationFrame(()=>{b.scrollTop=b.scrollHeight})}
@@ -1001,9 +1001,9 @@ function pushRecent(t,id){if(!id)return;const r=st.get('recent',[]).filter(x=>!(
 function openSettings(pane){const a=APPS.find(x=>x.n==='Settings');if(!a)return;openApp(a);setTimeout(()=>{const w=document.querySelector('.win[data-app="Settings"]');if(!w)return;const bs=w.querySelectorAll('.seg>button');if(pane==='app'&&bs[1])bs[1].click();if(pane==='gen'&&bs[0])bs[0].click()},90)}
 function rofiSel(){document.querySelectorAll('.rofi-it').forEach((b,i)=>{b.classList.toggle('sel',i===RSEL);if(i===RSEL)b.scrollIntoView({block:'nearest'})})}
 function rofiGo(i){const r=ROFI[i];if(!r)return;closeOv();r.run()}
-function saveWSMap(){const m={};document.querySelectorAll('.win').forEach(w=>{const n=w.dataset.ws||'1';const a=w.dataset.app;if(!a)return;const pool=(typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games);const g=pool.find(x=>(x.name||x.title)===a);const e2=g?{t:'g',id:g.id}:(APPS.some(x=>x.n===a)?{t:'a',id:a}:null);if(!e2)return;(m[n]=m[n]||[]);if(!m[n].some(x=>x.t===e2.t&&x.id===e2.id))m[n].push(e2)});st.set('wsm',{cur:WS,m})}
+function saveWSMap(){const m={};document.querySelectorAll('.win').forEach(w=>{const n=w.dataset.ws||'1';const a=w.dataset.app;if(!a)return;const pool=CONFIG.games;const g=pool.find(x=>(x.name||x.title)===a);const e2=g?{t:'g',id:g.id}:(APPS.some(x=>x.n===a)?{t:'a',id:a}:null);if(!e2)return;(m[n]=m[n]||[]);if(!m[n].some(x=>x.t===e2.t&&x.id===e2.id))m[n].push(e2)});st.set('wsm',{cur:WS,m})}
 let _wsRestored=false;
-function restoreWS(){if(_wsRestored)return;_wsRestored=true;let data=null;try{data=st.get('wsm',null)}catch(e){}if(!data||!data.m)return;const cur=data.cur||1;for(let n=1;n<=WS_N;n++){const list=data.m[String(n)]||[];if(!list.length)continue;setWS(n);list.forEach(e2=>{try{if(e2.t==='a'){if(GUEST&&e2.id!=='Games')return;if(e2.id==='Admin'&&!ISADMIN)return;const a=APPS.find(x=>x.n===e2.id);if(a)openApp(a)}else{const pool=(typeof GAMES!=='undefined'&&GAMES.length)?GAMES:((typeof CATALOG!=='undefined'&&CATALOG.length)?CATALOG:CONFIG.games);const g=pool.find(x=>x.id===e2.id);if(g)playGame(g)}}catch(err){}})}setWS(cur)}
+function restoreWS(){if(_wsRestored)return;_wsRestored=true;let data=null;try{data=st.get('wsm',null)}catch(e){}if(!data||!data.m)return;const cur=data.cur||1;for(let n=1;n<=WS_N;n++){const list=data.m[String(n)]||[];if(!list.length)continue;setWS(n);list.forEach(e2=>{try{if(e2.t==='a'){if(GUEST&&e2.id!=='Games')return;if(e2.id==='Admin'&&!ISADMIN)return;const a=APPS.find(x=>x.n===e2.id);if(a)openApp(a)}else{const pool=CONFIG.games;const g=pool.find(x=>x.id===e2.id);if(g)playGame(g)}}catch(err){}})}setWS(cur)}
 (function(){let tries=0;const iv=setInterval(()=>{tries++;if(tries>40){clearInterval(iv);return}if(!document.querySelector('.scr.on')&&(SESSION||GUEST)&&document.querySelector('.win')===null){clearInterval(iv);restoreWS()}else if(!document.querySelector('.scr.on')&&(SESSION||GUEST)){clearInterval(iv)}},800)})();
 let _tx=0,_ty=0,_tt=null;
 addEventListener('touchstart',e=>{const t=e.changedTouches[0];_tx=t.clientX;_ty=t.clientY;_tt=e.target},{passive:true});
