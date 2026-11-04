@@ -1,0 +1,84 @@
+# Local full stack: backend API + static frontend + MongoDB.
+#   docker compose up --build
+#   API:      http://localhost:3000  (docs at /api-docs)
+#   Frontend: http://localhost:8080
+#
+# Postgres is opt-in:  docker compose --profile postgres up
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: the-maze-game-backend:local
+    container_name: maze-game-backend
+    restart: unless-stopped
+    ports:
+      - '${PORT:-3000}:3000'
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      HOST: 0.0.0.0
+      DB_DRIVER: ${DB_DRIVER:-mongo}
+      MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017}
+      MONGODB_DB: ${MONGODB_DB:-maze-game}
+      JWT_SECRET: ${JWT_SECRET:-dev-insecure-change-me}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - maze-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: the-maze-game-frontend:local
+    container_name: maze-game-frontend
+    restart: unless-stopped
+    ports:
+      - '${FRONTEND_PORT:-8080}:80'
+    networks:
+      - maze-net
+
+  mongo:
+    image: mongo:7
+    container_name: maze-game-mongo
+    restart: unless-stopped
+    ports:
+      - '${MONGO_PORT:-27017}:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - maze-net
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Opt-in PostgreSQL (DB_DRIVER=postgres). Start with: --profile postgres
+  postgres:
+    image: postgres:16-alpine
+    container_name: maze-game-postgres
+    profiles: ['postgres']
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-maze_game}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./server/database/schema-game.sql:/docker-entrypoint-initdb.d/10-schema-game.sql:ro
+    networks:
+      - maze-net
+
+volumes:
+  mongo-data:
+  postgres-data:
+
+networks:
+  maze-net:
+    driver: bridge

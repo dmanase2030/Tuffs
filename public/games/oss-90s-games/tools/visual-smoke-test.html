@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>90s Games :: Visual Smoke Test</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --panel: #131a2b;
+    --panel-2: #1b243a;
+    --text: #e8ecf5;
+    --muted: #8a93a8;
+    --pass: #3ad29f;
+    --warn: #ffb454;
+    --bad: #ff6b6b;
+    --info: #6ab7ff;
+    --grid: #2a3450;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+  }
+  header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--grid);
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+  }
+  header .sub {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  header .controls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  button {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--grid);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button:hover { background: #243150; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  main {
+    display: grid;
+    grid-template-columns: 820px 1fr;
+    gap: 14px;
+    padding: 14px;
+  }
+  #stage {
+    background: var(--panel);
+    border: 1px solid var(--grid);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  #stageInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  #stageInfo .name { color: var(--text); font-weight: 600; font-size: 14px; }
+  iframe {
+    width: 800px;
+    height: 600px;
+    border: 1px solid var(--grid);
+    background: #000;
+    display: block;
+  }
+  #sidebar {
+    background: var(--panel);
+    border: 1px solid var(--grid);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 600px;
+  }
+  #progress {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  #counts {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    border: 1px solid var(--grid);
+    background: var(--panel-2);
+  }
+  .pill.pass { color: var(--pass); }
+  .pill.static { color: var(--warn); }
+  .pill.unresponsive { color: var(--bad); }
+  .pill.console_error { color: var(--bad); }
+  .pill.load_error { color: var(--bad); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  thead th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 500;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--grid);
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+  }
+  tbody td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #1d263c;
+    vertical-align: top;
+  }
+  tbody tr.current { background: #1f2a44; }
+  tbody td.status { font-weight: 600; }
+  td.status.PASS { color: var(--pass); }
+  td.status.STATIC { color: var(--warn); }
+  td.status.UNRESPONSIVE { color: var(--bad); }
+  td.status.CONSOLE_ERROR { color: var(--bad); }
+  td.status.LOAD_ERROR { color: var(--bad); }
+  td.status.PENDING { color: var(--muted); }
+  td.status.RUNNING { color: var(--info); }
+  #tableWrap {
+    flex: 1;
+    overflow: auto;
+    border: 1px solid var(--grid);
+    border-radius: 6px;
+  }
+  #jsonOut {
+    background: #07101c;
+    border: 1px solid var(--grid);
+    border-radius: 6px;
+    padding: 10px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    color: #cbd5e6;
+    max-height: 220px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .note {
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .err-snippet {
+    color: var(--bad);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Visual Smoke Test</h1>
+  <span class="sub" id="modeLabel">Loading...</span>
+  <div class="controls">
+    <button id="startBtn">Start</button>
+    <button id="stopBtn" disabled>Stop</button>
+    <button id="copyBtn">Copy JSON</button>
+    <button id="downloadBtn">Download JSON</button>
+  </div>
+</header>
+
+<main>
+  <section id="stage">
+    <div id="stageInfo">
+      <span class="name" id="currentName">(idle)</span>
+      <span id="currentPhase" class="note">awaiting start</span>
+    </div>
+    <iframe id="frame" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>
+  </section>
+
+  <aside id="sidebar">
+    <div id="progress">0 / 0 complete</div>
+    <div id="counts">
+      <span class="pill pass">PASS <b id="cnt-PASS">0</b></span>
+      <span class="pill static">STATIC <b id="cnt-STATIC">0</b></span>
+      <span class="pill unresponsive">UNRESPONSIVE <b id="cnt-UNRESPONSIVE">0</b></span>
+      <span class="pill console_error">CONSOLE_ERROR <b id="cnt-CONSOLE_ERROR">0</b></span>
+      <span class="pill load_error">LOAD_ERROR <b id="cnt-LOAD_ERROR">0</b></span>
+    </div>
+    <div id="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Game</th>
+            <th>Status</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <details>
+      <summary class="note">JSON report</summary>
+      <pre id="jsonOut">{}</pre>
+    </details>
+    <div class="note">
+      Append <code>?game=&lt;file.html&gt;</code> for single-game mode.
+      Tests run sequentially: load, wait 3s, hash, wait 2s, hash, simulate input,
+      wait 2s, hash. Iframe is sandboxed; same-origin is required for
+      <code>getImageData</code> to read canvas pixels.
+    </div>
+  </aside>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  // -- Game list ----------------------------------------------------------
+  // Full list of the 114 games in /games/. Kept in sync manually; if a game
+  // is added or removed, update this array.
+  var ALL_GAMES = [
+    "2048.html",
+    "8bit-quest.html",
+    "agar.html",
+    "apex-predator.html",
+    "arcade-classic.html",
+    "arcade-fever.html",
+    "asteroids.html",
+    "aurora-burst.html",
+    "aurora-dance.html",
+    "binary-blast.html",
+    "block-squad.html",
+    "bounce-palace.html",
+    "breakout.html",
+    "brick-blaster.html",
+    "bullet-hell.html",
+    "cartridge-dash.html",
+    "cassette-quest.html",
+    "chain-reaction.html",
+    "chip-tune-battle.html",
+    "chrono-jump.html",
+    "cipher-crack.html",
+    "code-runner.html",
+    "color-match.html",
+    "combo-master.html",
+    "crystal-dash.html",
+    "crystal-fusion.html",
+    "cyber-breach.html",
+    "cyber-rush.html",
+    "data-surge.html",
+    "digital-maze.html",
+    "earth-digger.html",
+    "earthquake-survival.html",
+    "echo-sync.html",
+    "eclipse-runner.html",
+    "fast-reflex.html",
+    "flappy-fall.html",
+    "flappy.html",
+    "flow-state.html",
+    "forest-guardian.html",
+    "frogger.html",
+    "frost-maze.html",
+    "gravity-ball.html",
+    "hanoi.html",
+    "hexagon-defense.html",
+    "inferno-dash.html",
+    "infinity-burst.html",
+    "jump-quest.html",
+    "laser-defender.html",
+    "laser-grid.html",
+    "lightning-strike.html",
+    "logic-gate.html",
+    "marble-run.html",
+    "math-marathon.html",
+    "matrix-trace.html",
+    "memory.html",
+    "meteor-strike.html",
+    "minesweeper.html",
+    "minimalist-zen.html",
+    "nature-collector.html",
+    "nebula-collector.html",
+    "neon-portal.html",
+    "neon-surge.html",
+    "nexus-blocks.html",
+    "nexus-painter.html",
+    "nova-strike.html",
+    "ocean-explorer.html",
+    "orbit-defender.html",
+    "pacman.html",
+    "phantom-path.html",
+    "ping-pong-2p.html",
+    "pixel-blast.html",
+    "pixel-painter.html",
+    "pixel-perfect.html",
+    "plasma-collector.html",
+    "pong.html",
+    "prism-match.html",
+    "pulse-beat.html",
+    "pulse-runner.html",
+    "puzzle-match.html",
+    "quake-runner.html",
+    "quantum-sync.html",
+    "quick-tap.html",
+    "resonance-grid.html",
+    "retro-racer.html",
+    "rhythm-master.html",
+    "rhythm-tap.html",
+    "riddle-realm.html",
+    "rotator.html",
+    "sequence-solver.html",
+    "shadow-dash.html",
+    "simon.html",
+    "sky-flyer.html",
+    "snake.html",
+    "sokoban.html",
+    "solar-flare.html",
+    "space-invaders.html",
+    "space-maze.html",
+    "spectrum-runner.html",
+    "surge-defender.html",
+    "synth-wave.html",
+    "tempest-surge.html",
+    "tetris.html",
+    "tidal-wave.html",
+    "time-racer.html",
+    "titan-clash.html",
+    "tornado-vortex.html",
+    "tsunami-escape.html",
+    "vaporwave-escape.html",
+    "velocity-zero.html",
+    "void-collector.html",
+    "void-escape.html",
+    "void-jumper.html",
+    "volcanic-eruption.html",
+    "whack-a-mole.html"
+  ];
+
+  // -- Config -------------------------------------------------------------
+  var IFRAME_W = 800;
+  var IFRAME_H = 600;
+  var INIT_WAIT_MS = 3000;       // wait after load before first hash
+  var SECOND_WAIT_MS = 2000;     // 3s + 2s = 5s total
+  var INPUT_WAIT_MS = 2000;      // 5s + 2s = 7s total
+  var LOAD_TIMEOUT_MS = 10000;   // max time we wait for iframe to fire load
+  var BASE_PATH = "../games/";   // relative to /tools/visual-smoke-test.html
+
+  // -- DOM refs -----------------------------------------------------------
+  var $frame = document.getElementById("frame");
+  var $startBtn = document.getElementById("startBtn");
+  var $stopBtn = document.getElementById("stopBtn");
+  var $copyBtn = document.getElementById("copyBtn");
+  var $downloadBtn = document.getElementById("downloadBtn");
+  var $modeLabel = document.getElementById("modeLabel");
+  var $currentName = document.getElementById("currentName");
+  var $currentPhase = document.getElementById("currentPhase");
+  var $progress = document.getElementById("progress");
+  var $rows = document.getElementById("rows");
+  var $jsonOut = document.getElementById("jsonOut");
+
+  // -- State --------------------------------------------------------------
+  var queue = [];
+  var results = [];
+  var stopRequested = false;
+  var running = false;
+
+  // Parse ?game=... for single-game mode.
+  var params = new URLSearchParams(window.location.search);
+  var singleGame = params.get("game");
+  if (singleGame) {
+    // Normalize: allow caller to pass "asteroids" or "asteroids.html".
+    if (singleGame.indexOf(".html") === -1) singleGame += ".html";
+    queue = [singleGame];
+    $modeLabel.textContent = "single-game mode: " + singleGame;
+  } else {
+    queue = ALL_GAMES.slice();
+    $modeLabel.textContent = "full sweep: " + queue.length + " games";
+  }
+
+  // Pre-populate table with PENDING rows.
+  for (var i = 0; i < queue.length; i++) {
+    addRow(i, queue[i], "PENDING", "");
+  }
+  updateProgress();
+
+  $startBtn.addEventListener("click", function () { runAll(); });
+  $stopBtn.addEventListener("click", function () {
+    stopRequested = true;
+    $currentPhase.textContent = "stop requested...";
+  });
+  $copyBtn.addEventListener("click", function () {
+    navigator.clipboard && navigator.clipboard.writeText(buildReportJSON());
+  });
+  $downloadBtn.addEventListener("click", function () {
+    var blob = new Blob([buildReportJSON()], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "smoke-test-report.json";
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  });
+
+  // -- Row helpers --------------------------------------------------------
+  function addRow(idx, name, status, notes) {
+    var tr = document.createElement("tr");
+    tr.id = "row-" + idx;
+    tr.innerHTML =
+      "<td>" + (idx + 1) + "</td>" +
+      "<td>" + escapeHtml(name) + "</td>" +
+      "<td class='status " + status + "'>" + status + "</td>" +
+      "<td>" + escapeHtml(notes) + "</td>";
+    $rows.appendChild(tr);
+  }
+  function updateRow(idx, status, notes, isCurrent) {
+    var tr = document.getElementById("row-" + idx);
+    if (!tr) return;
+    var cells = tr.children;
+    cells[2].className = "status " + status;
+    cells[2].textContent = status;
+    var noteCell = cells[3];
+    if (status === "CONSOLE_ERROR" || status === "LOAD_ERROR") {
+      noteCell.innerHTML = "<span class='err-snippet' title='" + escapeAttr(notes) + "'>" + escapeHtml(notes) + "</span>";
+    } else {
+      noteCell.textContent = notes || "";
+    }
+    if (isCurrent) tr.classList.add("current"); else tr.classList.remove("current");
+  }
+  function clearCurrentRow() {
+    var tr = document.querySelector("#rows tr.current");
+    if (tr) tr.classList.remove("current");
+  }
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c];
+    });
+  }
+  function escapeAttr(s) { return escapeHtml(s).replace(/'/g, "&#39;"); }
+
+  function updateProgress() {
+    var done = results.length;
+    $progress.textContent = done + " / " + queue.length + " complete";
+    var counts = { PASS: 0, STATIC: 0, UNRESPONSIVE: 0, CONSOLE_ERROR: 0, LOAD_ERROR: 0 };
+    for (var i = 0; i < results.length; i++) {
+      if (counts.hasOwnProperty(results[i].status)) counts[results[i].status]++;
+    }
+    Object.keys(counts).forEach(function (k) {
+      var el = document.getElementById("cnt-" + k);
+      if (el) el.textContent = counts[k];
+    });
+  }
+
+  function buildReportJSON() {
+    return JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      total: queue.length,
+      completed: results.length,
+      results: results
+    }, null, 2);
+  }
+
+  // -- Runner -------------------------------------------------------------
+  function runAll() {
+    if (running) return;
+    running = true;
+    stopRequested = false;
+    results = [];
+    $startBtn.disabled = true;
+    $stopBtn.disabled = false;
+    // Reset rows.
+    for (var i = 0; i < queue.length; i++) updateRow(i, "PENDING", "", false);
+    updateProgress();
+    nextGame(0);
+  }
+
+  function nextGame(idx) {
+    if (stopRequested || idx >= queue.length) {
+      running = false;
+      $startBtn.disabled = false;
+      $stopBtn.disabled = true;
+      $currentName.textContent = "(done)";
+      $currentPhase.textContent = stopRequested ? "stopped" : "all games complete";
+      clearCurrentRow();
+      $jsonOut.textContent = buildReportJSON();
+      return;
+    }
+    var name = queue[idx];
+    $currentName.textContent = name;
+    updateRow(idx, "RUNNING", "loading...", true);
+    runOne(name).then(function (result) {
+      result.index = idx;
+      result.game = name;
+      results.push(result);
+      updateRow(idx, result.status, result.notes, false);
+      updateProgress();
+      $jsonOut.textContent = buildReportJSON();
+      // Give the browser a beat to GC the iframe.
+      setTimeout(function () { nextGame(idx + 1); }, 100);
+    }).catch(function (err) {
+      results.push({
+        index: idx,
+        game: name,
+        status: "LOAD_ERROR",
+        notes: String(err && err.message || err),
+        hashes: [],
+        consoleErrors: []
+      });
+      updateRow(idx, "LOAD_ERROR", String(err && err.message || err), false);
+      updateProgress();
+      $jsonOut.textContent = buildReportJSON();
+      setTimeout(function () { nextGame(idx + 1); }, 100);
+    });
+  }
+
+  // -- Per-game test ------------------------------------------------------
+  function runOne(filename) {
+    return new Promise(function (resolve) {
+      var consoleErrors = [];
+      var loadFired = false;
+      var loadTimer = null;
+      var settled = false;
+
+      function finish(result) {
+        if (settled) return;
+        settled = true;
+        if (loadTimer) clearTimeout(loadTimer);
+        result.consoleErrors = consoleErrors.slice();
+        resolve(result);
+      }
+
+      // Wire up onload before changing src.
+      $frame.onload = function () {
+        loadFired = true;
+        try {
+          installErrorCapture($frame.contentWindow, consoleErrors);
+        } catch (e) {
+          consoleErrors.push("could not attach error capture: " + e.message);
+        }
+        runPhases(filename, $frame, consoleErrors, finish);
+      };
+
+      loadTimer = setTimeout(function () {
+        if (!loadFired) {
+          finish({
+            status: "LOAD_ERROR",
+            notes: "iframe load did not fire within " + LOAD_TIMEOUT_MS + "ms",
+            hashes: []
+          });
+        }
+      }, LOAD_TIMEOUT_MS);
+
+      // Set src to (re)load the game.
+      $frame.src = BASE_PATH + filename;
+    });
+  }
+
+  function installErrorCapture(win, sink) {
+    if (!win) return;
+    // window.onerror catches uncaught synchronous + parser errors.
+    win.addEventListener("error", function (ev) {
+      var msg = (ev && (ev.message || (ev.error && ev.error.message))) || "error event";
+      sink.push(String(msg).slice(0, 240));
+    });
+    win.addEventListener("unhandledrejection", function (ev) {
+      var reason = ev && (ev.reason && (ev.reason.message || ev.reason)) || "unhandledrejection";
+      sink.push(String(reason).slice(0, 240));
+    });
+    // Wrap console.error so games that log instead of throw still flag.
+    try {
+      var origErr = win.console && win.console.error;
+      if (origErr) {
+        win.console.error = function () {
+          var parts = [];
+          for (var i = 0; i < arguments.length; i++) {
+            var a = arguments[i];
+            parts.push(a && a.message ? a.message : String(a));
+          }
+          sink.push(parts.join(" ").slice(0, 240));
+          return origErr.apply(win.console, arguments);
+        };
+      }
+    } catch (e) { /* cross-origin or sealed console -- ignore */ }
+  }
+
+  function runPhases(filename, frame, consoleErrors, finish) {
+    setPhase("waiting for init (3s)");
+    setTimeout(function () {
+      var h1 = hashAllCanvases(frame);
+      setPhase("waiting for animation (2s)");
+      setTimeout(function () {
+        var h2 = hashAllCanvases(frame);
+        var sameAfter5 = sameHashes(h1, h2);
+        if (!sameAfter5) {
+          // Animated within 5s = healthy. Still report console errors if any.
+          var status = consoleErrors.length > 0 ? "CONSOLE_ERROR" : "PASS";
+          var notes = consoleErrors.length > 0 ? consoleErrors[0] : "animates within 5s";
+          finish({
+            status: status,
+            notes: notes,
+            hashes: [h1, h2]
+          });
+          return;
+        }
+        // No motion between 3s and 5s -- try injecting input.
+        setPhase("simulating input + 2s");
+        simulateInput(frame);
+        setTimeout(function () {
+          var h3 = hashAllCanvases(frame);
+          var sameAfter7 = sameHashes(h2, h3);
+          var status;
+          var notes;
+          if (sameAfter7) {
+            status = "UNRESPONSIVE";
+            notes = "no canvas change after input";
+          } else {
+            status = "STATIC";
+            notes = "static until input, then animated";
+          }
+          if (consoleErrors.length > 0) {
+            // Console errors take precedence as a more actionable signal.
+            status = "CONSOLE_ERROR";
+            notes = consoleErrors[0];
+          }
+          finish({
+            status: status,
+            notes: notes,
+            hashes: [h1, h2, h3]
+          });
+        }, INPUT_WAIT_MS);
+      }, SECOND_WAIT_MS);
+    }, INIT_WAIT_MS);
+  }
+
+  function setPhase(text) { $currentPhase.textContent = text; }
+
+  function sameHashes(a, b) {
+    if (!a || !b) return false;
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+
+  // -- Canvas pixel hashing -----------------------------------------------
+  // We sample every canvas in the iframe so games that use multiple layers
+  // (background + sprites + HUD) all count toward "did anything move".
+  function hashAllCanvases(frame) {
+    try {
+      var doc = frame.contentDocument;
+      if (!doc) return ["NO_DOC"];
+      var canvases = doc.querySelectorAll("canvas");
+      if (!canvases.length) return ["NO_CANVAS"];
+      var hashes = [];
+      for (var i = 0; i < canvases.length; i++) {
+        hashes.push(hashCanvas(canvases[i]));
+      }
+      return hashes;
+    } catch (e) {
+      return ["HASH_ERR:" + (e.message || e)];
+    }
+  }
+
+  function hashCanvas(canvas) {
+    try {
+      var w = canvas.width, h = canvas.height;
+      if (!w || !h) return "EMPTY";
+      var ctx = canvas.getContext("2d");
+      if (!ctx) return "NO2D";
+      // Sample a centered 200x150 region to keep hashing cheap and to skip
+      // any static border/letterbox decoration around the play field.
+      var sw = Math.min(200, w);
+      var sh = Math.min(150, h);
+      var sx = Math.floor((w - sw) / 2);
+      var sy = Math.floor((h - sh) / 2);
+      var data = ctx.getImageData(sx, sy, sw, sh).data;
+      // FNV-1a 32-bit over every 16th byte. Good enough to distinguish frames.
+      var hash = 2166136261;
+      for (var i = 0; i < data.length; i += 16) {
+        hash ^= data[i];
+        hash = (hash * 16777619) >>> 0;
+      }
+      return hash.toString(16) + ":" + w + "x" + h;
+    } catch (e) {
+      // Common cause: WebGL canvas with preserveDrawingBuffer=false will
+      // come back blank from getImageData on a 2d-context attempt. We still
+      // get a deterministic "EMPTY" hash, which is what we want.
+      return "READ_ERR:" + (e.message || e).toString().slice(0, 60);
+    }
+  }
+
+  // -- Input simulation ---------------------------------------------------
+  function simulateInput(frame) {
+    var win = frame.contentWindow;
+    var doc = frame.contentDocument;
+    if (!win || !doc) return;
+    var targets = [doc, doc.body, win];
+    var canvases = doc.querySelectorAll("canvas");
+    for (var i = 0; i < canvases.length; i++) targets.push(canvases[i]);
+
+    function fire(type, opts) {
+      try {
+        var ev = new win.KeyboardEvent(type, Object.assign({
+          bubbles: true,
+          cancelable: true
+        }, opts));
+        for (var t = 0; t < targets.length; t++) {
+          try { targets[t].dispatchEvent(ev); } catch (e) { /* ignore */ }
+        }
+      } catch (e) { /* cross-origin or no KeyboardEvent -- ignore */ }
+    }
+
+    fire("keydown", { key: "ArrowRight", code: "ArrowRight", keyCode: 39, which: 39 });
+    fire("keyup",   { key: "ArrowRight", code: "ArrowRight", keyCode: 39, which: 39 });
+    fire("keydown", { key: " ", code: "Space", keyCode: 32, which: 32 });
+    fire("keyup",   { key: " ", code: "Space", keyCode: 32, which: 32 });
+
+    // A click on the first canvas, in case the game uses pointer-to-start.
+    try {
+      if (canvases[0]) {
+        var rect = canvases[0].getBoundingClientRect();
+        var click = new win.MouseEvent("click", {
+          bubbles: true, cancelable: true,
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height / 2
+        });
+        canvases[0].dispatchEvent(click);
+      }
+    } catch (e) { /* ignore */ }
+  }
+})();
+</script>
+</body>
+</html>

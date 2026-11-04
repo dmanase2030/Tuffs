@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OSM 15 Puzzle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #4f4444;
+  font-family: "Amatic SC";
+  color: #fea;
+}
+
+a {
+  color: #fea;
+}
+
+#app, #board, .tile, .button, #attrib, #map-dialog, #help-dialog {
+  position: absolute;
+}
+
+#app {
+  transform-origin: 0 0;
+}
+
+.landscape #app,
+.landscape #map-dialog,
+.landscape #help-dialog {
+  width: 1268px;
+  height: 1096px;
+}
+.portrait #app,
+.portrait #map-dialog,
+.portrait #help-dialog {
+  width: 1096px;
+  height: 1268px;
+}
+
+#board {
+  width: 1048px;
+  height: 1048px;
+}
+.landscape #board {
+  top: 24px;
+  left: 148px;
+}
+.portrait #board {
+  top: 148px;
+  left: 24px;
+}
+
+.tile {
+  width: 256px;
+  height: 256px;
+  background-color: #fff;
+  box-shadow:
+    inset 8px 8px 16px #fff4,
+    inset -8px -8px 16px #0004,
+    inset 2px 2px 4px #fffc,
+    inset -2px -2px 4px #000c,
+    4px 4px 4px #000;
+  border-radius: 16px;
+  transition:
+    left 0.1s ease-out,
+    top  0.1s ease-out;
+  cursor: pointer;
+}
+
+.button {
+  width: 100px;
+  cursor: pointer;
+}
+
+#map-button {
+  top: 24px;
+  left: 24px;
+}
+.landscape #help-button {
+  top: 972px;
+  left: 24px;
+}
+.portrait #help-button {
+  top: 24px;
+  left: 972px;
+}
+
+#attrib {
+  width: 1048px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 24px;
+}
+.landscape #attrib {
+  top: 1072px;
+  left: 1220px;
+  transform-origin: 0 0;
+  transform: rotate(270deg);
+}
+.portrait #attrib {
+  left: 24px;
+  top: 1220px;
+  text-align: right;
+}
+
+#attrib, #attrib a {
+  font-weight: bold;
+}
+
+.dialog {
+  transition:
+    left 0.25s ease-out,
+    top  0.25s ease-out;
+  font-size: 48px;
+  background-color: #4f4444;
+}
+.landscape .dialog {
+  top: -1096px;
+  left: 0;
+}
+.portrait .dialog {
+  top: 0;
+  left: -1096px;
+}
+.dialog.visible {
+  top: 0;
+  left: 0;
+}
+@media (max-width: 720px) {
+  .dialog {
+    font-size: 72px;
+  }
+}
+
+#close-button {
+  transition:
+    left      0.25s ease-out,
+    top       0.25s ease-out,
+    transform 0.25s ease-out;
+}
+.landscape #close-button {
+  top: -124px;
+  left: 24px;
+}
+.portrait #close-button {
+  top: 24px;
+  left: -124px;
+}
+#close-button.visible {
+  top: 24px;
+  left: 24px;
+  transform: rotate(90deg);
+}
+
+.dialog strong {
+  margin-bottom: 24px;
+  font-size: 72px;
+}
+@media (max-width: 720px) {
+  .dialog strong {
+    font-size: 96px;
+  }
+}
+
+.dialog p {
+  margin: 24px 0 0 0;
+}
+
+#map-dialog {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+.landscape #map-dialog {
+  padding: 24px 72px 24px 148px;
+}
+.portrait #map-dialog {
+  padding: 148px 24px 72px 24px;
+}
+
+#map-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#map-list div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  margin-top: 8px;
+  padding: 16px;
+  width: 256px;
+  height: 128px;
+  border-radius: 16px;
+  text-align: center;
+  font-size: 56px;
+  line-height: 48px;
+  background-color: #fea2;
+  cursor: pointer;
+}
+
+#help-dialog {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#help-dialog > * {
+  width: 1048px;
+}
+
+.created {
+  font-size: 32px;
+}
+@media (max-width: 720px) {
+  .created {
+    font-size: 48px;
+  }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <img id="map-button"  class="button" src="icon-map.svg">
+  <img id="help-button" class="button" src="icon-help.svg">
+  <div id="board"></div>
+  <div id="attrib">Map tiles © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a></div>
+  <div id="map-dialog" class="dialog">
+    <strong>Choose Map</strong>
+    <div id="map-list"></div>
+  </div>
+  <div id="help-dialog" class="dialog">
+    <strong>OSM 15 Puzzle</strong>
+    <p>
+      This is the classic <a href="https://en.wikipedia.org/wiki/15_puzzle">15 puzzle</a>
+      game using standard <a href="https://www.openstreetmap.org">OpenStreetMap</a> tiles.
+      Solve the puzzle by sliding the pieces to create the original map image.
+    </p>
+    <p>
+      Move pieces by clicking or tapping on them.
+      If you have a keyboard, you may also use the arrow keys.</p>
+    <p class="created">
+      Created by <a href="https://en.osm.town/@seav">Eugene Alvin Villar</a> •
+      <a href="https://github.com/seav/osm-15-puzzle">Source code in GitHub</a>
+    </p>
+  </div>
+  <img id="close-button" class="button" src="icon-close.svg">
+</div>
+</body>
+<script>
+
+const PADDING        = 24;   // in pixels
+const TILE_WIDTH     = 256;  // in pixels
+const TILE_SPACING   = 8;    // in pixels
+const ATTRIB_HEIGHT  = 24;   // in pixels
+const ICON_SIZE      = 100;  // in pixels
+const TILES_PER_SIDE = 4;
+
+const MAPS = {
+  world    : { z0:  2, x0:      0, y0:      0, space: 'SE', title: 'World' },
+  europe   : { z0:  5, x0:     15, y0:      9, space: 'NE', title: 'Europe' },
+  asean    : { z0:  5, x0:     24, y0:     13, space: 'NE', title: 'Southeast Asia' },
+  aegean   : { z0:  7, x0:     71, y0:     47, space: 'NE', title: 'Aegean Sea' },
+  ireland  : { z0:  8, x0:    120, y0:     81, space: 'NW', title: 'Ireland' },
+  korea    : { z0:  8, x0:    217, y0:     98, space: 'NE', title: 'South Korea' },
+  tasmania : { z0:  8, x0:    230, y0:    159, space: 'SW', title: 'Tasmania' },
+  lesotho  : { z0:  9, x0:    294, y0:    298, space: 'NW', title: 'Lesotho' },
+  hawaii   : { z0: 10, x0:     68, y0:    453, space: 'NE', title: 'Hawai‘i'},
+  rio      : { z0: 12, x0:   1554, y0:   2314, space: 'SE', title: 'Rio de Janeiro' },
+  frisco   : { z0: 13, x0:   1308, y0:   3165, space: 'SE', title: 'San Francisco' },
+  barcelona: { z0: 14, x0:   8289, y0:   6118, space: 'SE', title: 'Barcelona' },
+  london   : { z0: 14, x0:   8185, y0:   5447, space: 'SE', title: 'London' },
+  schiphol : { z0: 14, x0:   8407, y0:   5387, space: 'SE', title: 'Schiphol [ams]' },
+  haneda   : { z0: 15, x0:  29105, y0:  12916, space: 'SW', title: 'Haneda [hnd]' },
+  paris    : { z0: 15, x0:  16596, y0:  11271, space: 'NW', title: 'Paris' },
+  pentagon : { z0: 18, x0:  74960, y0: 100305, space: 'SE', title: 'The Pentagon' },
+  moma     : { z0: 18, x0:  77212, y0:  98495, space: 'SE', title: 'MoMA New York City' },
+  shibuya  : { z0: 19, x0: 465597, y0: 206491, space: 'NE', title: 'Shibuya Station' },
+  stpeters : { z0: 19, x0: 280279, y0: 194814, space: 'NE', title: 'St. Peter’s Basilica' },
+};
+
+let AppDiv, BoardDiv, MapButton, HelpButton, MapDialog, MapList, HelpDialog, CloseButton;
+const TileDivs = [];
+const BoardState = [];
+const SpaceState = {};
+
+let IsSolved = false;
+let CanMove = false;
+
+const initApp = () => {
+
+  AppDiv      = document.getElementById('app');
+  BoardDiv    = document.getElementById('board');
+  MapButton   = document.getElementById('map-button');
+  HelpButton  = document.getElementById('help-button');
+  MapDialog   = document.getElementById('map-dialog');
+  MapList     = document.getElementById('map-list');
+  HelpDialog  = document.getElementById('help-dialog');
+  CloseButton = document.getElementById('close-button');
+
+  MapButton.onclick = () => {
+    CanMove = false;
+    MapDialog  .classList.add('visible');
+    CloseButton.classList.add('visible');
+  };
+
+  HelpButton.onclick = () => {
+    CanMove = false;
+    HelpDialog .classList.add('visible');
+    CloseButton.classList.add('visible');
+  };
+
+  CloseButton.onclick = closeDialogs;
+
+  relayoutApp();
+
+  populateMapList();
+
+  const hash = window.location.hash.replace('#', '')
+  generateMap(hash || undefined);
+};
+
+const relayoutApp = () => {
+
+  const isLandscape = window.innerWidth > window.innerHeight;
+
+  document.body.classList.add(isLandscape ? 'landscape' : 'portrait');
+
+  const boardWidth = (TILE_WIDTH * TILES_PER_SIDE) + (TILE_SPACING * (TILES_PER_SIDE - 1));
+  const appLength = boardWidth + ICON_SIZE + ATTRIB_HEIGHT + (PADDING * 4);
+  const appBreadth = boardWidth + (PADDING * 2);
+
+  if (isLandscape) {
+    const scale = window.innerHeight / appBreadth;
+    AppDiv.style.transform = `scale(${scale})`;
+    AppDiv.style.top = 0;
+    AppDiv.style.left = ((window.innerWidth - appLength * scale) / 2) + 'px';
+  }
+  else {
+    const scale = window.innerWidth / appBreadth;
+    AppDiv.style.transform = `scale(${scale})`;
+    AppDiv.style.top = ((window.innerHeight - appLength * scale) / 2) + 'px';
+    AppDiv.style.left = 0;
+  }
+};
+
+const populateMapList = () => {
+  Object.keys(MAPS).forEach(mapId => {
+    const map = document.createElement('div');
+    map.innerHTML = `<span>${MAPS[mapId].title}</span>`;
+    map.onclick = () => {
+      generateMap(mapId);
+      closeDialogs();
+    };
+    MapList.appendChild(map);
+  });
+};
+
+const generateMap = (mapId = 'world') => {
+
+  TileDivs.length = 0
+  BoardDiv.innerHTML = '';
+
+  window.location.hash = `#${mapId}`;
+
+  const map = MAPS[mapId];
+
+  for (let x = 0; x < TILES_PER_SIDE; x++) {
+    BoardState[x] = [];
+    for (let y = 0; y < TILES_PER_SIDE; y++) {
+
+      const spaceTest = `${x}/${y}/${map.space}`;
+      if (['0/0/NW', '3/0/NE', '0/3/SW', '3/3/SE'].includes(spaceTest)) {
+        SpaceState.currX = x;
+        SpaceState.currY = y;
+        continue;
+      }
+
+      const tile = document.createElement('div');
+      tile._origX = x;
+      tile._origY = y;
+      tile._currX = x;
+      tile._currY = y;
+      tile.classList.add('tile');
+      tile.style.backgroundImage = `url(https://tile.openstreetmap.org/${map.z0}/${map.x0 + x}/${map.y0 + y}.png)`;
+      tile.style.left = ((TILE_WIDTH + TILE_SPACING) * x) + 'px';
+      tile.style.top  = ((TILE_WIDTH + TILE_SPACING) * y) + 'px';
+
+      tile.onclick = handleTileClick;
+
+      BoardDiv.appendChild(tile);
+      TileDivs.push(tile);
+
+      BoardState[x][y] = tile;
+    }
+  }
+
+  scramble();
+
+  IsSolved = false;
+  CanMove = true;
+};
+
+const scramble = () => {
+
+  let iX = SpaceState.currX;
+  let iY = SpaceState.currY;
+  const positions = [];
+
+  for (let i = 0; i < 500; i++) {
+
+    const candidatePositions = [];
+    if (iX > 0)                  candidatePositions.push([iX - 1, iY]);
+    if (iX < TILES_PER_SIDE - 1) candidatePositions.push([iX + 1, iY]);
+    if (iY > 0)                  candidatePositions.push([iX, iY - 1]);
+    if (iY < TILES_PER_SIDE - 1) candidatePositions.push([iX, iY + 1]);
+
+    const position = candidatePositions[Math.floor(Math.random() * candidatePositions.length)];
+    positions.push(position);
+
+    iX = position[0];
+    iY = position[1];
+  }
+
+  positions.forEach(position => { swapTileWithSpace(...position) })
+};
+
+const swapTileWithSpace = (x, y) => {
+
+  let tile = BoardState[x][y]
+  BoardState[SpaceState.currX][SpaceState.currY] = tile;
+  BoardState[x][y] = null;
+  [SpaceState.currX, tile._currX] = [tile._currX, SpaceState.currX];
+  [SpaceState.currY, tile._currY] = [tile._currY, SpaceState.currY];
+
+  tile.style.left = ((TILE_WIDTH + TILE_SPACING) * tile._currX) + 'px';
+  tile.style.top  = ((TILE_WIDTH + TILE_SPACING) * tile._currY) + 'px';
+};
+
+const handleKeydown = (evt) => {
+
+  if (!CanMove && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(evt.code)) return;
+
+  // If space is at an edge and can't move opposite the pressed arrow key
+  if (
+    evt.code === 'ArrowLeft'  && SpaceState.currX === TILES_PER_SIDE - 1 ||
+    evt.code === 'ArrowRight' && SpaceState.currX === 0                  ||
+    evt.code === 'ArrowUp'    && SpaceState.currY === TILES_PER_SIDE - 1 ||
+    evt.code === 'ArrowDown'  && SpaceState.currY === 0
+  ) return;
+
+  let tileX, tileY;
+  switch (evt.code) {
+    case 'ArrowLeft':
+      tileX = SpaceState.currX + 1;
+      tileY = SpaceState.currY;
+      break;
+    case 'ArrowRight':
+      tileX = SpaceState.currX - 1;
+      tileY = SpaceState.currY;
+      break;
+    case 'ArrowUp':
+      tileX = SpaceState.currX;
+      tileY = SpaceState.currY + 1;
+      break;
+    case 'ArrowDown':
+      tileX = SpaceState.currX;
+      tileY = SpaceState.currY - 1;
+      break;
+    case 'Escape':
+      closeDialogs();
+      return;
+    default:
+      return;
+  }
+
+  swapTileWithSpace(tileX, tileY);
+
+  setTimeout(checkWin, 100);
+};
+
+const handleTileClick = (evt) => {
+
+  if (!CanMove) return;
+
+  tile = evt.currentTarget;
+
+  // Ignore clicks on tiles that are not on the same row or column as the space
+  if (tile._currX !== SpaceState.currX && tile._currY !== SpaceState.currY) return;
+
+  // Collect all positions between the space and the clicked tile
+  const positions = [];
+  const δx = Math.sign(tile._currX - SpaceState.currX);
+  const δy = Math.sign(tile._currY - SpaceState.currY);
+  let iX = SpaceState.currX;
+  let iY = SpaceState.currY;
+  do {
+    iX += δx;
+    iY += δy;
+    positions.push([iX, iY]);
+  } while (iX !== tile._currX || iY !== tile._currY);
+
+  positions.forEach(position => { swapTileWithSpace(...position) })
+
+  setTimeout(checkWin, 100);
+};
+
+const checkWin = () => {
+  const diff = TileDivs.reduce((acc, cur) => acc + (cur._currX === cur._origX ? 0 : 1) + (cur._currY === cur._origY ? 0 : 1), 0);
+  if (diff === 0) {
+
+    confetti({
+      particleCount: 500,
+      spread: 360,
+      scalar: 1.5,
+    });
+
+    IsSolved = true;
+    CanMove = false;
+  }
+};
+
+const closeDialogs = () => {
+  MapDialog  .classList.remove('visible');
+  HelpDialog .classList.remove('visible');
+  CloseButton.classList.remove('visible');
+  if (!IsSolved) CanMove = true;
+};
+
+window.onload = initApp;
+document.onkeydown = handleKeydown;
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+</html>

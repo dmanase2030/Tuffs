@@ -1,0 +1,13 @@
+language = "nodejs"
+run = "npm start"
+modules = ["nodejs-20"]
+
+[nix]
+packages = ["nodejs_latest", "sqlite"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[agent]
+expertMode = true

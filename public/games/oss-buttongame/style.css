@@ -1,0 +1,85 @@
+:root{
+    --header-height: 8vmin;
+    --footer-height: 7vmin;
+    --main-height: calc(100vh - var(--header-height) - var(--footer-height));
+    --rules-height: 9vmin;
+    --score-height: 3vmin;
+    --canvas-size: calc(min(80vw, var(--main-height) - var(--rules-height) - var(--score-height)));
+}
+
+.flex-horizontal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+.flex-vertical{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+body{
+    background-color: #f5f5f5;
+}
+header{
+    width: 100vw;
+    height: var(--header-height);
+}
+main{
+    width: 100vw;
+    height: var(--main-height);
+}
+footer{
+    width: 100vw;
+    height: var(--footer-height);
+}
+
+.header {
+    font-size: 5vmin;
+    font-family: 'Luminari', fantasy; 
+    font-weight: bold;
+    padding: 10px;
+  }
+  
+canvas {
+    border: 3px solid black;
+    height: 100%;
+    width: 100%;
+}
+.canvas-container{
+    height: var(--canvas-size);
+    width: var(--canvas-size);
+}
+#score {
+    height: var(--score-height);
+    font-size: 2.5vmin;
+    align-self: end;
+    margin-bottom: 1px;
+}
+ul{
+    margin: 0;
+}
+li{
+    font-size: 2vmin;
+}
+.rules{
+    height: var(--rules-height);
+    margin-top: 10px;
+}
+#footer-elements{
+    margin-top: 2vmin;
+    font-size: 2vmin;
+    justify-content: space-between;
+}
+#social-icons{
+    align-self: left;
+    margin-left: calc(50vw - var(--canvas-size)/2);
+}
+.icon{
+    margin: 3px;
+}
+#source-code{
+    margin-right:calc(50vw - var(--canvas-size)/2) ;
+}

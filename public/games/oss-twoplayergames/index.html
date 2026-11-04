@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game 2 Người - Bộ trò chơi đối kháng</title>
+  <meta name="description" content="76 trò chơi 2 người: cờ chiến thuật, đối kháng hành động, suy luận và may rủi. Chơi chung máy, đấu với máy (AI) hoặc online qua mã phòng. 76 two-player games: play locally, vs AI, or online." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="canonical" href="https://two-player-games-rnu3.onrender.com/" />
+  <meta name="theme-color" content="#211a12" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Game 2 Người" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <!-- Open Graph / chia sẻ mạng xã hội -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://two-player-games-rnu3.onrender.com/" />
+  <meta property="og:site_name" content="Game 2 Người" />
+  <meta property="og:title" content="Game 2 Người — 76 trò chơi đối kháng" />
+  <meta property="og:description" content="Cờ, hành động, suy luận, may rủi. Chơi chung máy, đấu AI hoặc online. 76 two-player games — local, vs AI or online." />
+  <meta property="og:image" content="https://two-player-games-rnu3.onrender.com/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Game 2 Người — 76 trò chơi đối kháng" />
+  <meta name="twitter:description" content="Cờ, hành động, suy luận, may rủi. Chơi chung máy, đấu AI hoặc online." />
+  <meta name="twitter:image" content="https://two-player-games-rnu3.onrender.com/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <button class="profile-chip" id="profileChip" data-i18n-title="profileTitle" title="Hồ sơ của bạn" aria-label="Mở hồ sơ của bạn">
+      <span class="chip-avatar" id="chipAvatar">🎮</span>
+      <span class="chip-name" id="chipName">Bạn</span>
+    </button>
+    <h1 class="logo" id="homeBtn">🎮 Game 2 Người</h1>
+    <p class="tagline" data-i18n="tagline">Chơi chung một máy hoặc online qua mạng</p>
+    <button class="sound-toggle lang-toggle" id="langToggle" data-i18n-title="langTitle" title="Đổi ngôn ngữ (Việt/Anh)" aria-label="Đổi ngôn ngữ">VI</button>
+    <button class="sound-toggle theme-toggle" id="themeToggle" data-i18n-title="themeTitle" title="Đổi giao diện sáng/tối" aria-label="Đổi giao diện sáng/tối">🌙</button>
+    <button class="sound-toggle accent-toggle" id="accentToggle" data-i18n-title="accentTitle" title="Đổi tông màu giao diện" aria-label="Đổi tông màu giao diện">🎨</button>
+    <button class="sound-toggle" id="soundToggle" data-i18n-title="soundTitle" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button>
+    <button class="install-btn hidden" id="installBtn" type="button" data-i18n="installApp" data-i18n-title="installTitle" title="Cài đặt ứng dụng" aria-label="Cài đặt ứng dụng vào màn hình chính">⬇ Cài app</button>
+  </header>
+
+  <main id="app">
+    <!-- Màn hình chọn game -->
+    <section id="menu" class="menu">
+      <div class="daily-banner hidden" id="dailyBanner"></div>
+      <div class="online-entry">
+        <div>
+          <h2 data-i18n="onlineHubH">🌐 Sảnh online</h2>
+          <p data-i18n="onlineHubP">Tạo phòng từ một game bất kỳ hoặc nhập mã phòng để tự vào đúng game mà chủ phòng đã tạo.</p>
+        </div>
+        <button class="btn primary" id="openOnlineHubBtn" data-i18n="openOnlineHub">Tạo / vào phòng</button>
+      </div>
+      <div class="browse">
+        <aside class="cat-sidebar" id="catSidebar"><!-- thể loại render bằng JS --></aside>
+        <div class="cat-content">
+          <div class="search-bar">
+            <span class="search-ic">🔎</span>
+            <input type="search" id="gameSearch" class="search-input" data-i18n-ph="searchPh" data-i18n-aria="searchAria" placeholder="Tìm trò chơi theo tên hoặc mô tả..." autocomplete="off" />
+          </div>
+          <div class="cat-head" id="catHead"><!-- tiêu đề + mô tả thể loại --></div>
+          <div class="list-controls">
+            <div class="filter-chips">
+              <button type="button" class="chip" id="chipOnline" data-i18n="chipOnline">🌐 Online</button>
+              <button type="button" class="chip" id="chipAI" data-i18n="chipAI">🤖 Đấu máy</button>
+            </div>
+            <label class="sort-wrap"><span data-i18n="sortLabel">Sắp xếp:</span>
+              <select class="option-select sort-select" id="sortSelect">
+                <option value="popular" data-i18n="sortPopular">Phổ biến</option>
+                <option value="az" data-i18n="sortAZ">Tên A→Z</option>
+                <option value="new" data-i18n="sortNew">Mới nhất</option>
+              </select>
+            </label>
+          </div>
+          <div class="game-section-grid" id="gameGrid"><!-- thẻ game render bằng JS --></div>
+          <button type="button" class="btn load-more hidden" id="loadMoreBtn" data-i18n="loadMore">Xem thêm</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trang hồ sơ / thống kê -->
+    <section id="profileView" class="profile-view hidden">
+      <button class="btn back-btn" id="profileBackBtn" data-i18n="backList">← Về danh sách</button>
+      <div class="profile-card">
+        <div class="profile-avatar" id="profileAvatar">🎮</div>
+        <div class="profile-id">
+          <label class="option-label" for="profileName" data-i18n="yourName">Tên của bạn</label>
+          <input id="profileName" class="player-name-input" maxlength="24" data-i18n-ph="namePh" placeholder="Nhập tên..." autocomplete="nickname" />
+          <div class="avatar-picker" id="avatarPicker"></div>
+        </div>
+      </div>
+
+      <!-- Tài khoản: đăng nhập để đồng bộ hồ sơ giữa các thiết bị -->
+      <div class="account-box" id="accountBox">
+        <div class="account-signedout" id="accountSignedOut">
+          <h3 class="profile-h account-h" data-i18n="accountH">☁️ Tài khoản &amp; đồng bộ</h3>
+          <p class="account-hint" data-i18n="accountHint">Đăng nhập để lưu hồ sơ, thống kê và thành tích trên nhiều thiết bị.</p>
+          <div class="account-form">
+            <input id="accUser" class="player-name-input" maxlength="24" autocomplete="username" data-i18n-ph="accUserPh" placeholder="Tên đăng nhập" />
+            <input id="accPass" class="player-name-input" type="password" maxlength="128" autocomplete="current-password" data-i18n-ph="accPassPh" placeholder="Mật khẩu" />
+            <div class="account-actions">
+              <button class="btn small primary" id="accLoginBtn" type="button" data-i18n="accLogin">Đăng nhập</button>
+              <button class="btn small" id="accRegisterBtn" type="button" data-i18n="accRegister">Đăng ký</button>
+            </div>
+            <div class="account-msg" id="accMsg" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="account-signedin hidden" id="accountSignedIn">
+          <h3 class="profile-h account-h" data-i18n="accountH">☁️ Tài khoản &amp; đồng bộ</h3>
+          <p class="account-status">
+            <span data-i18n="accSignedInAs">Đang đăng nhập:</span>
+            <strong id="accWho"></strong>
+          </p>
+          <div class="account-actions">
+            <button class="btn small" id="accSyncBtn" type="button" data-i18n="accSync">🔄 Đồng bộ ngay</button>
+            <button class="btn small danger" id="accLogoutBtn" type="button" data-i18n="accLogout">Đăng xuất</button>
+          </div>
+          <div class="account-msg" id="accMsg2" role="status" aria-live="polite"></div>
+          <p class="account-status account-elo hidden" id="accEloRow">
+            <span data-i18n="accYourElo">ELO của bạn:</span>
+            <strong id="accElo">—</strong>
+          </p>
+        </div>
+      </div>
+
+      <!-- Bảng xếp hạng online (ELO toàn cục) -->
+      <div class="lb-box" id="lbBox">
+        <h3 class="profile-h" data-i18n="lbTitle">🌐 Bảng xếp hạng online</h3>
+        <p class="account-hint" data-i18n="lbHint">Xếp hạng theo ELO từ các ván online giữa những người đã đăng nhập.</p>
+        <div class="lb-controls">
+          <select class="option-select" id="lbGameSelect"></select>
+          <button class="btn small" id="lbRefreshBtn" type="button" data-i18n="lbRefresh">🔄 Làm mới</button>
+        </div>
+        <div class="lb-list" id="lbList"></div>
+      </div>
+
+      <div class="profile-stats" id="profileStats"></div>
+      <h3 class="profile-h" data-i18n="leaderboardH">🏆 Bảng xếp hạng game của bạn</h3>
+      <div class="lead-list" id="leadList"></div>
+      <h3 class="profile-h" data-i18n="activityH">📊 Hoạt động 14 ngày gần đây</h3>
+      <div class="activity-chart" id="activityChart"></div>
+      <h3 class="profile-h" data-i18n="settingsH">⚙️ Cài đặt</h3>
+      <div class="settings-box">
+        <label class="set-row">
+          <span data-i18n="volume">🔊 Âm lượng</span>
+          <input type="range" id="volRange" min="0" max="100" step="5" />
+        </label>
+        <label class="set-row set-switch">
+          <span data-i18n="sfx">🎚️ Hiệu ứng âm thanh</span>
+          <input type="checkbox" id="sfxToggle" />
+        </label>
+        <label class="set-row set-switch">
+          <span data-i18n="music">🎵 Nhạc nền</span>
+          <input type="checkbox" id="musicToggle" />
+        </label>
+        <label class="set-row">
+          <span data-i18n="replayTour">🧭 Xem lại hướng dẫn</span>
+          <button class="btn small" id="replayTourBtn" type="button" data-i18n="replayTourBtn">▶ Bắt đầu</button>
+        </label>
+        <label class="set-row">
+          <span data-i18n="dataManage">💾 Dữ liệu của tôi</span>
+          <span class="data-btns">
+            <button class="btn small" id="exportDataBtn" type="button" data-i18n="exportData">⬇ Xuất</button>
+            <button class="btn small" id="importDataBtn" type="button" data-i18n="importData">⬆ Nhập</button>
+            <button class="btn small danger" id="clearDataBtn" type="button" data-i18n="clearData">🗑 Xóa</button>
+            <input type="file" id="importDataFile" accept="application/json,.json" hidden />
+          </span>
+        </label>
+      </div>
+      <h3 class="profile-h" data-i18n="achievementsH">🏅 Thành tích</h3>
+      <div class="ach-grid" id="achGrid"></div>
+      <h3 class="profile-h" data-i18n="historyH">📜 Lịch sử ván đấu</h3>
+      <div class="hist-filters">
+        <select class="option-select" id="histGameFilter"></select>
+        <select class="option-select" id="histModeFilter">
+          <option value="" data-i18n="filterAllModes">Tất cả chế độ</option>
+          <option value="local" data-i18n="filterLocal">👥 Chung máy</option>
+          <option value="ai" data-i18n="filterAI">🤖 Đấu máy</option>
+          <option value="online" data-i18n="filterOnline">🌐 Online</option>
+        </select>
+      </div>
+      <div class="hist-list" id="histList"></div>
+    </section>
+
+    <!-- Trang chi tiết game -->
+    <section id="detailView" class="detail-view hidden">
+      <button class="btn back-btn" id="detailBackBtn" data-i18n="backList">← Về danh sách</button>
+      <div class="detail-card">
+        <div class="detail-poster" id="detailPoster"><!-- poster --></div>
+        <div class="detail-info">
+          <h2 class="detail-title" id="detailTitle"></h2>
+          <div class="detail-badges" id="detailBadges"></div>
+          <p class="detail-desc" id="detailDesc"></p>
+          <div class="detail-stats" id="detailStats"></div>
+          <button class="btn primary detail-play" id="detailPlayBtn" data-i18n="playNow">▶ Chơi ngay</button>
+        </div>
+      </div>
+      <div class="detail-howto">
+        <h3 data-i18n="howToH">📖 Cách chơi</h3>
+        <ol id="detailHowto"></ol>
+      </div>
+    </section>
+
+    <!-- Chọn chế độ chơi -->
+    <section id="modeView" class="mode-view hidden">
+      <button class="btn back-btn" id="modeBackBtn" data-i18n="backMenu">← Về menu</button>
+      <h2 class="mode-title" id="modeTitle"></h2>
+      <div class="options-panel hidden" id="optionsPanel">
+        <h3 class="options-title" data-i18n="optionsTitle">⚙️ Tùy chỉnh ván chơi</h3>
+        <div class="options-list" id="optionsList"></div>
+      </div>
+      <div class="bestof-row">
+        <label class="option-label" for="bestOfSelect" data-i18n="bestOfLabel">🏆 Thể thức (chung máy / đấu máy)</label>
+        <select class="option-select bestof-select" id="bestOfSelect">
+          <option value="1" data-i18n="bestOfOff">Một ván</option>
+          <option value="3" data-i18n="bestOf3">Đấu 3 ván (thắng 2)</option>
+          <option value="5" data-i18n="bestOf5">Đấu 5 ván (thắng 3)</option>
+          <option value="7" data-i18n="bestOf7">Đấu 7 ván (thắng 4)</option>
+        </select>
+      </div>
+      <div class="mode-cards">
+        <div class="mode-card" id="modeLocal">
+          <div class="mode-icon mode-icon-local" aria-hidden="true"></div>
+          <h3 data-i18n="modeLocalH">Chơi chung máy</h3>
+          <p data-i18n="modeLocalP">Hai người luân phiên trên cùng một thiết bị.</p>
+        </div>
+        <div class="mode-card" id="modeAI">
+          <div class="mode-icon mode-icon-ai" aria-hidden="true">🤖</div>
+          <h3 data-i18n="modeAIH">Đấu với máy</h3>
+          <p data-i18n="modeAIP">Chơi một mình với máy tính (AI). Bạn cầm quân đi trước.</p>
+          <select class="option-select ai-level-select" id="aiLevel" data-i18n-title="aiLevelTitle" title="Mức độ khó">
+            <option value="easy" data-i18n="aiEasy">🟢 Dễ</option>
+            <option value="normal" selected data-i18n="aiNormal">🟡 Vừa</option>
+            <option value="hard" data-i18n="aiHard">🔴 Khó</option>
+          </select>
+        </div>
+        <div class="mode-card" id="modeOnline">
+          <div class="mode-icon mode-icon-online" aria-hidden="true"></div>
+          <h3 data-i18n="modeOnlineH">Chơi online</h3>
+          <p data-i18n="modeOnlineP">Hai người ở hai máy khác nhau, kết nối qua mã phòng.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sảnh chờ online -->
+    <section id="lobbyView" class="lobby-view hidden">
+      <button class="btn back-btn" id="lobbyBackBtn" data-i18n="backReturn">← Quay lại</button>
+      <h2 class="mode-title" id="lobbyTitle"></h2>
+      <div class="room-state hidden" id="lobbyState" role="status" aria-live="polite"></div>
+      <div class="matchmaking" id="matchmaking">
+        <div class="mm-info">
+          <h3 data-i18n="mmH">⚡ Tìm trận nhanh</h3>
+          <p data-i18n="mmP">Chọn game rồi bấm tìm — hệ thống tự ghép bạn với một người đang chờ cùng game. Đăng nhập để tính ELO.</p>
+        </div>
+        <div class="mm-controls">
+          <select class="option-select mm-game-select" id="mmGameSelect"></select>
+          <button class="btn primary" id="mmFindBtn" type="button" data-i18n="mmFind">⚡ Tìm đối thủ</button>
+          <button class="btn hidden" id="mmCancelBtn" type="button" data-i18n="mmCancel">✕ Hủy tìm</button>
+        </div>
+        <div class="mm-status hidden" id="mmStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="lobby-cards">
+        <div class="lobby-panel">
+          <h3 data-i18n="createRoomH">Tạo phòng mới</h3>
+          <p data-i18n="createRoomP">Chọn game, chỉnh luật nếu có, rồi gửi mã phòng cho bạn bè.</p>
+          <label class="option-label" for="createNameInput" data-i18n="yourName">Tên của bạn</label>
+          <input class="player-name-input" id="createNameInput" maxlength="24"
+                 data-i18n-ph="egName1" placeholder="Ví dụ: Nam" autocomplete="nickname" />
+          <label class="option-label" for="lobbyGameSelect" data-i18n="gameToCreate">Game tạo phòng</label>
+          <select class="option-select lobby-game-select" id="lobbyGameSelect"></select>
+          <div class="options-panel lobby-options hidden" id="lobbyOptionsPanel">
+            <h3 class="options-title" data-i18n="optionsTitle">⚙️ Tùy chỉnh ván chơi</h3>
+            <div class="options-list" id="lobbyOptionsList"></div>
+          </div>
+          <label class="set-row set-switch lobby-public">
+            <span data-i18n="publicLabel">🌐 Phòng công khai (cho người khác tìm thấy)</span>
+            <input type="checkbox" id="publicToggle" checked />
+          </label>
+          <label class="option-label" for="createPwInput" data-i18n="roomPwLabel">🔒 Mật khẩu phòng (tùy chọn)</label>
+          <input class="player-name-input" id="createPwInput" maxlength="32" type="password"
+                 data-i18n-ph="roomPwPh" placeholder="Để trống nếu không cần mật khẩu" autocomplete="off" />
+          <button class="btn primary" id="createRoomBtn" data-i18n="createRoom">Tạo phòng</button>
+          <div class="room-code hidden" id="roomCodeBox">
+            <span class="room-code-label" data-i18n="yourRoomCode">Mã phòng của bạn</span>
+            <span class="room-code-val" id="roomCodeVal">----</span>
+            <button class="btn small" id="copyCodeBtn" data-i18n="copyCode">📋 Sao chép</button>
+            <button class="btn small" id="shareCodeBtn" data-i18n="shareCode">📤 Chia sẻ</button>
+            <p class="waiting" id="waitingMsg" data-i18n="waiting">Đang chờ người chơi thứ hai...</p>
+          </div>
+        </div>
+        <div class="lobby-panel">
+          <h3 data-i18n="joinRoomH">Vào phòng có sẵn</h3>
+          <p data-i18n="joinRoomP">Nhập mã phòng (4 chữ số) mà bạn của bạn gửi cho.</p>
+          <label class="option-label" for="joinNameInput" data-i18n="yourName">Tên của bạn</label>
+          <input class="player-name-input" id="joinNameInput" maxlength="24"
+                 data-i18n-ph="egName2" placeholder="Ví dụ: Linh" autocomplete="nickname" />
+          <input class="code-input" id="joinCodeInput" maxlength="4" inputmode="numeric" data-i18n-aria="joinCodeAria"
+                 placeholder="0000" />
+          <input class="player-name-input" id="joinPwInput" maxlength="32" type="password" data-i18n-aria="roomPwAria"
+                 data-i18n-ph="roomPwJoinPh" placeholder="Mật khẩu phòng (nếu có)" autocomplete="off" />
+          <button class="btn primary" id="joinRoomBtn" data-i18n="joinRoom">Vào phòng</button>
+          <p class="lobby-error" id="lobbyError" role="alert" aria-live="assertive"></p>
+          <div class="public-rooms">
+            <div class="public-rooms-head">
+              <span id="publicRoomsTitle">🌐 Phòng công khai đang mở</span>
+              <button class="btn small" id="refreshRoomsBtn" type="button" data-i18n="refresh">🔄 Làm mới</button>
+            </div>
+            <div class="public-rooms-list" id="publicRoomsList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Khu vực chơi game -->
+    <section id="gameView" class="game-view hidden">
+      <div class="game-bar">
+        <button class="btn back-btn" id="backBtn" data-i18n="exit">← Thoát</button>
+        <h2 class="game-title" id="gameTitle"></h2>
+        <div class="game-bar-right">
+          <button class="btn icon-btn" id="helpBtn" data-i18n-title="helpTitle" title="Hướng dẫn chơi" aria-label="Hướng dẫn chơi">?</button>
+          <button class="btn hidden" id="undoBtn" data-i18n="undo" data-i18n-title="undoTitle" title="Hoàn tác nước đi">↶ Hoàn tác</button>
+          <button class="btn" id="restartBtn" data-i18n="restart">↻ Chơi lại</button>
+        </div>
+      </div>
+
+      <div class="scoreboard" id="scoreboard">
+        <div class="score score-p1" id="scoreP1">
+          <span class="score-name" id="p1Name">Người chơi 1</span>
+          <span class="score-val" id="p1Score">0</span>
+        </div>
+        <div class="turn-banner" id="turnBanner">Lượt: Người chơi 1</div>
+        <div class="score score-p2" id="scoreP2">
+          <span class="score-name" id="p2Name">Người chơi 2</span>
+          <span class="score-val" id="p2Score">0</span>
+        </div>
+      </div>
+
+      <div class="match-badge hidden" id="matchBadge"></div>
+
+      <div class="online-badge hidden" id="onlineBadge"></div>
+      <div class="room-state online-room-state hidden" id="gameRoomState"></div>
+
+      <div class="board-wrap" id="boardWrap"><!-- bàn chơi render bằng JS --></div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+
+      <!-- Khung chat (chỉ hiện khi chơi online) -->
+      <div class="chat-panel hidden" id="chatPanel">
+        <div class="chat-header">
+          <span>💬 Trò chuyện</span>
+          <button class="chat-toggle" id="chatToggle" title="Thu gọn/Mở rộng" aria-label="Thu gọn hoặc mở rộng khung chat" aria-expanded="true">▾</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+          <div class="chat-messages" id="chatMessages"></div>
+          <form class="chat-input-row" id="chatForm">
+            <input class="chat-input" id="chatInput" maxlength="200" data-i18n-aria="chatInputAria"
+                   placeholder="Nhập tin nhắn..." autocomplete="off" />
+            <button class="btn small primary" type="submit" data-i18n="chatSend">Gửi</button>
+          </form>
+          <div class="chat-quick" id="chatQuick"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span id="footerText" data-i18n="footer">Made with ❤️ — chơi chung máy hoặc online</span>
+  </footer>
+
+  <!-- Màn hình chúc mừng chiến thắng -->
+  <div class="win-overlay hidden" id="winOverlay">
+    <canvas class="win-confetti" id="winConfetti"></canvas>
+    <div class="win-card" id="winCard">
+      <div class="win-emoji win-win" id="winEmoji" aria-hidden="true"></div>
+      <h2 class="win-title" id="winTitle">Chiến thắng!</h2>
+      <p class="win-sub" id="winSub"></p>
+      <div class="win-actions">
+        <button class="btn primary" id="winAgain" data-i18n="restart">↻ Chơi lại</button>
+        <button class="btn hidden" id="winReplay" data-i18n="winReplay">🎬 Xem lại ván</button>
+        <button class="btn" id="winShare" data-i18n="share">📤 Chia sẻ</button>
+        <button class="btn" id="winMenu" data-i18n="backMenu">← Về menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal hướng dẫn chơi -->
+  <div class="modal-overlay hidden" id="helpOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="modal-header">
+        <h3 id="helpTitle">Hướng dẫn</h3>
+        <button class="modal-close" id="helpClose" data-i18n-title="closeTitle" title="Đóng" aria-label="Đóng">✕</button>
+      </div>
+      <div class="modal-body" id="helpBody"></div>
+      <div class="modal-footer">
+        <button class="btn primary" id="helpOk" data-i18n="helpOk">Đã hiểu, chơi thôi!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay xem lại ván online -->
+  <div class="replay-overlay hidden" id="replayOverlay">
+    <div class="replay-modal" role="dialog" aria-modal="true" aria-labelledby="replayTitle">
+      <div class="replay-head">
+        <h3 id="replayTitle" data-i18n="replayTitle">🎬 Xem lại ván</h3>
+        <button class="modal-close" id="replayClose" data-i18n-title="closeTitle" title="Đóng" aria-label="Đóng">✕</button>
+      </div>
+      <div class="replay-board" id="replayBoard"></div>
+      <div class="replay-status" id="replayStatus"></div>
+      <div class="replay-controls">
+        <button class="btn small" id="replayStart" title="Về đầu" aria-label="Về đầu ván">⏮</button>
+        <button class="btn small" id="replayPrev" title="Lùi 1 nước" aria-label="Lùi một nước">◀</button>
+        <button class="btn primary" id="replayPlay" title="Phát/Dừng" aria-label="Phát hoặc dừng xem lại">▶ Phát</button>
+        <button class="btn small" id="replayNext" title="Tới 1 nước" aria-label="Tới một nước">▶|</button>
+        <span class="replay-progress" id="replayProgress">0/0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tour hướng dẫn lần đầu -->
+  <div class="tour-overlay hidden" id="tourOverlay">
+    <div class="tour-ring" id="tourRing"></div>
+    <div class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+      <h3 id="tourTitle"></h3>
+      <p id="tourText"></p>
+      <div class="tour-actions">
+        <span class="tour-step" id="tourStep"></span>
+        <button class="btn small" id="tourSkip" type="button" data-i18n="tourSkip">Bỏ qua</button>
+        <button class="btn small primary" id="tourNext" type="button">Tiếp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- registry PHẢI nạp trước các file game; defer = tải song song, vẫn giữ thứ tự thực thi -->
+  <script defer src="js/registry.js"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/stats-util.js"></script>
+  <script defer src="js/replay-store.js"></script>
+  <script defer src="js/games-i18n.js"></script>
+  <script defer src="js/sound.js"></script>
+  <script defer src="js/net.js"></script>
+  <script defer src="js/games/tictactoe.js"></script>
+  <script defer src="js/games/connectfour.js"></script>
+  <script defer src="js/games/reversi.js"></script>
+  <script defer src="js/games/memory.js"></script>
+  <script defer src="js/games/gomoku.js"></script>
+  <script defer src="js/games/dotsandboxes.js"></script>
+  <script defer src="js/games/nim.js"></script>
+  <script defer src="js/games/hex.js"></script>
+  <script defer src="js/games/mancala.js"></script>
+  <script defer src="js/games/orderchaos.js"></script>
+  <script defer src="js/games/checkers.js"></script>
+  <script defer src="js/games/isolation.js"></script>
+  <script defer src="js/games/laserchess.js"></script>
+  <script defer src="js/games/pathlockduel.js"></script>
+  <script defer src="js/games/hunterswarm.js"></script>
+  <script defer src="js/games/pong.js"></script>
+  <script defer src="js/games/poolbattle.js"></script>
+  <script defer src="js/games/slingshotbattle.js"></script>
+  <script defer src="js/games/timeloopduel.js"></script>
+  <script defer src="js/games/coopdefense.js"></script>
+  <script defer src="js/games/basedefenseduel.js"></script>
+  <script defer src="js/games/robotfactorywar.js"></script>
+  <script defer src="js/games/dungeonrival.js"></script>
+  <script defer src="js/games/battleship.js"></script>
+  <script defer src="js/games/seabattleplus.js"></script>
+  <script defer src="js/games/submarinehunt.js"></script>
+  <script defer src="js/games/hiddenassassin.js"></script>
+  <script defer src="js/games/trapmansion.js"></script>
+  <script defer src="js/games/pentago.js"></script>
+  <script defer src="js/games/morris.js"></script>
+  <script defer src="js/games/artillery.js"></script>
+  <script defer src="js/games/tankarena.js"></script>
+  <script defer src="js/games/dicebattle.js"></script>
+  <script defer src="js/games/territorywar.js"></script>
+  <script defer src="js/games/crystalconquest.js"></script>
+  <script defer src="js/games/minesweeper.js"></script>
+  <script defer src="js/games/bullscows.js"></script>
+  <script defer src="js/games/stratego.js"></script>
+  <script defer src="js/games/quoridor.js"></script>
+  <script defer src="js/games/auctionwar.js"></script>
+  <script defer src="js/games/pig.js"></script>
+  <script defer src="js/games/yahtzee.js"></script>
+  <script defer src="js/games/domino.js"></script>
+  <script defer src="js/games/noitu.js"></script>
+  <script defer src="js/games/hangman.js"></script>
+  <script defer src="js/games/treasure.js"></script>
+  <script defer src="js/games/fishingfrenzy.js"></script>
+  <script defer src="js/games/reactionduel.js"></script>
+  <script defer src="js/games/dashdodge.js"></script>
+  <script defer src="js/games/tugofwar.js"></script>
+  <script defer src="js/games/typingrace.js"></script>
+  <script defer src="js/games/snakesladders.js"></script>
+  <script defer src="js/games/liarsdice.js"></script>
+  <script defer src="js/games/codebreakerduel.js"></script>
+  <script defer src="js/games/blackjackduel.js"></script>
+  <script defer src="js/games/twentyquestions.js"></script>
+  <script defer src="js/games/wordduel.js"></script>
+  <script defer src="js/games/numberduel.js"></script>
+  <script defer src="js/games/prisonersdilemma.js"></script>
+  <script defer src="js/games/rpsplus.js"></script>
+  <script defer src="js/games/tycoon.js"></script>
+  <script defer src="js/games/colorwar.js"></script>
+  <script defer src="js/games/sim.js"></script>
+  <script defer src="js/games/minichess.js"></script>
+  <script defer src="js/games/sprouts.js"></script>
+  <script defer src="js/games/boxpush.js"></script>
+  <script defer src="js/games/mazecoop.js"></script>
+  <script defer src="js/games/defusebomb.js"></script>
+  <script defer src="js/games/ultimatettt.js"></script>
+  <script defer src="js/games/konane.js"></script>
+  <script defer src="js/games/hive.js"></script>
+  <script defer src="js/games/tak.js"></script>
+  <script defer src="js/games/kamisado.js"></script>
+  <script defer src="js/games/amazons.js"></script>
+  <script defer src="js/games/breakthrough.js"></script>
+  <script defer src="js/games/coganh.js"></script>
+  <script defer src="js/account.js"></script>
+  <script defer src="js/main.js"></script>
+  <script defer src="js/sw-register.js"></script>
+</body>
+</html>

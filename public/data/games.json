@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "source": "https://github.com/beforeblazergithub/BlazerGames",
- "sourceNote": "Catalog entries were derived from the BlazerGames repository index and on-disk game directories, plus self-hosted NettleWeb HTML5 games (folders prefixed nw-). Only games with local files in this repository are listed (self-hosted only, per project direction); external CDN entries from NettleWeb/Interstellar/GameMonetize were removed. Flash and DOS entries from the NettleWeb repository were never included: they live inside a 4.4 GB chunk archive that is not practical to self-host.",
+ "sourceNote": "Catalog entries were derived from the BlazerGames repository index and on-disk game directories, plus self-hosted NettleWeb HTML5 games (folders prefixed nw-). Only games with local files in this repository are listed (self-hosted only, per project direction); external CDN entries from NettleWeb/Interstellar/GameMonetize were removed. Flash and DOS entries from the NettleWeb repository were never included: they live inside a 4.4 GB chunk archive that is not practical to self-host. Plus 85 open-source HTML5 games imported from GitHub repositories (ids prefixed oss-) under permissive licenses (MIT, Apache-2.0, BSD, CC0, GPL, MPL); upstream LICENSE files are included in each game folder.",
  "verification": {
   "entryPoint": "All local entry points verified on disk by scripts/verify-catalog.js. External (nwx-) entries point at third-party servers and are validated as URL format only.",
   "manual": "Not every game has been manually played end-to-end. Playability beyond page load is not guaranteed; see README.",
@@ -9,21 +9,24 @@
  },
  "games": [
   {
-   "id": "tuffclient",
-   "title": "Tuff Client",
-   "entry": "games/tuffclient/index.html",
-   "thumb": "images/thumbs/tuffclient.svg",
-   "category": "Sandbox",
-   "external": false,
-   "featured": false,
+   "id": "nw-l75mvok9",
+   "slug": "nw-l75mvok9",
+   "title": "1",
+   "entry": "games/nw-l75mvok9/index.html",
+   "thumb": "images/thumbs/nw-l75mvok9.jpg",
+   "category": "Puzzle",
    "license": {
-    "status": "unlicensed",
-    "note": "Tuffs own client code, part of this repository (no separate license file)."
+    "status": "unresolved",
+    "note": "Third-party game redistributed by the NettleWeb repository (github.com/BlueDonuts/unblocked-games, MIT for its software). No permission terms for the game itself."
    },
+   "source": "NettleWeb",
+   "knownDependencies": [],
    "verified": {
     "entryPoint": true,
-    "manualPlay": "n/a"
-   }
+    "manualPlay": "no"
+   },
+   "featured": false,
+   "external": false
   },
   {
    "id": "1v1lol",
@@ -67,239 +70,24 @@
    "featured": true
   },
   {
-   "id": "bob-the-robber-2",
-   "slug": "bob-the-robber-2",
-   "title": "Bob the Robber 2",
-   "entry": "games/bob-the-robber-2/index.html",
-   "thumb": "images/thumbs/bob-the-robber-2.png",
-   "category": "Stealth",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party GameDistribution build; @source.txt in game dir cites html5.gamedistribution.com."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "drive-mad",
-   "slug": "drive-mad",
-   "title": "Drive Mad",
-   "entry": "games/drive-mad/index.html",
-   "thumb": "images/thumbs/drive-mad.jpg",
-   "category": "Driving",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [
-    "Local GameMonetize ad script (Jump_Gamemonetize.js)"
-   ],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": false
-  },
-  {
-   "id": "moto-x3m",
-   "slug": "moto-x3m",
-   "title": "Moto X3M",
-   "entry": "games/moto-x3m/index.html",
-   "thumb": "images/thumbs/moto-x3m.jpg",
-   "category": "Racing",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "motox3m2",
-   "slug": "motox3m2",
-   "title": "Moto X3M 2",
-   "entry": "games/motox3m2/index.html",
-   "thumb": "images/thumbs/motox3m2.jpg",
-   "category": "Racing",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [
-    "External ad SDKs: imasdk.googleapis.com, pagead2.googlesyndication.com (game may attempt ad loading)"
-   ],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": false
-  },
-  {
-   "id": "retro-bowl",
-   "slug": "retro-bowl",
-   "title": "Retro Bowl",
-   "entry": "games/retro-bowl/index.html",
-   "thumb": "images/thumbs/retro-bowl.jpg",
-   "category": "Sports",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "slope",
-   "slug": "slope",
-   "title": "Slope",
-   "entry": "games/slope/index.html",
-   "thumb": "images/thumbs/slope.jpg",
+   "id": "oss-2d-breakout-web-browser-game",
+   "slug": "oss-2d-breakout-web-browser-game",
+   "title": "2d Breakout Web Browser Game",
+   "entry": "games/oss-2d-breakout-web-browser-game/index.html",
+   "thumb": "images/thumbs/oss-2d-breakout-web-browser-game.svg",
    "category": "Arcade",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party Unity WebGL build."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "vex3",
-   "slug": "vex3",
-   "title": "Vex 3",
-   "entry": "games/vex3/index.html",
-   "thumb": "images/thumbs/vex3.jpg",
-   "category": "Platformer",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "vex4",
-   "slug": "vex4",
-   "title": "Vex 4",
-   "entry": "games/vex4/index.html",
-   "thumb": "images/thumbs/vex4.jpg",
-   "category": "Platformer",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [
-    "External analytics: googletagmanager (gtag)"
-   ],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "vex5",
-   "slug": "vex5",
-   "title": "Vex 5",
-   "entry": "games/vex5/index.html",
-   "thumb": "images/thumbs/vex5.jpg",
-   "category": "Platformer",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game; includes a sitelock config (json/sitelock.json) from the original distributor - if the game refuses to run on your domain, that file is the reason."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "vex6",
-   "slug": "vex6",
-   "title": "Vex 6",
-   "entry": "games/vex6/index.html",
-   "thumb": "images/thumbs/vex6.jpeg",
-   "category": "Platformer",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party game."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "vex7",
-   "slug": "vex7",
-   "title": "Vex 7",
-   "entry": "games/vex7/index.html",
-   "thumb": "images/thumbs/vex7.jpeg",
-   "category": "Platformer",
-   "license": {
-    "status": "unresolved",
-    "note": "No license file in source repository. Third-party GameDistribution build; @source.txt in game dir cites html5.gamedistribution.com."
-   },
-   "source": "BlazerGames",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "partial"
-   },
-   "featured": true
-  },
-  {
-   "id": "nw-l75mvok9",
-   "slug": "nw-l75mvok9",
-   "title": "1",
-   "entry": "games/nw-l75mvok9/index.html",
-   "thumb": "images/thumbs/nw-l75mvok9.jpg",
-   "category": "Puzzle",
-   "license": {
-    "status": "unresolved",
-    "note": "Third-party game redistributed by the NettleWeb repository (github.com/BlueDonuts/unblocked-games, MIT for its software). No permission terms for the game itself."
-   },
-   "source": "NettleWeb",
-   "knownDependencies": [],
-   "verified": {
-    "entryPoint": true,
-    "manualPlay": "no"
-   },
+   "external": false,
    "featured": false,
-   "external": false
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/wlodpawlowski/2d-breakout-web-browser-game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: wlodpawlowski/2d-breakout-web-browser-game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-lcgyaqgk",
@@ -320,6 +108,26 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-90s-games",
+   "slug": "oss-90s-games",
+   "title": "90s Games",
+   "entry": "games/oss-90s-games/index.html",
+   "thumb": "images/thumbs/oss-90s-games.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/prateek121/90s-games (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: prateek121/90s-games",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m3yuq5xy",
@@ -360,6 +168,26 @@
    },
    "featured": true,
    "external": false
+  },
+  {
+   "id": "oss-antipacman",
+   "slug": "oss-antipacman",
+   "title": "Anti Pac Man",
+   "entry": "games/oss-antipacman/index.html",
+   "thumb": "images/thumbs/oss-antipacman.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/vmikhav/AntiPacMan (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: vmikhav/AntiPacMan",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-lgd2488r",
@@ -420,6 +248,26 @@
    },
    "featured": true,
    "external": false
+  },
+  {
+   "id": "oss-binding-of-isaac-webgame",
+   "slug": "oss-binding-of-isaac-webgame",
+   "title": "Binding Of Isaac Webgame",
+   "entry": "games/oss-binding-of-isaac-webgame/index.html",
+   "thumb": "images/thumbs/oss-binding-of-isaac-webgame.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/liyupi/binding-of-isaac-webgame (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: liyupi/binding-of-isaac-webgame",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m3yu4jat",
@@ -522,6 +370,65 @@
    "external": false
   },
   {
+   "id": "bob-the-robber-2",
+   "slug": "bob-the-robber-2",
+   "title": "Bob the Robber 2",
+   "entry": "games/bob-the-robber-2/index.html",
+   "thumb": "images/thumbs/bob-the-robber-2.png",
+   "category": "Stealth",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party GameDistribution build; @source.txt in game dir cites html5.gamedistribution.com."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
+   "id": "oss-bounce",
+   "slug": "oss-bounce",
+   "title": "Bounce",
+   "entry": "games/oss-bounce/index.html",
+   "thumb": "images/thumbs/oss-bounce.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "BSD-3-Clause",
+    "note": "Open-source game from github.com/import-this/bounce (BSD-3-Clause). License file included in the game folder."
+   },
+   "source": "GitHub: import-this/bounce",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-bounceback",
+   "slug": "oss-bounceback",
+   "title": "Bounce Back",
+   "entry": "games/oss-bounceback/index.html",
+   "thumb": "images/thumbs/oss-bounceback.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-2.0",
+    "note": "Open-source game from github.com/KilledByAPixel/BounceBack (GPL-2.0). License file included in the game folder."
+   },
+   "source": "GitHub: KilledByAPixel/BounceBack",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m1sb1ixq",
    "slug": "nw-m1sb1ixq",
    "title": "Brainjar Blackjack",
@@ -542,6 +449,26 @@
    "external": false
   },
   {
+   "id": "oss-breakout-game",
+   "slug": "oss-breakout-game",
+   "title": "Breakout Game",
+   "entry": "games/oss-breakout-game/index.html",
+   "thumb": "images/thumbs/oss-breakout-game.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/DhanushNehru/breakout-game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: DhanushNehru/breakout-game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m2gpmjnm",
    "slug": "nw-m2gpmjnm",
    "title": "Browser",
@@ -560,6 +487,66 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-bullethell",
+   "slug": "oss-bullethell",
+   "title": "Bullethell",
+   "entry": "games/oss-bullethell/index.html",
+   "thumb": "images/thumbs/oss-bullethell.svg",
+   "category": "Shooter",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/selenebun/bullethell (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: selenebun/bullethell",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-buttongame",
+   "slug": "oss-buttongame",
+   "title": "Button Game",
+   "entry": "games/oss-buttongame/index.html",
+   "thumb": "images/thumbs/oss-buttongame.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/mk314k/buttonGame (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: mk314k/buttonGame",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-c4",
+   "slug": "oss-c4",
+   "title": "C4",
+   "entry": "games/oss-c4/index.html",
+   "thumb": "images/thumbs/oss-c4.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/kenrick95/c4 (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: kenrick95/c4",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m4lpswbs",
@@ -602,6 +589,66 @@
    "external": false
   },
   {
+   "id": "oss-chess",
+   "slug": "oss-chess",
+   "title": "Chess",
+   "entry": "games/oss-chess/chess.html",
+   "thumb": "images/thumbs/oss-chess.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/kbjorklu/chess (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: kbjorklu/chess",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-cla-go",
+   "slug": "oss-cla-go",
+   "title": "Cla Go",
+   "entry": "games/oss-cla-go/index.html",
+   "thumb": "images/thumbs/oss-cla-go.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Kwusv55/Cla-Go (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Kwusv55/Cla-Go",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-clash-of-space",
+   "slug": "oss-clash-of-space",
+   "title": "Clash Of Space",
+   "entry": "games/oss-clash-of-space/index.html",
+   "thumb": "images/thumbs/oss-clash-of-space.svg",
+   "category": "Shooter",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Rajspeaks/clash-of-space (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Rajspeaks/clash-of-space",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m46gstln",
    "slug": "nw-m46gstln",
    "title": "Connect Four",
@@ -642,6 +689,66 @@
    "external": false
   },
   {
+   "id": "oss-corona-market",
+   "slug": "oss-corona-market",
+   "title": "Corona Market",
+   "entry": "games/oss-corona-market/index.html",
+   "thumb": "images/thumbs/oss-corona-market.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/dordchn/corona-market (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: dordchn/corona-market",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-crayon-contraptions",
+   "slug": "oss-crayon-contraptions",
+   "title": "Crayon Contraptions",
+   "entry": "games/oss-crayon-contraptions/index.html",
+   "thumb": "images/thumbs/oss-crayon-contraptions.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/winchxyz/crayon-contraptions (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: winchxyz/crayon-contraptions",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-crazy-racing",
+   "slug": "oss-crazy-racing",
+   "title": "Crazy Racing",
+   "entry": "games/oss-crazy-racing/index.html",
+   "thumb": "images/thumbs/oss-crazy-racing.svg",
+   "category": "Racing",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/yuehaowang/crazy_racing (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: yuehaowang/crazy_racing",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m7179hal",
    "slug": "nw-m7179hal",
    "title": "CS:GO Clicker",
@@ -660,6 +767,46 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-csnake",
+   "slug": "oss-csnake",
+   "title": "Csnake",
+   "entry": "games/oss-csnake/index.html",
+   "thumb": "images/thumbs/oss-csnake.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/michelebucelli/csnake (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: michelebucelli/csnake",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-css-room-escape",
+   "slug": "oss-css-room-escape",
+   "title": "Css Room Escape",
+   "entry": "games/oss-css-room-escape/index.html",
+   "thumb": "images/thumbs/oss-css-room-escape.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/takaneichinose/css-room-escape (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: takaneichinose/css-room-escape",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-l7zlkbdp",
@@ -722,6 +869,26 @@
    "external": false
   },
   {
+   "id": "oss-dead-covid",
+   "slug": "oss-dead-covid",
+   "title": "Dead Covid",
+   "entry": "games/oss-dead-covid/index.html",
+   "thumb": "images/thumbs/oss-dead-covid.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/gabrieldejesus/dead-covid (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: gabrieldejesus/dead-covid",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-lrkjfe8b",
    "slug": "nw-lrkjfe8b",
    "title": "Dogeminer",
@@ -782,6 +949,47 @@
    "external": false
   },
   {
+   "id": "drive-mad",
+   "slug": "drive-mad",
+   "title": "Drive Mad",
+   "entry": "games/drive-mad/index.html",
+   "thumb": "images/thumbs/drive-mad.jpg",
+   "category": "Driving",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [
+    "Local GameMonetize ad script (Jump_Gamemonetize.js)"
+   ],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": false
+  },
+  {
+   "id": "oss-elematter-js13k",
+   "slug": "oss-elematter-js13k",
+   "title": "Elematter Js13k",
+   "entry": "games/oss-elematter-js13k/index.html",
+   "thumb": "images/thumbs/oss-elematter-js13k.svg",
+   "category": "Strategy",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/jackrugile/elematter-js13k (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: jackrugile/elematter-js13k",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m5pvoa60",
    "slug": "nw-m5pvoa60",
    "title": "Elemental One",
@@ -802,6 +1010,46 @@
    "external": false
   },
   {
+   "id": "oss-enmeshed",
+   "slug": "oss-enmeshed",
+   "title": "Enmeshed",
+   "entry": "games/oss-enmeshed/index.html",
+   "thumb": "images/thumbs/oss-enmeshed.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/mdbarr/enmeshed (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: mdbarr/enmeshed",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-euphrosine-wants-ten-dots",
+   "slug": "oss-euphrosine-wants-ten-dots",
+   "title": "Euphrosine Wants Ten Dots",
+   "entry": "games/oss-euphrosine-wants-ten-dots/index.html",
+   "thumb": "images/thumbs/oss-euphrosine-wants-ten-dots.svg",
+   "category": "Platformer",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Quinten/euphrosine-wants-ten-dots (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Quinten/euphrosine-wants-ten-dots",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m714rqsc",
    "slug": "nw-m714rqsc",
    "title": "ExtPrint3r",
@@ -820,6 +1068,86 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-factorishjs",
+   "slug": "oss-factorishjs",
+   "title": "Factorish JS",
+   "entry": "games/oss-factorishjs/FactorishJS.html",
+   "thumb": "images/thumbs/oss-factorishjs.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/msakuta/FactorishJS (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: msakuta/FactorishJS",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-factorishwasm",
+   "slug": "oss-factorishwasm",
+   "title": "Factorish Wasm",
+   "entry": "games/oss-factorishwasm/index.html",
+   "thumb": "images/thumbs/oss-factorishwasm.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/msakuta/FactorishWasm (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: msakuta/FactorishWasm",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-factors-game",
+   "slug": "oss-factors-game",
+   "title": "Factors Game",
+   "entry": "games/oss-factors-game/index.html",
+   "thumb": "images/thumbs/oss-factors-game.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/mnito/factors-game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: mnito/factors-game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-farmsim",
+   "slug": "oss-farmsim",
+   "title": "Farmsim",
+   "entry": "games/oss-farmsim/farmsim.html",
+   "thumb": "images/thumbs/oss-farmsim.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/msakuta/farmsim (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: msakuta/farmsim",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m2kpd27j",
@@ -862,6 +1190,26 @@
    "external": false
   },
   {
+   "id": "oss-frodos-quest",
+   "slug": "oss-frodos-quest",
+   "title": "Frodos Quest",
+   "entry": "games/oss-frodos-quest/index.html",
+   "thumb": "images/thumbs/oss-frodos-quest.svg",
+   "category": "RPG",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/olsen232/frodos-quest (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: olsen232/frodos-quest",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m60y81ig",
    "slug": "nw-m60y81ig",
    "title": "Geo Dash Lite",
@@ -880,6 +1228,26 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-getrickrolled",
+   "slug": "oss-getrickrolled",
+   "title": "Get Rick Rolled",
+   "entry": "games/oss-getrickrolled/index.html",
+   "thumb": "images/thumbs/oss-getrickrolled.svg",
+   "category": "Shooter",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "BSD-3-Clause",
+    "note": "Open-source game from github.com/grypesc/getRickRolled (BSD-3-Clause). License file included in the game folder."
+   },
+   "source": "GitHub: grypesc/getRickRolled",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m6rzefh8",
@@ -920,6 +1288,46 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-grow-your-garden",
+   "slug": "oss-grow-your-garden",
+   "title": "Grow Your Garden",
+   "entry": "games/oss-grow-your-garden/index.html",
+   "thumb": "images/thumbs/oss-grow-your-garden.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Gmast2662/grow-your-garden (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Gmast2662/grow-your-garden",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-hangman-game",
+   "slug": "oss-hangman-game",
+   "title": "Hangman Game",
+   "entry": "games/oss-hangman-game/index.html",
+   "thumb": "images/thumbs/oss-hangman-game.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/abdoutech19/hangman-game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: abdoutech19/hangman-game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-lo84n1of",
@@ -1002,6 +1410,66 @@
    "external": false
   },
   {
+   "id": "oss-horse-racing-game-javascript",
+   "slug": "oss-horse-racing-game-javascript",
+   "title": "Horse Racing Game Java Script",
+   "entry": "games/oss-horse-racing-game-javascript/index.html",
+   "thumb": "images/thumbs/oss-horse-racing-game-javascript.svg",
+   "category": "Racing",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/fkitsantas/Horse-Racing-Game-JavaScript (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: fkitsantas/Horse-Racing-Game-JavaScript",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-html5-asteroids",
+   "slug": "oss-html5-asteroids",
+   "title": "HTML5 Asteroids",
+   "entry": "games/oss-html5-asteroids/index.html",
+   "thumb": "images/thumbs/oss-html5-asteroids.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/dmcinnes/HTML5-Asteroids (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: dmcinnes/HTML5-Asteroids",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-html5-space-invaders",
+   "slug": "oss-html5-space-invaders",
+   "title": "Html5 Space Invaders",
+   "entry": "games/oss-html5-space-invaders/index.html",
+   "thumb": "images/thumbs/oss-html5-space-invaders.svg",
+   "category": "Shooter",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/toivjon/html5-space-invaders (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: toivjon/html5-space-invaders",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-l9mknamd",
    "slug": "nw-l9mknamd",
    "title": "Infinite Mario",
@@ -1042,6 +1510,226 @@
    "external": false
   },
   {
+   "id": "oss-javascript-rock-paper-scissors",
+   "slug": "oss-javascript-rock-paper-scissors",
+   "title": "Javascript Rock Paper Scissors",
+   "entry": "games/oss-javascript-rock-paper-scissors/index.html",
+   "thumb": "images/thumbs/oss-javascript-rock-paper-scissors.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/milsaware/javascript-rock-paper-scissors (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: milsaware/javascript-rock-paper-scissors",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-javascript-roulette",
+   "slug": "oss-javascript-roulette",
+   "title": "Javascript Roulette",
+   "entry": "games/oss-javascript-roulette/index.html",
+   "thumb": "images/thumbs/oss-javascript-roulette.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/milsaware/javascript-roulette (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: milsaware/javascript-roulette",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-jogo-da-memoria",
+   "slug": "oss-jogo-da-memoria",
+   "title": "Jogo Da Memoria",
+   "entry": "games/oss-jogo-da-memoria/index.html",
+   "thumb": "images/thumbs/oss-jogo-da-memoria.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/machado001/Jogo-da-Memoria (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: machado001/Jogo-da-Memoria",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-jsshooter",
+   "slug": "oss-jsshooter",
+   "title": "Js Shooter",
+   "entry": "games/oss-jsshooter/index.html",
+   "thumb": "images/thumbs/oss-jsshooter.svg",
+   "category": "Shooter",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/AntonUden/jsShooter (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: AntonUden/jsShooter",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-js13k-2018",
+   "slug": "oss-js13k-2018",
+   "title": "Js13k 2018",
+   "entry": "games/oss-js13k-2018/index.html",
+   "thumb": "images/thumbs/oss-js13k-2018.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/picosonic/js13k-2018 (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: picosonic/js13k-2018",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-js13k-2020",
+   "slug": "oss-js13k-2020",
+   "title": "Js13k 2020",
+   "entry": "games/oss-js13k-2020/index.html",
+   "thumb": "images/thumbs/oss-js13k-2020.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/SalvatorePreviti/js13k-2020 (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: SalvatorePreviti/js13k-2020",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-js13k-2d",
+   "slug": "oss-js13k-2d",
+   "title": "Js13k 2d",
+   "entry": "games/oss-js13k-2d/index.html",
+   "thumb": "images/thumbs/oss-js13k-2d.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/kutuluk/js13k-2d (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: kutuluk/js13k-2d",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-js13k-lost-robot",
+   "slug": "oss-js13k-lost-robot",
+   "title": "Js13k Lost Robot",
+   "entry": "games/oss-js13k-lost-robot/index.html",
+   "thumb": "images/thumbs/oss-js13k-lost-robot.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Rayne/js13k-lost-robot (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Rayne/js13k-lost-robot",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-kaios-frogger",
+   "slug": "oss-kaios-frogger",
+   "title": "Kaios Frogger",
+   "entry": "games/oss-kaios-frogger/index.html",
+   "thumb": "images/thumbs/oss-kaios-frogger.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Tombarr/kaios-frogger (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Tombarr/kaios-frogger",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-keepyoursheep",
+   "slug": "oss-keepyoursheep",
+   "title": "Keep Your Sheep",
+   "entry": "games/oss-keepyoursheep/index.html",
+   "thumb": "images/thumbs/oss-keepyoursheep.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/vmikhav/keepYourSheep (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: vmikhav/keepYourSheep",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-ladderjs",
+   "slug": "oss-ladderjs",
+   "title": "Ladderjs",
+   "entry": "games/oss-ladderjs/index.html",
+   "thumb": "images/thumbs/oss-ladderjs.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/elliot-nelson/ladderjs (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: elliot-nelson/ladderjs",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m46gk5tw",
    "slug": "nw-m46gk5tw",
    "title": "Lights Out",
@@ -1060,6 +1748,66 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-linkit",
+   "slug": "oss-linkit",
+   "title": "Linkit",
+   "entry": "games/oss-linkit/index.html",
+   "thumb": "images/thumbs/oss-linkit.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/remarkablegames/linkit (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: remarkablegames/linkit",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-lost-in-a-space-odyssey",
+   "slug": "oss-lost-in-a-space-odyssey",
+   "title": "Lost In A Space Odyssey",
+   "entry": "games/oss-lost-in-a-space-odyssey/index.html",
+   "thumb": "images/thumbs/oss-lost-in-a-space-odyssey.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/mguinea/lost-in-a-space-odyssey (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: mguinea/lost-in-a-space-odyssey",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-maimai-restaurant-huiyan",
+   "slug": "oss-maimai-restaurant-huiyan",
+   "title": "Maimai Restaurant Huiyan",
+   "entry": "games/oss-maimai-restaurant-huiyan/index.html",
+   "thumb": "images/thumbs/oss-maimai-restaurant-huiyan.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Nothingsssss/maimai-restaurant-huiyan (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Nothingsssss/maimai-restaurant-huiyan",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m30r52dj",
@@ -1202,6 +1950,66 @@
    "external": false
   },
   {
+   "id": "oss-monkeywarp",
+   "slug": "oss-monkeywarp",
+   "title": "Monkey Warp",
+   "entry": "games/oss-monkeywarp/index.html",
+   "thumb": "images/thumbs/oss-monkeywarp.svg",
+   "category": "Platformer",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/cstoquer/MonkeyWarp (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: cstoquer/MonkeyWarp",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "moto-x3m",
+   "slug": "moto-x3m",
+   "title": "Moto X3M",
+   "entry": "games/moto-x3m/index.html",
+   "thumb": "images/thumbs/moto-x3m.jpg",
+   "category": "Racing",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
+   "id": "motox3m2",
+   "slug": "motox3m2",
+   "title": "Moto X3M 2",
+   "entry": "games/motox3m2/index.html",
+   "thumb": "images/thumbs/motox3m2.jpg",
+   "category": "Racing",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [
+    "External ad SDKs: imasdk.googleapis.com, pagead2.googlesyndication.com (game may attempt ad loading)"
+   ],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": false
+  },
+  {
    "id": "nw-m6osojhv",
    "slug": "nw-m6osojhv",
    "title": "n-gon",
@@ -1220,6 +2028,86 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-ns-shaft",
+   "slug": "oss-ns-shaft",
+   "title": "NS SHAFT",
+   "entry": "games/oss-ns-shaft/index.html",
+   "thumb": "images/thumbs/oss-ns-shaft.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "Apache-2.0",
+    "note": "Open-source game from github.com/iPel/NS-SHAFT (Apache-2.0). License file included in the game folder."
+   },
+   "source": "GitHub: iPel/NS-SHAFT",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-omega-meta-zero",
+   "slug": "oss-omega-meta-zero",
+   "title": "Omega Meta Zero",
+   "entry": "games/oss-omega-meta-zero/index.html",
+   "thumb": "images/thumbs/oss-omega-meta-zero.svg",
+   "category": "Idle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/veprogames/omega-meta-zero (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: veprogames/omega-meta-zero",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-openetg",
+   "slug": "oss-openetg",
+   "title": "Open Et G",
+   "entry": "games/oss-openetg/index.html",
+   "thumb": "images/thumbs/oss-openetg.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/serprex/openEtG (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: serprex/openEtG",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-osm-15-puzzle",
+   "slug": "oss-osm-15-puzzle",
+   "title": "Osm 15 Puzzle",
+   "entry": "games/oss-osm-15-puzzle/index.html",
+   "thumb": "images/thumbs/oss-osm-15-puzzle.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/seav/osm-15-puzzle (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: seav/osm-15-puzzle",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m6r92b5i",
@@ -1242,6 +2130,26 @@
    "external": false
   },
   {
+   "id": "oss-pacman",
+   "slug": "oss-pacman",
+   "title": "Pacman",
+   "entry": "games/oss-pacman/index.html",
+   "thumb": "images/thumbs/oss-pacman.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/mumuy/pacman (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: mumuy/pacman",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-lyrfj46j",
    "slug": "nw-lyrfj46j",
    "title": "Ping Pong",
@@ -1262,6 +2170,26 @@
    "external": false
   },
   {
+   "id": "oss-plank-puzzle-game",
+   "slug": "oss-plank-puzzle-game",
+   "title": "Plank Puzzle Game",
+   "entry": "games/oss-plank-puzzle-game/plank-puzzle.html",
+   "thumb": "images/thumbs/oss-plank-puzzle-game.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/cuixiping/plank-puzzle-game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: cuixiping/plank-puzzle-game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-lmn8r4jk",
    "slug": "nw-lmn8r4jk",
    "title": "Plants vs Zombies",
@@ -1280,6 +2208,26 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-plinksy",
+   "slug": "oss-plinksy",
+   "title": "Plinksy",
+   "entry": "games/oss-plinksy/index.html",
+   "thumb": "images/thumbs/oss-plinksy.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "Apache-2.0",
+    "note": "Open-source game from github.com/Saganaki22/Plinksy (Apache-2.0). License file included in the game folder."
+   },
+   "source": "GitHub: Saganaki22/Plinksy",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m46gk5tx",
@@ -1362,6 +2310,26 @@
    "external": false
   },
   {
+   "id": "oss-puzzle",
+   "slug": "oss-puzzle",
+   "title": "Puzzle",
+   "entry": "games/oss-puzzle/index.html",
+   "thumb": "images/thumbs/oss-puzzle.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/krishealty/puzzle (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: krishealty/puzzle",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m6s1kwh2",
    "slug": "nw-m6s1kwh2",
    "title": "PvZ: Free Edition",
@@ -1380,6 +2348,145 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-radius-raid-js13k",
+   "slug": "oss-radius-raid-js13k",
+   "title": "Radius Raid Js13k",
+   "entry": "games/oss-radius-raid-js13k/index.html",
+   "thumb": "images/thumbs/oss-radius-raid-js13k.svg",
+   "category": "Shooter",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/jackrugile/radius-raid-js13k (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: jackrugile/radius-raid-js13k",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-reldens",
+   "slug": "oss-reldens",
+   "title": "Reldens",
+   "entry": "games/oss-reldens/index.html",
+   "thumb": "images/thumbs/oss-reldens.svg",
+   "category": "Platformer",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/damian-pastorini/reldens (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: damian-pastorini/reldens",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "retro-bowl",
+   "slug": "retro-bowl",
+   "title": "Retro Bowl",
+   "entry": "games/retro-bowl/index.html",
+   "thumb": "images/thumbs/retro-bowl.jpg",
+   "category": "Sports",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
+   "id": "oss-rhine",
+   "slug": "oss-rhine",
+   "title": "Rhine",
+   "entry": "games/oss-rhine/index.html",
+   "thumb": "images/thumbs/oss-rhine.svg",
+   "category": "Strategy",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/SitanHuang/rhine (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: SitanHuang/rhine",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-river-raid-2k",
+   "slug": "oss-river-raid-2k",
+   "title": "River Raid 2k",
+   "entry": "games/oss-river-raid-2k/index.html",
+   "thumb": "images/thumbs/oss-river-raid-2k.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/joaoneto/river-raid-2k (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: joaoneto/river-raid-2k",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-road-fighter",
+   "slug": "oss-road-fighter",
+   "title": "Road Fighter",
+   "entry": "games/oss-road-fighter/index.html",
+   "thumb": "images/thumbs/oss-road-fighter.svg",
+   "category": "Action",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/pg07codes/road-fighter (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: pg07codes/road-fighter",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-rocket-game",
+   "slug": "oss-rocket-game",
+   "title": "Rocket Game",
+   "entry": "games/oss-rocket-game/index.html",
+   "thumb": "images/thumbs/oss-rocket-game.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/abhineetraj1/rocket-game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: abhineetraj1/rocket-game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-lj0xpunh",
@@ -1422,6 +2529,26 @@
    "external": false
   },
   {
+   "id": "oss-searchx",
+   "slug": "oss-searchx",
+   "title": "Searchx",
+   "entry": "games/oss-searchx/index.html",
+   "thumb": "images/thumbs/oss-searchx.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/zhangjikai/searchx (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: zhangjikai/searchx",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m5l97gyy",
    "slug": "nw-m5l97gyy",
    "title": "Shapez",
@@ -1440,6 +2567,65 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-shooter",
+   "slug": "oss-shooter",
+   "title": "Shooter",
+   "entry": "games/oss-shooter/index.html",
+   "thumb": "images/thumbs/oss-shooter.svg",
+   "category": "Shooter",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/liyasthomas/shooter (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: liyasthomas/shooter",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-skyhop",
+   "slug": "oss-skyhop",
+   "title": "Skyhop",
+   "entry": "games/oss-skyhop/index.html",
+   "thumb": "images/thumbs/oss-skyhop.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/evreniel/skyhop (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: evreniel/skyhop",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "slope",
+   "slug": "slope",
+   "title": "Slope",
+   "entry": "games/slope/index.html",
+   "thumb": "images/thumbs/slope.jpg",
+   "category": "Arcade",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party Unity WebGL build."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
   },
   {
    "id": "nw-m75b6rh3",
@@ -1542,6 +2728,26 @@
    "external": false
   },
   {
+   "id": "oss-solitairelib",
+   "slug": "oss-solitairelib",
+   "title": "Solitaire Lib",
+   "entry": "games/oss-solitairelib/index.html",
+   "thumb": "images/thumbs/oss-solitairelib.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/zzymyn/SolitaireLib (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: zzymyn/SolitaireLib",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m3ksel6f",
    "slug": "nw-m3ksel6f",
    "title": "Soundboard",
@@ -1560,6 +2766,46 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-spacepi-js13k",
+   "slug": "oss-spacepi-js13k",
+   "title": "Spacepi Js13k",
+   "entry": "games/oss-spacepi-js13k/index.html",
+   "thumb": "images/thumbs/oss-spacepi-js13k.svg",
+   "category": "Strategy",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/jackrugile/spacepi-js13k (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: jackrugile/spacepi-js13k",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-spike-sprint",
+   "slug": "oss-spike-sprint",
+   "title": "Spike Sprint",
+   "entry": "games/oss-spike-sprint/index.html",
+   "thumb": "images/thumbs/oss-spike-sprint.svg",
+   "category": "Platformer",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/shifulegend/spike-sprint (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: shifulegend/spike-sprint",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m6v5a21i",
@@ -1602,6 +2848,86 @@
    "external": false
   },
   {
+   "id": "oss-stacks",
+   "slug": "oss-stacks",
+   "title": "Stacks",
+   "entry": "games/oss-stacks/index.html",
+   "thumb": "images/thumbs/oss-stacks.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/stackshub/stacks (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: stackshub/stacks",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-stardust-tycoon",
+   "slug": "oss-stardust-tycoon",
+   "title": "Stardust Tycoon",
+   "entry": "games/oss-stardust-tycoon/index.html",
+   "thumb": "images/thumbs/oss-stardust-tycoon.svg",
+   "category": "Strategy",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Noah-Simons/Stardust-Tycoon (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Noah-Simons/Stardust-Tycoon",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-stonescreed",
+   "slug": "oss-stonescreed",
+   "title": "Stones Creed",
+   "entry": "games/oss-stonescreed/index.html",
+   "thumb": "images/thumbs/oss-stonescreed.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/kyranet/StonesCreed (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: kyranet/StonesCreed",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-sudokuflow",
+   "slug": "oss-sudokuflow",
+   "title": "Sudokuflow",
+   "entry": "games/oss-sudokuflow/index.html",
+   "thumb": "images/thumbs/oss-sudokuflow.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/vincenzo-afk/sudokuflow (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: vincenzo-afk/sudokuflow",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m6gil03c",
    "slug": "nw-m6gil03c",
    "title": "Super Mario 64",
@@ -1640,6 +2966,46 @@
    },
    "featured": true,
    "external": false
+  },
+  {
+   "id": "oss-supercold",
+   "slug": "oss-supercold",
+   "title": "Supercold",
+   "entry": "games/oss-supercold/index.html",
+   "thumb": "images/thumbs/oss-supercold.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "BSD-3-Clause",
+    "note": "Open-source game from github.com/import-this/supercold (BSD-3-Clause). License file included in the game folder."
+   },
+   "source": "GitHub: import-this/supercold",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-surds-game-off",
+   "slug": "oss-surds-game-off",
+   "title": "Surds Game Off",
+   "entry": "games/oss-surds-game-off/index.html",
+   "thumb": "images/thumbs/oss-surds-game-off.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/ashiishme/surds-game-off (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: ashiishme/surds-game-off",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-l8wzg5i3",
@@ -1762,6 +3128,86 @@
    "external": false
   },
   {
+   "id": "oss-the-maze-game",
+   "slug": "oss-the-maze-game",
+   "title": "The Maze Game",
+   "entry": "games/oss-the-maze-game/index.html",
+   "thumb": "images/thumbs/oss-the-maze-game.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/hoangsonww/The-Maze-Game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: hoangsonww/The-Maze-Game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-the-void-is-online",
+   "slug": "oss-the-void-is-online",
+   "title": "The Void Is Online",
+   "entry": "games/oss-the-void-is-online/index.html",
+   "thumb": "images/thumbs/oss-the-void-is-online.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/mguinea/the-void-is-online (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: mguinea/the-void-is-online",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-tictactoe",
+   "slug": "oss-tictactoe",
+   "title": "Tic Tac Toe",
+   "entry": "games/oss-tictactoe/index.html",
+   "thumb": "images/thumbs/oss-tictactoe.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Shivam010/TicTacToe (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Shivam010/TicTacToe",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-tic-tac-toe-game",
+   "slug": "oss-tic-tac-toe-game",
+   "title": "Tic Tac Toe Game",
+   "entry": "games/oss-tic-tac-toe-game/TicGame.html",
+   "thumb": "images/thumbs/oss-tic-tac-toe-game.svg",
+   "category": "Platformer",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/Shanisoni/Tic-Tac-Toe-Game (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: Shanisoni/Tic-Tac-Toe-Game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m0d5vydh",
    "slug": "nw-m0d5vydh",
    "title": "Time Shooter 2",
@@ -1822,6 +3268,46 @@
    "external": false
   },
   {
+   "id": "oss-tomato-smash",
+   "slug": "oss-tomato-smash",
+   "title": "Tomato Smash",
+   "entry": "games/oss-tomato-smash/index.html",
+   "thumb": "images/thumbs/oss-tomato-smash.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/Quinten/tomato-smash (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: Quinten/tomato-smash",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-tower-blocks",
+   "slug": "oss-tower-blocks",
+   "title": "Tower Blocks",
+   "entry": "games/oss-tower-blocks/index.html",
+   "thumb": "images/thumbs/oss-tower-blocks.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/DavidKk/tower-blocks (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: DavidKk/tower-blocks",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-lo5p4u8n",
    "slug": "nw-lo5p4u8n",
    "title": "Tower Building",
@@ -1840,6 +3326,26 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-tower-game",
+   "slug": "oss-tower-game",
+   "title": "Tower Game",
+   "entry": "games/oss-tower-game/index.html",
+   "thumb": "images/thumbs/oss-tower-game.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/iamkun/tower_game (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: iamkun/tower_game",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-m4w43urn",
@@ -1862,6 +3368,26 @@
    "external": false
   },
   {
+   "id": "oss-trailgame",
+   "slug": "oss-trailgame",
+   "title": "Trail Game",
+   "entry": "games/oss-trailgame/index.html",
+   "thumb": "images/thumbs/oss-trailgame.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/AntonUden/TrailGame (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: AntonUden/TrailGame",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
    "id": "nw-m6l65seh",
    "slug": "nw-m6l65seh",
    "title": "Tube Jumpers",
@@ -1880,6 +3406,23 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "tuffclient",
+   "title": "Tuff Client",
+   "entry": "games/tuffclient/index.html",
+   "thumb": "images/thumbs/tuffclient.svg",
+   "category": "Sandbox",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "unlicensed",
+    "note": "Tuffs own client code, part of this repository (no separate license file)."
+   },
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "nw-lm5wdxm0",
@@ -1902,6 +3445,123 @@
    "external": false
   },
   {
+   "id": "oss-twoplayergames",
+   "slug": "oss-twoplayergames",
+   "title": "Two Player Games",
+   "entry": "games/oss-twoplayergames/index.html",
+   "thumb": "images/thumbs/oss-twoplayergames.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "MIT",
+    "note": "Open-source game from github.com/tridpt/TwoPlayerGames (MIT). License file included in the game folder."
+   },
+   "source": "GitHub: tridpt/TwoPlayerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "vex3",
+   "slug": "vex3",
+   "title": "Vex 3",
+   "entry": "games/vex3/index.html",
+   "thumb": "images/thumbs/vex3.jpg",
+   "category": "Platformer",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
+   "id": "vex4",
+   "slug": "vex4",
+   "title": "Vex 4",
+   "entry": "games/vex4/index.html",
+   "thumb": "images/thumbs/vex4.jpg",
+   "category": "Platformer",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [
+    "External analytics: googletagmanager (gtag)"
+   ],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
+   "id": "vex5",
+   "slug": "vex5",
+   "title": "Vex 5",
+   "entry": "games/vex5/index.html",
+   "thumb": "images/thumbs/vex5.jpg",
+   "category": "Platformer",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game; includes a sitelock config (json/sitelock.json) from the original distributor - if the game refuses to run on your domain, that file is the reason."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
+   "id": "vex6",
+   "slug": "vex6",
+   "title": "Vex 6",
+   "entry": "games/vex6/index.html",
+   "thumb": "images/thumbs/vex6.jpeg",
+   "category": "Platformer",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party game."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
+   "id": "vex7",
+   "slug": "vex7",
+   "title": "Vex 7",
+   "entry": "games/vex7/index.html",
+   "thumb": "images/thumbs/vex7.jpeg",
+   "category": "Platformer",
+   "license": {
+    "status": "unresolved",
+    "note": "No license file in source repository. Third-party GameDistribution build; @source.txt in game dir cites html5.gamedistribution.com."
+   },
+   "source": "BlazerGames",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "partial"
+   },
+   "featured": true
+  },
+  {
    "id": "nw-l4xish5d",
    "slug": "nw-l4xish5d",
    "title": "Wordle",
@@ -1920,6 +3580,46 @@
    },
    "featured": false,
    "external": false
+  },
+  {
+   "id": "oss-wordled",
+   "slug": "oss-wordled",
+   "title": "Wordled",
+   "entry": "games/oss-wordled/index.html",
+   "thumb": "images/thumbs/oss-wordled.svg",
+   "category": "Arcade",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "GPL-3.0",
+    "note": "Open-source game from github.com/milsaware/wordled (GPL-3.0). License file included in the game folder."
+   },
+   "source": "GitHub: milsaware/wordled",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
+  },
+  {
+   "id": "oss-xor",
+   "slug": "oss-xor",
+   "title": "Xor",
+   "entry": "games/oss-xor/index.html",
+   "thumb": "images/thumbs/oss-xor.svg",
+   "category": "Puzzle",
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "BSD-3-Clause",
+    "note": "Open-source game from github.com/import-this/xor (BSD-3-Clause). License file included in the game folder."
+   },
+   "source": "GitHub: import-this/xor",
+   "knownDependencies": [],
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   }
  ]
 }

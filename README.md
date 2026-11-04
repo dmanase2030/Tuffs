@@ -10,7 +10,7 @@ browse tab, following the official
 implementation. Tuffs is an independent project and is not affiliated with
 any source project.
 
-- **96 games**: 13 from BlazerGames and 82 self-hosted from NettleWeb
+- **181 games**: 13 from BlazerGames, 82 self-hosted from NettleWeb
   (plus Tuff Client), all stored under `public/games/` — every game
   runs from your own server, no third-party CDNs
 - Search, category filters, sorting, favorites, recently played, random pick
@@ -215,6 +215,7 @@ functions. Proxy browsing history is not recorded by the portal.
 | Tuffs portal code | Unlicensed (all rights reserved by the operator) | Written for this project |
 | BlazerGames (games) | **No license file** | Third-party games redistributed by that repo without permission terms; see below |
 | BlueDonuts/unblocked-games (NettleWeb) | MIT (software only) | Grants no rights to the games themselves; self-hosted folders copied here |
+| Open-source GitHub games (85, ids prefixed `oss-`) | MIT, Apache-2.0, BSD-3-Clause, CC0-1.0, Unlicense, ISC, Zlib, GPL-2.0/3.0, MPL-2.0 | Ready-to-play static HTML5 games; each game folder carries the upstream LICENSE file |
 | 2048 | MIT | Gabriele Cirulli, LICENSE.txt inside the game folder |
 | Scramjet client (`@mercuryworkshop/scramjet`) | AGPL-3.0 (per its LICENSE file) | Served as an npm dependency, unmodified |
 | wisp-js | LGPL-3.0-or-later | Backend |
@@ -249,6 +250,20 @@ that is impractical to self-host here. Entries duplicating existing
 BlazerGames titles (Vex 3–7, 2048, Slope) and one unindexed folder
 (`m890avdt`) were skipped so no game appears twice.
 
+**About the open-source additions:** 85 additional games (catalog ids
+prefixed `oss-`) were imported from GitHub repositories published under
+permissive open-source licenses (MIT, Apache-2.0, BSD, CC0, Unlicense, ISC,
+Zlib, GPL-2.0/3.0, MPL-2.0). They were selected from GitHub's
+`html5-game`/`js13kgames` topics by star count, and only accepted if they
+are fully static, ready-to-play HTML5 pages — no build step, no server
+backend, no multiplayer signaling server — and under 6 MB extracted. The
+importer (`scripts/add-opensource-games.mjs`) copies each game folder into
+`public/games/oss-<slug>/` together with the upstream LICENSE file, and
+records the license and source repository in the catalog entry. Entries
+that referenced missing local files, needed a backend (express/socket.io),
+or turned out to be engine docs, starter templates or game hubs were
+removed after an automated link-check pass.
+
 **Also inspected:** [InvisiProxynoxroxynoxy](https://github.com/Americarna/InvisiProxynoxroxynoxy)
 (a fork of QuiteAFancyEmerald's InvisiProxy LTS, AGPL-3.0). **No code was
 reused from it.** Reasons: (1) it is a complete alternative portal running
@@ -266,13 +281,13 @@ Automated (run via `npm test`, all passing at delivery time):
 
 ```
 Tuffs catalog verification
-  games:  96
-  ok: ids unique and present (96)
+  games:  181
+  ok: ids unique and present (181)
   ok: entry points exist (0 external URL entries validated by format)
-  ok: thumbnails verified (96 with files, fallback used for the rest)
+  ok: thumbnails verified (181 with files, fallback used for the rest)
   ok: categories present
   ok: flags well-formed
-  license summary: 94 unresolved, 2 with a license on file
+  license summary: 94 unresolved, 87 with a license on file
 
 Tuffs smoke test (server + routes)
   ok: server started
@@ -291,10 +306,13 @@ What automated tests prove and what they don't:
   portal asset.
 - **Page loads** — verified over HTTP for local entry points and portal
   routes.
-- **Manually playable** — **not** verified for all 96 games. The original
+- **Manually playable** — **not** verified for all 181 games. The original
   13 BlazerGames entries were confirmed to load and be self-contained, but
   full playthroughs were not performed. The 82 NettleWeb folders were
-  checked for a self-contained `index.html`, not played. Caveats discovered
+  checked for a self-contained `index.html`, not played. The 85
+  open-source GitHub games passed an automated link-check (every local
+  file the entry HTML references exists on disk, no server backend
+  required), but were not played either. Caveats discovered
   by inspection: `motox3m2` and `vex4` load external ad/analytics scripts
   (may degrade offline); `1v1.LOL` pulls WebGL data from a DigitalOcean CDN;
   `vex5` ships a distributor sitelock config that could refuse to run on

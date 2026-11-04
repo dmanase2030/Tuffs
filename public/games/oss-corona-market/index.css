@@ -1,0 +1,164 @@
+body {
+  position: relative;
+  text-align: center;
+  margin-top: 24px;
+  user-select: none;
+  font-family: 'Comic Neue', cursive;
+  font-weight: bold;
+}
+
+.logo {
+  font-size: 78px;
+  letter-spacing: 6px;
+}
+
+.logo img {
+  width: 62px;
+  vertical-align: bottom;
+  margin: 0 -2px 7px -6px;
+}
+
+#error_msg {
+  display: none;
+  font-size: 30px;
+  margin: 40px 0;
+}
+
+#container {
+  display: inline-block;
+  position: relative;
+  margin-top: 10px;
+}
+
+#loading {
+  position: absolute;
+  width: 100%;
+  font-family: cursive;
+  font-size: 50px;
+  margin-top: 140px;
+}
+
+x-game {
+  display: inline-block;
+}
+
+#main_screen {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+
+#win_message {
+  margin-top: 45px;
+  font-size: 80px;
+  line-height: 92px;
+  visibility: hidden;
+}
+
+#start_button {
+  display: inline-block;
+  --width: 260px;
+  width: var(--width);
+  margin-top: 50px;
+  padding: 8px 0;
+  background-color: #7ce96d;
+  border: 1px solid black;
+  border-radius: 60px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  color: #333;
+  font-size: 70px;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+
+#howto_button {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 24px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#instructions {
+  display: inline-block;
+  margin-top: 16px;
+  border-radius: 12px;
+  background-color: #0009;
+  opacity: 0;
+  transform: scale(0.01);
+  transform-origin: top center;
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+#instructions.open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.share-buttons {
+  position: absolute;
+  width: 100%;
+  top: 530px;
+}
+
+.credits {
+  font-size: 16px;
+  color: #666;
+}
+
+.credits>div {
+  margin-bottom: 8px;
+}
+
+a {
+  color: #000;
+}
+
+#top_row {
+  position: relative;
+  visibility: hidden;
+}
+
+.sound-button {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  padding-left: 2px;
+  cursor: pointer;
+}
+
+.speaker {
+  height: 20px;
+  vertical-align: bottom;
+  margin-right: 2px;
+}
+
+.speaker-text {
+  display: inline-block;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+#lives {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+}
+
+.life-icon {
+  transition: transform 0.6s, opacity 0.6s;
+  height: 26px;
+}
+
+.life-icon.used {
+  opacity: 0;
+  transform: scale(0.01);
+}
+
+#level_label {
+  display: inline-block;
+  font-size: 22px;
+  line-height: 24px;
+  margin: -2px 0 3px 0;
+}

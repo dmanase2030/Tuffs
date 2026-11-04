@@ -1,0 +1,110 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="CoronaMarket is a free online game. Collect groceries, avoid the corona virus.">
+  <meta name="keywords" content="CoronaMarket, Corona, Coronavirus, Game">
+  <meta name="author" content="Dor D. Cohen">
+
+  <meta property="og:title" content="CoronaMarket">
+  <meta property="og:image" content="http://coronamarket.cc/res/og_high.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+
+  <title>Corona Market</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161762195-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-161762195-1');
+  </script>
+  <!-- ShareThis -->
+  <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=5e8a75e67759b60019731866&product=inline-share-buttons&cms=website' async='async'></script>
+  <!-- Github -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+<body>
+  <!-- Logo -->
+  <div class="logo">
+    <span>C</span><!--
+  --><img src="res/imgs/virus.svg"><!--
+  --><span>rona M</span><!--
+  --><img src="res/imgs/virus.svg"><!--
+  --><span>rket</span>
+  </div>
+
+  <!-- Errors -->
+  <div id='error_msg'></div>
+
+  <!-- Game -->
+  <div id="container">
+    <div id="top_row">
+      <span id="mute_button" class="sound-button">
+        <img class="speaker" src="res/imgs/speaker.svg">
+        <span class="speaker-text">Mute</span>
+      </span>
+      <span id="unmute_button" class="sound-button" style="display: none;">
+        <img class="speaker" src="res/imgs/mute.svg">
+        <span class="speaker-text">Unmute</span>
+      </span>
+      <div id="lives">
+        <img class="life-icon used" src="res/imgs/player.svg">
+        <img class="life-icon used" src="res/imgs/player.svg">
+        <img class="life-icon used" src="res/imgs/player.svg">
+      </div>
+      <span id="level_label">Level 1</span>
+    </div>
+
+    <!-- Screens -->
+    <div id="loading">Loading...</div>
+    <div id="main_screen" style="visibility: hidden;">
+      <div id="win_message">Well done!</div>
+      <div><div id="start_button">Start</div></div>
+      <div><div id="howto_button">How to play?</div></div>
+      <div id="instructions"><img src="res/imgs/keys.png" /></div>
+      <div class="share-buttons"><div class="sharethis-inline-share-buttons"></div></div>
+    </div>
+    <x-game></x-game>
+  </div>
+
+  <div class="credits">
+    <div>
+      <span onclick="gtag('event', 'click', { 'event_category': 'Credit', 'event_label': 'github-follow' });">
+        <a class="github-button" href="https://github.com/dordchn" data-size="large" aria-label="Follow @dordchn on GitHub">Follow @dordchn</a>
+      </span>
+      <span onclick="gtag('event', 'click', { 'event_category': 'Credit', 'event_label': 'github-star' });">
+        <a class="github-button" href="https://github.com/dordchn/CoronaMarket" data-icon="octicon-star" data-size="large" aria-label="Star dordchn/CoronaMarket on GitHub">Star</a>
+      </span>
+      <span onclick="gtag('event', 'click', { 'event_category': 'Credit', 'event_label': 'github-issue' });">
+        <a class="github-button" href="https://github.com/dordchn/CoronaMarket/issues" data-icon="octicon-issue-opened" data-size="large" aria-label="Issue dordchn/CoronaMarket on GitHub">Issue</a>
+      </span>
+    </div>
+    <div>Sound effects & music obtained from <a href="https://www.zapsplat.com" target="_blank">zapsplat</a></div>
+    <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik" target="_blank">Freepik</a> from <a
+        href="https://www.flaticon.com/" title="Flaticon" target="_blank">www.flaticon.com</a></div>
+  </div>
+
+  <script>
+    var container = document.getElementById('container');
+    var errorMsg = document.getElementById('error_msg');
+    var isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    if (isMobile || !('customElements' in window)) {
+      errorMsg.innerText = isMobile ? 'Mobile is not supported' : 'Unsupported browser version';
+      container.style.display = 'none';
+      errorMsg.style.display = 'block';
+    }
+  </script>
+  <script type="module" src="game.js"></script>
+  <script type="module" src="index.js"></script>
+
+</body>
+
+</html>

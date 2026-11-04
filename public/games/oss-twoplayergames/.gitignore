@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Môi trường / hệ điều hành
+.DS_Store
+Thumbs.db
+.env
+
+# Dữ liệu tài khoản (server-side, không commit)
+data/
+
+# Playwright artifacts
+test-results/
+playwright-report/
+
+# Editor
+.vscode/
+.idea/

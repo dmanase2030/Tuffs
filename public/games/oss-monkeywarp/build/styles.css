@@ -1,0 +1,40 @@
+body {
+	text-align: center;
+	font-family: verdana;
+	background-color: #D5E890;
+	margin: 0;
+}
+
+canvas {
+	position: absolute;
+	transform: translateX(-50%);
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: optimize-contrast;
+	image-rendering: pixelated;
+	-ms-interpolation-mode: nearest-neighbor;
+}
+
+.panel {
+	position: absolute;
+	padding: 2px;
+	left: 0px;
+	top: 0px;
+	border-radius: 5px;
+	box-shadow: 1px 1px 10px #333;
+	font-size: 12px;
+	background-color: #CCC;
+	z-index: 10;
+}
+
+.button {
+	text-align: left;
+	margin: 0 1px;
+	padding: 1px 3px;
+	border-radius: 4px;
+}
+
+.button:hover {
+	background-color: #FF2;
+}

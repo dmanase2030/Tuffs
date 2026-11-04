@@ -1,0 +1,10 @@
+# Build folder
+tmpbuild
+
+# Other folders
+abstract
+closure
+packer
+
+# Zip files
+*.zip

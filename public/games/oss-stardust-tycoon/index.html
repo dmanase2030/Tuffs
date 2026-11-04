@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stardust Tycoon</title>
+<meta name="description" content="A cozy idle/clicker game where the only goal is to make the numbers go up — and stay up. Mine stardust, automate galaxies, and prestige for permanent power." />
+<meta name="theme-color" content="#0b0b1a" />
+<!-- Share cards (issue #7): preview when linked on social / chat / Discord -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Stardust Tycoon ✨" />
+<meta property="og:description" content="A cozy idle game — mine stardust, automate galaxies, prestige for permanent power. Play free in your browser." />
+<meta property="og:url" content="https://noah-simons.github.io/Stardust-Tycoon/" />
+<meta property="og:image" content="https://noah-simons.github.io/Stardust-Tycoon/docs/screenshot.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Stardust Tycoon ✨" />
+<meta name="twitter:description" content="A cozy idle game — mine stardust, automate galaxies, prestige for permanent power. Play free in your browser." />
+<meta name="twitter:image" content="https://noah-simons.github.io/Stardust-Tycoon/docs/screenshot.png" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game">
+    <header>
+      <h1>✨ Stardust Tycoon</h1>
+      <div id="stardust">0 ✦</div>
+      <div id="rate">0 ✦/sec</div>
+      <button id="soundBtn" class="sound" title="Toggle sound">🔊</button>
+    </header>
+
+    <main>
+      <section id="clicker">
+        <button id="mineBtn">MINE ✦</button>
+      </section>
+
+      <section id="shop">
+        <div id="buyQty">
+          <span>Buy:</span>
+          <button data-qty="1" class="active">x1</button>
+          <button data-qty="10">x10</button>
+          <button data-qty="100">x100</button>
+          <button data-qty="max">Max</button>
+        </div>
+        <h2>Upgrades</h2>
+        <div id="shopList"></div>
+      </section>
+
+      <section id="stats">
+        <h2>Stats</h2>
+        <p>Total mined: <span id="totalMined">0</span> ✦</p>
+        <p>Clicks: <span id="clickCount">0</span></p>
+        <p>Per click: <span id="perClick">1</span> ✦</p>
+        <p>Production bonus: <span id="prestigeBonus">+0% (P0)</span></p>
+        <button id="prestigeBtn" class="prestige">Prestige ↻ (next: +10%)</button>
+        <a id="tipBtn" class="tip" href="https://ko-fi.com/noahsimons" target="_blank" rel="noopener">☕ Support the dev</a>
+        <hr class="cloudRule" />
+        <button id="cloudBtn" class="cloud">Sign in with Google</button>
+        <p id="cloudStatus" class="cloudStatus">Playing locally</p>
+        <button id="resetBtn" class="reset">Reset save</button>
+      </section>
+
+      <section id="achievements">
+        <h2>Achievements</h2>
+        <div id="achievementsList"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toasts"></div>
+
+  <!-- In-game confirm modal (replaces native confirm() which can be unreliable) -->
+  <div id="modalOverlay" class="modalOverlay hidden">
+    <div class="modalBox">
+      <div id="modalMsg" class="modalMsg"></div>
+      <div class="modalBtns">
+        <button id="modalCancel" class="modalCancel">Cancel</button>
+        <button id="modalOk" class="modalOk">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+  <script type="module" src="cloud.js"></script>
+</body>
+</html>

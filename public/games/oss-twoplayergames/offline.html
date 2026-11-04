@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ngoại tuyến · Game 2 Người</title>
+  <meta name="theme-color" content="#1a1f3d" />
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(1200px 600px at 50% -10%, #2a3068 0%, #0b0e22 60%);
+      color: #eef1ff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      padding: 24px; text-align: center;
+    }
+    .card {
+      max-width: 440px; width: 100%;
+      background: rgba(42, 48, 96, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px; padding: 36px 28px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+    .emoji { font-size: 3.4rem; line-height: 1; margin-bottom: 14px; }
+    h1 { font-size: 1.5rem; margin: 0 0 10px; }
+    p { color: #b9c0e8; line-height: 1.55; margin: 0 0 22px; }
+    .sub { font-size: 0.85rem; color: #8a93c4; margin-top: 18px; }
+    button {
+      font: inherit; font-weight: 700; cursor: pointer;
+      border: none; border-radius: 12px; padding: 12px 26px;
+      color: #2a1606; background: linear-gradient(135deg, #ffd166, #ff8f5a);
+      box-shadow: 0 8px 22px rgba(255, 140, 90, 0.35);
+      transition: filter 0.18s, transform 0.1s;
+    }
+    button:hover { filter: brightness(1.06); }
+    button:active { transform: scale(0.96); }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="emoji">📡</div>
+    <h1 data-vi="Bạn đang ngoại tuyến" data-en="You're offline">Bạn đang ngoại tuyến</h1>
+    <p data-vi="Không có kết nối mạng và bản trò chơi chưa được lưu sẵn. Hãy kiểm tra mạng rồi thử lại — chế độ chơi chung máy và đấu với máy vẫn chạy được sau khi tải xong một lần."
+       data-en="No network connection and the app isn't cached yet. Check your connection and retry — local and vs-AI play work offline once the app has loaded once.">
+      Không có kết nối mạng và bản trò chơi chưa được lưu sẵn. Hãy kiểm tra mạng rồi thử lại — chế độ chơi chung máy và đấu với máy vẫn chạy được sau khi tải xong một lần.
+    </p>
+    <button id="retry" data-vi="↻ Thử lại" data-en="↻ Retry">↻ Thử lại</button>
+    <p class="sub">🎮 Game 2 Người</p>
+  </main>
+  <script>
+    // Song ngữ nhẹ: tôn trọng lựa chọn ngôn ngữ đã lưu của app (khóa tpg_lang).
+    (function () {
+      var lang = "vi";
+      try { var s = localStorage.getItem("tpg_lang"); if (s === "en" || s === "vi") lang = s; } catch (e) {}
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-" + lang + "]").forEach(function (el) {
+        el.textContent = el.getAttribute("data-" + lang);
+      });
+      document.getElementById("retry").addEventListener("click", function () {
+        location.replace("./");
+      });
+    })();
+  </script>
+</body>
+</html>

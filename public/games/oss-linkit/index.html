@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='50' text-anchor='middle' dominant-baseline='central' font-size='70'>🔴</text></svg>"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="🔴 Linkit is a puzzle where you connect the dots."
+    />
+    <link rel="apple-touch-icon" href="logo192.png" />
+
+    <meta
+      property="og:image"
+      content="https://remarkablegames.org/linkit/cover.png"
+    />
+
+    <!--
+      manifest.webmanifest provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <link rel="stylesheet" href="src/style.css" />
+
+    <% if (process.env.BUNDLE !== 'true') { %>
+    <!--
+      GitHub Corners. See https://github.com/remarkablemark/github-corners
+    -->
+    <script
+      src="https://unpkg.com/github-corners/dist/embed.min.js"
+      data-href="https://github.com/remarkablegames/linkit"
+      data-target="_blank"
+      async
+      defer
+    ></script>
+    <style>
+      .github-corner > svg {
+        fill: darkslategray !important;
+        opacity: 0.2;
+        transition: opacity 0.4s;
+      }
+      .github-corner:hover > svg {
+        opacity: 1;
+      }
+    </style>
+    <% } %>
+
+    <title>Linkit</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to play this game.</noscript>
+    <script type="module" src="src/index.ts"></script>
+  </body>
+</html>

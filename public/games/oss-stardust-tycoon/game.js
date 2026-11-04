@@ -1,0 +1,533 @@
+// ===== Stardust Tycoon =====
+// Idle/clicker game. State persists in localStorage so progress survives refresh.
+
+const SAVE_KEY = "stardustTycoonSave";
+
+// Bumped whenever the saved-state shape changes, so a future version can tell
+// an old save apart and migrate it. See issue #6.
+const SAVE_VERSION = 2;
+
+// Upgrade definitions. cost grows 1.15x per owned copy.
+// unlockAt = lifetime stardust (totalMined) required before it appears in the shop.
+const UPGRADES = [
+  { id: "drone",      name: "Stardust Drone",        desc: "+1 ✦/sec",       baseCost: 15,      cps: 1,        unlockAt: 0 },
+  { id: "fingers",    name: "Stardust Fingers",      desc: "+1 per click",   baseCost: 50,      cps: 0, clickAdd: 1, unlockAt: 0 },
+  { id: "rig",        name: "Mining Rig",            desc: "+10 ✦/sec",      baseCost: 120,     cps: 10,       unlockAt: 0 },
+  { id: "planet",     name: "Mining Planet",         desc: "+50 ✦/sec",      baseCost: 1300,    cps: 50,       unlockAt: 0 },
+  { id: "fleet",      name: "Mining Fleet",          desc: "+100 ✦/sec",     baseCost: 14000,   cps: 100,      unlockAt: 0 },
+  { id: "galaxy",     name: "Galaxy Forge",          desc: "+1000 ✦/sec",    baseCost: 200000,  cps: 1000,     unlockAt: 0 },
+  { id: "multiverse", name: "Multiverse Harvester",  desc: "+1500 ✦/sec",    baseCost: 3300000, cps: 1500,     unlockAt: 0 },
+  // New tiers unlock as you play (lifetime totalMined based):
+  { id: "blackhole",  name: "Black Hole",            desc: "+10k ✦/sec",     baseCost: 50000000,      cps: 10000,     unlockAt: 1000000 },
+  { id: "quasar",     name: "Quasar",                desc: "+100k ✦/sec",    baseCost: 500000000,     cps: 100000,    unlockAt: 10000000 },
+  { id: "cosmic",     name: "Cosmic Witness",        desc: "+1M ✦/sec",      baseCost: 5000000000,    cps: 1000000,   unlockAt: 100000000 },
+  { id: "omniverse",  name: "Omniverse",             desc: "+10M ✦/sec",     baseCost: 50000000000,   cps: 10000000,  unlockAt: 1000000000 },
+  { id: "singularity",name: "Singularity",           desc: "+100M ✦/sec",    baseCost: 500000000000,  cps: 100000000, unlockAt: 10000000000 },
+  // Click-power tiers (bigger +per click)
+  { id: "rfingers",    name: "Reinforced Fingers",    desc: "+5 per click",   baseCost: 5000,          cps: 0, clickAdd: 5,   unlockAt: 0 },
+  { id: "mfingers",    name: "Mecha Fingers",         desc: "+50 per click",  baseCost: 500000,        cps: 0, clickAdd: 50,  unlockAt: 0 },
+  // Production multipliers (+% to ALL stardust, permanent, paid in stardust)
+  { id: "amp1",        name: "Stardust Amplifier",    desc: "+5% production", baseCost: 100000,        cps: 0, mult: 0.05,   unlockAt: 0 },
+  { id: "amp2",        name: "Nebula Amplifier",      desc: "+15% production",baseCost: 5000000,       cps: 0, mult: 0.15,   unlockAt: 100000 },
+  { id: "amp3",        name: "Cosmic Amplifier",      desc: "+50% production",baseCost: 500000000,     cps: 0, mult: 0.5,    unlockAt: 10000000 },
+];
+
+const state = {
+  version: SAVE_VERSION, // save-schema version (issue #6)
+  stardust: 0,
+  totalMined: 0,
+  clickCount: 0,
+  owned: {},        // id -> count
+  prestige: 0,      // number of prestiges; +0.1x production each
+  achieved: {},     // achievement id -> true (one-time claimed)
+};
+
+let buyQty = "1"; // "1" | "10" | "100" | "max"
+let resetPending = false; // true briefly during a reset so autosave can't clobber it
+
+// Fresh default save (used by reset).
+function defaultState() {
+  return { version: SAVE_VERSION, stardust: 0, totalMined: 0, clickCount: 0, owned: {}, prestige: 0, achieved: {} };
+}
+
+
+// Format big numbers nicely (k, M, B, T, Qa, Qi, Sx, Sp...)
+function fmt(n) {
+  if (n < 1000) return Math.floor(n).toString();
+  // Standard incremental-game ladder, one entry per 10^3. Extends past Qi
+  // (10^18) so long idle runs above 10^21 don't render as oversized Qi.
+  const units = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "UDc", "DDc", "TDc", "QaDc", "QiDc"];
+  let u = 0;
+  while (n >= 1000 && u < units.length - 1) { n /= 1000; u++; }
+  // Float error at a unit boundary can leave n just under 1000 (e.g. 1e33),
+  // which toFixed(2) would render as "1000.00" with the wrong unit. Bump.
+  const s = n.toFixed(2);
+  if (s === "1000.00" && u < units.length - 1) {
+    n /= 1000;
+    u++;
+    return n.toFixed(2) + units[u];
+  }
+  return s + units[u];
+}
+
+const PRESTIGE_REQ = 1e7; // 10,000,000 stardust needed to prestige, every time
+function prestigeMult() { return 1 + 0.1 * state.prestige; }
+function productionMult() {
+  let m = 1;
+  for (const up of UPGRADES) if (up.mult) m += (state.owned[up.id] || 0) * up.mult;
+  return m * prestigeMult();
+}
+function canPrestige() { return state.stardust >= PRESTIGE_REQ; }
+
+function upgradeCost(up) {
+  const count = state.owned[up.id] || 0;
+  return Math.ceil(up.baseCost * Math.pow(1.15, count));
+}
+
+// Cost to buy `k` copies of `up`, starting from `startOwned`.
+function batchCost(up, k, startOwned) {
+  let total = 0;
+  let mult = Math.pow(1.15, startOwned);
+  for (let i = 0; i < k; i++) { total += up.baseCost * mult; mult *= 1.15; }
+  return Math.ceil(total);
+}
+
+// How many copies of `up` we can afford with `budget`, starting from
+// `startOwned`. Closed-form (issue #4) instead of a stepwise loop:
+//
+//   sum_{i=0}^{k-1} base * 1.15^(startOwned+i)  =  base * 1.15^startOwned * (1.15^k - 1) / 0.15
+//
+// Solve for the largest k with cost <= budget. r = 1.15, A = base*r^startOwned.
+//   cost(k) = A * (r^k - 1) / (r - 1)  <=  budget
+//   =>  r^k <= 1 + budget*(r-1)/A
+//   =>  k <= log_r(1 + budget*(r-1)/A)
+// Edge cases: budget <= 0 -> 0; A == 0 (baseCost 0) -> 0.
+const GROWTH = 1.15;
+function maxAffordable(up, startOwned, budget) {
+  if (budget <= 0 || up.baseCost <= 0) return { k: 0, cost: 0 };
+  const A = up.baseCost * Math.pow(GROWTH, startOwned);
+  const ratio = 1 + (budget * (GROWTH - 1)) / A;
+  if (ratio <= 1) return { k: 0, cost: 0 };
+  let k = Math.floor(Math.log(ratio) / Math.log(GROWTH));
+  if (k < 0) k = 0;
+  // Guard against float error: trim any copies we can't quite afford.
+  while (k > 0 && batchCost(up, k, startOwned) > budget) k--;
+  return { k, cost: batchCost(up, k, startOwned) };
+}
+
+function cps() {
+  let total = 0;
+  for (const up of UPGRADES) total += (state.owned[up.id] || 0) * (up.cps || 0);
+  return total * productionMult();
+}
+
+// Stardust earned per manual click = (1 + clickAdd total) * productionMult.
+function clickPowerValue() {
+  let p = 1;
+  for (const up of UPGRADES) if (up.clickAdd) p += (state.owned[up.id] || 0) * up.clickAdd;
+  return p * productionMult();
+}
+
+// ===== Achievements =====
+// Each grants a one-time stardust bonus when its condition first becomes true.
+// cond(state) -> boolean. reward is added once.
+const ACHIEVEMENTS = [
+  { id: "first100",   name: "Pocket Change",       desc: "Mine 100 ✦ total",        reward: 50,       cond: s => s.totalMined >= 100 },
+  { id: "first1k",    name: "Stardust Saver",      desc: "Mine 1k ✦ total",         reward: 500,      cond: s => s.totalMined >= 1000 },
+  { id: "first1M",    name: "Millionaire",         desc: "Mine 1M ✦ total",         reward: 50000,    cond: s => s.totalMined >= 1e6 },
+  { id: "first1B",    name: "Billionaire",         desc: "Mine 1B ✦ total",         reward: 5e7,      cond: s => s.totalMined >= 1e9 },
+  { id: "clicks100",  name: "Clicker",             desc: "Click 100 times",         reward: 100,      cond: s => s.clickCount >= 100 },
+  { id: "clicks10k",  name: "Click Frenzy",        desc: "Click 10,000 times",      reward: 10000,    cond: s => s.clickCount >= 10000 },
+  { id: "drone10",    name: "Drone Fleet",         desc: "Own 10 Drones",           reward: 200,      cond: s => (s.owned.drone||0) >= 10 },
+  { id: "galaxy1",    name: "Forge Master",        desc: "Own a Galaxy Forge",      reward: 2000,     cond: s => (s.owned.galaxy||0) >= 1 },
+  { id: "prestige1",  name: "Ascended",            desc: "Prestige once",           reward: 1e6,      cond: s => s.prestige >= 1 },
+  { id: "prestige5",  name: "Cosmic Being",        desc: "Prestige 5 times",        reward: 5e7,      cond: s => s.prestige >= 5 },
+];
+
+let toastQueue = [];
+function checkAchievements() {
+  for (const a of ACHIEVEMENTS) {
+    if (!state.achieved[a.id] && a.cond(state)) {
+      state.achieved[a.id] = true;
+      state.stardust += a.reward;
+      state.totalMined += a.reward;
+      toastQueue.push("🏆 " + a.name + "  +" + fmt(a.reward) + " ✦");
+    }
+  }
+}
+
+// ===== Rendering =====
+const el = {
+  stardust: document.getElementById("stardust"),
+  rate: document.getElementById("rate"),
+  shopList: document.getElementById("shopList"),
+  totalMined: document.getElementById("totalMined"),
+  clickCount: document.getElementById("clickCount"),
+  perClick: document.getElementById("perClick"),
+  prestigeBonus: document.getElementById("prestigeBonus"),
+  prestigeBtn: document.getElementById("prestigeBtn"),
+  achievementsList: document.getElementById("achievementsList"),
+};
+
+// Build the shop ONCE. After that we only mutate text/classes in place,
+// so rapid clicking never waits on a full DOM rebuild.
+const shopRefs = {};
+
+function buildShop() {
+  el.shopList.innerHTML = "";
+  for (const up of UPGRADES) {
+    const item = document.createElement("div");
+    item.className = "shopItem";
+    item.innerHTML = `
+      <div class="info">
+        <div class="name">${up.name}</div>
+        <div class="desc">${up.desc}</div>
+        <div class="owned">Owned: 0</div>
+      </div>
+      <button data-id="${up.id}">0 ✦</button>`;
+    const btn = item.querySelector("button");
+    btn.addEventListener("click", () => buy(up));
+    el.shopList.appendChild(item);
+    shopRefs[up.id] = { item, owned: item.querySelector(".owned"), btn };
+  }
+}
+
+function updateShop() {
+  for (const up of UPGRADES) {
+    const ref = shopRefs[up.id];
+    const owned = state.owned[up.id] || 0;
+    const unlocked = state.totalMined >= up.unlockAt;
+
+    ref.item.classList.toggle("locked", !unlocked);
+    if (!unlocked) {
+      ref.owned.textContent = "Unlocks at " + fmt(up.unlockAt) + " ✦";
+      ref.btn.textContent = "🔒 Locked";
+      ref.btn.disabled = true;
+      ref.btn.classList.remove("affordable");
+      continue;
+    }
+
+    let k;
+    if (buyQty === "max") k = maxAffordable(up, owned, state.stardust).k;
+    else k = Math.min(Number(buyQty), maxAffordable(up, owned, state.stardust).k);
+
+    const canAfford = k > 0;
+    const cost = canAfford ? batchCost(up, k, owned) : upgradeCost(up);
+
+    ref.owned.textContent = "Owned: " + owned;
+    if (canAfford) {
+      const prefix = buyQty === "max" ? "Max x" + k : "x" + buyQty;
+      ref.btn.textContent = prefix + " (" + fmt(cost) + " ✦)";
+    } else {
+      ref.btn.textContent = fmt(cost) + " ✦";
+    }
+    ref.btn.disabled = !canAfford;
+    ref.btn.classList.toggle("affordable", canAfford);
+  }
+}
+
+function renderHUD() {
+  el.stardust.textContent = fmt(state.stardust) + " ✦";
+  el.rate.textContent = fmt(cps()) + " ✦/sec";
+  el.totalMined.textContent = fmt(state.totalMined);
+  el.clickCount.textContent = state.clickCount;
+  el.perClick.textContent = fmt(clickPowerValue());
+  el.prestigeBonus.textContent = "+" + Math.round((prestigeMult() - 1) * 100) + "% (P" + state.prestige + ")";
+  const nextPct = Math.round(0.1 * (state.prestige + 1) * 100);
+  if (canPrestige()) {
+    el.prestigeBtn.textContent = "Prestige ↻ (next: +" + nextPct + "%)";
+    el.prestigeBtn.disabled = false;
+    el.prestigeBtn.classList.add("ready");
+  } else {
+    el.prestigeBtn.textContent = "Prestige ↻ (need " + fmt(PRESTIGE_REQ) + " ✦)";
+    el.prestigeBtn.disabled = true;
+    el.prestigeBtn.classList.remove("ready");
+  }
+}
+
+// Lightweight update used on click: just the numbers that change per click.
+// Avoids rebuilding the shop/achievements DOM every click (that caused lag).
+function renderHUDFast() {
+  el.stardust.textContent = fmt(state.stardust) + " ✦";
+  el.totalMined.textContent = fmt(state.totalMined);
+  el.clickCount.textContent = state.clickCount;
+  el.perClick.textContent = fmt(clickPowerValue());
+}
+
+function render() {
+  renderHUD();
+  updateShop();
+  renderAchievements();
+  showToasts();
+}
+
+function renderAchievements() {
+  if (!el.achievementsList) return;
+  let unlocked = 0;
+  let html = "";
+  for (const a of ACHIEVEMENTS) {
+    const got = !!state.achieved[a.id];
+    if (got) unlocked++;
+    html += `<div class="ach ${got ? "got" : "locked"}" title="${a.desc}">
+      <span class="achName">${got ? "🏆" : "🔒"} ${a.name}</span>
+      <span class="achDesc">${a.desc}</span>
+      <span class="achReward">+${fmt(a.reward)} ✦</span>
+    </div>`;
+  }
+  el.achievementsList.innerHTML = `<div class="achHeader">Achievements ${unlocked}/${ACHIEVEMENTS.length}</div>` + html;
+}
+
+// Toast popups for newly-earned achievements.
+let toastEls = [];
+function showToasts() {
+  if (toastQueue.length === 0) return;
+  const wrap = document.getElementById("toasts");
+  while (toastQueue.length) {
+    const msg = toastQueue.shift();
+    const t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    wrap.appendChild(t);
+    setTimeout(() => t.classList.add("show"), 10);
+    setTimeout(() => { t.classList.remove("show"); }, 2600);
+    setTimeout(() => t.remove(), 3100);
+  }
+}
+
+function buy(up) {
+  if (state.totalMined < up.unlockAt) return;
+  const owned = state.owned[up.id] || 0;
+  let k;
+  if (buyQty === "max") k = maxAffordable(up, owned, state.stardust).k;
+  else k = Math.min(Number(buyQty), maxAffordable(up, owned, state.stardust).k);
+  if (k <= 0) return;
+  const cost = batchCost(up, k, owned);
+  state.stardust -= cost;
+  state.owned[up.id] = owned + k;
+  achDirty = true; // a new purchase may have unlocked an achievement
+  save();
+  render();
+}
+
+// ===== Sound (Web Audio API, no external file) =====
+let soundOn = true;
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playClick() {
+  if (!soundOn) return;
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = "triangle";
+  o.frequency.setValueAtTime(620, t);
+  o.frequency.exponentialRampToValueAtTime(960, t + 0.05);
+  g.gain.setValueAtTime(0.18, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+  o.connect(g);
+  g.connect(audioCtx.destination);
+  o.start(t);
+  o.stop(t + 0.1);
+}
+
+document.getElementById("soundBtn").addEventListener("click", () => {
+  soundOn = !soundOn;
+  document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+  if (soundOn) playClick();
+});
+
+// Buy-quantity selector
+document.querySelectorAll("#buyQty button").forEach((b) => {
+  b.addEventListener("click", () => {
+    buyQty = b.dataset.qty;
+    document.querySelectorAll("#buyQty button").forEach((x) => x.classList.toggle("active", x === b));
+    render();
+  });
+});
+
+// Spawn a falling yellow stardust bit from the click point.
+// It is non-selectable and non-interactive so rapid clicking never starts a
+// text-selection drag (which would flip the cursor to an I-beam and eat clicks).
+function spawnFloater(x, y, amount) {
+  const clicker = document.getElementById("clicker");
+  const rect = clicker.getBoundingClientRect();
+  const f = document.createElement("div");
+  f.className = "floater";
+  f.textContent = "✦"; // yellow stardust mote
+  const drift = (Math.random() * 44 - 22); // random sideways drift
+  f.style.setProperty("--drift", drift + "px");
+  f.style.left = (x - rect.left) + "px";
+  f.style.top = (y - rect.top) + "px";
+  clicker.appendChild(f);
+  f.addEventListener("animationend", () => f.remove());
+}
+
+// ===== Game loop =====
+// We only rebuild the shop/achievements DOM when something structural changes
+// (a new achievement unlocked, or a buy happened). Every-frame we just update text.
+let achDirty = true; // force one full render at boot
+
+function tick() {
+  const gain = cps() * (1 / 10); // 10 ticks/sec
+  state.stardust += gain;
+  state.totalMined += gain;
+  const before = Object.keys(state.achieved).length;
+  checkAchievements();
+  if (Object.keys(state.achieved).length !== before) achDirty = true;
+}
+
+function loop() {
+  tick();
+  // Lightweight per-frame update: numbers + shop button states.
+  renderHUD();
+  updateShop();
+  showToasts();
+  if (achDirty) {
+    renderAchievements();
+    achDirty = false;
+  }
+}
+
+// Core mining action. `x`/`y` are viewport coords for the floating "+N" mote;
+// if omitted (keyboard mining) the mote spawns at the center of the clicker.
+function doMine(x, y) {
+  const gain = clickPowerValue();
+  state.stardust += gain;
+  state.totalMined += gain;
+  state.clickCount++;
+  playClick();
+  const clicker = document.getElementById("clicker");
+  const rect = clicker.getBoundingClientRect();
+  if (x === undefined || y === undefined) {
+    x = rect.left + rect.width / 2;
+    y = rect.top + rect.height / 2;
+  }
+  spawnFloater(x, y, gain);
+  const btn = document.getElementById("mineBtn");
+  btn.classList.remove("pop");
+  void btn.offsetWidth; // restart animation
+  btn.classList.add("pop");
+  renderHUDFast(); // lightweight: no full DOM rebuild, so rapid clicks stay snappy
+}
+
+document.getElementById("mineBtn").addEventListener("click", (e) => {
+  doMine(e.clientX, e.clientY);
+});
+
+// Keyboard mining (issue #8): Space / Enter triggers a mine. Ignored while
+// focus is in a button or input so it never double-fires the clicked button.
+document.addEventListener("keydown", (e) => {
+  if (e.code !== "Space" && e.code !== "Enter") return;
+  const t = e.target;
+  if (t && (t.tagName === "BUTTON" || t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+  e.preventDefault();
+  doMine();
+});
+
+// ===== In-game confirm modal (replaces native confirm()) =====
+let modalCallback = null;
+function showModal(message, onOk) {
+  document.getElementById("modalMsg").textContent = message;
+  modalCallback = onOk;
+  document.getElementById("modalOverlay").classList.remove("hidden");
+}
+function hideModal() {
+  document.getElementById("modalOverlay").classList.add("hidden");
+  modalCallback = null;
+}
+document.getElementById("modalCancel").addEventListener("click", hideModal);
+document.getElementById("modalOk").addEventListener("click", () => {
+  const cb = modalCallback;
+  hideModal();
+  if (cb) cb();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  showModal("Reset ALL progress (including prestige)? This cannot be undone.", () => {
+    localStorage.removeItem(SAVE_KEY);
+    localStorage.removeItem("st_lastSeen");
+    Object.assign(state, defaultState());
+    resetPending = true; // so the beforeunload autosave can't restore old data
+    location.reload();
+  });
+});
+
+el.prestigeBtn.addEventListener("click", () => {
+  if (!canPrestige()) {
+    showModal("You need " + fmt(PRESTIGE_REQ) + " ✦ to prestige. Keep mining!");
+    return;
+  }
+  const nextPct = Math.round(0.1 * (state.prestige + 1) * 100);
+  showModal(
+    "Prestige now? Costs " + fmt(PRESTIGE_REQ) + " ✦ and resets stardust + upgrades, but grants +" + nextPct + "% permanent production (total after: +" + nextPct + "%).",
+    () => {
+      state.prestige += 1;
+      state.stardust = 0;
+      state.owned = {};
+      // NOTE: clickCount is intentionally preserved across prestige (issue #3)
+      // so lifetime click achievements (Clicker / Click Frenzy) are not wiped
+      // on every reset.
+      save();
+      render();
+      // Milestone: bypass the cloud push throttle so a prestige is never lost.
+      window.dispatchEvent(new Event("stardust:milestone"));
+    }
+  );
+});
+
+// ===== Save / load =====
+function save() {
+  if (resetPending) return; // don't persist state during a reset/reload
+  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  // Announce that state changed. cloud.js listens if it loaded; nothing here
+  // depends on it, so the game works identically with no listener.
+  window.dispatchEvent(new Event("stardust:dirty"));
+}
+
+function load() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    Object.assign(state, data);
+    state.owned = data.owned || {};
+    state.prestige = data.prestige || 0;
+  } catch (e) {
+    console.warn("Save load failed:", e);
+  }
+}
+
+// Offline progress: reward up to 8 hours away.
+function applyOfflineProgress() {
+  const last = Number(localStorage.getItem("st_lastSeen") || 0);
+  const now = Date.now();
+  if (last) {
+    // Floor elapsed time at 0 so a clock rollback (NTP correction, manual
+    // clock change, DST quirk) is a no-op instead of silently zeroing the
+    // payout. The 8h cap still applies. `gain > 0` below stays as
+    // defense-in-depth.
+    const secs = Math.max(0, Math.min((now - last) / 1000, 8 * 3600));
+    const gain = cps() * secs;
+    if (gain > 0) {
+      state.stardust += gain;
+      state.totalMined += gain;
+    }
+    // Only advance the timestamp when the clock moved forward (or when it is
+    // absurdly in the future, i.e. corrupted). Writing a rolled-back `now`
+    // back here would poison st_lastSeen and pay out an accidental 8h reward
+    // on the next boot.
+    if (now > last || now < last - 8 * 3600 * 1000) localStorage.setItem("st_lastSeen", now);
+  } else {
+    localStorage.setItem("st_lastSeen", now);
+  }
+}
+
+// ===== Boot =====
+load();
+applyOfflineProgress();
+buildShop();
+checkAchievements();
+render(); // full first paint
+
+setInterval(loop, 100); // 10 fps logic + lightweight UI refresh
+setInterval(save, 5000); // autosave
+window.addEventListener("beforeunload", save);

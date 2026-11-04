@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="theme-color" content="#309090" />
+<link rel="icon" href="/client/img/icon.png">
+<link rel="stylesheet" type="text/css" href="/client/style.css">
+<title>Trail Game</title>
+</head>
+<body onmousemove="mouseMove(event);" onclick="mouseClick(event);" id="body">
+<canvas id="ctx" width="1200" height="600" style="border: 1px solid #000000;"></canvas>
+<div id="menuTextDiv" class="noselect">
+	Menu
+</div>
+<table id="winners" onclick="rgb();">
+	<tr>
+		<th>
+			Latest winners
+		</th>
+	</tr>
+</table>
+<div id="uiDiv" class="noselect">
+	<input id="nameInput" value="Unnamed" maxlength="16" pattern="[A-Za-z0-9]" required onkeydown = "nameInputKeydown(event)">
+	<button id="setName" onclick="changeName()" class="shadow">Set name</button>
+	<a href="https://github.com/AntonUden/TrailGame" target="_blank" class="shadow">Source code</a>
+	<input type="checkbox" id="mlock" class="shadow">Lock menu
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/client/cookies.js"></script>
+<script src="/client/game.js"></script>
+</body>
+</html>

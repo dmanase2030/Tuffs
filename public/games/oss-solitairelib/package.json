@@ -1,0 +1,42 @@
+{
+    "name": "pyramid",
+    "version": "1.0.0",
+    "description": "",
+    "keywords": [],
+    "license": "ISC",
+    "author": "",
+    "scripts": {
+        "dev": "parcel serve --dist-dir bin-dev",
+        "build": "parcel build",
+        "tswatch": "tsc --watch --noEmit --project tsconfig.json",
+        "lint": "oxlint . --type-aware",
+        "lintfix": "oxlint . --type-aware --fix",
+        "format": "oxfmt \"**/*.ts\"",
+        "formatcheck": "oxfmt \"**/*.ts\" --check"
+    },
+    "dependencies": {
+        "pure-rand": "^8.4.2"
+    },
+    "devDependencies": {
+        "@parcel/transformer-sass": "^2.16.4",
+        "oxfmt": "^0.67.0",
+        "oxlint": "^1.82.0",
+        "oxlint-tsgolint": "^7.0.2001",
+        "parcel": "^2.16.4",
+        "sass": "^1.104.0",
+        "typescript": "^7.0.2"
+    },
+    "targets": {
+        "web": {
+            "context": "browser",
+            "engines": {
+                "browserslist": "> 0.5%, last 2 versions, not dead"
+            },
+            "distDir": "bin",
+            "source": "index.html",
+            "scopeHoist": false,
+            "publicUrl": "./",
+            "sourceMap": false
+        }
+    }
+}

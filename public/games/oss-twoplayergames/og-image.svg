@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2c2318"/>
+      <stop offset="1" stop-color="#211a12"/>
+    </linearGradient>
+    <radialGradient id="g1" cx="12%" cy="0%" r="60%">
+      <stop offset="0" stop-color="#e08a5c" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#e08a5c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="90%" cy="6%" r="60%">
+      <stop offset="0" stop-color="#6ec5bc" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#6ec5bc" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g3" cx="50%" cy="110%" r="55%">
+      <stop offset="0" stop-color="#e6b455" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#e6b455" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <rect width="1200" height="630" fill="url(#g2)"/>
+  <rect width="1200" height="630" fill="url(#g3)"/>
+
+  <!-- chấm trang trí -->
+  <g fill="#f3eadb" opacity="0.06">
+    <circle cx="120" cy="500" r="6"/>
+    <circle cx="180" cy="540" r="4"/>
+    <circle cx="1080" cy="120" r="6"/>
+    <circle cx="1020" cy="80" r="4"/>
+  </g>
+
+  <text x="600" y="150" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="64">🎮</text>
+
+  <text x="600" y="300" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif"
+        font-size="96" font-weight="700" fill="#e6b455">Game 2 Người</text>
+
+  <text x="600" y="378" text-anchor="middle" font-family="'Nunito Sans', 'Segoe UI', Arial, sans-serif"
+        font-size="38" font-weight="600" fill="#f3eadb" opacity="0.94">76 trò chơi 2 người · Two-Player Games</text>
+
+  <text x="600" y="438" text-anchor="middle" font-family="'Nunito Sans', 'Segoe UI', Arial, sans-serif"
+        font-size="28" fill="#c3b199">Chơi chung máy · Đấu AI · Online — Local · vs AI · Online</text>
+
+  <!-- huy hiệu thể loại -->
+  <g font-family="'Nunito Sans', 'Segoe UI', Arial, sans-serif" font-size="26" font-weight="700">
+    <g transform="translate(330,500)">
+      <rect x="0" y="0" width="150" height="56" rx="28" fill="#e6b455" opacity="0.16" stroke="#e6b455" stroke-opacity="0.5"/>
+      <text x="75" y="37" text-anchor="middle" fill="#e6b455">♟️ Cờ</text>
+    </g>
+    <g transform="translate(500,500)">
+      <rect x="0" y="0" width="180" height="56" rx="28" fill="#6ec5bc" opacity="0.16" stroke="#6ec5bc" stroke-opacity="0.5"/>
+      <text x="90" y="37" text-anchor="middle" fill="#6ec5bc">⚡ Hành động</text>
+    </g>
+    <g transform="translate(700,500)">
+      <rect x="0" y="0" width="170" height="56" rx="28" fill="#e08a5c" opacity="0.16" stroke="#e08a5c" stroke-opacity="0.5"/>
+      <text x="85" y="37" text-anchor="middle" fill="#e08a5c">🕵️ Suy luận</text>
+    </g>
+  </g>
+</svg>

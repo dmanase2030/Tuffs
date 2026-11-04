@@ -1,0 +1,25 @@
+{
+  "name": "enmeshed",
+  "version": "0.0.1",
+  "description": "Enmeshed - JavaScript Game",
+  "main": "index.js",
+  "repository": "git@github.com:mdbarr/enmeshed.git",
+  "author": "Mark Barr <mark@hyperingenuity.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "cssnano-preset-advanced": "^4.0.7",
+    "eslint": "^7.8.1",
+    "http-server": "^0.12.3",
+    "mkdirp": "^1.0.4",
+    "postcss-cli": "^7.1.2",
+    "uglify-es": "^3.3.9"
+  },
+  "scripts": {
+    "build": "./build.js",
+    "lint": "eslint build.js serve.js",
+    "serve": "./serve.js",
+    "test": "xdg-open ./dist/index.html"
+  }
+}

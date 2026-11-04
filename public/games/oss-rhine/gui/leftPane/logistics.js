@@ -1,0 +1,597 @@
+function onFactoryRatioChange(slider) {
+  let value = parseInt(slider.value);
+  currentPlayer.factoryInLight = value;
+  $('lightNum').innerText = value;
+  $('heavyNum').innerText = currentPlayer.factoryInHeavy;
+  $('constructionNum').innerText = Math.round(value + currentPlayer.factoryInHeavy * HEAVY_EQUIPMENT_COEF + (currentPlayer.cities || 0) / 10);
+}
+function onReserveRatioChange(slider) {
+  let value = parseInt(slider.value);
+  currentPlayer.percentReserved = value;
+  $('reserveNum').innerText = value;
+}
+
+const REPAINT_SHOW_ANTIAIR_CALLBACK = td => {
+  let pt = td.pt;
+  let prov = pt.prov;
+  let num = antiAirInProv(prov);
+  td.style.cursor = 'pointer';
+  if (pt.owner == currentPlayer) {
+    if(num > 0) {
+      let number = document.createElement('number');
+      number.innerText = num;
+      number.title = `+${Math.round(antiAirEvadeChance(num) * 1000) / 10}% air strike evasion chance` +
+                     `\nBy building 1 more AA this number will become ${Math.round(antiAirEvadeChance(num + 1) * 1000) / 10}%`;
+      td.appendChild(number)
+      if (num >= pt.terrain.slots) {
+        td.style.cursor = 'not-allowed';
+      }
+    }
+  } else {
+    td.style.cursor = 'not-allowed';
+  }
+};
+const REPAINT_SHOW_FACTORIES_CALLBACK = td => {
+  let pt = td.pt;
+  let prov = pt.prov;
+  let num = factoriesInProv(prov);
+  td.style.cursor = 'pointer';
+  if (pt.owner == currentPlayer) {
+    if(num > 0) {
+      let number = document.createElement('number');
+      number.innerText = num;
+      td.appendChild(number)
+      if (num >= pt.terrain.slots) {
+        td.style.cursor = 'not-allowed';
+      }
+    }
+  } else {
+    td.style.cursor = 'not-allowed';
+  }
+};
+const REPAINT_SHOW_SUPPLY_CALLBACK = td => {
+  let pt = td.pt;
+  let prov = pt.prov;
+  let num = prov.divisions.length;
+  if (pt.owner == currentPlayer) {
+    if(num > 0) {
+      let number = document.createElement('number');
+      number.innerText = ((prov.divisions[0].supply) * 10).round();
+      td.appendChild(number)
+    }
+  }
+};
+
+function toggleAntiAirOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+      toggleAntiAirOnClick(button);
+      colCallback(td)
+    }
+    repaintCanvas(REPAINT_SHOW_ANTIAIR_CALLBACK);
+  }
+}
+function toggleFactoriesOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+      toggleFactoriesOnClick(button);
+      colCallback(td)
+    }
+    repaintCanvas(REPAINT_SHOW_FACTORIES_CALLBACK);
+  }
+}
+function toggleStrengthOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    let max = 0;
+    MAP_DATA.forEach(row => {
+      row.forEach(col => {
+        if (col.owner == currentPlayerID) {
+          let num = 0;
+          col.divisions.forEach(x => {num += x.soft + x.hard});
+          max = Math.max(max, num);
+        }
+      })
+    });
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.soft + x.hard});
+          td.style.backgroundColor = getColorFromPercentage(num / max, [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+function toggleStrengthByMenOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    let max = 0;
+    MAP_DATA.forEach(row => {
+      row.forEach(col => {
+        if (col.owner == currentPlayerID) {
+          let num = 0;
+          col.divisions.forEach(x => {num += x.men});
+          max = Math.max(max, num);
+        }
+      })
+    });
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.men});
+          td.style.backgroundColor = getColorFromPercentage(num / max, [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+function toggleAverageStrengthOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    let max = 0;
+    MAP_DATA.forEach(row => {
+      row.forEach(col => {
+        if (col.owner == currentPlayerID && col.divisions.length > 0) {
+          let num = 0;
+          col.divisions.forEach(x => {num += x.men});
+          max = Math.max(max, num / col.divisions.length);
+        }
+      })
+    });
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.men});
+          num = num / prov.divisions.length;
+          td.style.backgroundColor = getColorFromPercentage(num / max, [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+function toggleAverageStrengthHPOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    let max = 0;
+    MAP_DATA.forEach(row => {
+      row.forEach(col => {
+        if (col.owner == currentPlayerID && col.divisions.length > 0) {
+          let num = 0;
+          col.divisions.forEach(x => {num += x.hp});
+          max = Math.max(max, num / col.divisions.length);
+        }
+      })
+    });
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.hp});
+          num = num / prov.divisions.length;
+          td.style.backgroundColor = getColorFromPercentage(num / max, [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+function toggleAverageSkillOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    let max = 0;
+    MAP_DATA.forEach(row => {
+      row.forEach(col => {
+        if (col.owner == currentPlayerID && col.divisions.length > 0) {
+          let num = 0;
+          col.divisions.forEach(x => {num += x.skill});
+          max = Math.max(max, num / col.divisions.length);
+        }
+      })
+    });
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.skill});
+          num = num / prov.divisions.length;
+          td.style.backgroundColor = getColorFromPercentage(num / max, [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+          let number = document.createElement('number');
+          number.innerText = num.round();
+          td.appendChild(number)
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+function toggleAverageHardnessOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    let max = 0;
+    MAP_DATA.forEach(row => {
+      row.forEach(col => {
+        if (col.owner == currentPlayerID && col.divisions.length > 0) {
+          let num = 0;
+          col.divisions.forEach(x => {num += x.hardness});
+          max = Math.max(max, num / col.divisions.length);
+        }
+      })
+    });
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.hardness});
+          num = num / prov.divisions.length;
+          td.style.backgroundColor = getColorFromPercentage(num / max, [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+          let number = document.createElement('number');
+          number.innerText = (num * 10).round();
+          td.appendChild(number)
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+function toggleAverageEntrenchOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.entrench});
+          num = num / prov.divisions.length;
+          td.style.backgroundColor = getColorFromPercentage((num - 1).min(0), [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+          let number = document.createElement('number');
+          number.innerText = (num * 10).round();
+          td.appendChild(number)
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+function toggleAverageReinforceOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+    }
+    repaintCanvas(function (td) {
+      let pt = td.pt;
+      let prov = pt.prov;
+      td.style.cursor = 'pointer';
+      if (pt.owner == currentPlayer) {
+        td.style.backgroundColor = 'white';
+        if(prov.divisions.length > 0) {
+          let num = 0;
+          prov.divisions.forEach(x => {num += x.reinforceRate});
+          num = num / prov.divisions.length;
+          td.style.backgroundColor = getColorFromPercentage(num, [{"pct":0,"color":{"r":180,"g":0,"b":0}},{"pct":0.5,"color":{"r":180,"g":180,"b":0}},{"pct":1,"color":{"r":32,"g":158,"b":32}}]);
+          let number = document.createElement('number');
+          number.innerText = (num * 100).round();
+          td.appendChild(number)
+        }
+      } else {
+        td.style.backgroundColor = 'grey';
+      }
+    });
+  }
+}
+
+function toggleSuppliesOnClick(button) {
+  if (button.showing) {
+    button.className = '';
+    button.showing = false;
+    repaintCanvas();
+  } else {
+    button.className = 'active';
+    button.showing = true;
+    let oldCallback = colCallback;
+    colCallback = td => {
+      toggleSuppliesOnClick(button);
+      colCallback(td)
+    }
+    repaintCanvas(REPAINT_SHOW_SUPPLY_CALLBACK);
+  }
+}
+
+function buildAntiAirOnClick(button) {
+  if (currentPlayer.constructionPoints < 150) {
+    button.parentNode.children[2].style.display = 'block';
+    return;
+  }
+  button.parentNode.children[3].style.display = 'block';
+  repaintCanvas(REPAINT_SHOW_ANTIAIR_CALLBACK);
+  colCallback = (td) => {
+    let pt = td.pt;
+    let prov = pt.prov;
+    let num = factoriesInProv(prov);
+    if (td.style.cursor == 'not-allowed') return;
+    prov.slots.push('A');
+    currentPlayer.constructionPoints -= 150;
+    colCallback = null;
+    button.parentNode.children[3].style.display = 'none';
+    buttonsPlayer.playSprite(15 + 3/60, 17 + 15/60);
+    updateLogistics();
+    repaintCanvas();
+  }
+}
+
+function buildFactoryOnClick(button) {
+  if (currentPlayer.constructionPoints < 550) {
+    button.parentNode.children[2].style.display = 'block';
+    return;
+  }
+  button.parentNode.children[3].style.display = 'block';
+  repaintCanvas(REPAINT_SHOW_FACTORIES_CALLBACK);
+  colCallback = (td) => {
+    let pt = td.pt;
+    let prov = pt.prov;
+    let num = factoriesInProv(prov);
+    if (td.style.cursor == 'not-allowed') return;
+    prov.slots.push('F');
+    currentPlayer.factories++;
+    currentPlayer.constructionPoints -= 550;
+    colCallback = null;
+    button.parentNode.children[3].style.display = 'none';
+    buttonsPlayer.playSprite(15 + 3/60, 17 + 15/60);
+    updateLogistics();
+    repaintCanvas();
+  }
+}
+
+function buildFortOnClick(button) {
+  if (currentPlayer.constructionPoints < 150) {
+    button.parentNode.children[2].style.display = 'block';
+    return;
+  }
+  button.parentNode.children[3].style.display = 'block';
+  repaintCanvas((td) => {
+    let pt = td.pt;
+    let prov = pt.prov;
+    td.style.cursor = 'pointer';
+    if (pt.owner == currentPlayer && prov.fort || pt.owner != currentPlayer) {
+      td.style.cursor = 'not-allowed';
+    }
+  });
+  colCallback = (td) => {
+    let pt = td.pt;
+    let prov = pt.prov;
+    if (td.style.cursor == 'not-allowed') return;
+    prov.fort = true;
+    currentPlayer.constructionPoints -= 150;
+    colCallback = null;
+    button.parentNode.children[3].style.display = 'none';
+    buttonsPlayer.playSprite(15 + 3/60, 17 + 15/60);
+    updateLogistics();
+    repaintCanvas();
+  }
+}
+
+function updateLogistics() {
+  setLeftPaneActiveTab(0);
+  $left_content.innerHTML = `
+  <table class="statistic">
+  <tr>
+  <th>Recruitable Manpower
+  <td>${abbreviate(currentPlayer.recruitable, 2, false, false)}
+<br><small><br>${abbreviate(currentPlayer._populationData.growth[0], 1, false, false)} -${abbreviate(-(currentPlayer._populationData.death.max(0)), 1, false, false)}<br>
+= ${abbreviate(currentPlayer._populationData.net, 1, false, false)}</small><br>
+  </tr>
+  <tr>
+  <th>
+  <td>(+${(currentPlayer.growthRate * 100).round(3)}%)
+  </tr>
+  <tr>
+  <th>Total Casualties
+  <td>${abbreviate(currentPlayer.casualties, 2, false, false)}
+  </tr>
+  <tr>
+  <th>Average Strength
+  <td>${currentPlayer.averageStrength.round(2)}%
+  </tr>
+  <tr>
+  <th>Cities
+  <td>${currentPlayer.cities}
+  </tr>
+  <tr>
+  <th>Divisions
+  <td>${currentPlayer.divisions}
+  </tr>
+  <tr>
+  <th>Field Manpower
+  <td>${abbreviate(currentPlayer.divisionMen, 3, false, false)}
+  </tr>
+  <tr>
+  <th>Total Damage
+  <td>${abbreviate(currentPlayer.divisionDamage, 3, false, false)}
+  </tr>
+  <tr></tr><tr></tr>
+  <tr>
+  <th>Factories
+  <td>${currentPlayer.factories}
+  </tr>
+<tr>
+  <th>Light Equipments
+  <td>${abbreviate(currentPlayer.light, 2, false, false)}
+  </tr>
+  <tr>
+  <th>Heavy Equipments
+  <td>${abbreviate(currentPlayer.heavy, 2, false, false)}
+  </tr>
+  </table>
+  <strong>Production ratio:</strong>
+  <input type="range" min="1" max="${currentPlayer.factories}" value="${currentPlayer.factoryInLight}" class="slider"
+    oninput="onFactoryRatioChange(this); document.getElementById('queueInfoArea').innerHTML = renderQueueInfo()">
+  Light: <span id="lightNum">${currentPlayer.factoryInLight}</span>, Heavy: <span id="heavyNum">${currentPlayer.factoryInHeavy}</span><br>
+  <button onclick="currentPlayer.activateReserve(0.5);updateLogistics()">-50% Reserve</button>
+  <button onclick="currentPlayer.activateReserve(1);updateLogistics()">-100% Reserve</button>
+  <br>
+  <strong>Minimum % reserved:</strong>
+  <input type="range" min="0" max="100" value="${currentPlayer.percentReserved}" class="slider"
+  oninput="onReserveRatioChange(this); document.getElementById('queueInfoArea').innerHTML = renderQueueInfo()">
+  <span id="reserveNum">${currentPlayer.percentReserved}</span>%<br><br>
+  <div id="queueInfoArea">
+  ${renderQueueInfo()}
+  </div><br>
+  Construction: <span id="constructionNum">${Math.round(currentPlayer.factoryInLight + currentPlayer.factoryInHeavy / 2)}</span><br><br>
+  <table class="statistic">
+  <tr>
+  <th>Construction Points
+  <td>${abbreviate(currentPlayer.constructionPoints, 2, false, false)}
+  <tr>
+  <th>
+  <button onclick="buildFortOnClick(this)">Build Fort</button><br>
+  <font style="display: none" color="red">Not enough pts</font>
+  <font style="display: none">Select location</font>
+  <td>150 pts
+  <tr>
+  <th>
+  <button onclick="buildFactoryOnClick(this)">Build Factory</button><br>
+  <font style="display: none" color="red">Not enough pts</font>
+  <font style="display: none">Select location</font>
+  <td>550 pts
+  <tr>
+  <th>
+  <button onclick="buildAntiAirOnClick(this)">Build Anti Air</button><br>
+  <font style="display: none" color="red">Not enough pts</font>
+  <font style="display: none">Select location</font>
+  <td>150 pts
+  </table>
+  <br>
+  <button onclick="toggleFactoriesOnClick(this)">Toggle Factories View</button><br><br>
+  <button onclick="toggleAntiAirOnClick(this)">Toggle Anti-Air View</button><br><br>
+  <button onclick="toggleSuppliesOnClick(this)">Toggle Supplies View</button><br><br>
+  <button onclick="toggleStrengthByMenOnClick(this)">Toggle Strength View (By Men)</button><br><br>
+  <button onclick="toggleAverageStrengthOnClick(this)">Toggle Average Strength View (By men)</button><br><br>
+  <button onclick="toggleAverageStrengthHPOnClick(this)">Toggle Average Strength View (By HP)</button><br><br>
+  <button onclick="toggleAverageSkillOnClick(this)">Toggle Average Skill View</button><br><br>
+  <button onclick="toggleAverageHardnessOnClick(this)">Toggle Average Hardness View</button><br><br>
+  <button onclick="toggleAverageEntrenchOnClick(this)">Toggle Average Entrench View</button><br><br>
+  <button onclick="toggleAverageReinforceOnClick(this)">Toggle Average Reinforce View</button><br><br>
+  <br><br><br>
+  <p>V1.0.2</p>
+  `;
+  jQuery('#left-content button:not([data-custom-sound])').bind( "click", function() {
+    buttonsPlayer.playSprite(7 + 3/60, 7 + 14/60);
+  });
+}

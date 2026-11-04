@@ -1,0 +1,25 @@
+{
+  "name": "sudokuflow",
+  "version": "1.0.0",
+  "description": "SudokuFlow is a premium, Notion-inspired Sudoku workspace built entirely with pure HTML, CSS, and JavaScript — no frameworks, no fluff. Play, learn, analyze, and compete across game modes with a clean minimal UI, smart hints, AI solver, daily challenges, and full offline support.",
+  "main": "app.js",
+  "scripts": {
+    "test": "node test-logic.js",
+    "test:logic": "node test-logic.js",
+    "test:ui": "node test-ui.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vincenzo-afk/sudokuflow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vincenzo-afk/sudokuflow/issues"
+  },
+  "homepage": "https://github.com/vincenzo-afk/sudokuflow#readme",
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}

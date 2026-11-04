@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <title>LOST ROBOT</title>
+    <link rel="stylesheet" href="assets/main.css"/>
+
+    <link rel="shortcut icon" href="assets/favicon.svg" type="image/svg+xml"/>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png"/>
+    <link rel="icon" href="assets/favicon.png" type="image/png"/>
+</head>
+<body>
+
+<canvas></canvas>
+
+<script src="vendor/SAT.js"></script>
+<script src="vendor/ZzFX.micro.js"></script>
+<script src="src/app.js" type="module"></script>
+
+<!-- MAIN MENU -->
+<div style="display: none">
+    <div id="scene--main-menu">
+        <div class="button-container">
+            <div class="button" data-action="scenarios">Scenarios</div>
+            <div class="button" data-action="objectives">Objectives</div>
+            <div class="button" data-action="controls">Controls</div>
+            <div class="button" data-action="credits">Credits</div>
+        </div>
+    </div>
+</div>
+
+<!-- LEVEL MENU -->
+<div style="display: none">
+    <div id="scene--level-menu">
+        <div class="content">
+            <div class="back-button" data-action="back">Back</div>
+            <h2>Scenarios</h2>
+
+            <!-- Template -->
+            <div id="level-select-template" style="display: none">
+                <div class="level-wrapper">
+                    <div class="level-button" data-level-id="{{ level.id }}">
+                        <div>{{ level.name }}</div>
+                        <div>{{ level.points }}</div>
+                        <div>{{ level.time }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="level-select">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OBJECTIVES -->
+<div style="display: none">
+    <div id="scene--objectives">
+        <div class="content">
+            <div class="back-button" data-action="back">Back</div>
+            <h2>Objectives</h2>
+            <ul>
+                <li>Guide the robot back to its shiny charging point</li>
+                <li>Visit placed landmarks to gain points and open doors</li>
+                <li>Speed run maps to improve your score</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- CONTROLS -->
+<div style="display: none">
+    <div id="scene--controls">
+        <div class="content">
+            <div class="back-button" data-action="back">Back</div>
+
+            <h2>Controls</h2>
+
+            <ul>
+                <li>Camera <kbd>C</kbd></li>
+            </ul>
+
+            <h3>Easy Mode</h3>
+            <ul>
+                <li>Move <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></li>
+                <li>Turbo <kbd>T</kbd></li>
+            </ul>
+
+            <h3>Differential Mode</h3>
+            <ul>
+                <li>Left wheel <kbd>W</kbd>/<kbd>S</kbd></li>
+                <li>Right wheel <kbd>I</kbd>/<kbd>K</kbd></li>
+                <li>Turbo <kbd>SPACE</kbd></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- CONTROLS -->
+<div style="display: none">
+    <div id="scene--credits">
+        <div class="content">
+            <div class="back-button" data-action="back">Back</div>
+
+            <h2>Credits</h2>
+
+            <ul>
+                <li>
+                    Lost Robot is a game by Dennis Meckel.
+                    The game was developed in two weeks for the <a href="http://js13kgames.com">JS13KGAMES</a> competition.
+                    You are playing the extended Deluxe Bytes Edition
+                </li>
+                <li><a href="https://straker.github.io/kontra/">Kontra.js</a></li>
+                <li><a href="http://jriecken.github.io/sat-js/">SAT.js</a></li>
+                <li><a href="https://zzfx.3d2k.com/">ZzFX</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- PAUSE -->
+<div style="display: none">
+    <div id="scene--pause-menu">
+        <div style="">
+            <div>Paused</div>
+            <div data-action="resume">Resume</div>
+            <div data-action="restart">Restart</div>
+            <div data-action="quit">Quit</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

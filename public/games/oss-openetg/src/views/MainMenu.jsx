@@ -1,0 +1,812 @@
+import { Repeat, createSignal, onSettled } from 'solid-js';
+
+import { changeMusic, changeSound, musicList } from '../audio.js';
+import Chat from '../Components/Chat.jsx';
+import * as sock from '../sock.jsx';
+import { mkAi, mkPremade } from '../mkAi.js';
+import Cards from '../Cards.js';
+import { addcard, decodedeck } from '../etgutil.js';
+import * as store from '../store.jsx';
+import Card from '../Components/Card.jsx';
+import { arenaCost, pveCostReward } from '../userutil.js';
+import parseChat from '../parseChat.js';
+
+const hasflag = store.hasflag;
+const tipjar = [
+	'Clicking on play by play rectangles will show the game state at that point of history',
+	'Each card in your booster pack has a \u2154 chance of being from the chosen element',
+	'Colosseum lets you compete in a number of daily events for extra prizes. The colosseum challenges reset daily',
+	'Be sure to try the Proving Grounds Quests for some good cards',
+	'Rarity ratings: Grey commons, green uncommons, blue rares, & pink ultra rares',
+	"The Library button allows you to see all of a user's cards & progress",
+	'If you are a new user, be sure to get your free packs from the Shop',
+	'Starter decks, cards from free packs, & all non-Common Daily Cards are account-bound; they cannot be traded or sold',
+	'If you include account-bound cards in an upgrade, the upgrade will also be account-bound',
+	"You'll receive a Daily Card upon logging in after midnight UTC. If you submit an Arena deck, it contain 5 copies of that card",
+	'Cards sell for around half as much as they cost to buy from a pack',
+	'Quests are free to try, & you always face the same deck. Keep trying until you collect your reward',
+	'You may mulligan at the start of the game to shuffle & redraw your hand with one less card',
+	'Your account name is case sensitive',
+	'Arena Tier 1 is unupgraded, while Tier 2 is upgraded. All decks in a tier have the same number of points',
+	"Typing '/who' in chat you will get a list of the users who are online. '/w user message' whispers that user",
+	"Typing '/help' in chat will list all commands",
+	'Keyboard shortcuts: space ends turn, backspace cancels, w targets opponent, s targets yourself, 1 through 8 cast cards in hand',
+	'Holding shift while dragging cursor over cards allows activating them without clicking',
+	'Commoner & Mage are unupped, Champion has some upped, & Demigod is fully upped',
+	"Rarity doesn't necessarily relate to card strength. You can go a long ways with commons & uncommons",
+	'A ply is half a turn',
+	'Mark cards are only obtainable through PvP events',
+	"After an AI battle you will win a random common, uncommon, or rare from your opponent's deck",
+	'Wealth used by leaderboards is a combination of current gold & cardpool',
+];
+
+function AiButton(props) {
+	return (
+		<div style="display:flex;font-size:14px;align-items:center">
+			<input
+				type="button"
+				value={props.name}
+				onClick={props.onClick}
+				onMouseOver={props.onMouseOver}
+				disabled={props.disabled}
+			/>
+			<div class="costcolumn">
+				{pveCostReward[props.lv * 2]}
+				<span class="ico gold" />
+			</div>
+			<div class="costcolumn">
+				{pveCostReward[props.lv * 2 + 1]}
+				<span class="ico gold" />
+			</div>
+		</div>
+	);
+}
+
+function setPbpSetting(e) {
+	store.setOpt('playByPlayMode', e.target.value);
+}
+
+function logout() {
+	sock.userEmit('logout');
+	store.logout();
+	store.setOpt('remember', false);
+	store.doNav(store.Login);
+}
+
+const musicTargetList = [
+	['main', 'Default'],
+	['match', 'Match'],
+	['0', 'Commoner'],
+	['1', 'Mage'],
+	['2', 'Champion'],
+	['3', 'Demigod'],
+	['4', 'Arena 1'],
+	['5', 'Arena 2'],
+];
+
+export default function MainMenu(props) {
+	const foename = () => (store.appState.opts.foename ?? '').trim(),
+		expectedDamageSamples = () =>
+			store.appState.opts.expectedDamageSamples || '4';
+
+	const [ocard, setocard] = createSignal(props.nymph);
+	const [settings, setSettings] = createSignal(false);
+	const [musicbox, setMusicbox] = createSignal(false);
+	const [musicboxTarget, setMusicboxTarget] = createSignal(musicTargetList[0]);
+	const [changepass, setChangepass] = createSignal(false);
+	let newpass, newpass2, rewardcode;
+
+	const [tipNumber, setTipNumber] = createSignal(
+			(Math.random() * tipjar.length) | 0,
+		),
+		[tip, setTip] = createSignal('');
+
+	const resetTip = e => {
+		if (e.target.tagName && e.target.tagName.match(/^(DIV|CANVAS|HTML)$/)) {
+			setTip(tipjar[tipNumber()]);
+		}
+	};
+
+	sock.useCmds({
+		oracle: data => {
+			setocard(data.c);
+			store.updateUser(user => {
+				const update = {
+					daily: 128,
+					dailymage: data.mage,
+					dailydg: data.dg,
+					oracle: data.day,
+					ostreakday: 0,
+					ostreakday2: data.day,
+					ocard: data.c,
+				};
+				if (data.bound) {
+					update.accountbound = addcard(user.accountbound, data.c);
+				} else {
+					update.pool = addcard(user.pool, data.c);
+				}
+				return update;
+			});
+			store.chatMsg('Daily Reward: ' + Cards.Codes[data.c].name, 'System');
+		},
+		codecard: data => {
+			store.doNav(import('./Reward.jsx'), {
+				type: data.type,
+				amount: data.num,
+				code: rewardcode.value,
+			});
+		},
+		codegold: data => {
+			store.updateUser(user => ({ gold: user.gold + data.g }));
+			store.chat(() => (
+				<div>
+					{data.g}
+					<span class="ico gold" /> added!
+				</div>
+			));
+		},
+		codecode: data => {
+			store.updateUser(user => ({
+				pool: addcard(user.pool, data.card),
+			}));
+			store.chatMsg(Cards.Codes[data.card].name + ' added!', 'System');
+		},
+	});
+
+	onSettled(() => {
+		store.loadMusic('main');
+		if (
+			!hasflag(store.appState.user, 'no-oracle') &&
+			((Date.now() / 86400000) | 0) > store.appState.user.oracle
+		) {
+			sock.userEmit('oracle', {});
+		}
+	});
+	store.listen(document, 'mousemove', resetTip);
+
+	const arenaAi = i => {
+		const cost = arenaCost(i);
+		return e => {
+			if (
+				!Cards.isDeckLegal(decodedeck(store.getDeck()), store.appState.user)
+			) {
+				store.chatMsg('Invalid deck', 'System');
+			} else if (store.appState.user.gold < cost) {
+				store.requiresGold(cost);
+			} else {
+				sock.userEmit('foearena', { lv: i });
+				e.target.style.display = 'none';
+			}
+		};
+	};
+
+	const changeFunc = () => {
+		if (newpass.value === newpass2.value) {
+			sock.userEmit('passchange', { p: newpass.value });
+			setChangepass(false);
+		} else {
+			store.chatMsg('Passwords do not match', 'System');
+		}
+		newpass.value = '';
+		newpass2.value = '';
+	};
+
+	const quickslots = () => {
+		const slots = [];
+		if (store.appState.user) {
+			for (let i = 0; i < 10; i++) {
+				slots.push(
+					<input
+						type="button"
+						value={i + 1}
+						class={[
+							'editbtn',
+							{
+								selected:
+									store.appState.user.selectedDeck ===
+									store.appState.user.qecks[i],
+							},
+						]}
+						onMouseOver={() => setTip(store.appState.user.qecks[i] ?? '')}
+						onClick={() => {
+							sock.userExec('setdeck', {
+								name: store.appState.user.qecks[i] ?? '',
+							});
+						}}
+					/>,
+				);
+			}
+		}
+		return slots;
+	};
+
+	return (
+		store.appState.user && (
+			<div class="bg_main">
+				<div style="position:absolute;left:196px;top:4px;width:504px;height:48px">
+					{tip()}
+					<input
+						type="button"
+						value="Next Tip"
+						onClick={() => {
+							const newTipNumber = (tipNumber() + 1) % tipjar.length;
+							setTipNumber(newTipNumber);
+							setTip(tipjar[newTipNumber]);
+						}}
+						style="position:absolute;right:2px;bottom:2px"
+					/>
+				</div>
+				<div style="position:absolute;left:100px;top:92px;width:170px;height:120px;font-size:14px;display:grid;align-content:stretch">
+					<div>{store.appState.username}</div>
+					{store.appState.uname && <div>↪{store.appState.uname}</div>}
+					<div>
+						{store.appState.user?.gold}
+						<span class="ico gold" />
+					</div>
+					<div style="display:grid;grid-template-columns:auto 1fr auto 1fr">
+						PvE
+						<span style="text-align:right">{store.appState.user?.aiwins}</span>
+						&ndash;
+						<span>{store.appState.user?.ailosses}</span>
+						PvP
+						<span style="text-align:right">{store.appState.user?.pvpwins}</span>
+						&ndash;
+						<span>{store.appState.user?.pvplosses}</span>
+					</div>
+				</div>
+				<div style="position:absolute;left:317px;top:383px;width:264px;height:110px;display:grid;justify-items:center">
+					<div class="maintitle">Miscellaneous</div>
+					<div style="display:flex;font-size:14px;width:100%;align-items:center;justify-content:space-between">
+						<input
+							type="button"
+							value="Colosseum"
+							onClick={() => {
+								if (!hasflag(store.appState.user, 'no-oracle')) {
+									store.doNav(import('./Colosseum.jsx'));
+								}
+							}}
+							onMouseOver={[
+								setTip,
+								'Try some daily challenges in the Colosseum',
+							]}
+							disabled={hasflag(store.appState.user, 'no-oracle')}
+						/>
+						<input
+							type="button"
+							value="Quests"
+							onClick={() => {
+								if (!hasflag(store.appState.user, 'no-quest')) {
+									store.doNav(import('./Quest.jsx'));
+								}
+							}}
+							onMouseOver={[setTip, 'Go on an adventure']}
+							disabled={hasflag(store.appState.user, 'no-quest')}
+						/>
+					</div>
+					<div style="display:flex;font-size:14px;width:100%;align-items:center;justify-content:space-between">
+						<input
+							type="button"
+							value="Custom"
+							onClick={() =>
+								store.doNav(import('./Challenge.jsx'), { pvp: false })
+							}
+							onMouseOver={[
+								setTip,
+								'Setup custom games vs AI or other players',
+							]}
+						/>
+						<input
+							type="button"
+							value="Arena Deck"
+							onClick={() => {
+								if (!store.appState.uname) {
+									store.doNav(import('./ArenaInfo.jsx'));
+								}
+							}}
+							onMouseOver={[setTip, 'Check how your arena decks are doing']}
+							disabled={store.appState.uname}
+						/>
+					</div>
+					<div style="display:flex;font-size:14px;width:100%;align-items:center;justify-content:space-between">
+						<input
+							type="button"
+							value="Legacy"
+							onClick={() => store.doNav(import('../vanilla/views/Login.jsx'))}
+							onMouseOver={[
+								setTip,
+								'A mode attempting to imitate original EtG',
+							]}
+						/>
+						<input
+							type="button"
+							value="Alts"
+							onClick={() => store.doNav(import('./Alts.jsx'))}
+							onMouseOver={[setTip, 'Manage subaccounts']}
+						/>
+					</div>
+				</div>
+				{ocard() ?
+					<>
+						<div style="font-size:16px;user-select:none;position:absolute;left:95px;top:300px">
+							<div style="text-align:center">Daily Login Reward</div>
+							<Card card={Cards.Codes[ocard()]} />
+						</div>
+					</>
+				:	!store.appState.opts.hideMainchat && (
+						<>
+							<Chat
+								channel="Main"
+								style="position:absolute;left:72px;top:228px;width:226px;height:300px;background:transparent;font-size:14px;opacity:0.6"
+							/>
+							<input
+								placeholder="Chat"
+								onKeyDown={parseChat}
+								style="position:absolute;left:99px;top:532px"
+							/>
+						</>
+					)
+				}
+				<div style="position:absolute;left:302px;top:120px;width:294px;height:210px;display:grid;justify-items:center">
+					<div class="maintitle">Battle</div>
+					<div style="display:flex;padding-left:82px;align-items:center">
+						<div class="costcolumn">Cost</div>
+						<div class="costcolumn">Reward</div>
+					</div>
+					<AiButton
+						name="Commoner"
+						lv={0}
+						onClick={() => store.navGame(mkAi(0))}
+						onMouseOver={[
+							setTip,
+							'Commoners have no upgraded cards & mostly common cards',
+						]}
+						disabled={hasflag(store.appState.user, 'no-battle')}
+					/>
+					<AiButton
+						name="Mage"
+						lv={1}
+						onClick={() => store.navGame(mkPremade(1))}
+						onMouseOver={[
+							setTip,
+							'Mages have preconstructed decks with a couple rares',
+						]}
+						disabled={hasflag(store.appState.user, 'no-battle')}
+					/>
+					<AiButton
+						name="Champion"
+						lv={2}
+						onClick={() => store.navGame(mkAi(2))}
+						onMouseOver={[setTip, 'Champions have some upgraded cards']}
+						disabled={hasflag(store.appState.user, 'no-battle')}
+					/>
+					<AiButton
+						name="Demigod"
+						lv={3}
+						onClick={() => store.navGame(mkPremade(3))}
+						onMouseOver={[
+							setTip,
+							'Demigods are extremely powerful. Come prepared',
+						]}
+						disabled={hasflag(store.appState.user, 'no-battle')}
+					/>
+					<AiButton
+						name="Arena 1"
+						onClick={arenaAi(0)}
+						onMouseOver={[
+							setTip,
+							'In the arena you will face decks from other players',
+						]}
+						lv={4}
+						disabled={hasflag(store.appState.user, 'no-battle')}
+					/>
+					<AiButton
+						name="Arena 2"
+						onClick={arenaAi(1)}
+						onMouseOver={[
+							setTip,
+							'In the arena you will face upgraded decks from other players',
+						]}
+						lv={5}
+						disabled={hasflag(store.appState.user, 'no-battle')}
+					/>
+				</div>
+				<div style="position:absolute;left:620px;top:92px;width:196px;height:150px;display:grid;align-content:space-between">
+					<div class="maintitle">Cards</div>
+					<div style="font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-left:16px;margin-top:12px">
+						{`Deck: ${store.appState.user?.selectedDeck}`}
+					</div>
+					<div style="display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:2px">
+						{quickslots}
+					</div>
+					<div style="display:flex;flex-wrap:wrap;justify-content:space-evenly;gap:2px">
+						<input
+							type="button"
+							value="Editor"
+							onClick={() => store.doNav(import('./DeckEditor.jsx'))}
+							onMouseOver={[setTip, 'Edit & manage your decks']}
+						/>
+						<input
+							type="button"
+							value="Shop"
+							onClick={() => {
+								if (
+									!hasflag(store.appState.user, 'no-shop') ||
+									(store.appState.user.freepacks &&
+										store.appState.user.freepacks.some(x => x))
+								) {
+									store.doNav(import('./Shop.jsx'));
+								}
+							}}
+							onMouseOver={[
+								setTip,
+								'Buy booster packs which contain cards from the elements you choose',
+							]}
+							disabled={
+								hasflag(store.appState.user, 'no-shop') &&
+								!store.appState.user.freepacks?.some(x => x)
+							}
+						/>
+						<input
+							type="button"
+							value="Upgrade"
+							onClick={() => {
+								if (!(
+									hasflag(store.appState.user, 'no-up-pillar') &&
+									hasflag(store.appState.user, 'no-up-merge')
+								)) {
+									store.doNav(import('./Upgrade.jsx'));
+								}
+							}}
+							onMouseOver={[setTip, 'Upgrade or sell cards']}
+							disabled={
+								hasflag(store.appState.user, 'no-up-pillar') &&
+								hasflag(store.appState.user, 'no-up-merge')
+							}
+						/>
+						<input
+							type="button"
+							value="Bazaar"
+							onClick={() => {
+								if (!store.appState.uname) {
+									store.doNav(import('./Bazaar.jsx'));
+								}
+							}}
+							onMouseOver={[
+								setTip,
+								"Put up cards for sale & review other players' offers",
+							]}
+							disabled={store.appState.uname}
+						/>
+					</div>
+				</div>
+				<div style="position:absolute;left:619px;top:292px;width:195px;height:240px;display:grid">
+					<div style="display:flex;flex-wrap:wrap;justify-content:space-evenly;align-items:center;padding-bottom:5px">
+						<div class="maintitle">Social</div>
+						<input
+							placeholder="Player's Name"
+							value={store.appState.opts.foename ?? ''}
+							onInput={e => store.setOptTemp('foename', e.target.value)}
+						/>
+						<input
+							type="button"
+							value="Library"
+							onClick={() => {
+								const name = foename() || store.appState.username;
+								if (name) {
+									const props = { name };
+									if (!foename()) props.alt = store.appState.uname;
+									store.doNav(import('./Library.jsx'), props);
+								}
+							}}
+							onMouseOver={[setTip, 'See exactly what cards you or others own']}
+						/>
+						<input
+							type="button"
+							value="PvP"
+							onClick={() => sock.sendChallenge(foename())}
+						/>
+						<input
+							type="button"
+							value="Trade"
+							onClick={() => {
+								if (!hasflag(store.appState.user, 'no-trade')) {
+									sock.userEmit('offertrade', {
+										f: foename(),
+										cards: '',
+										g: 0,
+										forcards: null,
+										forg: null,
+									});
+									store.doNav(import('./Trade.jsx'), { foe: foename() });
+								}
+							}}
+							onMouseOver={[setTip, 'Trade cards/$ with another player']}
+							disabled={hasflag(store.appState.user, 'no-trade')}
+						/>
+					</div>
+					<div style="display:flex;flex-wrap:wrap;align-content:center;justify-content:center;align-items:center">
+						<div class="maintitle">Reward</div>
+						<div style="display:flex;justify-content:space-evenly;width:100%">
+							<input placeholder="Code" style="width:80px" ref={rewardcode} />
+							<input
+								type="button"
+								value="Redeem"
+								onClick={() => {
+									sock.userEmit('codesubmit', {
+										code: rewardcode.value,
+									});
+								}}
+								onMouseOver={[setTip, 'Redeem a reward code']}
+							/>
+						</div>
+					</div>
+					<div style="display:flex;flex-wrap:wrap;justify-content:space-evenly;align-items:center;padding:8px">
+						<div class="maintitle">Leaderboards</div>
+						<Repeat count={2}>
+							{i => (
+								<input
+									type="button"
+									value={`Arena${i + 1} T30`}
+									onClick={() =>
+										store.doNav(import('./ArenaTop.jsx'), { lv: i })
+									}
+									onMouseOver={[
+										setTip,
+										'See who the top players in arena are right now',
+									]}
+								/>
+							)}
+						</Repeat>
+						<input
+							type="button"
+							value="View"
+							onClick={() => store.doNav(import('./Leaderboards.jsx'))}
+							onMouseOver={[
+								setTip,
+								"Leaderboards to see data such as who's collected the most wealth",
+							]}
+						/>
+					</div>
+				</div>
+				{musicbox() && (
+					<div
+						class="bgbox"
+						style="position:relative;left:302px;top:120px;width:290px;z-index:1;display:flex;flex-direction:column;align-content:space-between;justify-content:space-between">
+						<div style="display:flex;flex-direction:column;align-content:center;justify-content:space-between;flex-wrap:wrap;align-items:flex-start">
+							<input
+								type="number"
+								placeholder="cooldown"
+								value={+store.appState.opts.musicCooldown || 300}
+								onChange={e => store.setOpt('musicCooldown', e.target.value)}
+							/>
+							<div>
+								{musicTargetList.map(target => (
+									<input
+										type="button"
+										class={musicboxTarget() === target ? 'selected' : ''}
+										value={target[1]}
+										onClick={() => setMusicboxTarget(target)}
+									/>
+								))}
+							</div>
+							{musicList.map(([id, _opus, name]) => (
+								<label>
+									<input
+										type="checkbox"
+										checked={
+											!!store.appState.opts[`music${musicboxTarget()[0]}_${id}`]
+										}
+										onChange={e => {
+											store.setOpt(
+												`music${musicboxTarget()[0]}_${id}`,
+												e.target.checked,
+											);
+											if (musicboxTarget()[0] === 'main') {
+												store.loadMusic('main');
+											}
+										}}
+									/>
+									{name}
+								</label>
+							))}
+						</div>
+					</div>
+				)}
+				{changepass() && (
+					<div
+						class="bgbox"
+						style="position:relative;left:302px;top:286px;width:290px;height:60px;z-index:1">
+						<input
+							placeholder="New Password"
+							ref={newpass}
+							onKeyDown={e => {
+								if (e.key === 'Enter') changeFunc();
+							}}
+							style="position:absolute;left:136px;top:4px;width:128px"
+						/>
+						<input
+							placeholder="Confirm New"
+							ref={newpass2}
+							onKeyDown={e => {
+								if (e.key === 'Enter') changeFunc();
+							}}
+							style="position:absolute;left:136px;top:32px;width:128px"
+						/>
+						<input
+							type="button"
+							value="Change Password"
+							onClick={changeFunc}
+							style="position:absolute;left:8px;top:8px;width:120px"
+						/>
+						<input
+							type="button"
+							value="Cancel Change"
+							onClick={() => {
+								setChangepass(false);
+								newpass.value = '';
+								newpass2.value = '';
+							}}
+							style="position:absolute;left:8px;top:32px;width:120px"
+						/>
+					</div>
+				)}
+				<div style="position:absolute;left:317px;top:517px;width:263px;display:flex;flex-wrap:nowrap;align-content:center;justify-content:space-between;align-items:center;">
+					<input
+						type="button"
+						value="Settings"
+						onClick={() => {
+							setSettings(settings => !settings);
+							setChangepass(false);
+							setMusicbox(false);
+							if (newpass) newpass.value = '';
+							if (newpass2) newpass2.value = '';
+						}}
+						onMouseOver={[setTip, 'Change password and user interface']}
+					/>
+					{typeof kongregateAPI === 'undefined' && (
+						<input
+							type="button"
+							value="Logout"
+							onClick={logout}
+							onMouseOver={[setTip, 'Click here to log out']}
+						/>
+					)}
+				</div>
+				{settings() && (
+					<div
+						class="bgbox"
+						style="position:absolute;left:302px;top:310px;width:min-content;height:200px;display:flex;flex-direction:column;align-content:space-between;justify-content:space-between">
+						<div style="display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:flex-start">
+							<div style="display:flex;flex-direction:column;align-content:center;justify-content:space-between;flex-wrap:wrap;align-items:flex-start;">
+								<input
+									type="button"
+									value="Change Password"
+									onClick={() => setChangepass(true)}
+								/>
+								<label>
+									<input
+										type="checkbox"
+										checked={!!store.appState.opts.enableSound}
+										onChange={e => {
+											changeSound(e.target.checked);
+											store.setOpt('enableSound', e.target.checked);
+										}}
+									/>
+									Enable sound
+								</label>
+								<label>
+									<input
+										type="checkbox"
+										checked={!!store.appState.opts.enableMusic}
+										onChange={e => {
+											changeMusic(e.target.checked);
+											store.setOpt('enableMusic', e.target.checked);
+										}}
+									/>
+									Enable music
+								</label>
+								<label>
+									<input
+										type="checkbox"
+										checked={!!store.appState.opts.hideMainchat}
+										onChange={e =>
+											store.setOpt('hideMainchat', e.target.checked)
+										}
+									/>
+									Hide mainchat
+								</label>
+								<label>
+									<input
+										type="checkbox"
+										checked={!!store.appState.opts.hideRightpane}
+										onChange={e =>
+											store.setOpt('hideRightpane', e.target.checked)
+										}
+									/>
+									Hide rightpane
+								</label>
+							</div>
+							<div style="display:flex;flex-direction:column;align-content:center;justify-content:space-between;flex-wrap:wrap;align-items:flex-start">
+								<input
+									type="button"
+									value="Musicbox"
+									onClick={() => setMusicbox(value => !value)}
+								/>
+								<label>
+									<input
+										type="checkbox"
+										checked={!!store.appState.opts.disableTut}
+										onChange={e => store.setOpt('disableTut', e.target.checked)}
+									/>
+									Hide help
+								</label>
+								<label>
+									<input
+										type="checkbox"
+										checked={!!store.appState.opts.lofiArt}
+										onChange={e => store.setOpt('lofiArt', e.target.checked)}
+									/>
+									Lofi Art
+								</label>
+								<label>
+									<input
+										type="checkbox"
+										checked={!!store.appState.opts.shiftDrag}
+										onChange={e => store.setOpt('shiftDrag', e.target.checked)}
+									/>
+									Shift Drag
+								</label>
+							</div>
+						</div>
+						<span>
+							Play by play
+							<label>
+								<input
+									type="radio"
+									name="settings-pbp"
+									value=""
+									checked={!store.appState.opts.playByPlayMode}
+									onChange={setPbpSetting}
+								/>
+								On
+							</label>
+							<label>
+								<input
+									type="radio"
+									name="settings-pbp"
+									value="noline"
+									checked={store.appState.opts.playByPlayMode === 'noline'}
+									onChange={setPbpSetting}
+								/>
+								No line
+							</label>
+							<label>
+								<input
+									type="radio"
+									name="settings-pbp"
+									value="disabled"
+									checked={store.appState.opts.playByPlayMode === 'disabled'}
+									onChange={setPbpSetting}
+								/>
+								Off
+							</label>
+						</span>
+						<label>
+							Expected Damage Samples {expectedDamageSamples()}
+							<input
+								type="range"
+								style="width:272px"
+								min={1}
+								max={5}
+								value={expectedDamageSamples()}
+								onChange={e =>
+									store.setOpt('expectedDamageSamples', e.target.value)
+								}
+							/>
+						</label>
+					</div>
+				)}
+			</div>
+		)
+	);
+}

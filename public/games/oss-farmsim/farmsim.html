@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Farm Simulator Game Test</title>
+	<meta charset="UTF-8" />
+	<style>
+		#container{
+			position: relative;
+		}
+
+		/* Class that prevents text selection by mouse dragging.
+			The style is not defined by standard, so we'd write down browser-dependent styles for major browsers.
+			Support by IE11 is somewhat incomplete since Ctrl+A selects the text in elements even with this style. */
+		.noselect{
+			-webkit-touch-callout: none; /* iOS Safari */
+			-webkit-user-select: none;   /* Chrome/Safari/Opera */
+			-khtml-user-select: none;    /* Konqueror */
+			-moz-user-select: none;      /* Firefox */
+			-ms-user-select: none;       /* IE/Edge */
+			user-select: none;           /* non-prefixed version, currently
+											not supported by any browser */
+		}
+
+		/* The animation code */
+		@keyframes rain {
+			from {background-position: 0px 0px;}
+			to {background-position: 64px 192px;}
+		}
+		@keyframes rain2 {
+			from {background-position: 0px 0px;}
+			to {background-position: 96px 384px;}
+		}
+
+	</style>
+	<script type="text/javascript" src="xorshift.js"></script>
+	<!--script type="text/javascript" src="pixi.dev.js"></script-->
+	<script type="text/javascript" src="FarmGame.js"></script>
+	<script type="text/javascript" src="i18next-1.7.2.js"></script>
+	<script type="text/javascript" src="translation.js"></script>
+	<!--script type="text/javascript" src="farmsim.js"></script-->
+	<script type="text/javascript" src="farmsimDiv.js"></script>
+</head>
+<body>
+<div id="header">
+	<h1>Farm Simulator Game Test</h1>
+</div>
+<div id="container"></div>
+	Auto Save Content: <input id="autoSaveText" type="text" value=""></input><br>
+	<input type="button" value="get state" onclick="document.getElementById('saveText').value = game.serialize()"></input>
+	<input id="saveText" type="text" value=""></input>
+	<input type="button" value="reset" onclick="reset()"></input>
+<hr>
+Powered by <a href="https://github.com/GoodBoyDigital/pixi.js">PIXI.js</a>
+</body>
+</html>

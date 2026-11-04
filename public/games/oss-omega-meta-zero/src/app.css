@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("./assets/fonts/RobotoMono-Regular.woff2") format("woff2"),
+        url("./assets/fonts/RobotoMono-Regular.woff") format("woff");
+}
+
+body {
+    @apply bg-black text-gray-300 font-mono text-lg;
+}
+
+main {
+    @apply mx-auto;
+}
+
+button {
+    @apply bg-gray-800 border-gray-300 border-2 p-2 rounded transition-colors shadow-md;
+}
+
+button:disabled {
+    @apply opacity-60;
+}
+
+button:hover:not(:disabled) {
+    @apply bg-gray-600;
+}
+
+button:active:not(:disabled) {
+    @apply bg-gray-500;
+}
+
+h1 {
+    @apply text-4xl text-yellow-200 font-bold;
+}
+
+h2 {
+    @apply text-2xl text-yellow-300 font-bold;
+}
+
+h3 {
+    @apply text-xl text-yellow-400 font-bold;
+}
+
+table {
+    @apply bg-gray-800 border-gray-500 border-2;
+}
+
+td {
+    @apply p-2;
+}
+
+tr:nth-child(2n) {
+    @apply bg-gray-700;
+}
+
+input[type="text"],
+input[type="number"] {
+    @apply bg-gray-700;
+}

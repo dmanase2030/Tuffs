@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SudokuFlow - Premium Sudoku Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="notion-light">
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Left Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="app-title">SudokuFlow</h1>
+                <button id="sidebar-toggle" class="icon-btn" aria-label="Toggle sidebar">☰</button>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item" data-action="new-game">
+                    <span class="nav-icon">🎮</span>
+                    <span class="nav-label">New Game</span>
+                </button>
+                <button class="nav-item" data-action="continue">
+                    <span class="nav-icon">▶️</span>
+                    <span class="nav-label">Continue</span>
+                </button>
+                <button class="nav-item" data-action="daily-challenge">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-label">Daily Challenge</span>
+                </button>
+                <button class="nav-item" data-action="archive">
+                    <span class="nav-icon">📁</span>
+                    <span class="nav-label">Archive</span>
+                </button>
+                <button class="nav-item" data-action="leaderboard">
+                    <span class="nav-icon">🏆</span>
+                    <span class="nav-label">Leaderboard</span>
+                </button>
+                <button class="nav-item" data-action="themes">
+                    <span class="nav-icon">🎨</span>
+                    <span class="nav-label">Themes</span>
+                </button>
+                <button class="nav-item" data-action="stats">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">My Stats</span>
+                </button>
+                <button class="nav-item" data-action="learn">
+                    <span class="nav-icon">📚</span>
+                    <span class="nav-label">Learn</span>
+                </button>
+                <button class="nav-item" data-action="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Settings</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Toolbar -->
+            <header class="toolbar">
+                <div class="toolbar-left">
+                    <button id="undo-btn" class="toolbar-btn" title="Undo (Ctrl+Z)">↶</button>
+                    <button id="redo-btn" class="toolbar-btn" title="Redo (Ctrl+Y)">↷</button>
+                    <div class="mistake-counter" id="mistake-counter">❌ 0/∞</div>
+                </div>
+                <div class="toolbar-center">
+                    <div id="game-mode-display" class="game-mode-badge">Classic</div>
+                    <div id="difficulty-display" class="difficulty-badge">Medium</div>
+                </div>
+                <div class="toolbar-right">
+                    <button id="pause-btn" class="toolbar-btn" title="Pause (P)">⏸</button>
+                    <button id="sound-toggle" class="toolbar-btn" title="Toggle sound">🔊</button>
+                    <button id="focus-mode-btn" class="toolbar-btn" title="Focus Mode (F)">◻</button>
+                </div>
+            </header>
+
+            <!-- Board Container -->
+            <div class="board-container">
+                <div id="sudoku-board" class="sudoku-board"></div>
+            </div>
+
+            <!-- Number Pad -->
+            <div class="number-pad">
+                <div class="number-grid">
+                    <button class="num-btn" data-num="1">1</button>
+                    <button class="num-btn" data-num="2">2</button>
+                    <button class="num-btn" data-num="3">3</button>
+                    <button class="num-btn" data-num="4">4</button>
+                    <button class="num-btn" data-num="5">5</button>
+                    <button class="num-btn" data-num="6">6</button>
+                    <button class="num-btn" data-num="7">7</button>
+                    <button class="num-btn" data-num="8">8</button>
+                    <button class="num-btn" data-num="9">9</button>
+                </div>
+                <div class="number-controls">
+                    <button id="notes-toggle" class="control-btn">✏️ Notes</button>
+                    <button id="erase-btn" class="control-btn">🗑️ Erase</button>
+                    <button id="hint-btn" class="control-btn">💡 Hint</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Stats Panel -->
+        <aside id="stats-panel" class="stats-panel">
+            <div class="stats-card">
+                <h3 class="stats-title">Statistics</h3>
+                <div class="stat-item">
+                    <span class="stat-label">⏱ Time</span>
+                    <span id="timer-display" class="stat-value">00:00</span>
+                </div>
+                <div class="progress-ring-container">
+                    <svg class="progress-ring" width="80" height="80">
+                        <circle class="progress-ring-bg" cx="40" cy="40" r="35" />
+                        <circle id="progress-ring-circle" class="progress-ring-fill" cx="40" cy="40" r="35" />
+                    </svg>
+                    <div class="progress-text" id="progress-text">0%</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">❌ Mistakes</span>
+                    <span id="mistakes-display" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">💡 Hints Used</span>
+                    <span id="hints-display" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">✅ Completion</span>
+                    <span id="completion-display" class="stat-value">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🔥 Streak</span>
+                    <span id="streak-display" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🏆 Score</span>
+                    <span id="score-display" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">⏱ Best Time</span>
+                    <span id="best-time-display" class="stat-value">--:--</span>
+                </div>
+                <div class="strategy-assistant">
+                    <div class="stat-label">🧠 Strategy</div>
+                    <div id="strategy-hint" class="strategy-text">Start playing...</div>
+                </div>
+                <canvas id="mini-heatmap" width="90" height="90" class="mini-heatmap"></canvas>
+            </div>
+        </aside>
+    </div>
+
+    <!-- New Game Modal -->
+    <div id="new-game-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Game</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Select Difficulty</h3>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                    <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                    <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                    <button class="difficulty-btn" data-difficulty="expert">Expert</button>
+                    <button class="difficulty-btn" data-difficulty="insane">Insane</button>
+                    <button class="difficulty-btn" data-difficulty="custom">Custom</button>
+                </div>
+                <div id="custom-clues-container" class="custom-clues-container" style="display: none;">
+                    <label for="clue-count">Number of clues: <span id="clue-count-value">30</span></label>
+                    <input type="range" id="clue-count" min="17" max="50" value="30">
+                </div>
+                <h3>Select Game Mode</h3>
+                <div class="game-mode-buttons">
+                    <button class="mode-btn" data-mode="classic">Classic</button>
+                    <button class="mode-btn" data-mode="timed">Timed Rush</button>
+                    <button class="mode-btn" data-mode="zen">Zen Mode</button>
+                    <button class="mode-btn" data-mode="hardcore">Hardcore</button>
+                    <button class="mode-btn" data-mode="infinite">Infinite</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Game Settings</h3>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-timer" checked>
+                        <span>Show Timer</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-auto-check" checked>
+                        <span>Auto-check Mistakes</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-highlight-numbers" checked>
+                        <span>Highlight Same Numbers</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-highlight-rcb" checked>
+                        <span>Highlight Row/Col/Box</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-animations" checked>
+                        <span>Animations</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-sound" checked>
+                        <span>Sound Effects</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-auto-notes">
+                        <span>Auto-notes on Start</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="setting-hint-penalty" checked>
+                        <span>Hint Timer Penalty (30s)</span>
+                    </label>
+                </div>
+                <div class="settings-section">
+                    <h3>Mistake Detection</h3>
+                    <label class="setting-item">
+                        <input type="radio" name="mistake-mode" value="immediate" checked>
+                        <span>Immediate</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="radio" name="mistake-mode" value="submit">
+                        <span>On Submit</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="radio" name="mistake-mode" value="off">
+                        <span>Off</span>
+                    </label>
+                </div>
+                <div class="settings-section">
+                    <h3>Hint Level</h3>
+                    <label class="setting-item">
+                        <input type="radio" name="hint-level" value="1" checked>
+                        <span>Level 1 (Gentle)</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="radio" name="hint-level" value="2">
+                        <span>Level 2 (Pointed)</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="radio" name="hint-level" value="3">
+                        <span>Level 3 (Full)</span>
+                    </label>
+                </div>
+                <div class="settings-section">
+                    <h3>Player Info</h3>
+                    <label class="setting-item">
+                        <span>Name for Leaderboard:</span>
+                        <input type="text" id="player-name" placeholder="Enter your name" maxlength="20">
+                    </label>
+                </div>
+                <div class="settings-section">
+                    <button id="clear-leaderboard" class="danger-btn">Clear Leaderboard</button>
+                    <button id="clear-all-data" class="danger-btn">Clear All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Themes Modal -->
+    <div id="themes-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Themes</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="theme-grid">
+                    <button class="theme-btn" data-theme="notion-light">
+                        <div class="theme-preview notion-light-preview"></div>
+                        <span>Notion Light</span>
+                    </button>
+                    <button class="theme-btn" data-theme="notion-dark">
+                        <div class="theme-preview notion-dark-preview"></div>
+                        <span>Notion Dark</span>
+                    </button>
+                    <button class="theme-btn" data-theme="cream">
+                        <div class="theme-preview cream-preview"></div>
+                        <span>Cream</span>
+                    </button>
+                    <button class="theme-btn" data-theme="paper">
+                        <div class="theme-preview paper-preview"></div>
+                        <span>Paper</span>
+                    </button>
+                    <button class="theme-btn" data-theme="forest">
+                        <div class="theme-preview forest-preview"></div>
+                        <span>Forest</span>
+                    </button>
+                    <button class="theme-btn" data-theme="midnight">
+                        <div class="theme-preview midnight-preview"></div>
+                        <span>Midnight</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Leaderboard</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" data-tab="daily">Daily Challenge</button>
+                    <button class="tab-btn" data-tab="all-time">All-Time</button>
+                </div>
+                <div id="leaderboard-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="stats-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>My Statistics</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="achievements-grid" class="achievements-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learn Modal -->
+    <div id="learn-modal" class="modal">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2>Learn Sudoku Techniques</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="lessons-list">
+                    <button class="lesson-btn" data-lesson="naked-singles">
+                        <span class="lesson-title">1. Naked Singles</span>
+                        <span class="lesson-difficulty">Easiest</span>
+                    </button>
+                    <button class="lesson-btn" data-lesson="hidden-singles">
+                        <span class="lesson-title">2. Hidden Singles</span>
+                        <span class="lesson-difficulty">Easy</span>
+                    </button>
+                    <button class="lesson-btn" data-lesson="naked-pairs">
+                        <span class="lesson-title">3. Naked Pairs</span>
+                        <span class="lesson-difficulty">Medium</span>
+                    </button>
+                    <button class="lesson-btn" data-lesson="pointing-pairs">
+                        <span class="lesson-title">4. Pointing Pairs</span>
+                        <span class="lesson-difficulty">Medium</span>
+                    </button>
+                    <button class="lesson-btn" data-lesson="x-wing">
+                        <span class="lesson-title">5. X-Wing</span>
+                        <span class="lesson-difficulty">Hard</span>
+                    </button>
+                    <button class="lesson-btn" data-lesson="swordfish">
+                        <span class="lesson-title">6. Swordfish</span>
+                        <span class="lesson-difficulty">Expert</span>
+                    </button>
+                </div>
+                <div id="lesson-content" class="lesson-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archive Modal -->
+    <div id="archive-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Puzzle Archive</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="archive-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Puzzle Modal -->
+    <div id="custom-puzzle-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Custom Puzzle</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Paste an 81-character puzzle string (0 for empty cells):</p>
+                <textarea id="puzzle-input" rows="3" placeholder="e.g., 530070000600195000098000060800060003400803001700020006060000280000419005000080079"></textarea>
+                <button id="load-custom-puzzle" class="primary-btn">Load Puzzle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Challenge Modal -->
+    <div id="daily-challenge-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📅 Daily Challenge</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="daily-info">
+                    <p>Today's puzzle: <strong id="daily-date"></strong></p>
+                    <p>Everyone gets the same puzzle today!</p>
+                    <p id="daily-status"></p>
+                    <div id="daily-countdown"></div>
+                </div>
+                <button id="start-daily-challenge" class="primary-btn">Start Today's Challenge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div id="completion-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎉 Puzzle Complete!</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body completion-body">
+                <div class="completion-stats">
+                    <div class="completion-stat">
+                        <span class="completion-label">Time</span>
+                        <span id="completion-time" class="completion-value">--:--</span>
+                    </div>
+                    <div class="completion-stat">
+                        <span class="completion-label">Accuracy</span>
+                        <span id="completion-accuracy" class="completion-value">100%</span>
+                    </div>
+                    <div class="completion-stat">
+                        <span class="completion-label">Score</span>
+                        <span id="completion-score" class="completion-value">0</span>
+                    </div>
+                    <div class="completion-stat">
+                        <span class="completion-label">Rank</span>
+                        <span id="completion-rank" class="completion-value">⭐ Expert</span>
+                    </div>
+                </div>
+                <div class="completion-rating">
+                    <p>Rate this puzzle:</p>
+                    <div class="star-rating" id="puzzle-rating">
+                        <span class="star" data-rating="1">☆</span>
+                        <span class="star" data-rating="2">☆</span>
+                        <span class="star" data-rating="3">☆</span>
+                        <span class="star" data-rating="4">☆</span>
+                        <span class="star" data-rating="5">☆</span>
+                    </div>
+                </div>
+                <div class="completion-actions">
+                    <button id="share-puzzle" class="primary-btn">Share</button>
+                    <button id="new-game-completion" class="primary-btn">New Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shortcuts Modal -->
+    <div id="shortcuts-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⌨️ Keyboard Shortcuts</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcuts-grid">
+                    <div class="shortcut-item">
+                        <kbd>1-9</kbd>
+                        <span>Fill number</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Backspace</kbd> / <kbd>Delete</kbd>
+                        <span>Erase cell</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Arrow Keys</kbd>
+                        <span>Navigate cells</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>N</kbd>
+                        <span>Toggle notes mode</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>H</kbd>
+                        <span>Get hint</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+Z</kbd>
+                        <span>Undo</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+Y</kbd>
+                        <span>Redo</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>P</kbd>
+                        <span>Pause timer</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>F</kbd>
+                        <span>Focus mode</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>?</kbd>
+                        <span>Show shortcuts</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Space</kbd>
+                        <span>Select/deselect cell</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameover-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💥 Game Over</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body completion-body">
+                <p id="gameover-message">You made 3 mistakes in Hardcore mode.</p>
+                <div class="completion-actions">
+                    <button id="gameover-new-game" class="primary-btn">New Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div id="pause-overlay" class="pause-overlay" style="display: none;">
+        <div class="pause-content">
+            <h2>⏸ Paused</h2>
+            <p>Press P or click Resume to continue</p>
+            <button id="resume-btn" class="primary-btn">Resume</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

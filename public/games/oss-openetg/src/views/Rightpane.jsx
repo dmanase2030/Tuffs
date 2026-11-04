@@ -1,0 +1,75 @@
+import { Show } from 'solid-js';
+
+import Chat from '../Components/Chat.jsx';
+import * as sock from '../sock.jsx';
+import * as store from '../store.jsx';
+import parseChat from '../parseChat.js';
+
+function ChannelTab(props) {
+	return (
+		<span
+			class={
+				store.appState.opts.channel === props.channel ? 'tab selected' : 'tab'
+			}
+			onClick={_e => store.setOptTemp('channel', props.channel)}>
+			{props.channel}
+		</span>
+	);
+}
+
+export default function Rightpane() {
+	return (
+		<Show when={!store.appState.opts.hideRightpane}>
+			<div id="rightlinks">
+				<div style="display:flex;margin-bottom:4px;justify-content:space-evenly">
+					<a href="artcredit.html" target="_blank">
+						Art credits
+					</a>
+					&emsp;&emsp;
+					<a href="forum" target="_blank">
+						Forum
+					</a>
+					&emsp;&emsp;
+					<a
+						href="https://discordapp.com/invite/qAmfB8T"
+						target="_blank"
+						rel="noopener">
+						Discord
+					</a>
+				</div>
+				<div style="display:flex;margin-bottom:4px;justify-content:space-evenly">
+					<label>
+						<input
+							type="checkbox"
+							checked={store.appState.opts.offline}
+							onChange={e => {
+								sock.emit({ x: 'chatus', hide: e.target.checked });
+								store.setOpt('offline', e.target.checked);
+							}}
+						/>
+						Appear Offline
+					</label>
+					<label>
+						<input
+							type="checkbox"
+							checked={store.appState.opts.afk}
+							onChange={e => {
+								sock.emit({ x: 'chatus', afk: e.target.checked });
+								store.setOptTemp('afk', e.target.checked);
+							}}
+						/>
+						Afk
+					</label>
+				</div>
+			</div>
+			<div style="display:flex;justify-content:space-evenly">
+				<ChannelTab channel="Main" />
+				<ChannelTab channel="System" />
+				<ChannelTab channel="Stats" />
+				<ChannelTab channel="Replay" />
+			</div>
+			<Chat channel={store.appState.opts.channel} />
+			<textarea class="chatinput" placeholder="Chat" onKeyDown={parseChat} />
+		</Show>
+	);
+}

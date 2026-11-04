@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The void is online - js13k 2018</title>
+    <style media="screen">
+      body {background:#000;margin:0;padding:0;}
+      canvas {display:none;}
+      #c{height:100vh;margin:auto;display:block;}
+      .button { background-color: #2c3e50;border: none;padding: 12px 18px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; }
+      .button:hover{ background-color:#ecf0f1; }
+      #f{font-family:sans-serif;position:absolute;bottom:10px;left:10px;font-size:18px;color:#ecf0f1;text-decoration:none;}
+      #f:hover{color:#2c3e50;}
+    </style>
+    <script id="vertex-shader-static" type="x-shader/x-vertex">
+          attribute vec2 p;
+          varying vec2 uv;
+
+          void main() {
+            gl_Position = vec4(p,.0,1.);
+            uv = .5 * (p+1.);
+          }
+      </script>
+      <script id="fragment-shader-glow" type="x-shader/x-fragment">
+        precision highp float;
+        uniform vec2 dim;
+        uniform sampler2D tex;
+        varying vec2 uv;
+        uniform float time;
+
+        void main (){
+           vec2 pos = uv * dim;
+           vec4 col = texture2D(tex, uv);
+           vec4 gws = vec4(.0);
+           float rand = .02*sin(time)+.3;
+           float weight = .03;
+
+           vec4 col_r = texture2D(tex, uv + vec2((-15. / dim.x) * rand, 0));
+           //glow
+           for (int i = 0; i <9; i++) {
+             float miw = float(mod(float(i), 8.));
+             float idw = float(i / 3);
+             vec2 v1 = vec2(pos.x + miw, pos.y + idw);
+             vec2 v2 = vec2(pos.x - miw, pos.y + idw);
+             vec2 v3 = vec2(pos.x + miw, pos.y - idw);
+             vec2 v4 = vec2(pos.x - miw, pos.y - idw);
+             gws += texture2D(tex, v1 / dim) * weight;
+             gws += texture2D(tex, v2 / dim) * weight;
+             gws += texture2D(tex, v3 / dim) * weight;
+             gws += texture2D(tex, v4 / dim) * weight;
+           }
+           col += gws;
+
+           gl_FragColor.rgba = col;
+        }
+      </script>
+      <script id="fragment-shader-crt" type="x-shader/x-fragment">
+          precision highp float;
+          uniform vec2 dim;
+          uniform sampler2D tex;
+          varying vec2 uv;
+          uniform float time;
+          uniform vec3 colors;
+
+          void main() {
+              vec2 coord = uv * dim;
+              coord -= dim/2.;
+              float dis = length(coord);
+              if (dis < 600.) {
+                  float percent = dis / 600.;
+                  coord *= mix(1., smoothstep(0.0, 600. / dis, percent), .125);
+              }
+              coord += dim/2.;
+              vec4 color = texture2D(tex, coord / dim);
+
+              float dist = distance(uv, vec2(.5, .5));
+              color.rgb *= smoothstep(.8, .2*.8, dist);
+
+              gl_FragColor = color;
+          }
+      </script>
+  </head>
+  <body allowfullscreen>
+    <div id="d">
+  		<canvas id="c"></canvas>
+      <canvas id="g" moz-opaque></canvas>
+    </div>
+
+    <a href='#' id='f' class='button' title='fullscreen'>FullScreen</a>
+
+    <script src="src/js/lib/webgl.js"></script>
+    <script src="src/js/lib/native.object.extension.js"></script>
+    <script src="src/js/lib/utils.js"></script>
+    <script src="src/js/lib/pools.js"></script>
+    <script src="src/js/lib/utils.draw.js"></script>
+    <script src="src/js/lib/jsfxr.js"></script>
+    <script src="src/js/lib/font.js"></script>
+
+    <script src="src/js/engine/effects.js"></script>
+    <script src="src/js/engine/setup.js"></script>
+    <script src="src/js/engine/cam.js"></script>
+    <script src="src/js/engine/gameloop.js"></script>
+    <script src="src/js/engine/eventlisteners.js"></script>
+
+    <script src="src/js/resources/colors.js"></script>
+    <script src="src/js/resources/sounds.js"></script>
+
+    <script src="src/js/groups/asteroids.js"></script>
+    <script src="src/js/groups/bosses.js"></script>
+    <script src="src/js/groups/enemies.js"></script>
+    <script src="src/js/groups/powerups.js"></script>
+    <script src="src/js/groups/playerProjectiles.js"></script>
+    <script src="src/js/groups/bossProjectiles.js"></script>
+    <script src="src/js/groups/enemyProjectiles.js"></script>
+    <script src="src/js/groups/stars.js"></script>
+    <script src="src/js/groups/wave.js"></script>
+    <script src="src/js/groups/explosions.js"></script>
+
+    <script src="src/js/entities/asteroid.js"></script>
+    <script src="src/js/entities/boss.js"></script>
+    <script src="src/js/entities/wavesManager.js"></script>
+    <script src="src/js/entities/explosion.js"></script>
+    <script src="src/js/entities/enemy.js"></script>
+    <script src="src/js/entities/powerup.js"></script>
+    <script src="src/js/entities/projectile.js"></script>
+    <script src="src/js/entities/bossProjectile.js"></script>
+    <script src="src/js/entities/enemyProjectile.js"></script>
+    <script src="src/js/entities/playerProjectile.js"></script>
+    <script src="src/js/entities/player.js"></script>
+
+    <script src="src/js/states/splash.js"></script>
+    <script src="src/js/states/menu.js"></script>
+		<script src="src/js/states/path.js"></script>
+    <script src="src/js/states/game.js"></script>
+  </body>
+</html>

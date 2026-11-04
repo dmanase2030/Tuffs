@@ -1,0 +1,14 @@
+# Render.com Blueprint — deploy tự động từ repo GitHub
+# Xem hướng dẫn ở DEPLOY.md
+services:
+  - type: web
+    name: two-player-games
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.11.0

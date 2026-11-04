@@ -1,0 +1,19 @@
+# CITATION.cff
+# Allows GitHub to generate APA/BibTeX citations for this project.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files
+
+cff-version: 1.2.0
+message: "If you use or reference this project, please cite it as below."
+type: software
+title: "spike-sprint"
+abstract: "A poorly coded pixel runner. A browser-based endless runner game built with vanilla JavaScript and HTML5 Canvas. Features a procedurally-drawn running character, jump mechanics, enemies, pits, bushes, and a chasing spiked barrel, with zero external assets."
+authors:
+  - family-names: ""
+    given-names: "shifulegend"
+    alias: "shifulegend"
+    website: "https://github.com/shifulegend"
+version: "1.0.0"
+date-released: "2026-07-07"
+url: "https://github.com/shifulegend/spike-sprint"
+repository-code: "https://github.com/shifulegend/spike-sprint"
+license: MIT

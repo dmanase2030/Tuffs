@@ -1,0 +1,10 @@
+{
+	"name": "MonkeyWarp",
+	"version": "1.0.0",
+	"description": "made with Pixelbox.js",
+	"dependencies": {
+		"pixelbox": "2.0.1",
+		"audio-manager": "0.1.17"
+	},
+	"devDependencies": {}
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Game 2 Người - Bộ trò chơi đối kháng",
+  "short_name": "Game 2 Người",
+  "description": "Bộ sưu tập trò chơi 2 người: cờ, chiến thuật, đối kháng, suy luận. Chơi chung máy, đấu với máy hoặc online.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#211a12",
+  "theme_color": "#211a12",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

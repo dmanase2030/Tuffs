@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Frodo's Quest</title>
+    <style type="text/css">
+      #playn-root {
+        width: 960px;
+        height: 672px;
+      }
+      #playn-root canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+    </style>
+  </head>
+  <body style="background-color: black; color: grey; overflow:hidden">
+    <script src="frodosquest/frodosquest.nocache.js"></script>
+    <center>
+      <div id="playn-root"></div>
+    </center>
+    
+    <script>
+      preventTab = function(e) {
+        var code = e.keyCode || e.which;
+        if (code == 0 || code == 9) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+      document.body.onkeydown = preventTab;
+    </script>    
+  </body>
+</html>
+

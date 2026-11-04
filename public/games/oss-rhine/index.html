@@ -1,0 +1,113 @@
+<html>
+<head>
+  <title>rhine</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    army {
+     display: block;
+    }
+    number, mark {
+     display: block;
+    }
+    .hpIndicator {
+      display: none;
+    }
+    td:hover .hpIndicator {
+      display: block;
+    }
+  </style>
+  <link rel="stylesheet" href="gui/css/style.css">
+  <link rel="stylesheet" href="gui/css/components.css">
+  <link rel="stylesheet" href="gui/css/tooltip.css">
+  <link rel="stylesheet" href="gui/d3_timeseries.min.css">
+
+  <script charset="utf-8" src="gui/jquery-3.3.1.min.js"></script>
+  <script>
+    $.noConflict();
+  </script>
+
+
+  <script charset="utf-8" src="core/pathfinding/astar.js"></script>
+  <script charset="utf-8" src="core/pathfinding/pathfinding.js"></script>
+  <script charset="utf-8" src="core/randomColor.js"></script>
+  <script charset="utf-8" src="core/commons.js"></script>
+  <script charset="utf-8" src="core/pt.js"></script>
+  <script charset="utf-8" src="core/template.js"></script>
+  <script charset="utf-8" src="core/battle.js"></script>
+  <script charset="utf-8" src="core/division.js"></script>
+  <script charset="utf-8" src="core/player.js"></script>
+  <script charset="utf-8" src="core/queue.js"></script>
+  <script charset="utf-8" src="core/map.js"></script>
+  <script charset="utf-8" src="core/weather.js"></script>
+  <script charset="utf-8" src="core/mapIt.js"></script>
+  <script charset="utf-8" src="core/diplomacy.js"></script>
+  <script charset="utf-8" src="core/bots/ai.js"></script>
+  <script charset="utf-8" src="core/bots/ai2.js"></script>
+  <script charset="utf-8" src="core/bots/autoFight.js"></script>
+
+  <script charset="utf-8" src="scenario/ChineseGenerals/ChineseGenerals.js"></script>
+  <script charset="utf-8" src="scenario/InvasionOfChina.js"></script>
+  <script charset="utf-8" src="scenario/InvasionOfChina1941.js"></script>
+  <script charset="utf-8" src="scenario/1944.js"></script>
+  <script charset="utf-8" src="scenario/1941.js"></script>
+  <script charset="utf-8" src="scenario/1939.js"></script>
+  <script charset="utf-8" src="scenario/1936.js"></script>
+  <script charset="utf-8" src="gui/draggable.js"></script>
+  <script charset="utf-8" src="gui/zoomable.js"></script>
+  <script charset="utf-8" src="gui/d3.v4.js"></script>
+  <script charset="utf-8" src="gui/d3_timeseries.min.js"></script>
+  <script charset="utf-8" src="gui/observe.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+  <script charset="utf-8" src="core/ref.js"></script>
+  <script charset="utf-8" src="core/serializer.js"></script>
+
+</head>
+<body>
+  <div id="left">
+    <div class="tabs">
+      <span style="flex-basis: 16px;" id="playerID">1</span>
+      <span onclick="updateLogistics()" class="shortcut" data-key="1">Logistics</span>
+      <span onclick="updatePolicy()" class="shortcut" data-key="2">Army</span>
+      <span onclick="updateDeploy()" class="shortcut" data-key="3">Deploy</span>
+      <span onclick="pass()" class="shortcut" data-key="4">Pass</span>
+    </div>
+    <div id="left-wrap">
+      <div id="left-content">
+
+      </div>
+      <div id="graph-content" style="display: none;">
+
+      </div>
+    </div>
+  </div>
+  <div id="map-container" class="dragscroll">
+    <table id="app"></table>
+  </div>
+  <div id="right">
+    <div id="controls">
+      <button onclick="zoomIn()">+</button>
+      <button onclick="zoomOut()">-</button>
+      <button onclick="toggleGrid()">📏</button>
+    </div>
+    <div id="right-content">
+
+    </div>
+  </div>
+  <button style="display: none;" class="shortcut" data-key="9"
+    onclick="currentPlayer.ai.think();pass();"></button>
+  <script charset="utf-8" src="gui/displayNumbers.js"></script>
+  <script charset="utf-8" src="gui/canvas.js"></script>
+  <script charset="utf-8" src="gui/leftPane.js"></script>
+  <script charset="utf-8" src="gui/leftPane/logistics.js"></script>
+  <script charset="utf-8" src="gui/leftPane/policy.js"></script>
+  <script charset="utf-8" src="gui/leftPane/deploy.js"></script>
+  <script charset="utf-8" src="gui/rightPane.js"></script>
+  <script charset="utf-8" src="gui/interface.js"></script>
+  <script charset="utf-8" src="gui/rightPane/colRightClickCallback.js"></script>
+  <script charset="utf-8" src="gui/editor.js"></script>
+  <script charset="utf-8" src="gui/sound.js"></script>
+  <script charset="utf-8" src="index.js"></script>
+</body>
+</html>
