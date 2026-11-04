@@ -1,5 +1,5 @@
 /* Shared helpers for Lumio accounts (Pages Functions + D1).
- * Passwords: PBKDF2-SHA256 (120k iterations), per-user salt.
+ * Passwords: PBKDF2-SHA256 (100k iterations — the Cloudflare Workers cap), per-user salt.
  * Sessions: random bearer tokens, stored only as SHA-256 hashes, 30-day expiry.
  */
 
@@ -28,7 +28,7 @@ export async function hashPassword(password, saltB64) {
   const salt = saltB64 ? fromB64(saltB64) : crypto.getRandomValues(new Uint8Array(16));
   const key = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
   const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", hash: "SHA-256", salt, iterations: 120000 },
+    { name: "PBKDF2", hash: "SHA-256", salt, iterations: 100000 },
     key,
     256
   );
