@@ -590,6 +590,16 @@ input[type=range]{accent-color:#3584e4}
 .bar-brand span{color:#9a9aa2}
 .tb b{max-width:none}
 .tb .tt{max-width:72%}
+
+/* ===== settings + player pass ===== */
+.seg{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);border-radius:99px;padding:3px;gap:3px;margin-bottom:4px}
+.seg button{flex:1;border:0;background:transparent;color:#a7a7ad;font:600 12.5px Inter;padding:7px 0;border-radius:99px;cursor:pointer}
+.seg button.on{background:#2e2e33;color:#fff;box-shadow:0 1px 6px rgba(0,0,0,.4)}
+.sh{font:700 11px Inter;letter-spacing:.14em;text-transform:uppercase;color:#8e8e96;margin:18px 2px 8px}
+.srow{background:#17171a;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px;gap:9px}
+.og{background:#17171a;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.og .oi{min-height:0;padding:9px 10px;border-radius:9px}
+.btn.danger{color:#ff7b72;border-color:rgba(255,123,114,.45)}
 </style>
 </head>
 <body>
@@ -739,7 +749,7 @@ const draw=()=>{lib.innerHTML="";CONFIG.games.filter(g=>g.name.toLowerCase().inc
 inp.oninput=draw;draw()}
 function playGame(g){const r=st.get('rec',[]).filter(x=>x!==g.id);r.unshift(g.id);st.set('rec',r.slice(0,12));if(g.type)return BUILTIN[g.type]();const{body}=win(g.name,"f",760,480);
 if(!g.url){body.innerHTML=`<div class="msg"><b>${g.name}</b> has no link yet.<br>Open the file, find <b>CONFIG.games</b>, and set <b>url</b> to a local game path or a full address.</div>`;return}
-const f=document.createElement("iframe");f.allow="fullscreen;autoplay;gamepad";f.src=proxify(g.url);body.append(f)}
+const pbar=el('div','nav');pbar.style.cssText='gap:6px;padding:6px 8px';const fsb=el('button','btn','Full screen'),ntb=el('button','btn','Open in new tab');fsb.onclick=()=>{if(body.requestFullscreen)body.requestFullscreen().catch(()=>toast('Full screen is not supported on this device'));else toast('Full screen is not supported on this device')};ntb.onclick=()=>window.open(new URL(g.url,location.href).href,'_blank');pbar.append(fsb,ntb);body.append(pbar);const f=document.createElement("iframe");f.allow="fullscreen;autoplay;gamepad";f.src=proxify(g.url);body.append(f)}
 function browser(){
  const{w,body:b}=win('Browser','f',940,600);
  const fsT=w.querySelector('[data-a=f]');if(fsT)fsT.click();
@@ -1032,19 +1042,19 @@ function pickWall(file){
 }
 
 const UGp=g=>{g.name=g.title;g.n=g.name;g.c=g.c||'#4a6ea8';return g};
-function settingsApp(){const{body:b}=win('Settings','',640,520);b.style.fontFamily='Inter';b.style.display='block';
-const H=t=>b.append(el('div','sh',t)),G=()=>{const d=el('div','og');b.append(d);return d},R=(...n)=>{const d=el('div','srow');d.append(...n);b.append(d)};
-H('Account');R(el('span','',SESSION?('Signed in as '+USER+(ISADMIN?' · Admin':'')):'You are a guest. Accounts live on the server and work on any device.'));H('Appearance');opts(G(),[['auto','System','Follows your device'],['dark','Dark','Easy on the eyes'],['light','Light','Bright and clean']],'theme');swatches(b);
+function settingsApp(){const{w,body:b}=win('Settings','',640,520);b.style.fontFamily='Inter';b.style.display='block';const _ss=w.querySelector('.tsub');if(_ss)_ss.textContent='Preferences';
+const seg=el('div','seg'),pA=el('div'),pB=el('div');pB.style.display='none';const mkSeg=(t,p)=>{const x=el('button','',t);x.type='button';x.onclick=()=>{pA.style.display=p===pA?'':'none';pB.style.display=p===pB?'':'none';seg.querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};return x};const sA=mkSeg('General',pA),sB=mkSeg('Appearance',pB);sA.classList.add('on');seg.append(sA,sB);b.append(seg,pA,pB);let cur=pA;const H=t=>cur.append(el('div','sh',t)),G=()=>{const d=el('div','og');cur.append(d);return d},R=(...n)=>{const d=el('div','srow');d.append(...n);cur.append(d)};
+H('Account');R(el('span','',SESSION?('Signed in as '+USER+(ISADMIN?' · Admin':'')):'You are a guest. Accounts live on the server and work on any device.'));cur=pB;H('Appearance');opts(G(),[['auto','System','Follows your device'],['dark','Dark','Easy on the eyes'],['light','Light','Bright and clean']],'theme');swatches(b);
 H('Wallpapers');wallpaperPicker(G());
 const wu=field('Image address (https://...)','text'),wb=el('button','btn','Use address'),wf=el('input');wf.type='file';wf.accept='image/*';wf.setAttribute('aria-label','Upload wallpaper');
 wb.onclick=()=>wu.value.trim()&&setWall(wu.value.trim());wf.onchange=()=>wf.files[0]&&pickWall(wf.files[0]);R(wu,wb,wf);
-H('Device');const dn=field('Device name','text');dn.value=S.device;dn.oninput=()=>{S.device=dn.value.trim()||'linux-pc';saveS();applyS()};R(dn);
+cur=pA;H('Device');const dn=field('Device name','text');dn.value=S.device;dn.oninput=()=>{S.device=dn.value.trim()||'linux-pc';saveS();applyS()};R(dn);
 H('Proxy and browser');const px=field('Proxy path','text'),se=field('Search engine address','text'),sv=el('button','btn p','Save');px.value=CONFIG.proxyPrefix;se.value=CONFIG.searchEngine;
 sv.onclick=()=>{CONFIG.proxyPrefix=px.value.trim();CONFIG.searchEngine=se.value.trim();st.set('cfg',{proxyPrefix:CONFIG.proxyPrefix,searchEngine:CONFIG.searchEngine});toast('Saved')};R(px,se,sv);
 H('Add a game');const gt=field('Title','text'),gu=field('Game address or path','text'),gi=field('Cover image address (optional)','text'),ga=el('button','btn p','Add game'),ul=el('div','srow');
 const lu=()=>{ul.innerHTML='';st.get('ug',[]).forEach(g=>{const r=el('div','urow');r.append(el('span','',g.title));const x=el('button','btn','Remove');x.onclick=()=>{st.set('ug',st.get('ug',[]).filter(y=>y.id!==g.id));CONFIG.games=CONFIG.games.filter(y=>y.id!==g.id);render();lu()};r.append(x);ul.append(r)})};
 ga.onclick=()=>{const t=gt.value.trim(),u=gu.value.trim();if(!t||!u)return toast('Enter a title and an address');const ug=st.get('ug',[]),g={id:'u'+Date.now(),title:t,tags:['Custom'],url:u,thumb:gi.value.trim()};ug.push(g);st.set('ug',ug);CONFIG.games.push(UGp(g));render();gt.value=gu.value=gi.value='';toast(t+' added');lu()};R(gt,gu,gi,ga);b.append(ul);lu();
-H('Reset');const rb=el('button','btn','Reset everything');rb.onclick=()=>{try{Object.keys(localStorage).filter(k=>k.startsWith('lx:')).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()};R(rb)}
+cur=pA;H('Quick actions');const qa1=el('button','btn','Enter full screen'),qa2=el('button','btn','Open site in new tab');qa1.onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>toast('Full screen is not supported on this device'))};qa2.onclick=()=>window.open(location.href,'_blank');R(qa1,qa2);H('Reset');const rb=el('button','btn danger','Reset everything');rb.onclick=()=>{try{Object.keys(localStorage).filter(k=>k.startsWith('lx:')).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()};R(rb)}
 /* ===== chat + admin (Lumio server) ===== */
 function chatApp(){const{w,body:b}=win('Chat','f',560,520);b.style.fontFamily='Inter';
 if(!SESSION){b.append(el('div','msg','Sign in to use chat.'));return}
