@@ -152,9 +152,12 @@ casing and URL encoding exactly as on disk.
 
 Drop the image into `public/images/thumbs/`, set the `thumb` field, run
 `npm run verify`. Thumbnails are lazy-loaded with reserved dimensions
-(320x200, 16:10 aspect) to avoid layout shift. Games without a thumbnail
-(1v1.LOL, 2048 in the source repo) show a tasteful initials-based gradient
-card — deliberately, not a wrong image.
+(320x200, 16:10 aspect) to avoid layout shift. Every catalog entry now has
+a thumbnail: the 82 NettleWeb folders, 1v1.LOL and 2048 use images from
+the [NettleWeb repository's image library](https://github.com/BlueDonuts/unblocked-games)
+(`d/<title>.jpg`, fetched by `node scripts/fetch-thumbnails.mjs`), and the
+Tuff Client uses a generated SVG card. The initials-based gradient remains
+only as the fallback when an image fails to load.
 
 ## 8. Security and privacy limitations (read before public deployment)
 
@@ -243,7 +246,8 @@ external entries (ids prefixed `nwx-`) that stream from third-party servers
 such as `cdn.htmlgames.com` — those are clearly labeled "external", load in
 the player from their CDN, and depend entirely on that server being up (the
 NettleWeb index did not carry thumbnails for the self-hosted folders, so
-those cards use the title-initials fallback). The Flash and DOS entries were
+those thumbnails were later sourced from the NettleWeb repository's `d/`
+image library by title match — see section 7). The Flash and DOS entries were
 **not** included: their payload lives inside a custom 4.4 GB chunk archive
 that is impractical to self-host here. Entries duplicating existing
 BlazerGames titles (Vex 3–7, 2048, Slope) and one unindexed folder

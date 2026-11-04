@@ -5,23 +5,32 @@
  "verification": {
   "entryPoint": "All local entry points verified on disk by scripts/verify-catalog.js. External (nwx-) entries point at third-party servers and are validated as URL format only.",
   "manual": "Not every game has been manually played end-to-end. Playability beyond page load is not guaranteed; see README.",
-  "thumbnails": "Thumbnail files were copied verbatim from the source repository's images/ directory and matched to games by filename. 1v1.LOL and 2048 have no thumbnail in the source and use the portal's title-based fallback."
+  "thumbnails": "Thumbnail files were copied verbatim from the source repository images directory and matched to games by filename. The 82 NettleWeb folders, 1v1.LOL and 2048 use images sourced from the NettleWeb repository (github.com/BlueDonuts/unblocked-games) d/ image library, matched by title via scripts/fetch-thumbnails.mjs. Tuff Client uses a generated SVG card."
  },
  "games": [
   {
    "id": "tuffclient",
    "title": "Tuff Client",
    "entry": "games/tuffclient/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/tuffclient.svg",
    "category": "Sandbox",
-   "external": false
+   "external": false,
+   "featured": false,
+   "license": {
+    "status": "unlicensed",
+    "note": "Tuffs own client code, part of this repository (no separate license file)."
+   },
+   "verified": {
+    "entryPoint": true,
+    "manualPlay": "n/a"
+   }
   },
   {
    "id": "1v1lol",
    "slug": "1v1lol",
    "title": "1v1.LOL",
    "entry": "games/1v1lol/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/1v1lol.jpg",
    "category": "Shooter",
    "license": {
     "status": "unresolved",
@@ -43,7 +52,7 @@
    "slug": "2048",
    "title": "2048",
    "entry": "games/2048/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/2048.jpg",
    "category": "Puzzle",
    "license": {
     "status": "mit",
@@ -277,7 +286,7 @@
    "slug": "nw-l75mvok9",
    "title": "1",
    "entry": "games/nw-l75mvok9/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l75mvok9.jpg",
    "category": "Puzzle",
    "license": {
     "status": "unresolved",
@@ -297,7 +306,7 @@
    "slug": "nw-lcgyaqgk",
    "title": "9007199254740992",
    "entry": "games/nw-lcgyaqgk/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lcgyaqgk.jpg",
    "category": "Mininalism",
    "license": {
     "status": "unresolved",
@@ -317,7 +326,7 @@
    "slug": "nw-m3yuq5xy",
    "title": "A Dark Room",
    "entry": "games/nw-m3yuq5xy/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m3yuq5xy.jpg",
    "category": "Adventure",
    "license": {
     "status": "unresolved",
@@ -337,7 +346,7 @@
    "slug": "nw-lc1iwfis",
    "title": "Among Us",
    "entry": "games/nw-lc1iwfis/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lc1iwfis.jpg",
    "category": "Space",
    "license": {
     "status": "unresolved",
@@ -357,7 +366,7 @@
    "slug": "nw-lgd2488r",
    "title": "Astray",
    "entry": "games/nw-lgd2488r/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lgd2488r.jpg",
    "category": "Puzzle",
    "license": {
     "status": "unresolved",
@@ -377,7 +386,7 @@
    "slug": "nw-m46ggy5z",
    "title": "Basic Tetris HTML Game",
    "entry": "games/nw-m46ggy5z/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m46ggy5z.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -397,7 +406,7 @@
    "slug": "nw-lwjn0b03",
    "title": "Basketball Stars",
    "entry": "games/nw-lwjn0b03/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lwjn0b03.jpg",
    "category": "Sports",
    "license": {
     "status": "unresolved",
@@ -417,7 +426,7 @@
    "slug": "nw-m3yu4jat",
    "title": "Bitburner",
    "entry": "games/nw-m3yu4jat/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m3yu4jat.jpg",
    "category": "Hacking",
    "license": {
     "status": "unresolved",
@@ -437,7 +446,7 @@
    "slug": "nw-m3jdbkdu",
    "title": "BitLife",
    "entry": "games/nw-m3jdbkdu/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m3jdbkdu.jpg",
    "category": "Simulation",
    "license": {
     "status": "unresolved",
@@ -457,7 +466,7 @@
    "slug": "nw-m61ebzqn",
    "title": "Black Hole Square",
    "entry": "games/nw-m61ebzqn/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m61ebzqn.jpg",
    "category": "Arcade",
    "license": {
     "status": "unresolved",
@@ -477,7 +486,7 @@
    "slug": "nw-m46gk5tv",
    "title": "Blastar",
    "entry": "games/nw-m46gk5tv/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m46gk5tv.jpg",
    "category": "Arcade",
    "license": {
     "status": "unresolved",
@@ -497,7 +506,7 @@
    "slug": "nw-m6qvglmn",
    "title": "Block Blast",
    "entry": "games/nw-m6qvglmn/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6qvglmn.jpg",
    "category": "Arcade",
    "license": {
     "status": "unresolved",
@@ -517,7 +526,7 @@
    "slug": "nw-m1sb1ixq",
    "title": "Brainjar Blackjack",
    "entry": "games/nw-m1sb1ixq/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m1sb1ixq.jpg",
    "category": "Gambling",
    "license": {
     "status": "unresolved",
@@ -537,7 +546,7 @@
    "slug": "nw-m2gpmjnm",
    "title": "Browser",
    "entry": "games/nw-m2gpmjnm/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m2gpmjnm.jpg",
    "category": "Browser",
    "license": {
     "status": "unresolved",
@@ -557,7 +566,7 @@
    "slug": "nw-m4lpswbs",
    "title": "Celeste Classic",
    "entry": "games/nw-m4lpswbs/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m4lpswbs.jpg",
    "category": "Platformer",
    "license": {
     "status": "unresolved",
@@ -577,7 +586,7 @@
    "slug": "nw-m3jcztv1",
    "title": "Champion Island",
    "entry": "games/nw-m3jcztv1/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m3jcztv1.jpg",
    "category": "Sports",
    "license": {
     "status": "unresolved",
@@ -597,7 +606,7 @@
    "slug": "nw-m46gstln",
    "title": "Connect Four",
    "entry": "games/nw-m46gstln/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m46gstln.jpg",
    "category": "Board",
    "license": {
     "status": "unresolved",
@@ -617,7 +626,7 @@
    "slug": "nw-llilsihd",
    "title": "Cookie Clicker",
    "entry": "games/nw-llilsihd/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-llilsihd.jpg",
    "category": "Cookie",
    "license": {
     "status": "unresolved",
@@ -637,7 +646,7 @@
    "slug": "nw-m7179hal",
    "title": "CS:GO Clicker",
    "entry": "games/nw-m7179hal/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m7179hal.jpg",
    "category": "Arcade",
    "license": {
     "status": "unresolved",
@@ -657,7 +666,7 @@
    "slug": "nw-l7zlkbdp",
    "title": "Cut the Rope",
    "entry": "games/nw-l7zlkbdp/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l7zlkbdp.jpg",
    "category": "Puzzle",
    "license": {
     "status": "unresolved",
@@ -677,7 +686,7 @@
    "slug": "nw-l9vlake7",
    "title": "Cut the Rope Vivid Edition",
    "entry": "games/nw-l9vlake7/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l9vlake7.jpg",
    "category": "Puzzle",
    "license": {
     "status": "unresolved",
@@ -697,7 +706,7 @@
    "slug": "nw-leuzxwmt",
    "title": "Cut the Rope: Time Travel",
    "entry": "games/nw-leuzxwmt/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-leuzxwmt.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -717,7 +726,7 @@
    "slug": "nw-lrkjfe8b",
    "title": "Dogeminer",
    "entry": "games/nw-lrkjfe8b/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lrkjfe8b.jpg",
    "category": "Humor",
    "license": {
     "status": "unresolved",
@@ -737,7 +746,7 @@
    "slug": "nw-lskyy8lj",
    "title": "Dominoes",
    "entry": "games/nw-lskyy8lj/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lskyy8lj.jpg",
    "category": "Oard game",
    "license": {
     "status": "unresolved",
@@ -757,7 +766,7 @@
    "slug": "nw-lf5a1hhy",
    "title": "Doodle Jump",
    "entry": "games/nw-lf5a1hhy/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lf5a1hhy.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -777,7 +786,7 @@
    "slug": "nw-m5pvoa60",
    "title": "Elemental One",
    "entry": "games/nw-m5pvoa60/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m5pvoa60.jpg",
    "category": "Platformer",
    "license": {
     "status": "unresolved",
@@ -797,7 +806,7 @@
    "slug": "nw-m714rqsc",
    "title": "ExtPrint3r",
    "entry": "games/nw-m714rqsc/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m714rqsc.jpg",
    "category": "Unblocker",
    "license": {
     "status": "unresolved",
@@ -817,7 +826,7 @@
    "slug": "nw-m2kpd27j",
    "title": "Five Nights at Winston's",
    "entry": "games/nw-m2kpd27j/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m2kpd27j.jpg",
    "category": "Horror",
    "license": {
     "status": "unresolved",
@@ -837,7 +846,7 @@
    "slug": "nw-l5hcfy3r",
    "title": "Flappy Bird",
    "entry": "games/nw-l5hcfy3r/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l5hcfy3r.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -857,7 +866,7 @@
    "slug": "nw-m60y81ig",
    "title": "Geo Dash Lite",
    "entry": "games/nw-m60y81ig/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m60y81ig.jpg",
    "category": "Puzzle",
    "license": {
     "status": "unresolved",
@@ -877,7 +886,7 @@
    "slug": "nw-m6rzefh8",
    "title": "Getting Over It (Scratch Edition)",
    "entry": "games/nw-m6rzefh8/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6rzefh8.jpg",
    "category": "Fun",
    "license": {
     "status": "unresolved",
@@ -897,7 +906,7 @@
    "slug": "nw-lu8a3uim",
    "title": "Greedy Shark",
    "entry": "games/nw-lu8a3uim/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lu8a3uim.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -917,7 +926,7 @@
    "slug": "nw-lo84n1of",
    "title": "HexGL",
    "entry": "games/nw-lo84n1of/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lo84n1of.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -937,7 +946,7 @@
    "slug": "nw-lmylpw4o",
    "title": "Hextris",
    "entry": "games/nw-lmylpw4o/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lmylpw4o.jpg",
    "category": "Tetris",
    "license": {
     "status": "unresolved",
@@ -957,7 +966,7 @@
    "slug": "nw-lo4j2ngf",
    "title": "Hop Mania",
    "entry": "games/nw-lo4j2ngf/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lo4j2ngf.jpg",
    "category": "Jump",
    "license": {
     "status": "unresolved",
@@ -977,7 +986,7 @@
    "slug": "nw-m4yodmz7",
    "title": "Horse Racing Game",
    "entry": "games/nw-m4yodmz7/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m4yodmz7.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -997,7 +1006,7 @@
    "slug": "nw-l9mknamd",
    "title": "Infinite Mario",
    "entry": "games/nw-l9mknamd/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l9mknamd.jpg",
    "category": "Mario",
    "license": {
     "status": "unresolved",
@@ -1017,7 +1026,7 @@
    "slug": "nw-le8p9bdq",
    "title": "Javascript Pseudo 3D Racer",
    "entry": "games/nw-le8p9bdq/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-le8p9bdq.jpg",
    "category": "Car",
    "license": {
     "status": "unresolved",
@@ -1037,7 +1046,7 @@
    "slug": "nw-m46gk5tw",
    "title": "Lights Out",
    "entry": "games/nw-m46gk5tw/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m46gk5tw.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1057,7 +1066,7 @@
    "slug": "nw-m30r52dj",
    "title": "Minecraft 1.19 (EaglercraftX)",
    "entry": "games/nw-m30r52dj/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m30r52dj.jpg",
    "category": "Sandbox",
    "license": {
     "status": "unresolved",
@@ -1077,7 +1086,7 @@
    "slug": "nw-l6nrbn76",
    "title": "Minecraft 1.5.2 (Eaglercraft)",
    "entry": "games/nw-l6nrbn76/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l6nrbn76.jpg",
    "category": "Sandbox",
    "license": {
     "status": "unresolved",
@@ -1097,7 +1106,7 @@
    "slug": "nw-m0y5v3sj",
    "title": "Minecraft 1.8.8 (EaglercraftX)",
    "entry": "games/nw-m0y5v3sj/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m0y5v3sj.jpg",
    "category": "Sandbox",
    "license": {
     "status": "unresolved",
@@ -1117,7 +1126,7 @@
    "slug": "nw-m6g4t5eb",
    "title": "Minecraft Beta 1.3 (Eaglercraft)",
    "entry": "games/nw-m6g4t5eb/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6g4t5eb.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1137,7 +1146,7 @@
    "slug": "nw-lnxmcjw5",
    "title": "Minecraft Classic",
    "entry": "games/nw-lnxmcjw5/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lnxmcjw5.jpg",
    "category": "Sandbox",
    "license": {
     "status": "unresolved",
@@ -1157,7 +1166,7 @@
    "slug": "nw-m6g4od0o",
    "title": "Minecraft Indev (Eaglercraft)",
    "entry": "games/nw-m6g4od0o/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6g4od0o.jpg",
    "category": "Sandbox",
    "license": {
     "status": "unresolved",
@@ -1177,7 +1186,7 @@
    "slug": "nw-lsytaxxo",
    "title": "Minesweeper",
    "entry": "games/nw-lsytaxxo/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lsytaxxo.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1197,7 +1206,7 @@
    "slug": "nw-m6osojhv",
    "title": "n-gon",
    "entry": "games/nw-m6osojhv/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6osojhv.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -1217,7 +1226,7 @@
    "slug": "nw-m6r92b5i",
    "title": "OvO",
    "entry": "games/nw-m6r92b5i/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6r92b5i.jpg",
    "category": "Ruh",
    "license": {
     "status": "unresolved",
@@ -1237,7 +1246,7 @@
    "slug": "nw-lyrfj46j",
    "title": "Ping Pong",
    "entry": "games/nw-lyrfj46j/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lyrfj46j.jpg",
    "category": "Ping pong",
    "license": {
     "status": "unresolved",
@@ -1257,7 +1266,7 @@
    "slug": "nw-lmn8r4jk",
    "title": "Plants vs Zombies",
    "entry": "games/nw-lmn8r4jk/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lmn8r4jk.jpg",
    "category": "Strategy",
    "license": {
     "status": "unresolved",
@@ -1277,7 +1286,7 @@
    "slug": "nw-m46gk5tx",
    "title": "Pong",
    "entry": "games/nw-m46gk5tx/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m46gk5tx.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1297,7 +1306,7 @@
    "slug": "nw-m7pqw7ku",
    "title": "Popcorn Games in NettleWeb",
    "entry": "games/nw-m7pqw7ku/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m7pqw7ku.jpg",
    "category": "Other",
    "license": {
     "status": "unresolved",
@@ -1317,7 +1326,7 @@
    "slug": "nw-lyrfmb3z",
    "title": "Portal",
    "entry": "games/nw-lyrfmb3z/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lyrfmb3z.jpg",
    "category": "Arcade",
    "license": {
     "status": "unresolved",
@@ -1337,7 +1346,7 @@
    "slug": "nw-m681m4bm",
    "title": "Puyo Puyo",
    "entry": "games/nw-m681m4bm/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m681m4bm.jpg",
    "category": "Flash",
    "license": {
     "status": "unresolved",
@@ -1357,7 +1366,7 @@
    "slug": "nw-m6s1kwh2",
    "title": "PvZ: Free Edition",
    "entry": "games/nw-m6s1kwh2/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6s1kwh2.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -1377,7 +1386,7 @@
    "slug": "nw-lj0xpunh",
    "title": "Run 3",
    "entry": "games/nw-lj0xpunh/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lj0xpunh.jpg",
    "category": "Runner",
    "license": {
     "status": "unresolved",
@@ -1397,7 +1406,7 @@
    "slug": "nw-m4a0lyip",
    "title": "Scary Runner",
    "entry": "games/nw-m4a0lyip/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m4a0lyip.jpg",
    "category": "Arcade",
    "license": {
     "status": "unresolved",
@@ -1417,7 +1426,7 @@
    "slug": "nw-m5l97gyy",
    "title": "Shapez",
    "entry": "games/nw-m5l97gyy/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m5l97gyy.jpg",
    "category": "Puzzle",
    "license": {
     "status": "unresolved",
@@ -1437,7 +1446,7 @@
    "slug": "nw-m75b6rh3",
    "title": "Slope (unblocked)",
    "entry": "games/nw-m75b6rh3/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m75b6rh3.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1457,7 +1466,7 @@
    "slug": "nw-lqxnn5rh",
    "title": "Slope 2",
    "entry": "games/nw-lqxnn5rh/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lqxnn5rh.jpg",
    "category": "Racing",
    "license": {
     "status": "unresolved",
@@ -1477,7 +1486,7 @@
    "slug": "nw-lmknavnm",
    "title": "Snake (Google)",
    "entry": "games/nw-lmknavnm/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lmknavnm.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1497,7 +1506,7 @@
    "slug": "nw-m4a60kwg",
    "title": "Soda's Simple Snake Game",
    "entry": "games/nw-m4a60kwg/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m4a60kwg.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1517,7 +1526,7 @@
    "slug": "nw-l4s3rier",
    "title": "Solitaire",
    "entry": "games/nw-l4s3rier/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l4s3rier.jpg",
    "category": "Card",
    "license": {
     "status": "unresolved",
@@ -1537,7 +1546,7 @@
    "slug": "nw-m3ksel6f",
    "title": "Soundboard",
    "entry": "games/nw-m3ksel6f/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m3ksel6f.jpg",
    "category": "Simulation",
    "license": {
     "status": "unresolved",
@@ -1557,7 +1566,7 @@
    "slug": "nw-m6v5a21i",
    "title": "Sprunki",
    "entry": "games/nw-m6v5a21i/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6v5a21i.jpg",
    "category": "Music",
    "license": {
     "status": "unresolved",
@@ -1577,7 +1586,7 @@
    "slug": "nw-m48031kb",
    "title": "Stack",
    "entry": "games/nw-m48031kb/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m48031kb.jpg",
    "category": "Html5",
    "license": {
     "status": "unresolved",
@@ -1597,7 +1606,7 @@
    "slug": "nw-m6gil03c",
    "title": "Super Mario 64",
    "entry": "games/nw-m6gil03c/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6gil03c.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -1617,7 +1626,7 @@
    "slug": "nw-m1w4m72x",
    "title": "Super Mario Bros.",
    "entry": "games/nw-m1w4m72x/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m1w4m72x.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1637,7 +1646,7 @@
    "slug": "nw-l8wzg5i3",
    "title": "Surf",
    "entry": "games/nw-l8wzg5i3/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l8wzg5i3.jpg",
    "category": "Sports",
    "license": {
     "status": "unresolved",
@@ -1657,7 +1666,7 @@
    "slug": "nw-lleh0lgv",
    "title": "T-Rex Run",
    "entry": "games/nw-lleh0lgv/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lleh0lgv.jpg",
    "category": "Chromedino",
    "license": {
     "status": "unresolved",
@@ -1677,7 +1686,7 @@
    "slug": "nw-ltrmmlpr",
    "title": "T-Rex Run 3D",
    "entry": "games/nw-ltrmmlpr/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-ltrmmlpr.jpg",
    "category": "Chromedino",
    "license": {
     "status": "unresolved",
@@ -1697,7 +1706,7 @@
    "slug": "nw-ltzjs7mk",
    "title": "Temple Run 2",
    "entry": "games/nw-ltzjs7mk/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-ltzjs7mk.jpg",
    "category": "Runner",
    "license": {
     "status": "unresolved",
@@ -1717,7 +1726,7 @@
    "slug": "nw-lc2t5w1l",
    "title": "Tetris",
    "entry": "games/nw-lc2t5w1l/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lc2t5w1l.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1737,7 +1746,7 @@
    "slug": "nw-m6gyaatk",
    "title": "The Man Behind the Pacman",
    "entry": "games/nw-m6gyaatk/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6gyaatk.jpg",
    "category": "Arcade",
    "license": {
     "status": "unresolved",
@@ -1757,7 +1766,7 @@
    "slug": "nw-m0d5vydh",
    "title": "Time Shooter 2",
    "entry": "games/nw-m0d5vydh/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m0d5vydh.jpg",
    "category": "Shooter",
    "license": {
     "status": "unresolved",
@@ -1777,7 +1786,7 @@
    "slug": "nw-m0d5yuxq",
    "title": "Time Shooter 3 SWAT",
    "entry": "games/nw-m0d5yuxq/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m0d5yuxq.jpg",
    "category": "Shooter",
    "license": {
     "status": "unresolved",
@@ -1797,7 +1806,7 @@
    "slug": "nw-m2091pqj",
    "title": "Tiny Fishing",
    "entry": "games/nw-m2091pqj/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m2091pqj.jpg",
    "category": "Relax",
    "license": {
     "status": "unresolved",
@@ -1817,7 +1826,7 @@
    "slug": "nw-lo5p4u8n",
    "title": "Tower Building",
    "entry": "games/nw-lo5p4u8n/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lo5p4u8n.jpg",
    "category": "Physics",
    "license": {
     "status": "unresolved",
@@ -1837,7 +1846,7 @@
    "slug": "nw-m4w43urn",
    "title": "Tower Platform Master",
    "entry": "games/nw-m4w43urn/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m4w43urn.jpg",
    "category": "Classic",
    "license": {
     "status": "unresolved",
@@ -1857,7 +1866,7 @@
    "slug": "nw-m6l65seh",
    "title": "Tube Jumpers",
    "entry": "games/nw-m6l65seh/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-m6l65seh.jpg",
    "category": "Action",
    "license": {
     "status": "unresolved",
@@ -1877,7 +1886,7 @@
    "slug": "nw-lm5wdxm0",
    "title": "Tunnel Rush",
    "entry": "games/nw-lm5wdxm0/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-lm5wdxm0.jpg",
    "category": "Runner",
    "license": {
     "status": "unresolved",
@@ -1897,7 +1906,7 @@
    "slug": "nw-l4xish5d",
    "title": "Wordle",
    "entry": "games/nw-l4xish5d/index.html",
-   "thumb": null,
+   "thumb": "images/thumbs/nw-l4xish5d.jpg",
    "category": "Online",
    "license": {
     "status": "unresolved",
