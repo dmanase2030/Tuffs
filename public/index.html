@@ -779,6 +779,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms)),mem={};
 const st={get(k,d){try{const v=localStorage.getItem('lx:'+k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},set(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}}};
 const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false},st.get('S',{})),saveS=()=>st.set('S',S);
 if(S.accent==='#a78bfa')S.accent='#3584e4';
+try{if(!localStorage.getItem('lx:silkwall1')){S.wall=0;saveS();localStorage.setItem('lx:silkwall1','1')}}catch(e){}
 let USER='user',mode='in';const W0=$('#wall').innerHTML;
 const WALLS=[{n:'Silk',s:'Gray silk waves',l:1,img:'/images/wall-grey.jpg'},
 {n:'Peaks',s:'Dark mountains',svg:`<defs><linearGradient id='pk' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#3a3e48'/><stop offset='1' stop-color='#0d0e11'/></linearGradient></defs><rect width='1600' height='900' fill='url(#pk)'/><path d='M0 700L260 430 420 560 700 260 980 600 1180 440 1600 720V900H0Z' fill='#1b1d22'/><path d='M0 800L300 600 560 740 860 520 1200 760 1600 620V900H0Z' fill='#08090b'/>`},
