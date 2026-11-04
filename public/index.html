@@ -499,6 +499,17 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13.5px;
 #bootlogs{font-size:12px;line-height:1.65;overflow-wrap:anywhere}
 #bootlogs>div{margin:2px 0}
 @media(max-width:520px){#bootterminal{padding:12px!important}#bootform label,#bootcmd{font-size:11px!important}#bootlogs{font-size:11px}}
+
+/* ===== polish pack ===== */
+.tile .tn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:34px}
+.tile .art img{transition:transform .35s}
+.tile:hover .art img{transform:scale(1.06)}
+.tile:hover{box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.ic:hover{transform:translateY(-4px) scale(1.07)}
+.lib::-webkit-scrollbar,.body::-webkit-scrollbar,.tags::-webkit-scrollbar{width:8px;height:8px}
+.lib::-webkit-scrollbar-thumb,.body::-webkit-scrollbar-thumb,.tags::-webkit-scrollbar-thumb{background:rgba(140,140,160,.35);border-radius:8px}
+::selection{background:var(--acc);color:#fff}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
 </style>
 </head>
 <body>
@@ -645,29 +656,48 @@ function playGame(g){const r=st.get('rec',[]).filter(x=>x!==g.id);r.unshift(g.id
 if(!g.url){body.innerHTML=`<div class="msg"><b>${g.name}</b> has no link yet.<br>Open the file, find <b>CONFIG.games</b>, and set <b>url</b> to a local game path or a full address.</div>`;return}
 const f=document.createElement("iframe");f.allow="fullscreen;autoplay;gamepad";f.src=proxify(g.url);body.append(f)}
 function browser(){
- const {body:b}=win('Browser','f',790,520);
- b.innerHTML=`<form class="nav" aria-label="Browser address bar"><button type="button" data-browser="back" title="Back">&#8592;</button><button type="button" data-browser="forward" title="Forward">&#8594;</button><button type="button" data-browser="home" title="Home">Home</button><input class="url" placeholder="Search or enter a URL" aria-label="Address bar"><button type="button" data-browser="reload" title="Reload">Reload</button><button type="button" data-browser="external" title="Open in a new tab">Open tab</button></form><div class="browser-hint">Some sites block embedded viewing. A configured web proxy is required for in-app browsing; “Open tab” works without one.</div><div class="browser-home work-area"><div class="tool-heading">Browse the web</div><div class="tool-sub">Enter a website or search above, or choose a quick link.</div><div class="quick-sites" style="display:flex;gap:8px;flex-wrap:wrap"></div></div>`;
- const form=b.querySelector('form'),input=form.querySelector('input'),home=b.querySelector('.browser-home');
- let history=[],idx=-1,frame=null;
- function parse(v){v=v.trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/i.test(v))return 'https://'+v;return CONFIG.searchEngine+encodeURIComponent(v)}
- function load(url,remember=true){if(!url)return;input.value=url;if(remember){history=history.slice(0,idx+1);history.push(url);idx=history.length-1}
-   if(home)home.hidden=true;
-   if(frame)frame.remove();frame=document.createElement('iframe');frame.title='Web content';frame.referrerPolicy='no-referrer';frame.src=proxify(url);b.append(frame);
- }
- form.onsubmit=e=>{e.preventDefault();load(parse(input.value))};
- b.querySelectorAll('[data-browser]').forEach(btn=>btn.onclick=()=>{
-  const a=btn.dataset.browser;
-  if(a==='home'){if(frame){frame.remove();frame=null}home.hidden=false;input.value='';return}
-  if(a==='external'){const url=parse(input.value);if(url)window.open(url,'_blank','noopener,noreferrer');return}
-  if(a==='reload'){if(frame)frame.src=frame.src;return}
-  if(a==='back'&&idx>0)load(history[--idx],false);
-  if(a==='forward'&&idx<history.length-1)load(history[++idx],false);
- });
- const links=home.querySelector('.quick-sites');CONFIG.quick.forEach(([name,url])=>{
-  const btn=el('button','toolbtn',name);btn.onclick=()=>load(url);links.append(btn)
- });
+ const{w,body:b}=win('Browser','f',940,600);
+ const fsT=w.querySelector('[data-a=f]');if(fsT)fsT.click();
+ let tabs=[],cur=null;
+ const strip=el('div','nav');strip.style.cssText='gap:6px;flex-wrap:nowrap';
+ const tabBox=el('div');tabBox.style.cssText='display:flex;gap:6px;flex:1;overflow-x:auto;align-items:center;min-width:0';
+ const plus=el('button','btn','+');plus.type='button';plus.title='New tab';plus.style.cssText='padding:4px 11px;flex:none';
+ strip.append(tabBox,plus);b.append(strip);
+ const bar=el('form','nav');bar.setAttribute('aria-label','Browser address bar');
+ const mkBtn=(t,title)=>{const x=el('button','btn',t);x.type='button';x.title=title;x.style.flex='none';return x};
+ const refresh=mkBtn('↻','Refresh'),homeBtn=mkBtn('⌂','Home'),fsb=mkBtn('⛶','Full screen');
+ const addr=el('input','url');addr.placeholder='Search or enter a URL';addr.setAttribute('aria-label','Address');
+ bar.append(refresh,homeBtn,fsb,addr);b.append(bar);
+ const area=el('div');area.style.cssText='position:relative;flex:1;min-height:0';b.append(area);
+ function parse(v){v=(v||'').trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(v))return 'https://'+v;return CONFIG.searchEngine+encodeURIComponent(v)}
+ function select(t){cur=t;for(const x of tabs){x.pane.style.display=x===t?'block':'none';x.tab.style.opacity=x===t?'1':'.55'}addr.value=t.url||''}
+ function nav(t,v){const url=parse(v);if(!url)return;t.url=url;t.home.style.display='none';t.frame.hidden=false;t.frame.src=proxify(url);try{t.label.textContent=new URL(url).hostname}catch(e){t.label.textContent=url}if(cur===t)addr.value=url}
+ function newTab(url){const pane=el('div');pane.style.cssText='position:absolute;inset:0';
+  const home=el('div');home.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center;overflow:auto';
+  const h=el('h2','','Lumio');h.style.cssText='font:700 30px Inter;margin:0';
+  const inp=el('input','url');inp.placeholder='Search or enter a URL';inp.style.cssText='max-width:440px;width:100%;flex:none';inp.setAttribute('aria-label','Search or enter a URL');
+  const links=el('div');links.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center';
+  const note=el('div','msg','Browsing runs through a proxy, so heavy sites and logins may not work yet.');
+  home.append(h,inp,links,note);
+  const frame=document.createElement('iframe');frame.title='Web page';frame.hidden=true;frame.referrerPolicy='no-referrer';frame.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff';
+  pane.append(home,frame);area.append(pane);
+  const tab=el('div');tab.style.cssText='display:flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border-radius:9px;background:rgba(127,127,140,.18);cursor:pointer;flex:none;max-width:170px';
+  const label=el('span','','New tab');label.style.cssText='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 12px Inter';
+  const x=el('button','btn','×');x.type='button';x.title='Close tab';x.style.cssText='padding:1px 7px;flex:none';
+  tab.append(label,x);tabBox.append(tab);
+  const t={pane,home,frame,tab,label,url:''};tabs.push(t);
+  tab.onclick=()=>select(t);
+  x.onclick=e=>{e.stopPropagation();const i=tabs.indexOf(t);tabs.splice(i,1);tab.remove();pane.remove();if(!tabs.length){w.querySelector('[data-a=x]').click()}else if(cur===t)select(tabs[Math.max(0,i-1)])};
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nav(t,inp.value)}});
+  for(const [name,u] of CONFIG.quick){const qb=el('button','btn',name);qb.type='button';qb.onclick=()=>nav(t,u);links.append(qb)}
+  select(t);if(url)nav(t,url);return t}
+ bar.onsubmit=e=>{e.preventDefault();if(cur)nav(cur,addr.value)};
+ refresh.onclick=()=>{if(cur&&cur.url)cur.frame.src=proxify(cur.url)};
+ homeBtn.onclick=()=>{if(!cur)return;cur.url='';cur.frame.hidden=true;cur.frame.removeAttribute('src');cur.home.style.display='flex';cur.label.textContent='New tab';addr.value=''};
+ fsb.onclick=()=>{if(w.requestFullscreen)w.requestFullscreen().catch(()=>toast('Full screen is not supported on this device'));else toast('Full screen is not supported on this device')};
+ plus.onclick=()=>newTab();
+ newTab();
 }
-
 const TREE=`<span class="dr">.</span>
 ├── <span class="dr">games</span>
 │   ├── snake
@@ -937,7 +967,7 @@ const list=el('div');list.style.cssText='flex:1;overflow:auto;padding:10px;displ
 const form=el('form','nav');const inp=el('input','url');inp.placeholder='Message';inp.maxLength=500;inp.setAttribute('aria-label','Message');const send=el('button','btn p','Send');send.type='submit';form.append(inp,send);b.append(form);
 let lastId=0,room='General',alive=true;
 w.addEventListener('appclose',()=>{alive=false;clearInterval(iv)});
-const render=m=>{const row=el('div');row.style.cssText='background:rgba(127,127,140,.12);border-radius:10px;padding:6px 10px';const h=el('div');const nm=el('b','',m.user);const tm=el('span','',new Date(m.ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}));tm.style.cssText='opacity:.6;font-size:11px;margin-left:6px';h.append(nm,tm);const tx=el('div','',m.text);tx.style.whiteSpace='pre-wrap';row.append(h,tx);list.append(row)};
+const render=m=>{const row=el('div');const own=m.user===USER;row.style.cssText='border-radius:10px;padding:6px 10px;max-width:88%;'+(own?'align-self:flex-end;background:rgba(110,120,255,.28)':'align-self:flex-start;background:rgba(127,127,140,.12)');const h=el('div');const nm=el('b','',m.user);const tm=el('span','',new Date(m.ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}));tm.style.cssText='opacity:.6;font-size:11px;margin-left:6px';h.append(nm,tm);const tx=el('div','',m.text);tx.style.whiteSpace='pre-wrap';row.append(h,tx);list.append(row)};
 async function poll(){if(!alive)return;try{const r=await fetch('/api/chat/messages?room='+encodeURIComponent(room)+'&after='+lastId,{headers:{authorization:'Bearer '+SESSION.t}});const d=await r.json();if(!r.ok){list.innerHTML='';list.append(el('div','msg',d.error||'Chat unavailable'));return}const msgs=d.messages||[];for(const m of msgs){render(m);lastId=Math.max(lastId,m.id)}if(msgs.length)list.scrollTop=list.scrollHeight}catch(e){}}
 form.onsubmit=async e=>{e.preventDefault();const text=inp.value.trim();if(!text)return;inp.value='';try{const r=await fetch('/api/chat/messages',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+SESSION.t},body:JSON.stringify({room,text})});const d=await r.json();if(!r.ok)toast(d.error||'Could not send');else poll()}catch(e){toast('Could not send')}};
 roomSel.onchange=()=>{room=roomSel.value;lastId=0;list.innerHTML='';poll()};
