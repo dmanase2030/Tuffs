@@ -540,6 +540,49 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13.5px;
 .nav{background:rgba(9,9,11,.92)}
 input[type=range]{accent-color:#3584e4}
 .msg{color:#a7a7ae}
+
+/* ===== rice pack 2: per-app minimal pass ===== */
+.body{font-family:Inter,system-ui,sans-serif}
+.ws{display:flex;gap:4px;align-items:center}
+.ws i{width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.35);display:block}
+.ws i.a{width:20px;background:#fff}
+.bar{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center}
+.bar #clk{justify-self:center}
+.bar #sys{justify-self:end}
+.eq{display:flex;gap:2px;align-items:flex-end;height:12px}
+.eq i{width:3px;border-radius:2px;background:#e8e8ea;animation:eqa 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.18s;animation-duration:.8s}
+.eq i:nth-child(3){animation-delay:.36s;animation-duration:1.15s}
+.eq i:nth-child(4){animation-delay:.1s;animation-duration:.7s}
+@keyframes eqa{0%,100%{height:4px}50%{height:12px}}
+#sys #ram,#sys #tmp{background:rgba(255,255,255,.1);padding:2px 8px;border-radius:99px;font-family:"JetBrains Mono",monospace;font-size:11px}
+.tb .tt{position:absolute;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;max-width:58%}
+.tb b{position:static;transform:none;display:block}
+.tb .tsub{display:block;font-size:10px;color:#8a8a91;letter-spacing:.05em;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wnew{flex:none;width:24px;height:24px;border:0;border-radius:8px;background:transparent;color:#b9b9be;font-size:16px;cursor:pointer;margin-right:auto;line-height:1}
+.wnew:hover{background:rgba(255,255,255,.13);color:#fff}
+#big .desktop-foot{display:block;font:500 clamp(12px,1.8vw,17px) Inter;letter-spacing:.34em;color:var(--clk2,#3a3a3d);margin-top:12px;text-transform:uppercase}
+#qsav{width:34px;height:34px;border-radius:50%;background:#3584e4;color:#fff;display:inline-grid;place-items:center;font:700 14px Inter;flex:none}
+#qs .tg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#qs .tg button{border-radius:13px;min-height:44px}
+.wall-card{transform:skewX(-5deg)}
+.wall-card.active{transform:skewX(-5deg) scale(1.05);outline-color:#fff}
+.fm-window,.fm-body{background:#101012!important}
+.fm-shell{--fm-text:#ececf1;--fm-mute:#8e8e96;--fm-border:rgba(255,255,255,.09);--fm-surface:#17171a;--fm-hov:rgba(255,255,255,.07)}
+.fm-toolbar{background:#141416}
+.fm-sidebar{background:#131315}
+.fm-main{background:#101012}
+.fm-place.active{color:#fff;background:rgba(53,132,228,.22)}
+.fm-place.active .fm-svg{color:#6cb2ff}
+.fm-file-art.is-folder,.fm-file-art.is-folder[data-tint="teal"],.fm-file-art.is-folder[data-tint="pink"],.fm-file-art.is-folder[data-tint="blue"]{color:#5aa9ff}
+.fm-folder-badge{background:#1d1d20;border-color:rgba(255,255,255,.14)}
+.tool-textarea{background:#0b0b0d;color:#e8e8ea}
+.day-grid button.selected{background:rgba(53,132,228,.3)}
+.tool-item{background:rgba(255,255,255,.03);border-radius:10px}
+.cy{color:#7aa2f7}
+.pr{color:#f7768e}
+.mon canvas{background:#0b0b0d}
+@media(max-width:560px){#viz{display:none}#sys #tmp{display:none}.bar{grid-template-columns:auto 1fr auto}#clk{font-size:11px;padding:5px 9px}.tb .tsub{display:none}}
 </style>
 </head>
 <body>
@@ -566,6 +609,7 @@ input[type=range]{accent-color:#3584e4}
 
 <div class="bar">
  <button class="chip" id="act" aria-label="Activities"><span class="ws"><i class="a"></i><i></i><i></i></span><span class="bar-brand">HYPR<span>DESK</span></span></button>
+ <div class="chip" id="viz" aria-hidden="true"><span class="eq"><i></i><i></i><i></i><i></i></span></div>
  <div class="chip" id="clk">--</div>
  <button class="chip" id="sys" aria-label="Quick settings">
   <span class="opt" id="ram"></span><span class="opt" id="tmp"></span>
@@ -642,7 +686,7 @@ const icon=(g,b)=>`<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="11"
 const tileIcon=(t,c)=>`<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="11" fill="${c}"/><text x="24" y="32" text-anchor="middle" font-size="22" font-weight="700" fill="#fff" font-family="Inter,sans-serif">${t[0]}</text></svg>`;
 
 function tick(){const d=new Date(),D=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-$("#wd").textContent=D[d.getDay()];$("#dt").textContent=p2(d.getDate())+" "+M[d.getMonth()]+" "+d.getFullYear()+"  /  "+p2(d.getHours())+":"+p2(d.getMinutes());
+$("#wd").textContent=D[d.getDay()];$("#dt").textContent=p2(d.getDate())+" "+M[d.getMonth()]+" "+d.getFullYear();const _bf=document.querySelector('#big .desktop-foot');if(_bf)_bf.textContent='- '+p2(d.getHours())+':'+p2(d.getMinutes())+' -';
 $("#clk").textContent=D[d.getDay()].slice(0,3)+" "+d.getDate()+" "+M[d.getMonth()].toLowerCase()+"  "+p2(d.getHours())+":"+p2(d.getMinutes())+":"+p2(d.getSeconds());
 $("#ram").textContent="HYPR / WEB";if(navigator.getBattery&&!window._bat)window._bat=1,navigator.getBattery().then(b=>{const up=()=>{const r=$("#ram");if(r)r.textContent="BAT "+Math.round(b.level*100)+"%"};b.addEventListener("levelchange",up);up()}).catch(()=>{});$("#tmp").textContent=navigator.onLine?"Online":"Offline"}
 tick();setInterval(()=>{if(!document.hidden)tick()},1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
@@ -669,8 +713,9 @@ addEventListener("keydown",e=>{if(e.key==="Escape"){closeOv();$("#qs").classList
 let z=100,n=0;
 function win(title,kind,wd=680,ht=420){const w=document.createElement("div");w.className="win";const W=Math.min(innerWidth-16,wd),H=Math.min(innerHeight-130,ht);
 w.style.cssText=`width:${W}px;height:${H}px;left:${Math.max(8,(innerWidth-W)/2+n*24)}px;top:${Math.max(52,(innerHeight-H)/2-20+n*24)}px;z-index:${++z}`;n=(n+1)%6;
-w.innerHTML=`<div class="tb"><b></b><div class="wb"><button data-a="m" aria-label="Minimize"><svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg></button><button data-a="f" aria-label="Maximize"><svg viewBox="0 0 12 12"><rect x="2" y="2" width="8" height="8" rx="1"/></svg></button><button data-a="x" aria-label="Close"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8"/></svg></button></div></div><div class="body ${kind||""}"></div>`;
+w.innerHTML=`<div class="tb"><button class="wnew" title="New window" aria-label="New window">+</button><div class="tt"><b></b><small class="tsub"></small></div><div class="wb"><button data-a="m" aria-label="Minimize"><svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg></button><button data-a="f" aria-label="Maximize"><svg viewBox="0 0 12 12"><rect x="2" y="2" width="8" height="8" rx="1"/></svg></button><button data-a="x" aria-label="Close"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8"/></svg></button></div></div><div class="body ${kind||""}"></div>`;
 w.querySelector("b").textContent=title;document.body.append(w);
+const _wn=w.querySelector('.wnew');if(_wn){const _ap=APPS.find(x=>x.n===title);if(_ap)_wn.onclick=e=>{e.stopPropagation();openApp(_ap)};else _wn.remove()}
 w.onpointerdown=()=>w.style.zIndex=++z;
 w.querySelector("[data-a=x]").onclick=()=>{w.dispatchEvent(new Event('appclose'));w.remove();dockSync()};w.querySelector("[data-a=m]").onclick=()=>{w.style.display="none";dockSync()};
 w.querySelector("[data-a=f]").onclick=()=>{if(w.dataset.max){w.style.cssText=w.dataset.max;delete w.dataset.max}else{w.dataset.max=w.style.cssText;w.style.cssText=`left:0;top:calc(env(safe-area-inset-top,0px) + 40px);width:100vw;height:calc(100dvh - env(safe-area-inset-top,0px) - 112px);border-radius:0;z-index:${++z}`}};
@@ -704,7 +749,7 @@ function browser(){
  const area=el('div');area.style.cssText='position:relative;flex:1;min-height:0';b.append(area);
  function parse(v){v=(v||'').trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(v))return 'https://'+v;return CONFIG.searchEngine+encodeURIComponent(v)}
  function select(t){cur=t;for(const x of tabs){x.pane.style.display=x===t?'block':'none';x.tab.style.opacity=x===t?'1':'.55'}addr.value=t.url||''}
- function nav(t,v){const url=parse(v);if(!url)return;t.url=url;t.home.style.display='none';t.frame.hidden=false;t.frame.src=proxify(url);try{t.label.textContent=new URL(url).hostname}catch(e){t.label.textContent=url}if(cur===t)addr.value=url}
+ function nav(t,v){const url=parse(v);if(!url)return;t.url=url;t.home.style.display='none';t.frame.hidden=false;t.frame.src=proxify(url);let _hh=url;try{_hh=new URL(url).hostname}catch(e){}t.label.textContent=_hh;const _ts2=w.querySelector('.tsub');if(_ts2)_ts2.textContent=_hh;if(cur===t)addr.value=url}
  function newTab(url){const pane=el('div');pane.style.cssText='position:absolute;inset:0';
   const home=el('div');home.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center;overflow:auto';
   const h=el('h2','','Lumio');h.style.cssText='font:700 30px Inter;margin:0';
@@ -737,7 +782,7 @@ const TREE=`<span class="dr">.</span>
 │   └── ...
 ├── <span class="dr">proxy</span>
 └── notes.md`;
-function terminal(){const{body:b}=win("Terminal");const out=document.createElement("div"),f=document.createElement("div");f.className="tin";
+function terminal(){const{w,body:b}=win("Terminal");b.style.fontFamily="'JetBrains Mono',monospace";const _ts=w.querySelector('.tsub');if(_ts)_ts.textContent='~';const out=document.createElement("div"),f=document.createElement("div");f.className="tin";
 f.innerHTML=`<span class="pr">❯</span><input aria-label="Command" autocomplete="off" spellcheck="false">`;b.append(out,f);const inp=f.querySelector("input");
 const esc=s=>s.replace(/</g,"&lt;"),say=h=>{const l=document.createElement("div");l.className="t-line";l.innerHTML=h;out.append(l)};
 say(`<span class="cy">user@linux</span> ~ type <b>help</b>`);
@@ -750,7 +795,7 @@ if(c==="play"){const g=CONFIG.games.find(g=>g.name.toLowerCase()===arg.toLowerCa
 else if(c==="open"&&arg){const{body}=win("Browser","f",760,480),fr=document.createElement("iframe");fr.src=proxify(/^https?:/.test(arg)?arg:"https://"+arg);body.append(fr)}
 else if(C[c])say(C[c]());else say("zsh: command not found: "+esc(c));b.scrollTop=b.scrollHeight};
 setTimeout(()=>inp.focus(),60);b.onclick=()=>inp.focus()}
-function monitor(){const{w,body:b}=win("System monitor","",620,380);b.style.fontFamily="Inter";b.innerHTML=`<div class="mon"><b>Activity demo</b><canvas></canvas><dl><dt>Graph</dt><dd>Simulated visualization, not live CPU data</dd><dt>Platform</dt><dd id="u">Browser only</dd></dl></div>`;
+function monitor(){const{w,body:b}=win("System monitor","",620,380);b.style.fontFamily="'JetBrains Mono',monospace";b.innerHTML=`<div class="mon"><b>Activity demo</b><canvas></canvas><dl><dt>Graph</dt><dd>Simulated visualization, not live CPU data</dd><dt>Platform</dt><dd id="u">Browser only</dd></dl></div>`;
 const c=b.querySelector("canvas"),x=c.getContext("2d"),h=Array(60).fill(3);
 const iv=setInterval(()=>{if(!w.isConnected)return clearInterval(iv);h.push(Math.max(1,Math.min(60,h.at(-1)+(Math.random()-.5)*8)));h.shift();c.width=c.clientWidth;c.height=150;
 x.strokeStyle="rgba(47,123,255,.15)";for(let i=1;i<10;i++){x.beginPath();x.moveTo(i*c.width/10,0);x.lineTo(i*c.width/10,150);x.stroke()}
@@ -780,6 +825,7 @@ const st={get(k,d){try{const v=localStorage.getItem('lx:'+k);if(v!==null)return 
 const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false},st.get('S',{})),saveS=()=>st.set('S',S);
 if(S.accent==='#a78bfa')S.accent='#3584e4';
 try{if(!localStorage.getItem('lx:silkwall1')){S.wall=0;saveS();localStorage.setItem('lx:silkwall1','1')}}catch(e){}
+try{const _qr=document.querySelector('#qs .row');if(_qr&&!document.getElementById('qsav')){const _av=document.createElement('span');_av.id='qsav';_av.textContent='?';_qr.prepend(_av)}setInterval(()=>{const _a2=document.getElementById('qsav');if(_a2)_a2.textContent=(USER[0]||'?').toUpperCase()},1500)}catch(e){}
 let USER='user',mode='in';const W0=$('#wall').innerHTML;
 const WALLS=[{n:'Silk',s:'Gray silk waves',l:1,img:'/images/wall-grey.jpg'},
 {n:'Peaks',s:'Dark mountains',svg:`<defs><linearGradient id='pk' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#3a3e48'/><stop offset='1' stop-color='#0d0e11'/></linearGradient></defs><rect width='1600' height='900' fill='url(#pk)'/><path d='M0 700L260 430 420 560 700 260 980 600 1180 440 1600 720V900H0Z' fill='#1b1d22'/><path d='M0 800L300 600 560 740 860 520 1200 760 1600 620V900H0Z' fill='#08090b'/>`},
