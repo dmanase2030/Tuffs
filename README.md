@@ -10,12 +10,13 @@ browse tab, following the official
 implementation. Tuffs is an independent project and is not affiliated with
 any source project.
 
-- **11,291 games**: 95 self-hosted (13 from BlazerGames, 82 from NettleWeb,
-  folders under `public/games/`) and 11,196 external catalog entries that
-  stream from third-party CDNs — 1,112 from NettleWeb, 135 from
-  Interstellar, and 9,949 from the GameMonetize publisher feed — each
-  verified to load and allow embedding at integration time (marked
-  "external" on their cards and filterable via the **Self-hosted** chip)
+- **11,283 games**: 96 self-hosted (13 from BlazerGames, 82 from NettleWeb
+  plus Tuff Client, folders under `public/games/`) and 11,187 external
+  catalog entries that stream from third-party CDNs — 1,103 from
+  NettleWeb, 135 from Interstellar, and 9,949 from the GameMonetize
+  publisher feed — each verified to load and allow embedding at
+  integration time (marked "external" on their cards and filterable via
+  the **Self-hosted** chip)
 - Search, category filters, sorting, favorites, recently played, random pick
 - Dedicated player pages with fullscreen, reload and favorite controls
 - The Tuffx browser tab (Scramjet client over your own Wisp backend)
