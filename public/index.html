@@ -6,6 +6,7 @@
 <title>Launcher · Hypr Edition</title>
 <meta name="theme-color" content="#0b101e">
 <meta name="description" content="Hyprland-inspired web desktop with a functional local file explorer">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Michroma&display=swap" rel="stylesheet">
 <style>
 :root{--glass:rgba(22,22,24,.8);--glass2:rgba(44,44,48,.9);--fg:#f2f2f2;--mute:#a8a8ad;--acc:#2f7bff;--line:rgba(255,255,255,.1);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fg:#f2f2f2}}
@@ -510,6 +511,35 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13.5px;
 .lib::-webkit-scrollbar-thumb,.body::-webkit-scrollbar-thumb,.tags::-webkit-scrollbar-thumb{background:rgba(140,140,160,.35);border-radius:8px}
 ::selection{background:var(--acc);color:#fff}
 @media (prefers-reduced-motion: reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+/* ===== realism pack: monochrome desktop look ===== */
+#wall{background:#c9c9cd url("/images/wall-grey.jpg") center/cover no-repeat}
+.bar{top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;right:10px}
+.chip{background:rgba(18,18,20,.68);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 13px;box-shadow:0 6px 20px rgba(0,0,0,.22);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);color:#f0f0f2}
+#clk{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px}
+.bar-brand{letter-spacing:.14em;font-weight:700}
+.win{background:#101012;border:1px solid rgba(255,255,255,.13);border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.tb{height:38px;background:#0a0a0b;position:relative;justify-content:flex-end}
+.tb b{position:absolute;left:50%;transform:translateX(-50%);font-size:12px;font-weight:500;color:#b9b9be;letter-spacing:.04em;pointer-events:none;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb button{background:transparent;border-radius:8px}
+.wb button:hover{background:rgba(255,255,255,.13)}
+.body{background:#101012}
+[data-theme=light] .win{background:#f4f4f5}
+[data-theme=light] .tb{background:#e9e9eb}
+[data-theme=light] .tb b{color:#44444a}
+[data-theme=light] .body{background:#f4f4f5}
+#big{top:33%}
+#big p{letter-spacing:.34em;text-transform:uppercase}
+.desktop-eyebrow,.desktop-foot{display:none}
+#dock{background:rgba(12,12,14,.8);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%)}
+#ov{background:rgba(22,22,25,.55);backdrop-filter:blur(30px) saturate(120%);-webkit-backdrop-filter:blur(30px) saturate(120%)}
+.launcher-heading{display:none}
+#q{border-radius:999px;text-align:center}
+#qs{background:rgba(16,16,18,.94);border:1px solid rgba(255,255,255,.13);border-radius:20px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+#qs .tg button.on{background:#3584e4;border-color:transparent}
+.nav{background:rgba(9,9,11,.92)}
+input[type=range]{accent-color:#3584e4}
+.msg{color:#a7a7ae}
 </style>
 </head>
 <body>
@@ -613,9 +643,9 @@ const tileIcon=(t,c)=>`<svg viewBox="0 0 48 48"><rect width="48" height="48" rx=
 
 function tick(){const d=new Date(),D=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 $("#wd").textContent=D[d.getDay()];$("#dt").textContent=p2(d.getDate())+" "+M[d.getMonth()]+" "+d.getFullYear()+"  /  "+p2(d.getHours())+":"+p2(d.getMinutes());
-$("#clk").textContent=p2(d.getDate())+" "+M[d.getMonth()].toLowerCase()+"  "+p2(d.getHours())+":"+p2(d.getMinutes());
-$("#ram").textContent="HYPR / WEB";$("#tmp").textContent=navigator.onLine?"Online":"Offline"}
-tick();setInterval(()=>{if(!document.hidden)tick()},15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
+$("#clk").textContent=D[d.getDay()].slice(0,3)+" "+d.getDate()+" "+M[d.getMonth()].toLowerCase()+"  "+p2(d.getHours())+":"+p2(d.getMinutes())+":"+p2(d.getSeconds());
+$("#ram").textContent="HYPR / WEB";if(navigator.getBattery&&!window._bat)window._bat=1,navigator.getBattery().then(b=>{const up=()=>{const r=$("#ram");if(r)r.textContent="BAT "+Math.round(b.level*100)+"%"};b.addEventListener("levelchange",up);up()}).catch(()=>{});$("#tmp").textContent=navigator.onLine?"Online":"Offline"}
+tick();setInterval(()=>{if(!document.hidden)tick()},1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
 
 let SESSION=null,ISADMIN=false,GUEST=false,RESET_TOKEN=null;
 try{SESSION=JSON.parse(localStorage.getItem('lumio_session')||'null')}catch(e){SESSION=null}
@@ -747,9 +777,10 @@ $('#annx').onclick=()=>{$('#annbar').style.display='none';try{sessionStorage.set
 /* ===== setup wizard, lock screen, accounts ===== */
 const sleep=ms=>new Promise(r=>setTimeout(r,ms)),mem={};
 const st={get(k,d){try{const v=localStorage.getItem('lx:'+k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},set(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}}};
-const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#a78bfa',wall:5,setup:false},st.get('S',{})),saveS=()=>st.set('S',S);
+const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false},st.get('S',{})),saveS=()=>st.set('S',S);
+if(S.accent==='#a78bfa')S.accent='#3584e4';
 let USER='user',mode='in';const W0=$('#wall').innerHTML;
-const WALLS=[{n:'Dunes',s:'Soft gray waves',l:1},
+const WALLS=[{n:'Silk',s:'Gray silk waves',l:1,img:'/images/wall-grey.jpg'},
 {n:'Peaks',s:'Dark mountains',svg:`<defs><linearGradient id='pk' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#3a3e48'/><stop offset='1' stop-color='#0d0e11'/></linearGradient></defs><rect width='1600' height='900' fill='url(#pk)'/><path d='M0 700L260 430 420 560 700 260 980 600 1180 440 1600 720V900H0Z' fill='#1b1d22'/><path d='M0 800L300 600 560 740 860 520 1200 760 1600 620V900H0Z' fill='#08090b'/>`},
 {n:'Hex',s:'Dark honeycomb',svg:`<defs><pattern id='hx' width='104' height='180' patternUnits='userSpaceOnUse'><path d='M52 0l52 30v60l-52 30-52-30V30zM0 120l52 30v30M104 120l-52 30' fill='#2a2a2e' stroke='#161618' stroke-width='4'/></pattern></defs><rect width='1600' height='900' fill='url(#hx)'/>`},
 {n:'Mist',s:'Blue haze',svg:`<defs><radialGradient id='ms' cx='.5' cy='.6' r='.7'><stop offset='0' stop-color='#3a9bf0'/><stop offset='1' stop-color='#0a1230'/></radialGradient></defs><rect width='1600' height='900' fill='url(#ms)'/><ellipse cx='380' cy='280' rx='420' ry='210' fill='#6a7dff' opacity='.35'/><ellipse cx='1250' cy='640' rx='480' ry='230' fill='#0a84e8' opacity='.35'/>`}];
@@ -759,6 +790,7 @@ function applyS(){
  d.style.setProperty('--acc',S.accent);
  const wall=$('#wall');
  if(w.customSrc){wall.innerHTML='';wall.style.backgroundImage=`url(${JSON.stringify(w.customSrc)})`;wall.classList.add('custom-wall')}
+ else if(w.img){wall.innerHTML='';wall.style.backgroundImage='url("'+w.img+'")';wall.style.backgroundSize='cover';wall.style.backgroundPosition='center';wall.classList.add('custom-wall')}
  else {wall.style.backgroundImage='';wall.classList.remove('custom-wall');wall.innerHTML=w.svg?`<svg viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice' aria-hidden='true'>${w.svg}</svg>`:W0}
  d.style.setProperty('--clk',w.l?'#2a2a2c':'#f5f6ff');d.style.setProperty('--clk2',w.l?'#3a3a3d':'#c6d0ea');
  $('#who').textContent=USER+' on '+S.device;
