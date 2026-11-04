@@ -1,0 +1,23 @@
+{
+  "name": "tuffs",
+  "version": "1.0.0",
+  "description": "Tuffs - self-hosted arcade portal and Scramjet-powered web browser",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "verify": "node scripts/verify-catalog.js",
+    "test": "npm run verify && node scripts/smoke-test.js"
+  },
+  "dependencies": {
+    "@fastify/rate-limit": "^10.3.0",
+    "@fastify/static": "^9.0.0",
+    "@mercuryworkshop/bare-mux": "^2.1.9",
+    "@mercuryworkshop/libcurl-transport": "^1.5.2",
+    "@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/v1.1.0/mercuryworkshop-scramjet-1.1.0.tgz",
+    "@mercuryworkshop/wisp-js": "^0.4.1",
+    "fastify": "^5.12.8"
+  }
+}

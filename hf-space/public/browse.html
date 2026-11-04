@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" data-accent="violet">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuffx — Tuffs</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23141417'/%3E%3Cpath d='M9 9l7 7 7-7M9 16l7 7 7-7' stroke='%238b5cf6' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/portal.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#browse-main">Skip to browser</a>
+
+  <div class="browse-shell">
+    <div class="topbar" style="border-radius:12px; margin-bottom:14px;">
+      <a class="topbar-btn" href="/index.html" title="Back to Tuffs home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6-7-7 7 7 7"/></svg>
+        <span class="sr-only">Back to Tuffs home</span>
+      </a>
+      <span class="topbar-brand" style="font-weight:600; letter-spacing:.01em;">Tuffx</span>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14 0 18M12 3c-3 3.5-3 14 0 18"/></svg>
+        <input type="text" id="browse-url" placeholder="Enter a web address or search…" autocomplete="off" spellcheck="false" aria-label="Web address or search">
+      </div>
+      <button class="topbar-btn" id="browse-go">Go</button>
+    </div>
+
+    <div class="status-line" id="browse-status">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Checking backend…</span>
+    </div>
+
+    <div id="setup-notice-root" hidden>
+      <div class="setup-notice">
+        <h2>Tuffx backend not available</h2>
+        <p>
+          Tuffx (the Tuffs browser) needs the Node backend running on this host (it serves the Scramjet
+          client and the Wisp proxy backend). Start it with <code>npm start</code> and reload this
+          page. If you are hosting static files only, the arcade works but this tab cannot.
+        </p>
+        <p>
+          The address bar, back/forward and reload controls you see here belong to <em>your portal</em> —
+          they are not a real browser's chrome, and this tool does not make you anonymous or untraceable.
+        </p>
+      </div>
+    </div>
+
+    <main id="browse-main">
+      <div class="browse-bar" id="browse-controls" hidden>
+        <button class="browse-icon-btn" id="btn-back" title="Back" aria-label="Go back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6-7-7 7 7 7"/></svg>
+        </button>
+        <button class="browse-icon-btn" id="btn-forward" title="Forward" aria-label="Go forward">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-7 7 7-7 7"/></svg>
+        </button>
+        <button class="browse-icon-btn" id="btn-reload" title="Reload" aria-label="Reload page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11A8 8 0 1 0 20 13"/><path d="M20 4v7h-7"/></svg>
+        </button>
+        <button class="browse-icon-btn" id="btn-home" title="Reset to start page" aria-label="Reset browser">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+        </button>
+        <div class="field" aria-hidden="true"></div>
+        <button class="browse-icon-btn" id="btn-fullscreen" title="Fullscreen" aria-label="Fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M4 15v5h5M20 15v5h-5"/></svg>
+        </button>
+      </div>
+      <div id="sj-frame-host"></div>
+      <p class="player-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>
+        <span>
+          Pages load through the Scramjet client on your portal's own backend. Some sites (heavy
+          CAPTCHAs, strict logins, DRM video) will not work — that is a limitation of the approach,
+          not a bug in your setup. Nothing you browse here is recorded by the portal.
+        </span>
+      </p>
+    </main>
+  </div>
+
+  <div id="toast-root" aria-live="polite"></div>
+
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/browse.js"></script>
+</body>
+</html>
