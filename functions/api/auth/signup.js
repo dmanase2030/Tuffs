@@ -1,9 +1,17 @@
 import { json, guard, readBody, hashPassword, createSession, USERNAME_RE, getSettings } from "./_shared.js";
+import { clientIp, throttleCheck, throttleFail } from "./_throttle.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
   const blocked = guard(request, env);
   if (blocked) return blocked;
+
+  /* Account-spam throttle: 6 signups per IP per hour, then a 30 min pause. */
+  const tkey = "signup|" + clientIp(request);
+  if (await throttleCheck(env.DB, tkey) > 0) {
+    return json({ error: "Too many accounts created from this network — try again later." }, 429);
+  }
+  await throttleFail(env.DB, tkey, 6, 60 * 60 * 1000, 30 * 60 * 1000);
 
   const settings = await getSettings(env.DB);
   if (settings.maintenance) return json({ error: "Lumio is under maintenance — please try again later." }, 503);
