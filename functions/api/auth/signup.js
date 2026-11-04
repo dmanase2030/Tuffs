@@ -26,5 +26,5 @@ export async function onRequestPost(context) {
   }
 
   const token = await createSession(env.DB, key);
-  return json({ username, token }, 201);
+  return json({ username, token, isAdmin: false }, 201);
 }

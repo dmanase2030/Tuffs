@@ -73,9 +73,16 @@ export async function sessionUser(request, env) {
   const token = bearer(request);
   if (!token || !env.DB) return null;
   const row = await env.DB.prepare(
-    "SELECT u.username, u.username_key FROM sessions s JOIN users u ON u.username_key = s.username_key WHERE s.token_hash = ?1 AND s.expires_at > ?2"
+    "SELECT u.username, u.username_key, u.is_admin FROM sessions s JOIN users u ON u.username_key = s.username_key WHERE s.token_hash = ?1 AND s.expires_at > ?2"
   ).bind(await sha256hex(token), Date.now()).first();
   return row || null;
+}
+
+/* The signed-in user, only if their account is flagged admin in the database. */
+export async function requireAdmin(request, env) {
+  const user = await sessionUser(request, env);
+  if (!user || !user.is_admin) return null;
+  return user;
 }
 
 /* Returns an error Response, or null when the request may proceed. */
