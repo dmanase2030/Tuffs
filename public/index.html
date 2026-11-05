@@ -2560,5 +2560,20 @@ new MutationObserver(function(){
 }).observe(document.body,{childList:true,subtree:true});
 }catch(e){}
 </script>
+
+<script>
+/* ===== RICE PACK 8 (appended) ===== */
+try{
+['To Do','Paint','Weather'].forEach(function(nm){
+  var i=APPS.findIndex(function(a){return a.n===nm});
+  if(i>=0)APPS.splice(i,1);
+});
+try{delete CUSTOM.todo;delete CUSTOM.paint;delete CUSTOM.weather;}catch(e){}
+document.querySelectorAll('#deskicons .dicon').forEach(function(b){
+  var t=(b.textContent||'').trim();
+  if(t==='To Do'||t==='Paint'||t==='Weather')b.remove();
+});
+}catch(e){}
+</script>
 </body>
 </html>
