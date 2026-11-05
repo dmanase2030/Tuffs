@@ -22,7 +22,7 @@ function text(msg, status) {
 }
 
 function resolveAndProxy(rawValue, base) {
-  const v = (rawValue || "").trim();
+  const v = (rawValue || "").replace(/&amp;/g, "&").replace(/&#0*38;/g, "&").replace(/&#x0*26;/gi, "&").trim();
   if (!v || v.startsWith("#")) return null;
   if (/^(javascript|mailto|tel|sms|data|blob|about|chrome|view-source):/i.test(v)) return null;
   if (v.startsWith("/service/")) return null; // already proxied
@@ -32,6 +32,14 @@ function resolveAndProxy(rawValue, base) {
   // Our own origin is served directly, never through the proxy (avoids loops).
   if (abs.host === base.__selfHost) return abs.href;
   return "/service/" + encodeURIComponent(abs.href);
+}
+
+function navGuard(base) {
+  const t = JSON.stringify(base.origin);
+  return "<script>(function(){var T=" + t + ";function fx(u){try{var x=new URL(u,location.href);if(x.origin===location.origin){if(x.pathname.indexOf('/service/')===0)return null;return '/service/'+encodeURIComponent(T+x.pathname+x.search)+(x.hash||'')}if(x.origin===T)return '/service/'+encodeURIComponent(x.href);return null}catch(e){return null}}"
+    + "document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(!a)return;var h=a.getAttribute('href')||'';if(!h||/^(#|javascript:|mailto:|tel:|sms:)/i.test(h))return;var r=fx(a.href);if(r){e.preventDefault();e.stopPropagation();location.href=r}},true);"
+    + "document.addEventListener('submit',function(e){var f=e.target;if(f&&f.action){var r=fx(f.action);if(r)f.action=r}},true);"
+    + "try{var ps=history.pushState,rs=history.replaceState;function w(fn){return function(s2,t2,u){if(u){var r=fx(new URL(u,location.href).href);if(r)u=r}return fn.call(this,s2,t2,u)}}history.pushState=w(ps);history.replaceState=w(rs)}catch(e){}})();<\/script>";
 }
 
 function rewriteHtml(html, base) {
@@ -63,6 +71,9 @@ function rewriteHtml(html, base) {
     const r = resolveAndProxy(val, base);
     return r === null ? m : "url(" + q + r + q + ")";
   });
+  const guard = navGuard(base);
+  if (/<head[^>]*>/i.test(html)) html = html.replace(/<head[^>]*>/i, m => m + guard);
+  else html = guard + html;
   return html;
 }
 
