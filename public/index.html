@@ -784,6 +784,26 @@ body.ov #ov{display:flex!important}
  .win,.win.top,.win.closing,.wsin,.win.top .frame{animation:none!important;transition:none!important}
  .win{opacity:1;transform:none}
 }
+
+/* ===== rice pack 3 (batch A): glass, chrome, presets, notifications ===== */
+[data-preset=gruv]{--winbg:#282828;--glass:rgba(40,40,40,.86);--glass2:rgba(60,56,54,.93)}
+[data-preset=nord]{--winbg:#2e3440;--glass:rgba(46,52,64,.86);--glass2:rgba(59,66,82,.93)}
+[data-preset=rose]{--winbg:#191724;--glass:rgba(25,23,36,.87);--glass2:rgba(31,29,46,.93)}
+.win{border-radius:var(--crad,14px);border-width:var(--bw,1px);backdrop-filter:blur(var(--hblur,14px)) saturate(150%);-webkit-backdrop-filter:blur(var(--hblur,14px)) saturate(150%);background:color-mix(in srgb,var(--winbg,#141a2a) calc(100% - var(--walpha,10%)),transparent)}
+.bar{backdrop-filter:blur(var(--hblur,14px)) saturate(150%);-webkit-backdrop-filter:blur(var(--hblur,14px)) saturate(150%)}
+[data-shdw=off] .win:not(.top){box-shadow:none}
+[data-shdw=strong] .win{box-shadow:0 34px 100px rgba(0,0,0,.68)}
+.lclk h2{font-weight:200;font-size:clamp(64px,17vw,150px);text-shadow:0 6px 44px rgba(0,0,0,.5)}
+.lclk p{text-transform:uppercase;font-size:13px;color:#e6e9f5}
+#wint{gap:7px;max-width:210px}
+#wint-ic{display:flex}
+#wint-ic svg{width:14px;height:14px}
+#wint-tx{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:700px){#wint{display:none}}
+#nots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 58px);right:10px;z-index:6000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+#nots .toast{position:static;left:auto;bottom:auto;transform:none;pointer-events:auto;min-width:210px;max-width:min(320px,84vw);background:var(--glass2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:12px;padding:10px 14px;box-shadow:0 12px 32px rgba(0,0,0,.4);animation:notin .28s cubic-bezier(.05,.9,.1,1.05);cursor:pointer;z-index:auto}
+#nots .toast.out{opacity:0;transform:translateX(16px);transition:.25s}
+@keyframes notin{from{opacity:0;transform:translateX(24px)}}
 </style>
 </head>
 <body>
@@ -811,7 +831,7 @@ body.ov #ov{display:flex!important}
 <div class="bar" role="banner">
  <div class="way-left">
   <div id="wsbar" role="group" aria-label="Workspaces"></div>
-  <button class="chip" id="act" type="button" aria-label="Launcher"><span class="bar-brand">TUFFS</span></button>
+  <button class="chip" id="act" type="button" aria-label="Launcher"><span class="bar-brand">TUFFS</span></button> <div class="chip" id="wint"><span id="wint-ic"></span><span id="wint-tx">Desktop</span></div>
  </div>
  <div class="chip" id="clk">--</div>
  <button class="chip way-right" id="sys" type="button" aria-label="Quick settings">
@@ -1030,7 +1050,7 @@ const out=el('div','tout'),line=el('div','tline'),pr=el('span','tpr'),tin=el('sp
 inp.setAttribute('aria-label','Terminal input');inp.setAttribute('autocomplete','off');inp.setAttribute('autocapitalize','none');inp.spellcheck=false;
 tin.append(mir,cur,aft);line.append(pr,tin,inp);b.append(out,line);
 const pool=()=> CONFIG.games;
-const presetName=()=>({hypr:'Hyprland',tokyo:'Tokyo Night',catppuccin:'Catppuccin',midnight:'Midnight'})[S.preset||'hypr']||'Hyprland';
+const presetName=()=>({hypr:'Hyprland',tokyo:'Tokyo Night',catppuccin:'Catppuccin',gruv:'Gruvbox',nord:'Nord',rose:'Rosé Pine',midnight:'Midnight'})[S.preset||'hypr']||'Hyprland';
 const upStr=()=>{const s=Math.floor(performance.now()/1000);return Math.floor(s/3600)+'h '+Math.floor(s%3600/60)+'m '+(s%60)+'s'};
 function scroll(){requestAnimationFrame(()=>{b.scrollTop=b.scrollHeight})}
 function print(txt,cls){const d=el('div','tl '+(cls||''));d.textContent=txt;out.append(d);scroll()}
@@ -1066,7 +1086,7 @@ if(c==='clearhistory'){HIST.length=0;print('history cleared');return}
 if(c==='ls'){const p=resolve(args[0]);if(!isDir(p)){print('ls: no such directory: '+(args[0]||''));return}const k=kids(p);print(k.length?k.join('   '):'(empty)');return}
 if(c==='cd'){const p=resolve(args[0]);if(isDir(p)){cwd=p;setPr()}else print('cd: no such directory: '+(args[0]||''));return}
 if(c==='cat'){if(!args[0]){print('cat: missing file');return}const p=resolve(args[0]);if(isDir(p)){print('cat: '+args[0]+': is a directory');return}const t=fileText(p);if(t==null)print('cat: no such file: '+args[0]);else t.split('\n').forEach(l=>print(l));return}
-if(c==='theme'){const map={hyprland:'hypr',hypr:'hypr','tokyo':'tokyo','tokyo-night':'tokyo',catppuccin:'catppuccin',midnight:'midnight'};if(!args[0]){print('Theme: '+presetName()+' — available: hyprland, tokyo-night, catppuccin, midnight');return}const v=map[args[0].toLowerCase()];if(!v){print('theme: unknown theme: '+args[0]);return}S.preset=v;S.accent={hypr:'#3584e4',tokyo:'#7aa2f7',catppuccin:'#cba6f7',midnight:'#89b4fa'}[v];applyS();saveS();print('Theme set to '+presetName());return}
+if(c==='theme'){const map={hyprland:'hypr',hypr:'hypr','tokyo':'tokyo','tokyo-night':'tokyo',catppuccin:'catppuccin',gruvbox:'gruv',gruv:'gruv',nord:'nord',rose:'rose','rose-pine':'rose',midnight:'midnight'};if(!args[0]){print('Theme: '+presetName()+' — available: hyprland, tokyo-night, catppuccin, gruvbox, nord, rose-pine, midnight');return}const v=map[args[0].toLowerCase()];if(!v){print('theme: unknown theme: '+args[0]);return}S.preset=v;S.accent={hypr:'#3584e4',tokyo:'#7aa2f7',catppuccin:'#cba6f7',gruv:'#fabd2f',nord:'#88c0d0',rose:'#ebbcba',midnight:'#89b4fa'}[v];applyS();saveS();print('Theme set to '+presetName());return}
 if(c==='games'){const a=APPS.find(x=>x.n==='Games');if(a)openApp(a);print('opening games…');return}
 if(c==='browser'){const a=APPS.find(x=>x.n==='Browser');if(a)openApp(a);print('opening browser…');return}
 if(c==='settings'){const a=APPS.find(x=>x.n==='Settings');if(a)openApp(a);print('opening settings…');return}
@@ -1122,7 +1142,7 @@ const _pt={};
 function cloudPush(k,v,now){if(!SESSION||GUEST)return;const send=()=>{fetch('/api/data',{method:'PUT',headers:{'content-type':'application/json',authorization:'Bearer '+SESSION.t},body:JSON.stringify({k,v})}).catch(()=>{})};if(now){send();return}clearTimeout(_pt[k]);_pt[k]=setTimeout(send,700)}
 async function cloudPull(){try{const r=await Promise.race([fetch('/api/data',{headers:{authorization:'Bearer '+SESSION.t}}),new Promise((_,rj)=>setTimeout(rj,2500))]);if(!r.ok)return;const d=await r.json(),data=d.data||{};for(const k of Object.keys(data)){if(!SYNC_KEYS.includes(k))continue;if(k==='S'){Object.assign(S,data[k]);st.hydrate('S',S)}else if(k==='cfg'){Object.assign(CONFIG,data[k]);st.hydrate('cfg',CONFIG)}else st.hydrate(k,data[k])}for(const k of SYNC_KEYS){if(!(k in data)){let lv;try{const raw=localStorage.getItem('lx:'+k);lv=raw===null?undefined:JSON.parse(raw)}catch(e){}if(lv!==undefined)cloudPush(k,lv,true)}}}catch(e){}}
 const st={get(k,d){try{const v=localStorage.getItem('lx:'+k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},set(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}if(SYNC_KEYS.includes(k))cloudPush(k,v)},hydrate(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}}};
-const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false},st.get('S',{})),saveS=()=>st.set('S',S);
+const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false,crad:14,bw:1,blur:14,walpha:10,shdw:'soft',dnd:false,vol:55,bright:100,anim:'normal',fscale:0,barPos:'top',openMode:'float',dockHide:false},st.get('S',{})),saveS=()=>st.set('S',S);
 if(S.accent==='#a78bfa')S.accent='#3584e4';
 try{if(!localStorage.getItem('lx:silkwall1')){S.wall=0;saveS();localStorage.setItem('lx:silkwall1','1')}}catch(e){}
 try{const _qr=document.querySelector('#qs .row');if(_qr&&!document.getElementById('qsav')){const _av=document.createElement('span');_av.id='qsav';_av.textContent='?';_qr.prepend(_av)}setInterval(()=>{const _a2=document.getElementById('qsav');if(_a2)_a2.textContent=(USER[0]||'?').toUpperCase()},1500)}catch(e){}
@@ -1131,7 +1151,7 @@ let WS=1;const WS_N=5;
 const forest={};
 function wsWins(n){return [...document.querySelectorAll('.win')].filter(w=>+w.dataset.ws===n&&!w.dataset.min)}
 function topWin(){let best=null,bz=-1;document.querySelectorAll('.win').forEach(w=>{if(w.style.display!=='none'&&!w.dataset.min&&+w.style.zIndex>bz){bz=+w.style.zIndex;best=w}});return best}
-function markTop(){const best=topWin();document.querySelectorAll('.win.top').forEach(w=>{if(w!==best)w.classList.remove('top')});if(best)best.classList.add('top')}
+function markTop(){const best=topWin();document.querySelectorAll('.win.top').forEach(w=>{if(w!==best)w.classList.remove('top')});if(best)best.classList.add('top');try{const wt=$('#wint-tx'),wi=$('#wint-ic');if(wt){if(best){wt.textContent=best.dataset.app||'Window';if(wi){const _a=APPS.find(a=>a.n===best.dataset.app);wi.innerHTML=_a?icon(_a.g,_a.b):''}}else{wt.textContent='Desktop';if(wi)wi.innerHTML=''}}}catch(e){}}
 function workspaceBox(){const bar=document.querySelector('.bar'),dock=document.getElementById('dock');
  const br=bar?bar.getBoundingClientRect():{bottom:56},dr=dock?dock.getBoundingClientRect():{top:innerHeight-88};
  const gap=8,top=Math.round(br.bottom+gap),bottom=Math.round(Math.min(dr.top-gap,innerHeight-gap));
@@ -1196,6 +1216,9 @@ function applyS(){
  $('#who').textContent=USER+' on '+S.device;
  const darkToggle=[...document.querySelectorAll('#qs .tg button')].find(x=>x.textContent.trim()==='Dark style');
  if(darkToggle)darkToggle.classList.toggle('on',d.dataset.theme==='dark');
+ d.style.setProperty('--crad',(S.crad==null?14:S.crad)+'px');d.style.setProperty('--bw',(S.bw==null?1:S.bw)+'px');d.style.setProperty('--hblur',(S.blur==null?14:S.blur)+'px');d.style.setProperty('--walpha',(S.walpha==null?10:S.walpha)+'%');d.dataset.shdw=S.shdw||'soft';d.dataset.anim=S.anim||'normal';d.dataset.barpos=S.barPos||'top';d.style.fontSize=(13+(+S.fscale||0))+'px';
+ const bo=$('#brightov');if(bo)bo.style.opacity=(S.bright==null||S.bright>=100)?0:((1-S.bright/100)*0.75);
+ document.querySelectorAll('audio,video').forEach(m=>{try{m.volume=(S.vol==null?55:S.vol)/100}catch(e){}});
 }
 
 const show=id=>document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('on',s.id===id));
@@ -1332,7 +1355,7 @@ function start(){
  }
 }
 /* ===== v3: cover art, games app, settings, notes, calculator, menus ===== */
-function toast(m){const t=el('div','toast',m);document.body.append(t);setTimeout(()=>t.remove(),2200)}
+function toast(m){if(S.dnd)return;let c=$('#nots');if(!c){c=el('div','');c.id='nots';document.body.append(c)}const t=el('div','toast',m);t.onclick=()=>t.remove();c.append(t);while(c.children.length>4)c.firstChild.remove();setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),260)},3400)}
 function dockSync(){const wins=[...document.querySelectorAll('.win')],n=new Set(wins.map(x=>x.dataset.app));dock.querySelectorAll('.ic').forEach(b=>b.classList.toggle('on',n.has(b.dataset.app||b.title)));try{APPS.filter(a=>!a.d).forEach(a=>{let b=dock.querySelector('.ic.dyn[data-app="'+a.n+'"]');if(n.has(a.n)){if(!b){b=entry(a,'ic');b.classList.add('dyn','on');b.dataset.app=a.n;b.onclick=e=>{e.stopPropagation();if(!restoreNamed(a.n))openApp(a)};dock.append(b)}}else if(b)b.remove()});const known=new Set(APPS.map(a=>a.n));wins.forEach(w=>{const name=w.dataset.app;if(!name||known.has(name))return;let b=dock.querySelector('.ic.dyn[data-win="'+CSS.escape(name)+'"]');if(!b){b=document.createElement('button');b.type='button';b.className='ic dyn on letter';b.title=name;b.dataset.win=name;b.dataset.app=name;b.setAttribute('aria-label',name);b.textContent=(name[0]||'•').toUpperCase();b.onclick=e=>{e.stopPropagation();restoreNamed(name)};dock.append(b)}});dock.querySelectorAll('.ic.dyn[data-win]').forEach(b=>{if(!n.has(b.dataset.win))b.remove()})}catch(e){}try{saveWSMap()}catch(e){}}
 function seed(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h}
 function cover(g){const h=seed(g.name),a=h%360,b=(a+50+h%80)%360,k=h%4,L=(g.name[0]||'?').toUpperCase().replace(/[<>&]/g,'?');
@@ -1380,7 +1403,12 @@ function pickWall(file){
 const UGp=g=>{g.name=g.title;g.n=g.name;g.c=g.c||'#4a6ea8';return g};
 function settingsApp(){const{w,body:b}=win('Settings','',640,520);b.style.fontFamily='system-ui,-apple-system,sans-serif';b.style.display='block';const _ss=w.querySelector('.tsub');if(_ss)_ss.textContent='Preferences';
 const seg=el('div','seg'),pA=el('div'),pB=el('div');pB.style.display='none';const mkSeg=(t,p)=>{const x=el('button','',t);x.type='button';x.onclick=()=>{pA.style.display=p===pA?'':'none';pB.style.display=p===pB?'':'none';seg.querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};return x};const sA=mkSeg('General',pA),sB=mkSeg('Appearance',pB);sA.classList.add('on');seg.append(sA,sB);b.append(seg,pA,pB);let cur=pA;const H=t=>cur.append(el('div','sh',t)),G=()=>{const d=el('div','og');cur.append(d);return d},R=(...n)=>{const d=el('div','srow');d.append(...n);cur.append(d)};
-H('Account');R(el('span','',SESSION?('Signed in as '+USER+(ISADMIN?' · Admin':'')):'You are a guest. Accounts live on the server and work on any device.'));cur=pB;H('Appearance');opts(G(),[['auto','System','Follows your device'],['dark','Dark','Easy on the eyes'],['light','Light','Bright and clean']],'theme');swatches(cur);H('Style');const _pr=G();[['hypr','Hyprland','Mono dark · blue'],['tokyo','Tokyo Night','Night blue'],['catppuccin','Catppuccin','Soft pastel'],['midnight','Midnight','Pure black']].forEach(([v,t,s2])=>{const x=el('button','oi'+((S.preset||'hypr')===v?' on':''));x.type='button';x.append(el('b','',t),el('small','',s2));x.onclick=()=>{S.preset=v;S.accent={hypr:'#3584e4',tokyo:'#7aa2f7',catppuccin:'#cba6f7',midnight:'#89b4fa'}[v];applyS();saveS();_pr.querySelectorAll('.oi').forEach(y=>y.classList.toggle('on',y===x))};_pr.append(x)});H('Window gaps');const _gr=el('input');_gr.type='range';_gr.min='0';_gr.max='24';_gr.value=S.gap==null?10:S.gap;_gr.setAttribute('aria-label','Window gaps');const _gv=el('span','',_gr.value+' px');_gr.oninput=()=>{S.gap=+_gr.value;_gv.textContent=_gr.value+' px';saveS();try{layoutAll()}catch(e){}};R(_gr,_gv);
+H('Account');R(el('span','',SESSION?('Signed in as '+USER+(ISADMIN?' · Admin':'')):'You are a guest. Accounts live on the server and work on any device.'));cur=pB;H('Appearance');opts(G(),[['auto','System','Follows your device'],['dark','Dark','Easy on the eyes'],['light','Light','Bright and clean']],'theme');swatches(cur);H('Style');const _pr=G();[['hypr','Hyprland','Mono dark · blue'],['tokyo','Tokyo Night','Night blue'],['catppuccin','Catppuccin','Soft pastel'],['gruv','Gruvbox','Warm retro'],['nord','Nord','Arctic blue'],['rose','Rosé Pine','Soft pine'],['midnight','Midnight','Pure black']].forEach(([v,t,s2])=>{const x=el('button','oi'+((S.preset||'hypr')===v?' on':''));x.type='button';x.append(el('b','',t),el('small','',s2));x.onclick=()=>{S.preset=v;S.accent={hypr:'#3584e4',tokyo:'#7aa2f7',catppuccin:'#cba6f7',gruv:'#fabd2f',nord:'#88c0d0',rose:'#ebbcba',midnight:'#89b4fa'}[v];applyS();saveS();_pr.querySelectorAll('.oi').forEach(y=>y.classList.toggle('on',y===x))};_pr.append(x)});H('Window gaps');const _gr=el('input');_gr.type='range';_gr.min='0';_gr.max='24';_gr.value=S.gap==null?10:S.gap;_gr.setAttribute('aria-label','Window gaps');const _gv=el('span','',_gr.value+' px');_gr.oninput=()=>{S.gap=+_gr.value;_gv.textContent=_gr.value+' px';saveS();try{layoutAll()}catch(e){}};R(_gr,_gv); H('Window chrome');const _mkR=(t,min,max,val,unit,fn)=>{H(t);const r=el('input');r.type='range';r.min=min;r.max=max;r.value=val;r.setAttribute('aria-label',t);const v=el('span','',val+unit);r.oninput=()=>{fn(+r.value);v.textContent=r.value+unit;saveS();applyS()};R(r,v)};
+_mkR('Corner radius',0,28,S.crad==null?14:S.crad,' px',x=>S.crad=x);
+_mkR('Border size',0,3,S.bw==null?1:S.bw,' px',x=>S.bw=x);
+_mkR('Blur',0,30,S.blur==null?14:S.blur,' px',x=>S.blur=x);
+_mkR('Window transparency',0,45,S.walpha==null?10:S.walpha,' %',x=>S.walpha=x);
+H('Shadow');opts(G(),[['soft','Soft','Default depth'],['strong','Strong','Deep shadow'],['off','Off','Flat windows']],'shdw');
 H('Wallpapers');wallpaperPicker(G());
 const wu=field('Image or GIF address (https://...)','text'),wb=el('button','btn','Use address'),wf=el('input');wf.type='file';wf.accept='image/*';wf.setAttribute('aria-label','Upload wallpaper');
 wb.onclick=()=>wu.value.trim()&&setWall(wu.value.trim());wf.onchange=()=>wf.files[0]&&pickWall(wf.files[0]);R(wu,wb,wf);
