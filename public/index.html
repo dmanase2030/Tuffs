@@ -890,7 +890,7 @@ body.ov #ov{display:flex!important}
 <div id="qs"><div class='row'><b id='who'></b></div>
  <div class="row"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8"/></svg><input type="range" id="qsvol" value="55" aria-label="Volume"></div>
  <div class="row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg><input type="range" id="qsbri" value="60" aria-label="Brightness"></div>
- <div class="tg"><button class="on">Wi-Fi</button><button>Bluetooth</button><button>Balanced power</button><button>Night light</button><button class="on">Dark style</button><button>Do not disturb</button></div><div class='tg' style='margin-top:8px'><button id='so'>Sign out</button><button id='rs'>Run setup again</button></div>
+ <div class="tg"><button>Night light</button><button class="on">Dark style</button><button>Do not disturb</button></div><div class='tg' style='margin-top:8px'><button id='so'>Sign out</button><button id='rs'>Run setup again</button></div>
 </div>
 
 <div id="ov" role="dialog" aria-modal="true" aria-label="Launcher"><div class="rofi"><input id="q" placeholder="Search apps and games..." aria-label="Search" autocomplete="off"><div id="grid"></div></div></div>
@@ -2017,7 +2017,7 @@ function setupQuickControls(){
    if(name==='Do not disturb'){b.classList.toggle('on');toast(b.classList.contains('on')?'Launcher notices silenced':'Launcher notices enabled');S.dnd=b.classList.contains('on');saveS()}
   };
  });
- const qs=$('#qs'),note=el('div','setting-foot','Brightness changes the wallpaper only. Device Wi-Fi, Bluetooth and power settings are controlled by your operating system.');qs.append(note);
+ const qs=$('#qs'),note=el('div','setting-foot','Brightness changes the wallpaper only.');qs.append(note);
  const brightness=qs.querySelector('input[aria-label="Brightness"]');
  brightness.value=S.qb==null?60:Math.max(0,Math.min(100,Math.round((S.qb-0.4)*100)));brightness.oninput=()=>{S.qb=0.4+Number(brightness.value)/100;saveS();applyS()};
  const volume=qs.querySelector('input[aria-label="Volume"]');
