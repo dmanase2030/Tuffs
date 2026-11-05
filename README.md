@@ -2,10 +2,8 @@
 
 Browser games and a small web desktop. Live at [riseboosts.com](https://riseboosts.com).
 
-On a computer you get the desktop: windows, a dock, and apps like Files,
-Terminal, Notes and Chat. On a phone you get a simple scrollable list of
-games and apps instead (there's a "Desktop" button if you want the full
-thing).
+You get a desktop: windows, a dock, and apps like Files, Terminal, Notes
+and Chat. A phone gets that same desktop, sized to the screen.
 
 ## What's in it
 
