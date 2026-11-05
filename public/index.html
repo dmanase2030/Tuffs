@@ -625,7 +625,7 @@ input[type=range]{accent-color:#3584e4}
 .win{animation:winIn .3s cubic-bezier(.05,.9,.1,1.05)}
 @keyframes winIn{from{opacity:0;transform:scale(.94) translateY(8px)}}
 .win{background:var(--winbg,#101012)}
-.win.top{background:linear-gradient(var(--winbg,#101012),var(--winbg,#101012)) padding-box,linear-gradient(45deg,#33ccee,#00ff99) border-box;border:1px solid transparent}
+.win.top{border:1px solid transparent}
 .fm-window,.fm-body{background:var(--winbg,#101012)!important}
 [data-preset=tokyo]{--winbg:#1a1b26;--glass:rgba(26,27,38,.85);--glass2:rgba(36,40,59,.92)}
 [data-preset=catppuccin]{--winbg:#1e1e2e;--glass:rgba(30,30,46,.85);--glass2:rgba(49,50,68,.93)}
@@ -750,14 +750,16 @@ input[type=range]{accent-color:#3584e4}
 #vol{display:inline-flex;align-items:center}
 #vol svg,.wifi{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #net{display:inline-flex;align-items:center;gap:5px}
-.win{border:1px solid transparent;transition:left .22s cubic-bezier(.2,.8,.2,1),top .22s cubic-bezier(.2,.8,.2,1),width .22s cubic-bezier(.2,.8,.2,1),height .22s cubic-bezier(.2,.8,.2,1);animation:hyprPop .28s cubic-bezier(.16,.84,.24,1.16) both}
-.win .frame{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:6;border:1px solid rgba(255,255,255,.14)}
-.win.top .frame{border-color:transparent;background:linear-gradient(transparent,transparent) padding-box,linear-gradient(115deg,#5eead4,#7aa2f7,#c4b5fd,#5eead4) border-box;background-size:auto,260% 260%;animation:hyprBorder 7s linear infinite}
-.win:not(.top) .frame{border-color:rgba(255,255,255,.1)}
+.win{border:1px solid transparent;background-color:var(--winbg,#141418)!important;background-image:none!important;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.45);transition:left .22s cubic-bezier(.2,.8,.2,1),top .22s cubic-bezier(.2,.8,.2,1),width .22s cubic-bezier(.2,.8,.2,1),height .22s cubic-bezier(.2,.8,.2,1);animation:hyprPop .22s ease both}
+.win.top{box-shadow:0 0 0 1px #7aa2f7,0 0 0 2px rgba(94,234,212,.55),0 18px 50px rgba(0,0,0,.45);animation:hyprPop .22s ease both,hyprRing 3.2s ease-in-out infinite}
+.tb,.body{position:relative;z-index:2}
+.tb{flex:none;min-height:40px}
+.body{background-color:var(--winbg,#141418)}
+.win .frame{display:none}
 .win.closing{pointer-events:none;animation:hyprOut .16s ease forwards}
-@keyframes hyprPop{0%{opacity:0;transform:translateY(14px) scale(.94)}62%{opacity:1;transform:translateY(-3px) scale(1.012)}100%{opacity:1;transform:none}}
-@keyframes hyprOut{to{opacity:0;transform:translateY(8px) scale(.96)}}
-@keyframes hyprBorder{to{background-position:0 0,100% 50%}}
+@keyframes hyprPop{from{opacity:0}to{opacity:1}}
+@keyframes hyprOut{to{opacity:0}}
+@keyframes hyprRing{50%{box-shadow:0 0 0 1px #c4b5fd,0 0 0 2px rgba(122,162,247,.45),0 18px 50px rgba(0,0,0,.45)}}
 .wsin{animation:wsSlide .24s cubic-bezier(.2,.8,.2,1) both}
 @keyframes wsSlide{from{opacity:.35;transform:translateX(var(--slide,16px))}to{opacity:1;transform:none}}
 #ov{background:rgba(8,8,12,.42)!important;align-items:center!important;justify-content:flex-start!important;padding:calc(env(safe-area-inset-top,0px) + 11vh) 12px calc(env(safe-area-inset-bottom,0px) + 24px)!important}
@@ -987,21 +989,23 @@ function browser(){
  const area=el('div');area.style.cssText='position:relative;flex:1;min-height:0';b.append(area);
  function parse(v){v=(v||'').trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(v))return 'https://'+v;return CONFIG.searchEngine+encodeURIComponent(v)}
  function select(t){cur=t;for(const x of tabs){x.pane.style.display=x===t?'block':'none';x.tab.style.opacity=x===t?'1':'.55'}addr.value=t.url||''}
- function nav(t,v){const url=parse(v);if(!url)return;t.url=url;t.home.style.display='none';t.frame.hidden=false;t.frame.src=proxify(url);let _hh=url;try{_hh=new URL(url).hostname}catch(e){}t.label.textContent=_hh;const _ts2=w.querySelector('.tsub');if(_ts2)_ts2.textContent=_hh;if(cur===t)addr.value=url}
+ function showFail(t){t.frame.hidden=true;t.fail.hidden=false;t.fail.textContent='';const h=el('b','',"Couldn't load that page.");h.style.cssText='display:block;margin:0 0 8px';t.fail.append(h,document.createTextNode("The browser proxy isn't available from here, so this tab can't show it."))}
+ function nav(t,v){const url=parse(v);if(!url)return;t.url=url;t.home.style.display='none';t.fail.hidden=true;t.frame.hidden=false;const src=proxify(url);t.frame.src=src;let _hh=url;try{_hh=new URL(url).hostname}catch(e){}t.label.textContent=_hh;const _ts2=w.querySelector('.tsub');if(_ts2)_ts2.textContent=_hh;if(cur===t)addr.value=url;const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),8000);fetch(src,{signal:ctrl.signal}).then(r=>{clearTimeout(timer);if(!r.ok&&t.url===url)showFail(t)}).catch(()=>{clearTimeout(timer);if(t.url===url)showFail(t)})}
  function newTab(url){const pane=el('div');pane.style.cssText='position:absolute;inset:0';
   const home=el('div');home.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center;overflow:auto';
   const h=el('h2','','Lumio');h.style.cssText='font:700 30px system-ui,-apple-system,sans-serif;margin:0';
   const inp=el('input','url');inp.placeholder='Search or enter a URL';inp.style.cssText='max-width:440px;width:100%;flex:none';inp.setAttribute('aria-label','Search or enter a URL');
   const links=el('div');links.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center';
-  const note=el('div','msg','Browsing runs through a proxy, so heavy sites and logins may not work yet.');
+  const note=el('div','msg','Type an address. If the proxy cannot fetch the page, this tab says so instead of staying blank.');
   home.append(h,inp,links,note);
+  const fail=el('div','msg');fail.hidden=true;fail.style.cssText='position:absolute;inset:0;z-index:2;box-sizing:border-box;padding:28px 18px;text-align:center;background:#141418;color:#ececf0;overflow:auto';
   const frame=document.createElement('iframe');frame.title='Web page';frame.hidden=true;frame.referrerPolicy='no-referrer';frame.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff';
-  pane.append(home,frame);area.append(pane);
+  pane.append(home,fail,frame);area.append(pane);
   const tab=el('div');tab.style.cssText='display:flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border-radius:9px;background:rgba(127,127,140,.18);cursor:pointer;flex:none;max-width:170px';
   const label=el('span','','New tab');label.style.cssText='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 12px system-ui,-apple-system,sans-serif';
   const x=el('button','btn','×');x.type='button';x.title='Close tab';x.style.cssText='padding:1px 7px;flex:none';
   tab.append(label,x);tabBox.append(tab);
-  const t={pane,home,frame,tab,label,url:''};tabs.push(t);
+  const t={pane,home,fail,frame,tab,label,url:''};tabs.push(t);
   tab.onclick=()=>select(t);
   x.onclick=e=>{e.stopPropagation();const i=tabs.indexOf(t);tabs.splice(i,1);tab.remove();pane.remove();if(!tabs.length){w.querySelector('[data-a=x]').click()}else if(cur===t)select(tabs[Math.max(0,i-1)])};
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nav(t,inp.value)}});
@@ -1009,7 +1013,7 @@ function browser(){
   select(t);if(url)nav(t,url);return t}
  bar.onsubmit=e=>{e.preventDefault();if(cur)nav(cur,addr.value)};
  refresh.onclick=()=>{if(cur&&cur.url)cur.frame.src=proxify(cur.url)};
- homeBtn.onclick=()=>{if(!cur)return;cur.url='';cur.frame.hidden=true;cur.frame.removeAttribute('src');cur.home.style.display='flex';cur.label.textContent='New tab';addr.value=''};
+ homeBtn.onclick=()=>{if(!cur)return;cur.url='';cur.frame.hidden=true;cur.frame.removeAttribute('src');if(cur.fail)cur.fail.hidden=true;cur.home.style.display='flex';cur.label.textContent='New tab';addr.value=''};
  fsb.onclick=()=>{if(w.requestFullscreen)w.requestFullscreen().catch(()=>toast('Full screen is not supported on this device'));else toast('Full screen is not supported on this device')};
  plus.onclick=()=>newTab();
  newTab();
