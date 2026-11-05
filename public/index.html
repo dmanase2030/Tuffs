@@ -2247,7 +2247,7 @@ paintIcons();
 // settings rows (Appearance): Ambient glow + Desktop widgets
 function swRow(label,sub,key,fn){var r=document.createElement('div');r.className='srow';r.innerHTML='<div><b>'+label+'</b><span>'+sub+'</span></div>';var b=document.createElement('button');b.className='sw'+(S[key]?' on':'');b.setAttribute('aria-label',label);b.onclick=function(){S[key]=S[key]?0:1;b.classList.toggle('on',!!S[key]);saveS();fn();};r.appendChild(b);return r;}
 new MutationObserver(function(){try{
-  var pane=document.querySelector('#setbody .segp[data-p="appearance"]');
+  var panes=document.querySelectorAll('.win[data-app="Settings"] .segp');var pane=panes.length>1?panes[1]:null;
   if(pane&&!pane.querySelector('[data-r5]')){var m=document.createElement('div');m.dataset.r5='1';
     m.appendChild(swRow('Ambient glow','Animated aurora behind the desktop','aurora',applyAurora));
     m.appendChild(swRow('Desktop widgets','Clock, calendar and quick launch cards','widgets',wgSync));
