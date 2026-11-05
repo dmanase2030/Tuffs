@@ -806,8 +806,7 @@ body.ov #ov{display:flex!important}
 @keyframes notin{from{opacity:0;transform:translateX(24px)}}
 
 /* ===== rice pack 3 (batch B): bar position, dock auto-hide, overview, anim ===== */
-#brightov{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:9400}
-[data-barpos=bottom] .bar{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 6px)}
+[data-barpos=bottom] .bar{top:auto!important;bottom:calc(env(safe-area-inset-bottom,0px) + 6px)!important}
 [data-barpos=bottom] #dock{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 54px)}
 [data-barpos=bottom] #nots{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 58px)}
 #dock{transition:transform .32s cubic-bezier(.05,.9,.1,1.05),opacity .32s}
@@ -872,7 +871,7 @@ body.ov #ov{display:flex!important}
 
 <div id="qs"><div class='row'><b id='who'></b></div>
  <div class="row"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8"/></svg><input type="range" id="qsvol" value="55" aria-label="Volume"></div>
- <div class="row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg><input type="range" id="qsbri" value="100" aria-label="Brightness"></div>
+ <div class="row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg><input type="range" id="qsbri" value="60" aria-label="Brightness"></div>
  <div class="tg"><button class="on">Wi-Fi</button><button>Bluetooth</button><button>Balanced power</button><button>Night light</button><button class="on">Dark style</button><button>Do not disturb</button></div><div class='tg' style='margin-top:8px'><button id='so'>Sign out</button><button id='rs'>Run setup again</button></div>
 </div>
 
@@ -1168,7 +1167,7 @@ const _pt={};
 function cloudPush(k,v,now){if(!SESSION||GUEST)return;const send=()=>{fetch('/api/data',{method:'PUT',headers:{'content-type':'application/json',authorization:'Bearer '+SESSION.t},body:JSON.stringify({k,v})}).catch(()=>{})};if(now){send();return}clearTimeout(_pt[k]);_pt[k]=setTimeout(send,700)}
 async function cloudPull(){try{const r=await Promise.race([fetch('/api/data',{headers:{authorization:'Bearer '+SESSION.t}}),new Promise((_,rj)=>setTimeout(rj,2500))]);if(!r.ok)return;const d=await r.json(),data=d.data||{};for(const k of Object.keys(data)){if(!SYNC_KEYS.includes(k))continue;if(k==='S'){Object.assign(S,data[k]);st.hydrate('S',S)}else if(k==='cfg'){Object.assign(CONFIG,data[k]);st.hydrate('cfg',CONFIG)}else st.hydrate(k,data[k])}for(const k of SYNC_KEYS){if(!(k in data)){let lv;try{const raw=localStorage.getItem('lx:'+k);lv=raw===null?undefined:JSON.parse(raw)}catch(e){}if(lv!==undefined)cloudPush(k,lv,true)}}}catch(e){}}
 const st={get(k,d){try{const v=localStorage.getItem('lx:'+k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},set(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}if(SYNC_KEYS.includes(k))cloudPush(k,v)},hydrate(k,v){mem[k]=v;try{localStorage.setItem('lx:'+k,JSON.stringify(v))}catch(e){}}};
-const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false,crad:14,bw:1,blur:14,walpha:10,shdw:'soft',dnd:false,vol:55,bright:100,anim:'normal',fscale:0,barPos:'top',openMode:'tile',dockHide:'0',showClock:'1',showViz:'1',keys:{}},st.get('S',{})),saveS=()=>st.set('S',S);
+const S=Object.assign({device:'linux-pc',theme:'dark',accent:'#3584e4',wall:5,setup:false,crad:14,bw:1,blur:14,walpha:10,shdw:'soft',dnd:false,vol:55,bright:60,anim:'normal',fscale:0,barPos:'top',openMode:'tile',dockHide:'0',showClock:'1',showViz:'1',keys:{}},st.get('S',{})),saveS=()=>st.set('S',S);
 if(S.accent==='#a78bfa')S.accent='#3584e4';
 try{if(!localStorage.getItem('lx:silkwall1')){S.wall=0;saveS();localStorage.setItem('lx:silkwall1','1')}}catch(e){}
 try{const _qr=document.querySelector('#qs .row');if(_qr&&!document.getElementById('qsav')){const _av=document.createElement('span');_av.id='qsav';_av.textContent='?';_qr.prepend(_av)}setInterval(()=>{const _a2=document.getElementById('qsav');if(_a2)_a2.textContent=(USER[0]||'?').toUpperCase()},1500)}catch(e){}
@@ -1243,7 +1242,6 @@ function applyS(){
  const darkToggle=[...document.querySelectorAll('#qs .tg button')].find(x=>x.textContent.trim()==='Dark style');
  if(darkToggle)darkToggle.classList.toggle('on',d.dataset.theme==='dark');
  d.style.setProperty('--crad',(S.crad==null?14:S.crad)+'px');d.style.setProperty('--bw',(S.bw==null?1:S.bw)+'px');d.style.setProperty('--hblur',(S.blur==null?14:S.blur)+'px');d.style.setProperty('--walpha',(S.walpha==null?10:S.walpha)+'%');d.dataset.shdw=S.shdw||'soft';d.dataset.anim=S.anim||'normal';d.dataset.barpos=S.barPos||'top';d.style.fontSize=(13+(+S.fscale||0))+'px';
- const bo=$('#brightov');if(bo)bo.style.opacity=(S.bright==null||S.bright>=100)?0:((1-S.bright/100)*0.75);
  d.dataset.dockhide=(S.dockHide===true||S.dockHide==='1')?'1':'';const _ck=$('#clk');if(_ck)_ck.style.display=S.showClock==='0'?'none':'';const _vz=$('#viz');if(_vz)_vz.style.display=S.showViz==='0'?'none':'';
  document.querySelectorAll('audio,video').forEach(m=>{try{m.volume=(S.vol==null?55:S.vol)/100}catch(e){}});
 }
@@ -1979,7 +1977,7 @@ function setupQuickControls(){
    if(name==='Wi-Fi'||name==='Bluetooth'||name==='Balanced power'){toast(name+' is controlled by your device, not Launcher');return}
    if(name==='Dark style'){S.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';saveS();applyS();return}
    if(name==='Night light'){document.body.classList.toggle('night');b.classList.toggle('on');return}
-   if(name==='Do not disturb'){b.classList.toggle('on');toast(b.classList.contains('on')?'Launcher notices silenced':'Launcher notices enabled')}
+   if(name==='Do not disturb'){b.classList.toggle('on');toast(b.classList.contains('on')?'Launcher notices silenced':'Launcher notices enabled');S.dnd=b.classList.contains('on');saveS()}
   };
  });
  const qs=$('#qs'),note=el('div','setting-foot','Brightness changes the wallpaper only. Device Wi-Fi, Bluetooth and power settings are controlled by your operating system.');qs.append(note);
@@ -2035,17 +2033,14 @@ x.fillStyle="#0c0c0e";x.fillRect(0,0,320,400);br.forEach(k=>{x.fillStyle=col[k[4
 (function(){
 "use strict";
 function $(q){return document.querySelector(q)}
-/* brightness overlay */
-var bo=document.createElement('div');bo.id='brightov';document.body.appendChild(bo);
 /* ---- quick settings wiring ---- */
 try{
  var qv=$('#qsvol'),qb=$('#qsbri');
  if(qv){qv.value=(S.vol==null?55:S.vol);qv.addEventListener('input',function(){S.vol=+qv.value;saveS();applyS()})}
- if(qb){qb.value=(S.bright==null?100:S.bright);qb.addEventListener('input',function(){S.bright=+qb.value;saveS();applyS()})}
  var tg=$('#qs .tg');
  if(tg){
   var dnd=null;[].forEach.call(tg.querySelectorAll('button'),function(b){if(b.textContent.trim()==='Do not disturb')dnd=b});
-  if(dnd){dnd.classList.toggle('on',!!S.dnd);dnd.addEventListener('click',function(){var before=dnd.classList.contains('on');setTimeout(function(){if(dnd.classList.contains('on')===before)dnd.classList.toggle('on');S.dnd=dnd.classList.contains('on');saveS()},0)})}
+  if(dnd)dnd.classList.toggle('on',!!S.dnd);
   var row=document.createElement('div');row.className='tg';row.style.marginTop='8px';
   var PRESETS=[['hypr','Hyprland','#3584e4'],['tokyo','Tokyo Night','#7aa2f7'],['catppuccin','Catppuccin','#cba6f7'],['gruv','Gruvbox','#fabd2f'],['nord','Nord','#88c0d0'],['rose','Rosé Pine','#ebbcba'],['midnight','Midnight','#89b4fa']];
   var sb=document.createElement('button');sb.type='button';
@@ -2106,7 +2101,6 @@ function actFor(c){if(!c)return null;var K=S.keys||{};if(c===(K.term||'ctrl+alt+
 window.addEventListener('keydown',function(e){
  if(window.__r3arming)return;
  var a=actFor(combo(e));if(!a)return;
- if(e.target&&e.target.closest&&e.target.closest('input,textarea,[contenteditable="true"]'))return;
  e.preventDefault();e.stopPropagation();
  try{
   if(a==='term')openApp(APPS.find(function(x){return x.n==='Terminal'}));
