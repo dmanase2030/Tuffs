@@ -652,24 +652,24 @@ input[type=range]{accent-color:#3584e4}
 [data-preset=catppuccin] #ov{background:rgba(30,30,46,.52)}
 
 /* ===== kitty/tokyo-night terminal ===== */
-.term2{background:#16161e!important;color:#c0caf5;font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;font-size:13px;line-height:1.55;user-select:text;-webkit-user-select:text;padding:12px 14px}
+.term2{background:#0b0b10!important;box-shadow:inset 0 0 0 1px rgba(196,181,253,.13);color:#c0caf5;font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;font-size:13px;line-height:1.55;user-select:text;-webkit-user-select:text;padding:12px 14px}
 .term2 .tl{white-space:pre-wrap;word-break:break-word}
 .term2 .tline{display:flex;gap:7px;align-items:baseline;position:relative;margin-top:2px;min-height:20px}
-.term2 .tpr{color:#bb9af7;font-weight:700;white-space:nowrap}
+.term2 .tpr{color:#9ece6a;font-weight:700;white-space:nowrap}
 .term2 .tpa{color:#7aa2f7;white-space:nowrap}
 .term2 .tin{white-space:pre;overflow:hidden}
 .term2 .tcur{display:inline-block;min-width:8px;background:#bb9af7;color:#16161e;text-align:center;animation:tblink 1.06s steps(1) infinite}
 @keyframes tblink{50%{opacity:0}}
 .term2 .treal{position:absolute;inset:0;opacity:0;font-size:16px;border:0;background:transparent;color:transparent;width:100%}
 .term2 .fetch{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:6px}
-.term2 .ascii{color:#bb9af7;font-size:10px;line-height:1.3;white-space:pre;font-family:inherit}
-.term2 .fhead{color:#c0caf5;font-weight:700}
+.term2 .ascii{font-size:9.5px;line-height:1.35;white-space:pre;font-family:inherit}.term2 .ascii .dt{color:#3d4468}.term2 .ascii .lt{color:#8fd3f4;text-shadow:0 0 7px rgba(125,207,255,.4)}
+.term2 .fhead{color:#7dcfff;font-weight:700}.term2 .fdot{font-size:8px;margin-right:2px}
 .term2 .frule{color:#565f89}
 .term2 .fk{color:#bb9af7;font-weight:700}
 .term2 .fv{color:#c0caf5}
 .term2 .swrow{margin-top:7px}
-.term2 .swatch{display:inline-block;width:16px;height:16px;border-radius:4px;margin-right:5px}
-.win[data-app="Terminal"].top{background:linear-gradient(#16161e,#16161e) padding-box,linear-gradient(45deg,#bb9af7,#7aa2f7) border-box}
+.term2 .swatch{display:inline-block;width:25px;height:11px;border-radius:2px;margin-right:3px}
+.win.termwin .tb{background:linear-gradient(180deg,rgba(187,154,247,.22),rgba(187,154,247,.05))}.win[data-app="Terminal"].top{background:linear-gradient(#16161e,#16161e) padding-box,linear-gradient(45deg,#bb9af7,#7aa2f7) border-box}
 @media(max-width:560px){.term2 .ascii{font-size:6px}.term2{font-size:12px}}
 
 /* ===== tuffs code (embedded editor) ===== */
@@ -906,7 +906,7 @@ const tb=w.querySelector(".tb");let sx,sy,ox,oy,dr=false;
 tb.onpointerdown=e=>{if(e.target.closest("button"))return;dr=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;tb.setPointerCapture(e.pointerId)};
 tb.onpointermove=e=>{if(!dr)return;w.style.left=ox+e.clientX-sx+"px";w.style.top=Math.max(40,oy+e.clientY-sy)+"px"};
 tb.onpointerup=()=>dr=false;return{w,body:w.querySelector(".body")}}
-function openApp(a){if(a.n==='Admin'&&!ISADMIN){toast('Admins only');return}if(GUEST&&a.n!=='Games'){lock();mode='up';setMode();$('#ae').textContent='Guests can only play games. Create a free account to use the Browser, Chat and Settings.';return}pushRecent('a',a.n);const ex=[...document.querySelectorAll(".win")].find(x=>x.dataset.app===a.n&&["Settings","Games","Files","System monitor","Notes"].includes(a.n));if(ex){if(ex.dataset.ws&&+ex.dataset.ws!==WS)setWS(+ex.dataset.ws);delete ex.dataset.min;ex.style.display="flex";ex.style.zIndex=++z;dockSync();return}({lib:gamesApp,set:settingsApp,notes:notesApp,calc:calcApp,web:browser,term:terminal,mon:monitor,files:filesApp,code:codeApp,music:musicApp,clock:clockApp,camera:cameraApp,calendar:calendarApp,trash:trashApp,chat:chatApp,admin:adminApp})[a.k](a)}
+function openApp(a){if(a.n==='Admin'&&!ISADMIN){toast('Admins only');return}if(GUEST&&a.n!=='Games'){lock();mode='up';setMode();$('#ae').textContent='Guests can only play games. Create a free account to use the Browser, Chat and Settings.';return}pushRecent('a',a.n);const ex=[...document.querySelectorAll(".win")].find(x=>x.dataset.app===a.n&&(x.dataset.min||["Settings","Games","Files","System monitor","Notes"].includes(a.n)));if(ex){if(ex.dataset.ws&&+ex.dataset.ws!==WS)setWS(+ex.dataset.ws);delete ex.dataset.min;ex.style.display="flex";ex.style.zIndex=++z;dockSync();return}({lib:gamesApp,set:settingsApp,notes:notesApp,calc:calcApp,web:browser,term:terminal,mon:monitor,files:filesApp,code:codeApp,music:musicApp,clock:clockApp,camera:cameraApp,calendar:calendarApp,trash:trashApp,chat:chatApp,admin:adminApp})[a.k](a)}
 
 function library(){const{body}=win("Games","f",640,440);body.innerHTML=`<div class="nav"><input class="url" placeholder="Filter games" aria-label="Filter games"></div><div class="lib"></div>`;
 const lib=body.querySelector(".lib"),inp=body.querySelector("input");
@@ -964,7 +964,7 @@ const TREE=`<span class="dr">.</span>
 │   └── ...
 ├── <span class="dr">proxy</span>
 └── notes.md`;
-function terminal(){const{w,body:b}=win("Terminal","term",720,460);const _ts=w.querySelector('.tsub');if(_ts)_ts.textContent='~';b.classList.add('term2');
+function terminal(){const{w,body:b}=win("Terminal","term",720,460);const _ts=w.querySelector('.tsub');if(_ts)_ts.textContent='~';b.classList.add('term2');w.classList.add('termwin');
 const HIST=[];let hi=-1,draft='',cwd='~';
 const out=el('div','tout'),line=el('div','tline'),pr=el('span','tpr'),tin=el('span','tin'),mir=el('span',''),cur=el('span','tcur'),aft=el('span',''),inp=el('input','treal');
 inp.setAttribute('aria-label','Terminal input');inp.setAttribute('autocomplete','off');inp.setAttribute('autocapitalize','none');inp.spellcheck=false;
@@ -975,11 +975,12 @@ const upStr=()=>{const s=Math.floor(performance.now()/1000);return Math.floor(s/
 function scroll(){requestAnimationFrame(()=>{b.scrollTop=b.scrollHeight})}
 function print(txt,cls){const d=el('div','tl '+(cls||''));d.textContent=txt;out.append(d);scroll()}
 function printEl(n){out.append(n);scroll()}
-function echoLine(v){const d=el('div','tl');const p=el('span','tpr');p.textContent=(USER||'guest')+'@web ';const pa=el('span','tpa');pa.textContent=cwd+' $ ';const t=el('span','',v);d.append(p,pa,t);out.append(d)}
-const LOGO=['████████╗██╗   ██╗███████╗███████╗███████╗','╚══██╔══╝██║   ██║██╔════╝██╔════╝██╔════╝','   ██║   ██║   ██║█████╗  █████╗  ███████╗','   ██║   ██║   ██║██╔══╝  ██╔══╝  ╚════██║','   ██║   ╚██████╔╝██║     ██║     ███████║','   ╚═╝    ╚═════╝ ╚═╝     ╚═╝     ╚══════╝'].join('\n');
-function fetchEl(){const wrap=el('div','fetch');const pre=el('pre','ascii');pre.textContent=LOGO;const info=el('div','finfo');const who=(USER||'guest')+'@web';info.append(el('div','fhead',who),el('div','frule','─'.repeat(who.length)));
-[['OS','Tuffs OS (Web)'],['DE','Hyprland'],['WM','Hyprland (Web)'],['Theme',presetName()],['Browser','Scramjet (host pending) · basic proxy on'],['Games',String(pool().length)],['Shell','tuffs-sh'],['Uptime',upStr()]].forEach(([k,v])=>{const r=el('div','frow');r.append(el('span','fk',k+': '),el('span','fv',v));info.append(r)});
-const sw=el('div','swrow');['#f7768e','#ff9e64','#e0af68','#9ece6a','#7aa2f7','#bb9af7','#7dcfff','#c0caf5'].forEach(c=>{const s=el('span','swatch');s.style.background=c;sw.append(s)});info.append(sw);wrap.append(pre,info);return wrap}
+function echoLine(v){const d=el('div','tl');const p=el('span','tpr');p.textContent='>>> ';const pa=el('span','tpa');pa.textContent='\u{1F4C1} '+cwd+' ';const t=el('span','',v);d.append(p,pa,t);out.append(d)}
+const LOGO="<span class=dt>···························</span>\n<span class=dt>····</span><span class=lt>•••••••••••••••••••</span><span class=dt>····</span>\n<span class=dt>····</span><span class=lt>•••••••••••••••••••</span><span class=dt>····</span>\n<span class=dt>·····</span><span class=lt>•••••••••••••••••</span><span class=dt>·····</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>············</span><span class=lt>•••</span><span class=dt>············</span>\n<span class=dt>···························</span>";
+function fetchEl(){const wrap=el('div','fetch');const pre=el('pre','ascii');pre.innerHTML=LOGO;const info=el('div','finfo');const who=(USER||'guest')+'@web';info.append(el('div','fhead',who),el('div','frule','\u2500'.repeat(who.length)));
+const mem=(()=>{try{if(performance&&performance.memory)return Math.round(performance.memory.usedJSHeapSize/1048576)+'MiB / JS heap'}catch(e){}return navigator.deviceMemory?'~'+navigator.deviceMemory+'GiB':'\u2014'})();
+[['#f7768e','OS','Tuffs OS (Web) x86_64'],['#ff9e64','HST',(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'Web'],['#e0af68','WM','Hyprland (web)'],['#9ece6a','THM',presetName()],['#2ac3de','BRW','basic proxy \u00b7 Scramjet pending'],['#7aa2f7','PKG',pool().length+' (games)'],['#bb9af7','SHL','tuffs-sh 5.9'],['#7dcfff','TER','tuffs-term'],['#f7768e','UPT',upStr()],['#ff9e64','RES',screen.width+'x'+screen.height],['#e0af68','CPU',(navigator.hardwareConcurrency||'\u2014')+' cores'],['#9ece6a','MEM',mem]].forEach(([c,k,v])=>{const r=el('div','frow');const d=el('span','fdot','\u25cf');d.style.color=c;const kk=el('span','fk',k+'  ');kk.style.color=c;r.append(d,kk,el('span','fv',v));info.append(r)});
+const sw=el('div','swrow');['#f7768e','#ff9e64','#e0af68','#9ece6a','#2ac3de','#7aa2f7','#bb9af7','#e8e8f0'].forEach(c=>{const x=el('span','swatch');x.style.background=c;sw.append(x)});info.append(sw);wrap.append(pre,info);return wrap}
 function gameSlug(g){return (g.name||g.title||'game').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.game'}
 function kids(path){if(path==='~')return['about.txt','readme.txt','notes.txt','games/'];if(path==='~/games')return pool().slice(0,40).map(gameSlug);return[]}
 function fileText(path){if(path==='~/about.txt')return 'Tuffs is a Hyprland-inspired desktop that runs entirely in your browser.\nGames, a web browser, chat, files and notes — one tab, no installs.';
@@ -1013,7 +1014,7 @@ if(c==='open'){const a=APPS.find(x=>x.n.toLowerCase()===(argStr||'').toLowerCase
 if(c==='play'){const g=pool().find(g=>(g.name||g.title||'').toLowerCase()===(argStr||'').toLowerCase());if(g){print('starting '+(g.name||g.title)+'…');playGame(g)}else print('play: no game named '+argStr);return}
 if(c==='exit'){w.dispatchEvent(new Event('appclose'));w.remove();dockSync();return}
 print('tuffs-sh: command not found: '+c)}
-function setPr(){pr.textContent=(USER||'guest')+'@web ';let pa=line.querySelector('.tpa');if(!pa){pa=el('span','tpa');line.insertBefore(pa,tin)}pa.textContent=cwd+' $ '}
+function setPr(){pr.textContent='>>> ';let pa=line.querySelector('.tpa');if(!pa){pa=el('span','tpa');line.insertBefore(pa,tin)}pa.textContent='\u{1F4C1} '+cwd+' '}
 function drawMir(){const v=inp.value;let p=inp.selectionStart;if(p==null)p=v.length;mir.textContent=v.slice(0,p);cur.textContent=v[p]||' ';aft.textContent=v.slice(p+1)}
 function complete(){const v=inp.value;const endsSpace=/\s$/.test(v);const parts=parse(v);let cand=[],base='';
 if(parts.length<=1&&!endsSpace){base=(parts[0]||'').toLowerCase();cand=CMDS.filter(x=>x.startsWith(base))}
@@ -1246,7 +1247,7 @@ function start(){
 }
 /* ===== v3: cover art, games app, settings, notes, calculator, menus ===== */
 function toast(m){const t=el('div','toast',m);document.body.append(t);setTimeout(()=>t.remove(),2200)}
-function dockSync(){const n=new Set([...document.querySelectorAll('.win')].map(x=>x.dataset.app));dock.querySelectorAll('.ic').forEach(b=>b.classList.toggle('on',n.has(b.title)));try{saveWSMap()}catch(e){}}
+function dockSync(){const n=new Set([...document.querySelectorAll('.win')].map(x=>x.dataset.app));dock.querySelectorAll('.ic').forEach(b=>b.classList.toggle('on',n.has(b.title)));try{APPS.filter(a=>!a.d).forEach(a=>{let b=dock.querySelector('.ic.dyn[data-app="'+a.n+'"]');if(n.has(a.n)){if(!b){b=entry(a,'ic');b.classList.add('dyn','on');b.dataset.app=a.n;b.onclick=()=>{const ws=[...document.querySelectorAll('.win')].filter(x=>x.dataset.app===a.n);const t=ws.find(x=>x.dataset.min)||ws[ws.length-1];if(t){if(t.dataset.ws&&+t.dataset.ws!==WS)setWS(+t.dataset.ws);delete t.dataset.min;t.style.display='flex';t.style.zIndex=++z;dockSync()}else openApp(a)};dock.append(b)}}else if(b)b.remove()})}catch(e){}try{saveWSMap()}catch(e){}}
 function seed(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h}
 function cover(g){const h=seed(g.name),a=h%360,b=(a+50+h%80)%360,k=h%4,L=(g.name[0]||'?').toUpperCase().replace(/[<>&]/g,'?');
 const p=[`<circle cx='30' cy='62' r='34' fill='hsl(${b} 80% 62%)' fill-opacity='.55'/><circle cx='88' cy='18' r='26' fill='hsl(${a} 90% 70%)' fill-opacity='.5'/>`,
