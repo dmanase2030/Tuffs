@@ -19,7 +19,7 @@ button{font-family:inherit}
 .bar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:8px;right:8px;display:flex;justify-content:space-between;align-items:center;z-index:50;gap:6px}
 .chip{background:var(--glass);border-radius:9px;padding:5px 10px;display:flex;gap:10px;align-items:center;font-size:12.5px;font-weight:500;border:0;color:var(--fg);cursor:pointer;white-space:nowrap;height:28px}
 .chip svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ws{display:flex;gap:6px;align-items:center}.ws i{width:6px;height:6px;border-radius:50%;background:#777}.ws i.a{width:28px;border-radius:4px;background:#fff}
+
 @media(max-width:620px){.opt{display:none}}
 #big{position:fixed;left:0;right:0;top:40%;text-align:center;pointer-events:none;transition:.3s}
 #big h1{font:400 clamp(30px,8.5vw,112px) Michroma,sans-serif;letter-spacing:.06em;color:var(--clk,#2a2a2c);text-transform:uppercase}
@@ -104,7 +104,7 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 @media(max-width:700px){#oobe{flex-direction:column}.ill{flex:none;height:26vh}.pn{width:100%;flex:1;border-left:0}}
 :root[data-theme=light]{--glass:rgba(248,248,250,.84);--glass2:rgba(0,0,0,.07);--fg:#1a1a1c;--mute:#5c5c62;--line:rgba(0,0,0,.13);color-scheme:light}
 [data-theme=light] .chip svg,[data-theme=light] .row svg{stroke:#1a1a1c}[data-theme=light] .chip svg rect[fill]{fill:#1a1a1c}
-[data-theme=light] .ws i{background:#9a9a9f}[data-theme=light] .ws i.a{background:#1a1a1c}
+
 [data-theme=light] .win{background:#f3f3f3}[data-theme=light] .tb,[data-theme=light] .nav{background:#e6e6e9}
 [data-theme=light] .wb button{background:#d4d4d8}[data-theme=light] .wb svg{stroke:#1a1a1c}
 [data-theme=light] .tile{background:#fff;color:#1a1a1c}[data-theme=light] .tin input{color:#1a1a1c}[data-theme=light] .dr{color:#0a58c8}
@@ -276,7 +276,7 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13.5px;
 .desktop-foot{display:block;letter-spacing:.15em;font-size:10px;color:#d5d9f5;margin-top:25px;text-shadow:0 2px 10px #060916}
 .bar{left:18px;right:18px;top:calc(env(safe-area-inset-top,0px) + 12px)}
 .chip{height:38px;border-radius:11px;background:rgba(8,12,25,.8);padding:8px 13px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.ws i{background:#7d83a2;width:7px;height:7px}.ws i.a{background:var(--acc);width:24px;box-shadow:0 0 12px color-mix(in srgb,var(--acc) 45%,transparent)}
+
 .bar-brand{font-size:11px;letter-spacing:.15em;font-weight:850;color:#f2edff}.bar-brand span{color:#ada2dc;margin-left:4px}
 #clk{font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:.06em}
 #dock{bottom:calc(env(safe-area-inset-bottom,0px) + 15px);background:rgba(10,13,27,.80);border-color:rgba(225,221,255,.18);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);box-shadow:0 20px 55px rgba(0,0,0,.47);border-radius:18px}
@@ -544,8 +544,8 @@ input[type=range]{accent-color:#3584e4}
 /* ===== rice pack 2: per-app minimal pass ===== */
 .body{font-family:Inter,system-ui,sans-serif}
 .ws{display:flex;gap:4px;align-items:center}
-.ws i{width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.35);display:block}
-.ws i.a{width:20px;background:#fff}
+
+
 .bar{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center}
 .bar #clk{justify-self:center}
 .bar #sys{justify-self:end}
@@ -1070,7 +1070,7 @@ let WS=1;const WS_N=4;
 function wsWins(n){return [...document.querySelectorAll('.win')].filter(w=>+w.dataset.ws===n)}
 function topWin(){let best=null,bz=-1;document.querySelectorAll('.win').forEach(w=>{if(w.style.display!=='none'&&+w.style.zIndex>bz){bz=+w.style.zIndex;best=w}});return best}
 function markTop(){const best=topWin();document.querySelectorAll('.win.top').forEach(w=>{if(w!==best)w.classList.remove('top')});if(best)best.classList.add('top')}
-function setWS(n){WS=Math.max(1,Math.min(WS_N,n));document.querySelectorAll('.win').forEach(w=>{const on=+w.dataset.ws===WS&&!w.dataset.min;w.style.display=on?'':'none';if(on){w.classList.remove('wsin');void w.offsetWidth;w.classList.add('wsin')}});document.querySelectorAll('#wsbar button').forEach((b,i)=>{b.classList.toggle('on',i+1===WS);b.classList.toggle('occ',wsWins(i+1).length>0)});document.querySelectorAll('.ws i').forEach((d,i)=>d.classList.toggle('a',i===Math.min(WS,3)-1));markTop();dockSync()}
+function setWS(n){WS=Math.max(1,Math.min(WS_N,n));document.querySelectorAll('.win').forEach(w=>{const on=+w.dataset.ws===WS&&!w.dataset.min;w.style.display=on?'':'none';if(on){w.classList.remove('wsin');void w.offsetWidth;w.classList.add('wsin')}});document.querySelectorAll('#wsbar button').forEach((b,i)=>{b.classList.toggle('on',i+1===WS);b.classList.toggle('occ',wsWins(i+1).length>0)});markTop();dockSync()}
 function tileCycle(w){const g=S.gap==null?10:+S.gap,T=46,H=innerHeight-118;if(w.dataset.max){w.style.cssText=w.dataset.max;delete w.dataset.max}const cur2=w.dataset.tile||'';if(!cur2)w.dataset.tileSave=w.style.cssText;if(cur2===''){w.dataset.tile='l';w.style.cssText=`left:${g}px;top:${T}px;width:${innerWidth/2-g*1.5}px;height:${H}px;z-index:${++z}`}else if(cur2==='l'){w.dataset.tile='r';w.style.cssText=`left:${innerWidth/2+g/2}px;top:${T}px;width:${innerWidth/2-g*1.5}px;height:${H}px;z-index:${++z}`}else if(cur2==='r'){w.dataset.tile='f';w.style.cssText=`left:${g}px;top:${T}px;width:${innerWidth-g*2}px;height:${H}px;z-index:${++z}`}else{w.dataset.tile='';w.style.cssText=w.dataset.tileSave||w.style.cssText;delete w.dataset.tileSave}markTop()}
 try{const bar=document.querySelector('.bar'),chip=el('div','chip');chip.id='wsbar';chip.setAttribute('aria-label','Workspaces');for(let i=1;i<=WS_N;i++){const b=el('button','',String(i));b.type='button';b.title='Workspace '+i;b.onclick=e=>{e.stopPropagation();setWS(i)};chip.append(b)}bar.insertBefore(chip,document.getElementById('viz'));chip.querySelector('button').classList.add('on')}catch(e){}
 setInterval(markTop,600);
@@ -1782,8 +1782,10 @@ $('tin').onkeydown=e=>{if(e.key==='Enter'){const l=e.target.value;e.target.value
 /* ---- bridge: built-in file explorer (Files app) ---- */
 function fmArr(){try{if(typeof fmLoad==='function')return fmLoad()}catch(e){}try{return st.get('files',[])}catch(e){return[]}}
 function fmPath(f){return 'files'+(f.parent||'')+'/'+f.name}
-function fmWriteBack(p){if(!p||!p.startsWith('files/'))return;try{const rest=p.slice(6);const i=rest.lastIndexOf('/');const parent=rest.slice(0,i),name=rest.slice(i+1);const a=st.get('files',[]);let n=a.find(f=>f&&f.parent===parent&&f.name===name);if(n){n.content=files[p];n.modified=Date.now()}else{a.push({id:(typeof fmId==='function'?fmId():'v'+Date.now().toString(36)),name,parent,type:'text',content:files[p],modified:Date.now()})}st.set('files',a)}catch(e){}}
-fmArr().filter(f=>f&&f.type==='text').forEach(f=>{const p=fmPath(f);if(!(p in files)){files[p]=f.content||'';saved[p]=f.content||''}});
+const FMAP={};
+function fmWriteBack(p){if(!p||!p.startsWith('files/'))return;try{fmArr();const a=st.get('files',[]);let n=FMAP[p]?a.find(f=>f&&f.id===FMAP[p]):null;if(!n){const rest=p.slice(6);const i=rest.lastIndexOf('/');const parent='/'+rest.slice(0,i),name=rest.slice(i+1);n=a.find(f=>f&&f.parent===parent&&f.name===name);if(n)FMAP[p]=n.id;else{const id=(typeof fmId==='function'?fmId():'v'+Date.now().toString(36));a.push({id,name,parent,type:'text',content:files[p],modified:Date.now()});FMAP[p]=id;st.set('files',a);return}}
+n.content=files[p];n.modified=Date.now();st.set('files',a)}catch(e){}}
+(function(){const a=fmArr();const good=a.filter(f=>f&&f.type==='text'&&String(f.parent||'').startsWith('/'));const stray=f=>f&&f.type==='text'&&!String(f.parent||'').startsWith('/')&&good.some(g=>g.name===f.name&&g.parent==='/'+f.parent);if(a.some(stray))st.set('files',a.filter(f=>!stray(f)));good.forEach(f=>{const p=fmPath(f);FMAP[p]=f.id;if(!(p in files)){files[p]=f.content||'';saved[p]=f.content||''}})})();
 /* ---------- init ---------- */
 function fsz(){const f=mob()?Math.max(S.fs,16):S.fs,r=root.style;r.setProperty('--fs',f+'px');r.setProperty('--lh',Math.round(f*1.5)+'px')}
 $('bSave').onclick=save;$('bFind').onclick=openFind;addEventListener('resize',fsz);root.closest('.win').addEventListener('appclose',()=>{removeEventListener('message',_onMsg);document.removeEventListener('keydown',_onKey);removeEventListener('resize',fsz)});
