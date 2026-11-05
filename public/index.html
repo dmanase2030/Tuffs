@@ -2163,5 +2163,97 @@ function updPrev(){var pv=document.getElementById('setprev');if(!pv)return;try{
 try{new MutationObserver(function(){updPrev()}).observe(document.documentElement,{attributes:true,attributeFilter:['style','data-preset','data-theme','data-barpos']});setInterval(updPrev,1600)}catch(e){}
 })();
 </script>
+
+<style>
+/* ===== RICE PACK 5 · AURORA ===== */
+#aurora{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.ablob{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(70px);opacity:.34;will-change:transform}
+.ablob.b1{left:-14vmax;top:-16vmax;background:radial-gradient(circle at 35% 35%,var(--acc),transparent 65%);animation:adrift 26s ease-in-out infinite alternate}
+.ablob.b2{right:-16vmax;bottom:-18vmax;background:radial-gradient(circle at 60% 60%,#7c5cff,transparent 65%);animation:adrift 32s ease-in-out infinite alternate-reverse}
+.ablob.b3{left:38vw;top:52vh;width:34vmax;height:34vmax;background:radial-gradient(circle at 50% 50%,#ff5c8a,transparent 65%);opacity:.20;animation:adrift 38s ease-in-out infinite alternate}
+@keyframes adrift{from{transform:translate(0,0) scale(1)}to{transform:translate(6vmax,4vmax) scale(1.15)}}
+#aurora .vig{position:absolute;inset:0;box-shadow:inset 0 0 22vmax rgba(0,0,0,.5)}
+html[data-rmotion="1"] .ablob{animation:none}
+.bar{background:var(--glass);backdrop-filter:blur(calc(var(--wblur,18px) + 8px)) saturate(1.5);-webkit-backdrop-filter:blur(calc(var(--wblur,18px) + 8px)) saturate(1.5);border:1px solid var(--line);border-radius:999px;padding:5px 12px;box-shadow:0 12px 34px rgba(0,0,0,.35)}
+#dock{border-radius:28px;padding:9px 13px;backdrop-filter:blur(calc(var(--wblur,18px) + 8px)) saturate(1.5);-webkit-backdrop-filter:blur(calc(var(--wblur,18px) + 8px)) saturate(1.5);box-shadow:0 18px 44px rgba(0,0,0,.45)}
+#dock .di{transition:transform .18s var(--ease,cubic-bezier(.3,1.4,.4,1))}
+#dock .di:hover{transform:translateY(-7px) scale(1.13)}
+#dock .di:active{transform:translateY(-2px) scale(1.05)}
+.win.top{box-shadow:0 26px 70px rgba(0,0,0,.55),0 0 0 1px color-mix(in srgb,var(--acc) 60%,transparent),0 0 34px color-mix(in srgb,var(--acc) 26%,transparent)}
+.win .tb{background:linear-gradient(180deg,color-mix(in srgb,var(--winbg) 88%,#fff 6%),var(--winbg))}
+#ov{background:rgba(10,10,18,.45);backdrop-filter:blur(34px) saturate(1.4);-webkit-backdrop-filter:blur(34px) saturate(1.4)}
+#ov .app .ic{border-radius:26%;box-shadow:0 10px 24px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.35)}
+#qs{border-radius:26px;backdrop-filter:blur(calc(var(--wblur,18px) + 10px)) saturate(1.5);-webkit-backdrop-filter:blur(calc(var(--wblur,18px) + 10px)) saturate(1.5);box-shadow:0 22px 50px rgba(0,0,0,.5)}
+#widgets{position:fixed;z-index:2;left:18px;top:calc(env(safe-area-inset-top,0px) + 74px);display:flex;flex-direction:column;gap:12px;width:252px;pointer-events:none}
+.wgcard{pointer-events:auto;background:var(--glass);backdrop-filter:blur(calc(var(--wblur,18px) + 6px)) saturate(1.4);-webkit-backdrop-filter:blur(calc(var(--wblur,18px) + 6px)) saturate(1.4);border:1px solid var(--line);border-radius:22px;padding:14px 16px;box-shadow:0 16px 40px rgba(0,0,0,.35);color:var(--tx)}
+.wgreet{font-size:12px;opacity:.75;letter-spacing:.04em;text-transform:uppercase}
+.wgclock{font-size:42px;font-weight:800;line-height:1.05;letter-spacing:-.01em}
+.wgdate{font-size:13px;opacity:.85}
+.wgx{float:right;border:0;background:transparent;color:var(--tx);opacity:.5;font-size:15px;cursor:pointer;padding:0 2px}
+.wgcal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:11px;text-align:center;margin-top:6px}
+.wgcal b{padding:3px 0;border-radius:8px;font-weight:600}
+.wgcal b.today{background:var(--acc);color:#fff;box-shadow:0 4px 14px color-mix(in srgb,var(--acc) 55%,transparent)}
+.wgcal i{font-style:normal;opacity:.45;padding:2px 0}
+.wgcalhead{font-weight:700;font-size:13px}
+.wgql{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.wgql button{border:1px solid var(--line);background:color-mix(in srgb,var(--winbg) 70%,transparent);color:var(--tx);border-radius:14px;padding:9px 6px;font-size:12.5px;font-weight:600;cursor:pointer}
+.wgql button:active{transform:scale(.96)}
+.wgtitle{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;opacity:.75}
+@media (max-width:760px){#widgets{width:212px;top:calc(env(safe-area-inset-top,0px) + 66px);left:12px}.wgclock{font-size:34px}.wgcard.calcard{display:none}}
+::selection{background:color-mix(in srgb,var(--acc) 55%,transparent)}
+</style>
+<script>
+/* ===== RICE PACK 5 · AURORA (appended) ===== */
+try{
+if(S.aurora===undefined)S.aurora=1;
+if(S.widgets===undefined)S.widgets=1;
+// aurora layer
+var aur=document.createElement('div');aur.id='aurora';
+aur.innerHTML='<div class="ablob b1"></div><div class="ablob b2"></div><div class="ablob b3"></div><div class="vig"></div>';
+document.body.appendChild(aur);
+function applyAurora(){aur.style.display=S.aurora?'':'none'}
+applyAurora();
+// desktop widgets
+var wgHost=null;
+function wgClockText(){var d=new Date();return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});}
+function wgBuild(){
+  if(wgHost||!S.widgets)return;
+  wgHost=document.createElement('div');wgHost.id='widgets';
+  var d=new Date(),h=d.getHours();
+  var greet=h<5?'Up late':h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var first=new Date(d.getFullYear(),d.getMonth(),1).getDay();
+  var dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+  var cal='<i>Su</i><i>Mo</i><i>Tu</i><i>We</i><i>Th</i><i>Fr</i><i>Sa</i>';
+  for(var i=0;i<first;i++)cal+='<i></i>';
+  for(var n=1;n<=dim;n++)cal+='<b class="'+(n===d.getDate()?'today':'')+'">'+n+'</b>';
+  wgHost.innerHTML=
+   '<div class="wgcard"><button class="wgx" id="wgx" title="Hide widgets">✕</button><div class="wgreet">'+greet+'</div><div class="wgclock" id="wgclock">'+wgClockText()+'</div><div class="wgdate">'+days[d.getDay()]+', '+months[d.getMonth()]+' '+d.getDate()+'</div></div>'
+  +'<div class="wgcard calcard"><div class="wgcalhead">'+months[d.getMonth()]+' '+d.getFullYear()+'</div><div class="wgcal">'+cal+'</div></div>'
+  +'<div class="wgcard"><div class="wgtitle">Quick launch</div><div class="wgql"><button data-app="Browser">🌐 Browser</button><button data-app="Games">🎮 Games</button><button data-app="Chat">💬 Chat</button><button data-app="Files">🗂️ Files</button></div></div>';
+  document.body.appendChild(wgHost);
+  setInterval(function(){var c=document.getElementById('wgclock');if(c)c.textContent=wgClockText();},5000);
+  wgHost.querySelector('#wgx').onclick=function(){S.widgets=0;saveS();wgHost.remove();wgHost=null;};
+  wgHost.querySelectorAll('[data-app]').forEach(function(b){b.onclick=function(){try{openApp(b.dataset.app)}catch(e){}}});
+}
+function wgSync(){if(S.widgets){wgBuild()}else if(wgHost){wgHost.remove();wgHost=null}}
+wgSync();
+// per-app gradient icon tiles in the launcher
+var APPHUES={'Games':'linear-gradient(135deg,#8b5cf6,#ec4899)','Browser':'linear-gradient(135deg,#3b82f6,#06b6d4)','Chat':'linear-gradient(135deg,#22c55e,#84cc16)','Files':'linear-gradient(135deg,#f59e0b,#f97316)','Terminal':'linear-gradient(135deg,#334155,#0f172a)','Code':'linear-gradient(135deg,#6366f1,#a855f7)','Settings':'linear-gradient(135deg,#64748b,#94a3b8)','Notes':'linear-gradient(135deg,#eab308,#facc15)','Calculator':'linear-gradient(135deg,#f97316,#ef4444)','Admin':'linear-gradient(135deg,#ef4444,#991b1b)','Calendar':'linear-gradient(135deg,#0ea5e9,#2563eb)','Music':'linear-gradient(135deg,#ec4899,#8b5cf6)','Photos':'linear-gradient(135deg,#14b8a6,#22c55e)','Clock':'linear-gradient(135deg,#0f766e,#14b8a6)'};
+function paintIcons(){try{document.querySelectorAll('#ov .app').forEach(function(a){var nm=(a.textContent||'').trim();var ic=a.querySelector('.ic');if(ic&&APPHUES[nm])ic.style.background=APPHUES[nm];});}catch(e){}}
+new MutationObserver(function(){paintIcons()}).observe(document.body,{childList:true,subtree:true});
+paintIcons();
+// settings rows (Appearance): Ambient glow + Desktop widgets
+function swRow(label,sub,key,fn){var r=document.createElement('div');r.className='srow';r.innerHTML='<div><b>'+label+'</b><span>'+sub+'</span></div>';var b=document.createElement('button');b.className='sw'+(S[key]?' on':'');b.setAttribute('aria-label',label);b.onclick=function(){S[key]=S[key]?0:1;b.classList.toggle('on',!!S[key]);saveS();fn();};r.appendChild(b);return r;}
+new MutationObserver(function(){try{
+  var pane=document.querySelector('#setbody .segp[data-p="appearance"]');
+  if(pane&&!pane.querySelector('[data-r5]')){var m=document.createElement('div');m.dataset.r5='1';
+    m.appendChild(swRow('Ambient glow','Animated aurora behind the desktop','aurora',applyAurora));
+    m.appendChild(swRow('Desktop widgets','Clock, calendar and quick launch cards','widgets',wgSync));
+    pane.appendChild(m);}
+}catch(e){}}).observe(document.body,{childList:true,subtree:true});
+}catch(e){}
+</script>
 </body>
 </html>
