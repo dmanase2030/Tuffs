@@ -1659,7 +1659,7 @@ const TPL=n=>({[n+'/index.html']:'<!DOCTYPE html>\n<html>\n<head>\n  <meta chars
 let saved=TPL('my-project'),files,S={open:[],active:null,fs:14,cwd:'',col:{}},sel='my-project',view='explorer',sideOn=!mob(),sugg=[],dlgCb=null,pvOn=false;
 try{const d=(typeof st!=='undefined'&&st.get('codeFiles',null))||JSON.parse(localStorage.getItem(LS)||'null');if(d&&d.files){saved=d.files;S.open=d.open||[];S.active=d.active;S.fs=d.fs||14}}catch(e){}
 files={...saved};S.open=S.open.filter(p=>p in files);if(!(S.active in files))S.active=S.open[0]||null;if(!S.active&&!S.open.length){S.active='my-project/index.html';S.open=[S.active]}
-const persist=()=>{try{localStorage.setItem(LS,JSON.stringify({files:saved,open:S.open,active:S.active,fs:S.fs}));if(typeof st!=='undefined')st.set('codeFiles',saved)}catch(e){}};
+const persist=()=>{try{localStorage.setItem(LS,JSON.stringify({files:saved,open:S.open,active:S.active,fs:S.fs}))}catch(e){}try{if(typeof st!=='undefined')st.set('codeFiles',saved)}catch(e){}};
 const dirty=p=>files[p]!==saved[p],dir=p=>p.includes('/')?p.slice(0,p.lastIndexOf('/')):'',base=p=>p.split('/').pop();
 function kids(d){const pr=d?d+'/':'',m=new Map();for(const k in files){if(!k.startsWith(pr)||k===pr)continue;const r=k.slice(pr.length),i=r.indexOf('/');if(i<0)m.set(r,m.get(r)||false);else m.set(r.slice(0,i),true)}return[...m].map(([n,d2])=>({n,d:d2,p:pr+n})).sort((a,b)=>b.d-a.d||a.n.localeCompare(b.n))}
 const isDir=p=>p===''||Object.keys(files).some(k=>k.startsWith(p+'/'));
@@ -1783,9 +1783,9 @@ $('tin').onkeydown=e=>{if(e.key==='Enter'){const l=e.target.value;e.target.value
 function fmArr(){try{if(typeof fmLoad==='function')return fmLoad()}catch(e){}try{return st.get('files',[])}catch(e){return[]}}
 function fmPath(f){return 'files'+(f.parent||'')+'/'+f.name}
 const FMAP={};
-function fmWriteBack(p){if(!p||!p.startsWith('files/'))return;try{fmArr();const a=st.get('files',[]);let n=FMAP[p]?a.find(f=>f&&f.id===FMAP[p]):null;if(!n){const rest=p.slice(6);const i=rest.lastIndexOf('/');const parent='/'+rest.slice(0,i),name=rest.slice(i+1);n=a.find(f=>f&&f.parent===parent&&f.name===name);if(n)FMAP[p]=n.id;else{const id=(typeof fmId==='function'?fmId():'v'+Date.now().toString(36));a.push({id,name,parent,type:'text',content:files[p],modified:Date.now()});FMAP[p]=id;st.set('files',a);return}}
-n.content=files[p];n.modified=Date.now();st.set('files',a)}catch(e){}}
-(function(){const a=fmArr();const good=a.filter(f=>f&&f.type==='text'&&String(f.parent||'').startsWith('/'));const stray=f=>f&&f.type==='text'&&!String(f.parent||'').startsWith('/')&&good.some(g=>g.name===f.name&&g.parent==='/'+f.parent);if(a.some(stray))st.set('files',a.filter(f=>!stray(f)));good.forEach(f=>{const p=fmPath(f);FMAP[p]=f.id;if(!(p in files)){files[p]=f.content||'';saved[p]=f.content||''}})})();
+function fmWriteBack(p){if(!p||!p.startsWith('files/'))return;try{const a=fmArr().slice();let n=FMAP[p]?a.find(f=>f&&f.id===FMAP[p]):null;if(!n){const rest=p.slice(6);const i=rest.lastIndexOf('/');const parent='/'+rest.slice(0,i),name=rest.slice(i+1);n=a.find(f=>f&&f.parent===parent&&f.name===name);if(n)FMAP[p]=n.id;else{const id=(typeof fmId==='function'?fmId():'v'+Date.now().toString(36));a.push({id,name,parent,type:'text',content:files[p],modified:Date.now()});FMAP[p]=id;n=null;if(typeof fmPersist==='function')fmPersist(a);else st.set('vfs',a);return}}
+n.content=files[p];n.modified=Date.now();if(typeof fmPersist==='function')fmPersist(a);else st.set('vfs',a)}catch(e){}}
+(function(){fmArr().filter(f=>f&&f.type==='text'&&String(f.parent||'').startsWith('/')).forEach(f=>{const p=fmPath(f);FMAP[p]=f.id;if(!(p in files)||files[p]===saved[p]){files[p]=f.content||'';saved[p]=f.content||''}})})();
 /* ---------- init ---------- */
 function fsz(){const f=mob()?Math.max(S.fs,16):S.fs,r=root.style;r.setProperty('--fs',f+'px');r.setProperty('--lh',Math.round(f*1.5)+'px')}
 $('bSave').onclick=save;$('bFind').onclick=openFind;addEventListener('resize',fsz);root.closest('.win').addEventListener('appclose',()=>{removeEventListener('message',_onMsg);document.removeEventListener('keydown',_onKey);removeEventListener('resize',fsz)});
