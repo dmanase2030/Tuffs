@@ -142,3 +142,14 @@ Large `public/index.html` updates go through the GitHub web upload (the
 API push helper caps near 128 KB); small files use the API. Rollback for
 the whole site remains the pre-Lumio backup of Arising Boosts plus git
 history on `main`.
+
+## Addendum — 2026-11-04 (evening, after the main report)
+
+- **CI audit finding + fix:** the first CI runs failed `npm audit --audit-level=high` on the dormant backend: @fastify/static ≤10.1.8 (GHSA-8pvw-jcv7-9cmj auth bypass, GHSA-83w8-p2f5-377r traversal) + glob/minimatch moderates. Bumped to @fastify/static ^10.1.10 and regenerated the lockfile (glob 14.0.3 / minimatch 11.0.4 also clear their ranges); local smoke test passed (static 200, traversal probe 403). CI green on the bump commit. Local sandbox cannot reach the npm audit endpoint (403 policy) — CI on GitHub is the audit source of truth.
+- **Hyprland pack (live):** real workspaces 1–4 (windows carry dataset.ws, Alt+1..4 switch, Alt+Shift+1..4 move), titlebar tile button (float → left → right → full) with a Settings gap slider, gradient active-window border, pop-in animation, theme presets (Hyprland / Tokyo Night / Catppuccin / Midnight), lazy game thumbnails.
+- **Rofi-style launcher (live):** fuzzy search across apps, games, bookmarks and settings shortcuts; keyboard navigation; Recent row; Alt+Space. Workspaces remember their windows across reloads (per-account sync), touch swipe switches workspace.
+- **Terminal (live):** rewritten as a realistic tuffs-sh — neofetch with real session data (game count, preset, uptime), virtual FS over the real catalog, theme/play/open commands, history, Tab autocomplete, Ctrl+L / Ctrl+C, Ctrl+Alt+T.
+- **Tuffs Code (live):** the uploaded VS Code-style editor is integrated as the Code app, bridged to the built-in file explorer: explorer text files appear under `files/…` in the editor tree, and saving writes back into the explorer's `vfs` store (verified round-trip both ways). Editor projects sync to the account via the `codeFiles` key.
+- **Incident note:** one deploy briefly broke the desktop (TDZ: render() runs before later let/const declarations). Hotfixed within ~10 minutes; a TDZ simulation check is now part of the release routine (see AGENTS.md).
+- Still open: the full Scramjet proxy awaits a backend host decision (no free + no-card + persistent Node + WebSockets host exists); `scripts/verify-catalog.js` still expects the legacy catalog schema.
+
