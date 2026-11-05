@@ -262,7 +262,7 @@ await fastify.register(fastifyStatic, { root: libcurlPath, prefix: "/libcurl/", 
 await fastify.register(fastifyStatic, { root: baremuxPath, prefix: "/baremux/", decorateReply: false });
 
 fastify.setNotFoundHandler((_req, reply) => {
-  return reply.code(404).type("text/html").sendFile("index.html");
+  return reply.code(404).type("text/html").sendFile("404.html");
 });
 
 // ---------------------------------------------------------------------------
