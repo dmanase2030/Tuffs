@@ -2231,7 +2231,7 @@ function wgBuild(){
   wgHost.innerHTML=
    '<div class="wgcard"><button class="wgx" id="wgx" title="Hide widgets">✕</button><div class="wgreet">'+greet+'</div><div class="wgclock" id="wgclock">'+wgClockText()+'</div><div class="wgdate">'+days[d.getDay()]+', '+months[d.getMonth()]+' '+d.getDate()+'</div></div>'
   +'<div class="wgcard calcard"><div class="wgcalhead">'+months[d.getMonth()]+' '+d.getFullYear()+'</div><div class="wgcal">'+cal+'</div></div>'
-  +'<div class="wgcard"><div class="wgtitle">Quick launch</div><div class="wgql"><button data-app="Browser">🌐 Browser</button><button data-app="Games">🎮 Games</button><button data-app="Chat">💬 Chat</button><button data-app="Files">🗂️ Files</button></div></div>';
+  +'<div class="wgcard"><div class="wgtitle">Quick launch</div><div class="wgql"><button data-app="Browser">Browser</button><button data-app="Games">Games</button><button data-app="Chat">Chat</button><button data-app="Files">Files</button></div></div>';
   document.body.appendChild(wgHost);
   setInterval(function(){var c=document.getElementById('wgclock');if(c)c.textContent=wgClockText();},5000);
   wgHost.querySelector('#wgx').onclick=function(){S.widgets=0;saveS();wgHost.remove();wgHost=null;};
@@ -2253,6 +2253,150 @@ new MutationObserver(function(){try{
     m.appendChild(swRow('Desktop widgets','Clock, calendar and quick launch cards','widgets',wgSync));
     pane.appendChild(m);}
 }catch(e){}}).observe(document.body,{childList:true,subtree:true});
+}catch(e){}
+</script>
+
+<style>
+/* ===== RICE PACK 6 ===== */
+#ov .app .ic{background:transparent!important;box-shadow:none!important}
+#ov #grid{background:var(--glass);border:1px solid var(--line);border-radius:30px;padding:20px;backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 24px 60px rgba(0,0,0,.4)}
+#wall{animation:wallzoom 80s ease-in-out infinite alternate}
+@keyframes wallzoom{from{transform:scale(1)}to{transform:scale(1.07)}}
+.wgql button{display:flex;align-items:center;gap:8px;justify-content:flex-start;padding:7px 9px}
+.wgql button svg{width:24px;height:24px;flex:none}
+#deskicons{position:fixed;z-index:2;right:16px;top:calc(env(safe-area-inset-top,0px) + 74px);display:flex;flex-direction:column;gap:13px}
+.dicon{width:66px;text-align:center;cursor:pointer;background:transparent;border:0;padding:0;color:var(--tx)}
+.dicon svg{width:46px;height:46px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.4));transition:transform .15s var(--ease,cubic-bezier(.3,1.4,.4,1))}
+.dicon:hover svg{transform:translateY(-3px) scale(1.07)}
+.dicon span{display:block;margin-top:3px;font-size:11px;font-weight:600;background:var(--glass);border:1px solid var(--line);border-radius:999px;padding:2px 4px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+@media (max-width:760px){.dicon{width:56px}.dicon svg{width:38px;height:38px}}
+.p6row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.p6sw{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.35);cursor:pointer;padding:0}
+.p6sw.on{border-color:#fff;transform:scale(1.12)}
+.p6chip{border:1px solid var(--line);background:color-mix(in srgb,var(--winbg) 72%,transparent);color:var(--tx);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer}
+.p6chip.on{background:var(--acc);color:#fff;border-color:transparent}
+.p6big{font-size:44px;font-weight:800;line-height:1}
+.p6todo{display:flex;gap:8px;margin-bottom:10px}
+.p6todo input{flex:1}
+.p6task{display:flex;align-items:center;gap:9px;padding:8px 4px;border-bottom:1px solid var(--line)}
+.p6task s{opacity:.55}
+.p6task .del{margin-left:auto;border:0;background:transparent;color:var(--tx);opacity:.55;cursor:pointer;font-size:14px}
+canvas.p6paint{width:100%;height:320px;background:#fff;border-radius:14px;touch-action:none;cursor:crosshair;display:block}
+</style>
+<script>
+/* ===== RICE PACK 6 (appended) ===== */
+try{
+// --- remove Camera (owner: "remove some apps like camera") ---
+var _ci=APPS.findIndex(function(a){return a.n==='Camera'});
+if(_ci>=0)APPS.splice(_ci,1);
+// --- neutralize Pack 5's gradient painter (native icon tiles instead) ---
+try{APPHUES={};}catch(e){}
+document.querySelectorAll('#ov .app .ic').forEach(function(ic){ic.style.background='';});
+// --- widget quick launch: real icon tiles + object dispatch (Pack 5 bug fix) ---
+function wgFix(){
+  document.querySelectorAll('.wgql button[data-app]').forEach(function(b){
+    if(b.dataset.fixed)return;b.dataset.fixed='1';
+    var a=APPS.find(function(x){return x.n===b.dataset.app});
+    if(!a)return;
+    b.innerHTML=icon(a.g,a.b)+'<span>'+a.n+'</span>';
+    b.onclick=function(){try{openApp(a)}catch(e){}};
+  });
+}
+wgFix();
+new MutationObserver(wgFix).observe(document.body,{childList:true,subtree:true});
+// --- new apps ---
+function paintApp(a){
+  var sh=toolShell('Paint','Draw something. Save keeps a PNG copy.',640,520),area=sh.area;
+  var bar=document.createElement('div');bar.className='p6row';bar.style.marginBottom='10px';
+  var cv=document.createElement('canvas');cv.className='p6paint';cv.width=900;cv.height=480;
+  var ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,900,480);ctx.lineCap='round';ctx.lineJoin='round';
+  var color='#3584e4',size=6,erasing=false;
+  ['#111111','#ef4444','#f97316','#eab308','#22c55e','#3584e4','#8b5cf6','#ec4899','#ffffff'].forEach(function(c){
+    var b=document.createElement('button');b.className='p6sw'+(c===color?' on':'');b.style.background=c;b.title=c;
+    b.onclick=function(){color=c;erasing=false;bar.querySelectorAll('.p6sw').forEach(function(x){x.classList.remove('on')});b.classList.add('on');bar.querySelectorAll('.p6chip').forEach(function(x){if(x.textContent==='Eraser')x.classList.remove('on')});};
+    bar.appendChild(b);});
+  [[3,'S'],[6,'M'],[12,'L']].forEach(function(sz){var b=document.createElement('button');b.className='p6chip'+(sz[0]===size?' on':'');b.textContent=sz[1];
+    b.onclick=function(){size=sz[0];bar.querySelectorAll('.p6chip[data-sz]').forEach(function(x){x.classList.remove('on')});b.classList.add('on');};b.dataset.sz='1';bar.appendChild(b);});
+  var er=document.createElement('button');er.className='p6chip';er.textContent='Eraser';
+  er.onclick=function(){erasing=true;er.classList.add('on');setTimeout(function(){},0);};bar.appendChild(er);
+  var cl=document.createElement('button');cl.className='p6chip';cl.textContent='Clear';
+  cl.onclick=function(){ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);};bar.appendChild(cl);
+  var sv=document.createElement('button');sv.className='p6chip';sv.textContent='Save PNG';
+  sv.onclick=function(){var l=document.createElement('a');l.download='paint.png';l.href=cv.toDataURL('image/png');l.click();};bar.appendChild(sv);
+  area.append(bar,cv);
+  var down=false,lx=0,ly=0;
+  function pos(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height];}
+  cv.addEventListener('pointerdown',function(e){down=true;var p=pos(e);lx=p[0];ly=p[1];cv.setPointerCapture(e.pointerId);});
+  cv.addEventListener('pointermove',function(e){if(!down)return;var p=pos(e);ctx.strokeStyle=erasing?'#ffffff':color;ctx.lineWidth=erasing?size*3:size;ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p[0],p[1]);ctx.stroke();lx=p[0];ly=p[1];});
+  cv.addEventListener('pointerup',function(){down=false;});
+}
+var WCITIES=[['New York',40.71,-74.01,'fahrenheit'],['Los Angeles',34.05,-118.24,'fahrenheit'],['Chicago',41.88,-87.63,'fahrenheit'],['Miami',25.76,-80.19,'fahrenheit'],['London',51.51,-0.13,'celsius'],['Tokyo',35.68,139.69,'celsius']];
+var WTEXT={0:'Clear sky',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Fog',51:'Light drizzle',53:'Drizzle',55:'Drizzle',56:'Freezing drizzle',57:'Freezing drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',66:'Freezing rain',67:'Freezing rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow',80:'Light showers',81:'Showers',82:'Heavy showers',85:'Snow showers',86:'Snow showers',95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'};
+function weatherApp(a){
+  var sh=toolShell('Weather','Live conditions from Open-Meteo. No account, no key.',560,430),area=sh.area;
+  var bar=document.createElement('div');bar.className='p6row';bar.style.marginBottom='12px';
+  var out=document.createElement('div');out.innerHTML='<div class="tool-sub">Pick a city.</div>';
+  WCITIES.forEach(function(c,i){
+    var b=document.createElement('button');b.className='p6chip'+(i===0?' on':'');b.textContent=c[0];
+    b.onclick=function(){bar.querySelectorAll('.p6chip').forEach(function(x){x.classList.remove('on')});b.classList.add('on');load(c);};
+    bar.appendChild(b);});
+  area.append(bar,out);
+  function load(c){
+    out.innerHTML='<div class="tool-sub">Loading '+c[0]+'…</div>';
+    var u='https://api.open-meteo.com/v1/forecast?latitude='+c[1]+'&longitude='+c[2]+'&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&temperature_unit='+c[3]+'&timezone=auto';
+    fetch(u).then(function(r){return r.json()}).then(function(j){
+      var cur=j.current,unit=j.current_units.temperature_2m,wunit=j.current_units.wind_speed_10m;
+      var hi=j.daily.temperature_2m_max[0],lo=j.daily.temperature_2m_min[0];
+      out.innerHTML='<div class="wgreet">'+c[0]+'</div><div class="p6big">'+Math.round(cur.temperature_2m)+unit+'</div>'
+        +'<div class="tool-sub">'+(WTEXT[cur.weather_code]||'—')+' · High '+Math.round(hi)+unit+' · Low '+Math.round(lo)+unit+' · Wind '+Math.round(cur.wind_speed_10m)+' '+wunit+'</div>';
+    }).catch(function(){out.innerHTML='<div class="tool-sub">Could not load weather — check the connection and try again.</div>';});
+  }
+  load(WCITIES[0]);
+}
+function todoApp(a){
+  var sh=toolShell('To Do','A simple list. Saved on this device.',480,480),area=sh.area;
+  var items=st.get('todoList',[]);
+  var row=document.createElement('div');row.className='p6todo';
+  var inp=document.createElement('input');inp.className='url';inp.placeholder='Add a task and press Enter';inp.setAttribute('aria-label','New task');
+  var add=document.createElement('button');add.className='p6chip on';add.textContent='Add';
+  var list=document.createElement('div');
+  function save(){st.set('todoList',items);}
+  function draw(){list.innerHTML='';if(!items.length){list.innerHTML='<div class="tool-sub">Nothing here yet.</div>';return;}
+    items.forEach(function(it,i){
+      var d=document.createElement('div');d.className='p6task';
+      var cb=document.createElement('input');cb.type='checkbox';cb.checked=!!it.done;
+      cb.onchange=function(){it.done=cb.checked;save();draw();};
+      var tx=document.createElement(it.done?'s':'span');tx.textContent=it.text;
+      var del=document.createElement('button');del.className='del';del.textContent='✕';
+      del.onclick=function(){items.splice(i,1);save();draw();};
+      d.append(cb,tx,del);list.appendChild(d);});}
+  function push(){var v=inp.value.trim();if(!v)return;items.unshift({text:v,done:false});inp.value='';save();draw();}
+  add.onclick=push;inp.addEventListener('keydown',function(e){if(e.key==='Enter')push();});
+  row.append(inp,add);area.append(row,list);draw();
+}
+var CUSTOM={'paint':paintApp,'weather':weatherApp,'todo':todoApp};
+var NEWAPPS=[{n:'Paint',g:'palette',b:'purple',k:'paint'},{n:'Weather',g:'globe',b:'blue',k:'weather'},{n:'To Do',g:'pen',b:'green',k:'todo'}];
+var _ai=APPS.findIndex(function(a){return a.n==='Admin'});
+NEWAPPS.forEach(function(na,i){APPS.splice(_ai<0?APPS.length:_ai,0,na);if(_ai>=0)_ai++;});
+var _openApp=openApp;
+openApp=function(a){
+  if(a&&CUSTOM[a.k]){
+    if(typeof GUEST!=='undefined'&&GUEST){_openApp(a);return;}
+    try{pushRecent('a',a.n);}catch(e){}
+    CUSTOM[a.k](a);return;
+  }
+  return _openApp(a);
+};
+// --- desktop shortcut icons (right side) ---
+if(S.widgets){
+  var host=document.createElement('div');host.id='deskicons';
+  ['Games','Browser','Files','Chat','Paint','Weather','To Do','Settings'].forEach(function(nm){
+    var a=APPS.find(function(x){return x.n===nm});if(!a)return;
+    var b=document.createElement('button');b.className='dicon';b.innerHTML=icon(a.g,a.b)+'<span>'+nm+'</span>';
+    b.onclick=function(){try{openApp(a)}catch(e){}};
+    host.appendChild(b);});
+  document.body.appendChild(host);
+}
 }catch(e){}
 </script>
 </body>
