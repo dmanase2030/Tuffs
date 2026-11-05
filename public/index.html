@@ -2399,5 +2399,166 @@ if(S.widgets){
 }
 }catch(e){}
 </script>
+
+<style>
+/* ===== RICE PACK 7 ===== */
+.gmkey{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid var(--line);font-size:12.5px}
+.gmkey code{font-family:ui-monospace,Menlo,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:38%}
+.gmkey .v{opacity:.65;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.gmkey button{flex:none}
+.p7out{font-family:ui-monospace,Menlo,monospace;font-size:15px;word-break:break-all}
+.p7qr{display:flex;justify-content:center;padding:10px}
+.p7qr img{border-radius:12px;background:#fff;padding:8px;max-width:240px;width:100%}
+</style>
+<script>
+/* ===== RICE PACK 7 (appended) ===== */
+try{
+// --- remove Music (owner's call) ---
+var _mi=APPS.findIndex(function(a){return a.n==='Music'});
+if(_mi>=0)APPS.splice(_mi,1);
+// --- more apps ---
+function convApp(a){
+  var sh=toolShell('Converter','Length, weight, temperature and data. Works offline.',520,430),area=sh.area;
+  var CATS={'Length':{m:1,km:1000,cm:0.01,mm:0.001,mi:1609.344,ft:0.3048,in:0.0254,yd:0.9144},
+    'Weight':{kg:1,g:0.001,lb:0.453592,oz:0.0283495,t:1000},
+    'Data':{B:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776},
+    'Temperature':null};
+  var catSel=document.createElement('select');catSel.className='url';
+  Object.keys(CATS).forEach(function(c){var o=document.createElement('option');o.textContent=c;catSel.appendChild(o);});
+  var row1=document.createElement('div');row1.className='p6row';row1.style.margin='10px 0';
+  var inp=document.createElement('input');inp.className='url';inp.type='number';inp.value='1';inp.style.flex='1';
+  var from=document.createElement('select');from.className='url';var to=document.createElement('select');to.className='url';
+  var out=document.createElement('div');out.className='p7out';out.style.marginTop='12px';
+  function fillUnits(){var us=catSel.value==='Temperature'?['C','F','K']:Object.keys(CATS[catSel.value]);
+    [from,to].forEach(function(sel){sel.innerHTML='';us.forEach(function(u){var o=document.createElement('option');o.textContent=u;sel.appendChild(o);});});
+    to.selectedIndex=us.length>1?1:0;calc();}
+  function calc(){var v=parseFloat(inp.value);if(isNaN(v)){out.textContent='';return;}
+    var f=from.value,t=to.value,r;
+    if(catSel.value==='Temperature'){var c=f==='C'?v:f==='F'?(v-32)*5/9:v-273.15;r=t==='C'?c:t==='F'?c*9/5+32:c+273.15;}
+    else{var F=CATS[catSel.value];r=v*F[f]/F[t];}
+    out.textContent=v+' '+f+' = '+(Math.round(r*1000000)/1000000)+' '+t;}
+  catSel.onchange=fillUnits;inp.oninput=calc;from.onchange=calc;to.onchange=calc;
+  row1.append(inp,from,document.createTextNode('→'),to);
+  area.append(catSel,row1,out);fillUnits();
+}
+function passApp(a){
+  var sh=toolShell('Passwords','Strong random passwords, made on this device. Nothing is sent anywhere.',520,430),area=sh.area;
+  var out=document.createElement('input');out.className='url p7out';out.readOnly=true;out.setAttribute('aria-label','Generated password');
+  var lenRow=document.createElement('div');lenRow.className='p6row';lenRow.style.margin='12px 0 8px';
+  var len=document.createElement('input');len.type='range';len.min='8';len.max='40';len.value='16';len.style.flex='1';
+  var lenLab=document.createElement('b');lenLab.textContent='16';
+  lenRow.append(document.createTextNode('Length'),len,lenLab);
+  var optRow=document.createElement('div');optRow.className='p6row';
+  var SETS={lower:'abcdefghijklmnopqrstuvwxyz',upper:'ABCDEFGHIJKLMNOPQRSTUVWXYZ',digits:'0123456789',symbols:'!@#$%^&*()-_=+[]{}'};
+  var state={lower:1,upper:1,digits:1,symbols:1};
+  Object.keys(SETS).forEach(function(k){var b=document.createElement('button');b.className='p6chip on';b.textContent=k;
+    b.onclick=function(){state[k]=state[k]?0:1;b.classList.toggle('on',!!state[k]);gen();};optRow.appendChild(b);});
+  var btnRow=document.createElement('div');btnRow.className='p6row';btnRow.style.marginTop='12px';
+  var gen=document.createElement('button');gen.className='p6chip on';gen.textContent='Generate';
+  var copy=document.createElement('button');copy.className='p6chip';copy.textContent='Copy';
+  function make(){var pool='';Object.keys(SETS).forEach(function(k){if(state[k])pool+=SETS[k];});
+    if(!pool)return '';
+    var arr=new Uint32Array(parseInt(len.value,10));crypto.getRandomValues(arr);
+    var s='';for(var i=0;i<arr.length;i++)s+=pool[arr[i]%pool.length];return s;}
+  function gen2(){out.value=make();}
+  gen.onclick=gen2;len.oninput=function(){lenLab.textContent=len.value;gen2();};
+  copy.onclick=function(){out.select();try{navigator.clipboard.writeText(out.value);}catch(e){document.execCommand('copy');}};
+  btnRow.append(gen,copy);
+  area.append(out,lenRow,optRow,btnRow);gen2();
+}
+function qrApp(a){
+  var sh=toolShell('QR Code','Turn any text or link into a QR code. Image by api.qrserver.com.',520,480),area=sh.area;
+  var inp=document.createElement('input');inp.className='url';inp.placeholder='Type or paste a link or text';inp.value='https://riseboosts.com';
+  var btn=document.createElement('button');btn.className='p6chip on';btn.textContent='Make QR';btn.style.margin='10px 0';
+  var holder=document.createElement('div');holder.className='p7qr';
+  function make(){var v=inp.value.trim();if(!v){holder.innerHTML='';return;}
+    holder.innerHTML='<img alt="QR code" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data='+encodeURIComponent(v)+'">';}
+  btn.onclick=make;inp.addEventListener('keydown',function(e){if(e.key==='Enter')make();});
+  area.append(inp,btn,holder);make();
+}
+CUSTOM.conv=convApp;CUSTOM.pass=passApp;CUSTOM.qr=qrApp;
+var NEW7=[{n:'Converter',g:'calc',b:'dark',k:'conv'},{n:'Passwords',g:'shield',b:'grey',k:'pass'},{n:'QR Code',g:'image',b:'blue',k:'qr'}];
+var _ai7=APPS.findIndex(function(a){return a.n==='Admin'});
+NEW7.forEach(function(na){APPS.splice(_ai7<0?APPS.length:_ai7,0,na);if(_ai7>=0)_ai7++;});
+var di=document.getElementById('deskicons');
+if(di){NEW7.forEach(function(na){var b=document.createElement('button');b.className='dicon';b.innerHTML=icon(na.g,na.b)+'<span>'+na.n+'</span>';b.onclick=function(){try{openApp(na)}catch(e){}};di.appendChild(b);});}
+// --- Game Mods panel inside the Admin app ---
+function gmPanel(body){
+  var wrap=document.createElement('div');
+  wrap.style.cssText='border-top:1px solid var(--line);margin-top:16px;padding-top:12px';
+  wrap.innerHTML='<div class="wgtitle">Game mods</div>'
+    +'<div class="tool-sub" style="margin:6px 0 10px">Change money, scores and save data for games that save <b>on this site</b> (built-in games and self-hosted games). Games that run on other sites keep their saves there — those show as sealed.</div>';
+  var tRow=document.createElement('div');tRow.className='p6row';
+  var ref=document.createElement('button');ref.className='p6chip';ref.textContent='Refresh targets';
+  var msg=document.createElement('div');msg.className='tool-sub';msg.style.marginTop='8px';
+  var keysBox=document.createElement('div');keysBox.style.marginTop='8px';
+  var cur=null;
+  function targets(){
+    var list=[{label:'This site (built-ins & desktop saves)',w:window}];
+    document.querySelectorAll('.win[data-app="Games"] iframe').forEach(function(f,i){
+      var t='Game window '+(i+1);try{t=f.contentWindow.location.href.split('/').slice(-1)[0]||t;}catch(e){try{t=new URL(f.src).hostname;}catch(e2){}}
+      list.push({label:t,w:null,f:f});});
+    return list;}
+  function storeOf(t){
+    if(t.w)return t.w.localStorage;
+    return t.f.contentWindow.localStorage;}
+  function drawKeys(){
+    keysBox.innerHTML='';if(!cur)return;
+    var store;try{store=storeOf(cur);}catch(e){
+      keysBox.innerHTML='<div class="tool-sub">Sealed — this game runs on another site, so its save data lives there and cannot be changed from here. You can still rename or hide it in the Games section above.</div>';return;}
+    var keys=[];try{keys=Object.keys(store);}catch(e){}
+    if(!keys.length){keysBox.innerHTML='<div class="tool-sub">No saved data found for this target yet. Play the game once so it saves, then Refresh.</div>';return;}
+    keys.slice(0,120).forEach(function(k){
+      var row=document.createElement('div');row.className='gmkey';
+      var cd=document.createElement('code');cd.textContent=k;cd.title=k;
+      var v=document.createElement('span');v.className='v';var val='';try{val=store.getItem(k)||'';}catch(e){}
+      v.textContent=val.slice(0,48);v.title=val;
+      var ed=document.createElement('button');ed.className='p6chip';ed.textContent='Edit';
+      ed.onclick=function(){var nv=prompt('Set value for '+k, val);if(nv===null)return;try{store.setItem(k,nv);msg.textContent='Set '+k+' — reload the game to see it.';drawKeys();}catch(e){msg.textContent='Could not write that key.';}};
+      var del=document.createElement('button');del.className='p6chip';del.textContent='Delete';
+      del.onclick=function(){try{store.removeItem(k);drawKeys();}catch(e){}};
+      row.append(cd,v,ed,del);keysBox.appendChild(row);});}
+  function drawTargets(){
+    tRow.querySelectorAll('[data-t]').forEach(function(x){x.remove()});
+    targets().forEach(function(t,i){
+      var b=document.createElement('button');b.className='p6chip'+(i===0?' on':'');b.dataset.t='1';b.textContent=t.label;
+      b.onclick=function(){cur=t;tRow.querySelectorAll('[data-t]').forEach(function(x){x.classList.remove('on')});b.classList.add('on');drawKeys();};
+      if(i===0)cur=t;
+      tRow.insertBefore(b,ref);});
+    drawKeys();}
+  ref.onclick=drawTargets;
+  tRow.appendChild(ref);
+  var mRow=document.createElement('div');mRow.className='p6row';mRow.style.marginTop='10px';
+  var mInp=document.createElement('input');mInp.className='url';mInp.type='number';mInp.placeholder='Amount';mInp.style.width='120px';
+  var mBtn=document.createElement('button');mBtn.className='p6chip on';mBtn.textContent='Set money / score keys';
+  mBtn.onclick=function(){
+    if(!cur){msg.textContent='Pick a target first.';return;}
+    var store;try{store=storeOf(cur);}catch(e){msg.textContent='That target is sealed.';return;}
+    var amt=mInp.value;if(amt===''){msg.textContent='Type an amount first.';return;}
+    var n=0;try{Object.keys(store).forEach(function(k){if(/(money|cash|coin|gold|gem|credit|balance|score|buck|dollar)/i.test(k)){store.setItem(k,amt);n++;}});}catch(e){}
+    msg.textContent=n?('Set '+n+' money/score key'+(n>1?'s':'')+' to '+amt+' — reload the game to see it.'):'No money-like keys found in this target. Use Edit on a key below instead.';
+    drawKeys();};
+  mRow.append(mInp,mBtn);
+  var vRow=document.createElement('div');vRow.className='p6row';vRow.style.marginTop='8px';
+  var vName=document.createElement('input');vName.className='url';vName.placeholder='Variable name';vName.style.width='150px';
+  var vVal=document.createElement('input');vVal.className='url';vVal.placeholder='Value';vVal.style.width='120px';
+  var vBtn=document.createElement('button');vBtn.className='p6chip';vBtn.textContent='Set variable';
+  vBtn.onclick=function(){
+    if(!cur||!vName.value.trim())return;
+    var w=cur.w||(cur.f&&cur.f.contentWindow);
+    try{var val=vVal.value;try{val=JSON.parse(val);}catch(e){}
+      w[vName.value.trim()]=val;msg.textContent='Set '+vName.value+' on the target (live games may overwrite it).';}
+    catch(e){msg.textContent='Sealed — cannot set variables on another site\'s game.';}};
+  vRow.append(vName,vVal,vBtn);
+  wrap.append(tRow,mRow,vRow,msg,keysBox);
+  body.appendChild(wrap);
+  drawTargets();
+}
+new MutationObserver(function(){
+  try{var b=document.querySelector('.win[data-app="Admin"] .body');
+    if(b&&!b.dataset.gm){b.dataset.gm='1';gmPanel(b);}}catch(e){}
+}).observe(document.body,{childList:true,subtree:true});
+}catch(e){}
+</script>
 </body>
 </html>
