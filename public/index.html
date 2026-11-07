@@ -1590,6 +1590,7 @@ WALLS.push({n:'Ink',s:'Soft lift on near-black',css:'radial-gradient(120% 90% at
 WALLS.push({n:'Moss',s:'Deep green fade',css:'linear-gradient(180deg,#0d1b14 0%,#163028 46%,#121820 100%)'});
 WALLS.push({n:'Monochrome',s:'Silver cliffs, subtle light',svg:`
 <defs><linearGradient id="msg" x2="0" y2="1"><stop stop-color="#090c13"/><stop offset=".6" stop-color="#263041"/><stop offset="1" stop-color="#0b1119"/></linearGradient><linearGradient id="msk" x2="1" y2="1"><stop stop-color="#a0b1c2"/><stop offset="1" stop-color="#192637"/></linearGradient></defs><rect width="1600" height="900" fill="url(#msg)"/><path d="M0 730L350 280 530 580 820 180 1010 610 1230 340 1600 730V900H0" fill="url(#msk)"/><path d="M0 790L340 480 600 810 920 350 1180 770 1430 540 1600 780V900H0" fill="#182536"/><path d="M0 900L350 740 790 860 1020 670 1600 820V900H0" fill="#0a121e"/>`});
+WALLS.push({n:'Ribbon',s:'Hanging figure, red ribbon',l:1,img:'/images/wall-ribbon.gif'});
 function wallpaperPicker(container){
  const gallery=el('div','wall-gallery');
  WALLS.forEach((w,i)=>{
