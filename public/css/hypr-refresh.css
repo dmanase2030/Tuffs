@@ -1,0 +1,177 @@
+/* ============================================================
+   Tuffs — Hyprland minimal refresh (visual layer)
+   Additive only: loaded on top of the existing launcher styles.
+   ============================================================ */
+
+:root {
+  --glass: rgba(17, 17, 20, 0.62);
+  --glass2: rgba(38, 38, 44, 0.9);
+  --line: rgba(255, 255, 255, 0.08);
+  --acc-glow: 0 0 0 1px rgba(56, 214, 232, 0.55),
+              0 0 18px rgba(56, 214, 232, 0.10);
+}
+
+/* ---------------- Top bar ---------------- */
+.bar {
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-radius: 10px;
+  box-shadow: 0 1px 0 rgba(255,255,255,.05) inset,
+              0 6px 24px rgba(0,0,0,.35);
+}
+.chip {
+  transition: background 160ms cubic-bezier(0.16,1,0.3,1),
+              transform 160ms cubic-bezier(0.16,1,0.3,1);
+}
+.chip:active { transform: scale(0.97); }
+
+/* ---------------- Dock ---------------- */
+#dock {
+  backdrop-filter: blur(26px) saturate(160%);
+  -webkit-backdrop-filter: blur(26px) saturate(160%);
+  border-radius: 20px;
+  box-shadow: 0 1px 0 rgba(255,255,255,.06) inset,
+              0 14px 44px rgba(0,0,0,.45);
+}
+.ic { transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.ic:hover { filter: drop-shadow(0 4px 10px rgba(0,0,0,.45)); }
+.ic.on::after {
+  width: 16px;
+  background: linear-gradient(90deg, #33ccee, #00ff99);
+  border-radius: 2px;
+}
+
+/* ---------------- Windows ---------------- */
+.win {
+  box-shadow: 0 24px 70px rgba(0,0,0,.5),
+              0 0 0 1px rgba(255,255,255,.045);
+  animation: hyprWinIn 260ms cubic-bezier(0.05, 0.9, 0.1, 1.05);
+}
+.win.hypr-dim { opacity: 0.88; }
+.win { transition: opacity 240ms cubic-bezier(0.16,1,0.3,1); }
+.win.hypr-focus {
+  box-shadow: 0 24px 70px rgba(0,0,0,.5),
+              var(--acc-glow);
+}
+
+@keyframes hyprWinIn {
+  from { transform: scale(0.96) translateY(10px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);     opacity: 1; }
+}
+
+.tb { background: rgba(11, 11, 12, 0.92); }
+
+/* ---------------- Overview overlay ---------------- */
+#ov {
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+/* ---------------- App grid & game tiles ---------------- */
+.app { border-radius: 14px; transition: background 160ms, transform 160ms; }
+.app:hover { background: rgba(255,255,255,.14); transform: translateY(-2px); }
+.tile {
+  border-color: rgba(255,255,255,.07);
+  transition: transform 180ms cubic-bezier(0.16,1,0.3,1),
+              border-color 180ms, box-shadow 180ms;
+}
+.tile:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgba(56, 214, 232, 0.35);
+  box-shadow: 0 10px 28px rgba(0,0,0,.45);
+}
+.tile img { border-radius: 8px; }
+
+/* ---------------- Inputs ---------------- */
+#q, .url { transition: border-color 160ms, box-shadow 160ms; }
+#q:focus-visible, .url:focus-visible {
+  box-shadow: 0 0 0 2px rgba(47, 123, 255, 0.25);
+}
+
+/* ---------------- Scrollbars ---------------- */
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.18) transparent; }
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-thumb { background: rgba(255,255,255,.16); border-radius: 3px; }
+*::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.28); }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------------- Widgets panel (hypr-refresh.js) ---------------- */
+.hypr-widgets {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 44px);
+  right: 8px;
+  width: 300px;
+  background: var(--glass);
+  backdrop-filter: blur(26px) saturate(150%);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  z-index: 80;
+  color: var(--fg, #f2f2f2);
+  font: 13px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  animation: hyprPanelIn 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hypr-widgets h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(40,40,44,.9);
+  color: rgba(255,255,255,.85);
+}
+.hypr-widgets .cal {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 14px;
+  text-align: center;
+  font-size: 11.5px;
+  color: rgba(255,255,255,.55);
+}
+.hypr-widgets .cal .today {
+  background: rgba(47,123,255,.25);
+  color: #fff;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.hypr-widgets .stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-top: 1px solid rgba(255,255,255,.06);
+  font-size: 12.5px;
+  color: rgba(255,255,255,.75);
+}
+.hypr-widgets .stat-row b { color: #fff; font-weight: 600; }
+.hypr-widgets .ws-list { margin: 0; padding-left: 18px; color: rgba(255,255,255,.7); font-size: 12.5px; }
+.hypr-widgets .mode-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #33ccee, #00ff99);
+  color: #06231a;
+  font: 600 13px system-ui, sans-serif;
+  cursor: pointer;
+}
+.hypr-widgets .mode-btn:hover { filter: brightness(1.1); }
+
+@keyframes hyprPanelIn {
+  from { transform: translateY(-8px) scale(0.98); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ---------------- Minimal mode (Alt+C) ---------------- */
+body.hypr-minimal #big { display: none; }
+body.hypr-minimal .bar { padding: 0 2px; }
+body.hypr-minimal #dock { padding: 6px 9px; }
+body.hypr-minimal #dock .ic { width: 38px; height: 38px; }
+body.hypr-minimal #dock .ic svg { width: 34px; height: 34px; }
+body.hypr-minimal .opt { display: none; }
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  .win { animation: none; }
+  .ic, .tile, .app, .chip { transition: none; }
+}
