@@ -232,7 +232,7 @@ body.dockonly #desk,body.dockonly #wid{display:none}
  * in here also signs you in there and vice versa. */
 let AUTH={mode:'out',name:'',admin:false},SESSION=null,PENDING=null,AMODE='in';
 try{SESSION=JSON.parse(localStorage.getItem('lumio_session')||'null')}catch(e){SESSION=null}
-const PROXY='/service/',SEARCH='https://duckduckgo.com/?q=';
+const PROXY='/service/',SEARCH='https://www.bing.com/search?q=';
 const QUICK=[['Google','https://www.google.com'],['YouTube','https://www.youtube.com'],['Wikipedia','https://www.wikipedia.org'],['Reddit','https://www.reddit.com']];
 const USER_RE=/^[\w.-]{3,20}$/;
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c])}
@@ -286,18 +286,21 @@ function lumioAccount(b){b.dataset.acct=1;const u=AUTH.mode=='user';
 
 /* ---- Browser app: pages load through the site's /service/ proxy ---- */
 function parseAddr(v){v=(v||'').trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(v))return 'https://'+v;return SEARCH+encodeURIComponent(v)}
-function proxify(u){if(/^\s*(javascript|data|vbscript):/i.test(u))return 'about:blank';return /^https?:\/\//i.test(u)?PROXY+encodeURIComponent(u):u}
-function unproxy(path){if(path.indexOf(PROXY)!==0)return null;try{return decodeURIComponent(path.slice(PROXY.length))}catch(e){return null}}
+/* /service/https:/host/path keeps the site's own path, so relative links resolve inside the proxy */
+function proxify(u){if(/^\s*(javascript|data|vbscript):/i.test(u))return 'about:blank';return /^https?:\/\//i.test(u)?PROXY+u.replace(/^(https?):\/\//i,'$1:/'):u}
+function unproxy(path){if(path.indexOf(PROXY)!==0)return null;const raw=path.slice(PROXY.length),m=raw.match(/^(https?):\/+(.*)$/i);if(m)return m[1]+'://'+m[2];try{return decodeURIComponent(raw)}catch(e){return null}}
+/* Register the proxy's service worker early so the first page already loads fully. */
+try{if(navigator.serviceWorker&&isSecureContext)navigator.serviceWorker.register('/service/__sw.js',{scope:'/service/'}).catch(()=>{})}catch(e){}
 function newTab(u){const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.append(a);a.click();a.remove()}
 function lumioBrowser(b){
  b.innerHTML=`<div class=lb><div class=lbt><button class=lbb data-b=back aria-label=Back>${ic('<path d="M15 5l-7 7 7 7"/>')}</button><button class=lbb data-b=fwd aria-label=Forward>${ic('<path d="M9 5l7 7-7 7"/>')}</button><button class=lbb data-b=re aria-label=Reload>${ic('<path d="M20 12a8 8 0 11-2.3-5.6M20 4v5h-5"/>')}</button><form class=lbf><input name=q placeholder="Search or enter address" autocapitalize=none spellcheck=false enterkeyhint=go aria-label="Address"></form><button class=lbb data-b=ext aria-label="Open in new tab">${ic('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/>')}</button></div>
- <div class=lbh><div class=lbg>${IC.globe}</div><p class=lbs>Search or type an address. Pages load through the Tuffs proxy.</p><div class=lbq>${QUICK.map(q=>`<button class=btn data-u="${esc(q[1])}">${esc(q[0])}</button>`).join('')}</div><p class=lbn>Simple sites work best. Logins, videos and heavy apps often don't load through this proxy.</p></div>
- <div class="lbh lbx" hidden></div><iframe class=lbi hidden referrerpolicy=no-referrer allow="fullscreen;autoplay"></iframe></div>`;
+ <div class=lbh><div class=lbg>${IC.globe}</div><p class=lbs>Search with Bing or type an address. Pages load through the Tuffs proxy.</p><div class=lbq>${QUICK.map(q=>`<button class=btn data-u="${esc(q[1])}">${esc(q[0])}</button>`).join('')}</div><p class=lbn>Simple sites work best. Logins, videos and heavy apps often don't load through this proxy.</p></div>
+ <div class="lbh lbx" hidden></div><iframe class=lbi hidden allow="fullscreen;autoplay;clipboard-write" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-pointer-lock allow-presentation"></iframe></div>`;
  const fr=$('.lbi',b),home=$('.lbh',b),fail=$('.lbx',b),inp=$('input',b);let url='';
  const showFail=()=>{fr.hidden=true;fail.hidden=false;fail.innerHTML=`<b style="display:block;margin-bottom:8px">Couldn't load that page.</b><p class=lbs>The proxy couldn't open it. Some sites block proxies.</p>`};
  const nav=v=>{const u=parseAddr(v);if(!u)return;url=u;inp.value=u;home.hidden=true;fail.hidden=true;fr.hidden=false;const src=proxify(u);fr.src=src;
   const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);fetch(src,{signal:ctl.signal,method:'GET'}).then(r=>{clearTimeout(tm);if(!r.ok&&url===u)showFail()}).catch(()=>{clearTimeout(tm)})};
- fr.onload=()=>{try{const l=fr.contentWindow.location,real=unproxy(l.pathname);if(real){url=real+(l.search&&real.indexOf('?')<0?l.search:'');if(document.activeElement!==inp)inp.value=url}}catch(e){}};
+ fr.onload=()=>{try{const l=fr.contentWindow.location,real=unproxy(l.pathname);if(real){url=real+(/^https?%3A/i.test(l.pathname.slice(PROXY.length))&&real.indexOf('?')>=0?'':l.search);if(document.activeElement!==inp)inp.value=url}}catch(e){}};
  $('.lbf',b).onsubmit=e=>{e.preventDefault();inp.blur();nav(inp.value)};
  inp.onfocus=()=>inp.select();
  b.onclick=e=>{const q=e.target.closest('[data-u]');if(q){nav(q.dataset.u);return}const t=e.target.closest('[data-b]');if(!t)return;const a=t.dataset.b;
