@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name=lumio-build content=dcd4df354d54><meta charset="utf-8">
+<html lang="en"><head><meta name=lumio-build content=7a869fa4a672><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lumio</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
@@ -309,6 +309,7 @@ body.kbd .ain{display:none}body.kbd .aicomp{padding-bottom:6px}
 #dock button[data-a=ai]{background:linear-gradient(150deg,#ffd79a,var(--a,#f2a54a) 70%);color:#2a1608;border-color:rgba(255,226,180,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 14px rgba(242,165,74,.45)}
 #dock button[data-a=ai]:hover{color:#1e0f04}
 #dock button[data-a=ai] svg{stroke-width:1.9}
+.aistat.ok span{white-space:pre-line}
 
 /* menubar logo + About use the app icon */
 #mb .lg{background:url(/launcher/icon.svg) center/cover;border-radius:4px}
@@ -487,6 +488,19 @@ body.kbd .ain{display:none}body.kbd .aicomp{padding-bottom:6px}
 /* dock: size icons by how many there are (Chat made it 9, admins get 10) so it never spills off a phone */
 @media(max-width:700px){#dock button{width:clamp(22px,calc((100vw - 36px - var(--dn,9) * 5px) / var(--dn,9)),44px);height:clamp(22px,calc((100vw - 36px - var(--dn,9) * 5px) / var(--dn,9)),44px)}}
 
+/* ---- Lumio Chat in an iframe (/chat/) ---- */
+.body[data-chat]{overflow:hidden}
+.lcframe{display:block;width:100%;height:100%;border:0;background:#313338}
+#dock button .lcb{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#e5484d;color:#fff;font:700 11px/18px system-ui,-apple-system,sans-serif;text-align:center;box-shadow:0 0 0 2px rgba(14,18,26,.85);pointer-events:none}
+#dock button .lcb.dot{min-width:10px;width:10px;height:10px;padding:0;top:0;right:0}
+#lock .lcinv{position:fixed;z-index:2;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%);width:max-content;max-width:calc(100% - 28px);padding:10px 16px;border-radius:14px;background:rgba(88,101,242,.92);color:#fff;font-weight:600;font-size:14px;line-height:1.35;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.pfban{position:relative;overflow:hidden}.pfban img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pfcard .pfban:has(img){height:110px}
+.pfeh{position:relative;overflow:hidden}.pfeh.hasban{padding-top:72px}
+.pfeh .pfebn{position:absolute;left:0;right:0;top:0;width:100%;height:64px;object-fit:cover;pointer-events:none}
+.pfeh>*:not(.pfebn){position:relative}
+.pfl small{font-weight:500;opacity:.6;margin-left:6px;text-transform:none;letter-spacing:0}
+
 </style></head><body>
 <div id="pin" role="dialog" aria-label="Enter PIN"><form id="pinf" autocomplete="off" novalidate>
 <label for="pini">PIN</label>
@@ -516,7 +530,8 @@ html.pin-ok #pin{display:none}
 <script>
 (()=>{const R=document.documentElement,K='lumio_pin';
  let okd=false;try{okd=sessionStorage.getItem(K)==='1'}catch(e){}
- if(okd){R.classList.add('pin-ok');return}
+ // invite links (riseboosts.com/i/CODE → /?invite=CODE) go straight to Lumio's sign-in
+ if(okd||/[?&]invite=/.test(location.search)){R.classList.add('pin-ok');return}
  const f=document.getElementById('pinf'),i=document.getElementById('pini'),e=document.getElementById('pine');
  // while the PIN screen is up, keys must not reach the launcher underneath
  addEventListener('keydown',ev=>{if(!R.classList.contains('pin-ok')){ev.stopImmediatePropagation();if(ev.target!==i&&ev.key.length===1)i.focus()}},true);
@@ -767,7 +782,7 @@ function aiParse(t,admin){const acts=[],seen=new Set(),cards=[];let pending=fals
  return {txt,pending,cards,acts:acts.map(a=>{if(a.k=='app')return AI_APPS.includes(a.id)&&APPS[a.id]?{...a,label:'Open '+APPS[a.id].n}:null;
   if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
 function aiActs(t){return aiParse(t,false)}
-const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats'};
+const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats',chat_servers:'List chat servers',chat_reports:'Show chat reports',chat_resolve:'Resolve a chat report',chat_delete_message:'Delete a chat message',chat_server_ban:'Ban from a chat server',chat_transfer:'Transfer a chat server',chat_delete_server:'Delete a chat server'};
 function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'announce':return d.text?[['Text',d.text]]:[['Text','(remove the announcement)']];
  case 'settings':return ['signupsOpen','chatEnabled','maintenance'].filter(k=>typeof d[k]=='boolean').map(k=>[{signupsOpen:'Signups',chatEnabled:'Chat',maintenance:'Maintenance mode'}[k],b(d[k])]);
@@ -776,6 +791,13 @@ function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'game_edit':{const g=AI_CAT&&AI_CAT.find(x=>x.id==d.id);return [['Game',g?g.title:d.id],['New name',d.title||'(original name)']]}
  case 'game_hide':{const g=AI_CAT&&AI_CAT.find(x=>x.id==d.id);return [['Game',g?g.title:d.id],['Change',d.hidden?'Hide from catalog':'Show in catalog']]}
  case 'stats':return [['Shows','accounts, sessions and chat numbers from the database']];
+ case 'chat_servers':return [['Shows','every Lumio Chat server, owner and member count']];
+ case 'chat_reports':return [['Shows','open reported messages']];
+ case 'chat_resolve':return [['Report','#'+(d.id??'?')],['Change',d.delete?'Delete the reported message':'Dismiss the report']];
+ case 'chat_delete_message':return [['Message','#'+(d.mid??'?')]];
+ case 'chat_server_ban':return [['Server',d.sid||'?'],['Account',d.username||'?'],['Reason',d.reason||'(none)']];
+ case 'chat_transfer':return [['Server',d.sid||'?'],['New owner',d.to||'?']];
+ case 'chat_delete_server':return [['Server',d.sid||'?'],['Change','Delete the server and its messages']];
  default:return []}}
 function aiDiffHtml(diff){return diff.split('\n').map(l=>{const c=l.startsWith('+++')||l.startsWith('---')?'h':l[0]=='+'?'a':l[0]=='-'?'d':l.startsWith('@@')?'h':'';return `<span class="dl ${c}">${esc(l)||' '}</span>`}).join('')}
 
@@ -922,10 +944,9 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','
  const R={
   async Overview(){const o=await adminApi('/api/admin/overview');
    const stat=(n,l)=>`<div class=ads><b>${n}</b><small>${l}</small></div>`;
-   return `<div class=adg>${stat(o.users,'accounts')}${stat(o.admins,'admins')}${stat(o.banned,'suspended')}${stat(o.sessions,'active sessions')}${stat(o.newDay,'new in 24h')}${stat(o.newWeek,'new in 7 days')}${stat(o.chatTotal,'chat messages')}${stat(o.chatDay,'chat in 24h')}</div>
-   <h4>Chat rooms</h4><p class=adm>${['General','Games','Random'].map(r=>esc(r)+' '+(o.rooms[r]||0)).join(' · ')}</p>
+   return `<div class=adg>${stat(o.users,'accounts')}${stat(o.admins,'admins')}${stat(o.banned,'suspended')}${stat(o.sessions,'active sessions')}${stat(o.newDay,'new in 24h')}${stat(o.newWeek,'new in 7 days')}${stat(o.chatTotal,'chat messages')}${stat(o.chatDay,'chat in 24h')}${stat(o.servers||0,'chat servers')}${stat(o.openReports||0,'open reports')}</div>
    <h4>Newest accounts</h4>${(o.latestUsers||[]).map(u=>`<div class=adr><div><b>${esc(u.username)}</b>${u.is_admin?'<i class=adp>Admin</i>':''}${u.is_banned?'<i class="adp bad">Suspended</i>':''}</div><small>joined ${day(u.created_at)}</small></div>`).join('')||'<p class=adm>No accounts yet.</p>'}
-   <h4>Latest chat</h4>${(o.latestChat||[]).map(m=>`<div class=adr><div><b>#${esc(m.room)} · ${esc(m.user)}</b><p>${esc(m.text)}</p></div><small>${when(m.ts)}</small></div>`).join('')||'<p class=adm>No chat messages.</p>'}`},
+   <h4>Latest in the Lumio server</h4>${(o.latestChat||[]).map(m=>`<div class=adr><div><b>#${esc(m.room)} · ${esc(m.user)}</b><p>${esc(m.text)}</p></div><small>${when(m.ts)}</small></div>`).join('')||'<p class=adm>No chat messages.</p>'}`},
   async Accounts(){const q=($('.adq',B)||{}).value||'';const d=await adminApi('/api/admin/users'+(q.trim()?'?q='+encodeURIComponent(q.trim()):''));users=d.users||[];
    return `<div class=adbar><input class=adq type=search placeholder="Search accounts" value="${esc(q)}" aria-label="Search accounts" autocapitalize=none spellcheck=false><button type=button class=btn data-do=refresh>Refresh</button></div><div class=adreset hidden></div>`+
    (users.length?users.map((x,i)=>{const self=x.username.toLowerCase()===me();return `<div class=adr><div class=adrh><b>${esc(x.username)}</b>${x.is_admin?'<i class=adp>Admin</i>':''}${x.is_banned?'<i class="adp bad">Suspended</i>':''}${self?'<i class=adp>You</i>':''}</div>
@@ -937,9 +958,14 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','
    return `<div class=adbar><input class=adq type=search placeholder="Search ${games.length} games" value="${esc(q)}" aria-label="Search games" autocapitalize=none spellcheck=false><button type=button class=btn data-do=greload>Refresh</button></div><p class=adm>${hid} hidden · ${Object.values(gov).filter(o=>o.title).length} renamed. Changes show for everyone.</p>`+
    (list.slice(0,80).map(g=>{const o=gov[g.id]||{};return `<div class=adr><div class=adrh><b>${esc(o.title||g.title||g.id)}</b>${o.hidden?'<i class="adp bad">Hidden</i>':''}${o.title?'<i class=adp>Renamed</i>':''}</div><small>${esc(g.id)} · ${esc(g.category||'Games')}${o.title?' · original name: '+esc(g.title||g.id):''}</small>
     <div class=adacts>${act('Rename','grename',`data-g="${esc(g.id)}"`)}${act(o.hidden?'Show game':'Hide game','ghide',`data-g="${esc(g.id)}"`)}${o.title||o.hidden?act('Reset','greset',`data-g="${esc(g.id)}"`):''}</div></div>`}).join('')||'<p class=adm>No games match.</p>')+(list.length>80?`<p class=adm>Showing 80 of ${list.length}. Search to narrow it down.</p>`:'')},
-  async Chat(){const room=($('.adroom',B)||{}).value||'All';const d=await adminApi('/api/admin/chat?room='+encodeURIComponent(room));
-   return `<div class=adbar><select class=adroom aria-label="Chat room">${['All','General','Games','Random'].map(r=>`<option${r==room?' selected':''}>${r}</option>`).join('')}</select><button type=button class=btn data-do=refresh>Refresh</button><button type=button class="btn adx" data-do=cclear>Clear</button></div>`+
-   ((d.messages||[]).map(m=>`<div class=adr><div class=adrh><b>#${esc(m.room)} · ${esc(m.user)}</b></div><p>${esc(m.text)}</p><small>${when(m.ts)}</small><div class=adacts>${act('Delete message','cdel',`data-id=${m.id}`,1)}</div></div>`).join('')||'<p class=adm>No messages.</p>')},
+  async Chat(){const view=($('.adroom',B)||{}).value||'Open reports';const opt=['Open reports','All reports','Servers'];
+   const bar=`<div class=adbar><select class=adroom aria-label="Chat view">${opt.map(r=>`<option${r==view?' selected':''}>${r}</option>`).join('')}</select><button type=button class=btn data-do=refresh>Refresh</button></div>`;
+   if(view=='Servers'){const d=await adminApi('/api/lc/admin/servers');const sv=d.servers||[];
+    return bar+`<p class=adm>${sv.length} Lumio Chat server${sv.length==1?'':'s'}. Owners run their own servers; you can step in here.</p>`+(sv.map(x=>`<div class=adr><div class=adrh><b>${esc(x.n)}</b>${x.id=='lumio'?'<i class=adp>Official</i>':''}${x.reports?`<i class="adp bad">${x.reports} open report${x.reports==1?'':'s'}</i>`:''}</div><small>owner ${esc(x.ownerName)} · ${x.members} member${x.members==1?'':'s'} · ${x.msgs} message${x.msgs==1?'':'s'} · created ${day(x.ts)}</small>
+    <div class=adacts>${act('Ban a user','lcban',`data-s="${esc(x.id)}" data-sn="${esc(x.n)}"`)}${act('Transfer','lctr',`data-s="${esc(x.id)}" data-sn="${esc(x.n)}"`)}${x.id=='lumio'?'':act('Delete server','lcdel',`data-s="${esc(x.id)}" data-sn="${esc(x.n)}"`,1)}</div></div>`).join('')||'<p class=adm>No servers yet.</p>')}
+   const d=await adminApi('/api/lc/admin/reports'+(view=='All reports'?'?all=1':''));const U=d.users||{},nm=k=>U[k]?U[k].name:k;
+   return bar+((d.reports||[]).map(r=>`<div class=adr><div class=adrh><b>${esc(r.server)}${r.chan?' · #'+esc(r.chan):''} · ${esc(nm(r.author))}</b>${r.ai?'<i class=adp>Lumio AI flag</i>':''}${r.status!='open'?`<i class=adp>${esc(r.status)}</i>`:''}</div><p>${esc(r.text)}</p><small>${r.ai?'Auto-moderation':'Reported by '+esc(nm(r.by))}${r.reason?': '+esc(r.reason):''} · ${when(r.ts)}</small>
+    ${r.status=='open'?`<div class=adacts>${act('Remove message','lcrr',`data-id=${r.id}`,1)}${act('Dismiss','lcrd',`data-id=${r.id}`)}</div>`:''}</div>`).join('')||`<p class=adm>${view=='Open reports'?'No open reports. Reported messages from every Lumio Chat server show up here.':'No reports yet.'}</p>`)},
   async 'AI log'(){const d=await adminApi('/api/ai/admin-action');const l=d.log||[];
    return `<p class=adm>Every admin action Lumio AI ran, and every code proposal, newest first.</p>`+(l.map(x=>`<div class=adr><div class=adrh><b>${esc(x.action)}</b>${x.ok?'<i class=adp>Done</i>':'<i class="adp bad">Failed</i>'}</div><p>${esc(x.result||'')}</p><small>${esc(x.username)} · ${when(x.created_at)}</small></div>`).join('')||'<p class=adm>No AI admin actions yet.</p>')},
   async Site(){const s=await adminApi('/api/admin/settings');
@@ -971,8 +997,11 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','
      run(async()=>{await adminApi('/api/admin/game',{id:d.g,title:name,hidden:!!o.hidden});const n=name.trim();if(n)gov[d.g]={...o,title:n};else if(o.hidden)gov[d.g]={hidden:true};else delete gov[d.g];CAT_P=null},'Game renamed.');break}
    case 'ghide':{const o=gov[d.g]||{};run(async()=>{await adminApi('/api/admin/game',{id:d.g,title:o.title||'',hidden:!o.hidden});if(!o.hidden)gov[d.g]={...o,hidden:true};else if(o.title)gov[d.g]={title:o.title};else delete gov[d.g];CAT_P=null},o.hidden?'Game is visible again.':'Game hidden from the catalog.');break}
    case 'greset':run(async()=>{await adminApi('/api/admin/game',{id:d.g,reset:true});delete gov[d.g];CAT_P=null},'Game reset to its original name and visibility.');break;
-   case 'cdel':run(()=>adminApi('/api/admin/chat-delete',{id:+d.id}),'Message deleted.');break;
-   case 'cclear':{const room=$('.adroom',B).value;if(!confirm(room=='All'?'Clear ALL chat messages in every room?':'Clear all messages in #'+room+'?'))return;run(()=>adminApi('/api/admin/chat-clear',{room}),r=>'Cleared '+r.cleared+' messages.');break}
+   case 'lcrr':run(()=>adminApi('/api/lc/admin/act',{op:'resolveReport',id:+d.id,del:true}),'Message removed.');break;
+   case 'lcrd':run(()=>adminApi('/api/lc/admin/act',{op:'resolveReport',id:+d.id}),'Report dismissed.');break;
+   case 'lcban':{const u=prompt('Username to ban from '+d.sn+':');if(!u||!u.trim())return;const why=prompt('Reason (optional):','')||'';run(()=>adminApi('/api/lc/admin/act',{op:'serverBan',sid:d.s,username:u.trim(),reason:why}),r=>r.summary);break}
+   case 'lctr':{const u=prompt('Give '+d.sn+' to which username?');if(!u||!u.trim())return;run(()=>adminApi('/api/lc/admin/act',{op:'transferServer',sid:d.s,to:u.trim()}),r=>r.summary);break}
+   case 'lcdel':if(!confirm('Delete the server '+d.sn+' with all its channels and messages? This cannot be undone.'))return;run(()=>adminApi('/api/lc/admin/act',{op:'deleteServer',sid:d.s}),r=>r.summary);break;
    case 'save':{const on=k=>$(`[data-st=${k}]`,B).classList.contains('on');run(()=>adminApi('/api/admin/settings',{announcement:$('.adann',B).value,signupsOpen:on('signupsOpen'),chatEnabled:on('chatEnabled'),maintenance:on('maintenance')}),'Site controls saved.');break}}};
  b.closest('.win').onclose=()=>{alive=false};
  // Ask the server first; the panel only renders for a confirmed admin.
@@ -1085,10 +1114,12 @@ function lumioTabs(b){
  b.nav=u=>{const t=cur();if(t.url)add(u);else go(t,u)};
  paintTabs();showTab(cur())}
 /* ===== Lumio Chat + profiles =====
- * Chat: /api/chat/messages (poll every 2.5 s while the window is open and the
- * page is visible), /api/chat/delete; admins also get /api/admin/chat-clear and
- * /api/admin/set-banned. Profiles: /api/profile, pictures from /api/avatar.
- * All user text is inserted with textContent / esc(), never as HTML. */
+ * Chat: the full Lumio Chat client lives at /chat/ (servers, channels, DMs,
+ * invites, Lumio AI) and runs here in a same-origin iframe. It talks back with
+ * postMessage {lumioChat:1, ...}: action:'signin' (open the sign-in screen),
+ * unread/any (dock badge), profile (profile changed).
+ * Profiles: /api/profile, pictures from /api/avatar, uploads (GIF kept as-is)
+ * through /api/lc/upload. All user text goes in with textContent / esc(). */
 const PF_ACCENTS=['#f2a54a','#ff7a59','#ff5d8f','#b07cff','#5b8cff','#3fc1c9','#4cd07d','#e0c341'];
 const PF_GLYPH={star:'<path d="M12 3.6l2.5 5.4 5.9.6-4.4 4 1.2 5.8L12 16.5l-5.2 2.9 1.2-5.8-4.4-4 5.9-.6z"/>',moon:'<path d="M19 14.5A7.5 7.5 0 019.5 5a7.5 7.5 0 109.5 9.5z"/>',bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',heart:'<path d="M12 19.5s-7.5-4.4-7.5-10A4.2 4.2 0 0112 7a4.2 4.2 0 017.5 2.5c0 5.6-7.5 10-7.5 10z"/>',leaf:'<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l8-8"/>',flame:'<path d="M12 21c-3.6 0-6-2.4-6-5.6 0-3.3 2.6-5 3.4-8.4 1.9 1.4 2.4 3.3 2.2 4.8 1-.6 1.7-1.8 1.9-3.2 2.3 1.9 3.5 4.3 3.5 6.8 0 3.2-1.9 5.6-5 5.6z"/>',wave:'<path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/>',pad:'<path d="M7.6 7h8.8a5 5 0 015 5.5l-.4 3.5a2.6 2.6 0 01-4.6 1.3L15 15.6H9l-1.4 1.7A2.6 2.6 0 013 16l-.4-3.5A5 5 0 017.6 7z"/><path d="M8 9.9v4M6 11.9h4"/>',note:'<path d="M9 17.5V6.6l11-2.4v10.9"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.1" r="2.5"/>',planet:'<circle cx="12" cy="12" r="5"/><path d="M4.5 15.5c-2 2.4 6.8-.3 11.5-4.5 4.7-4.2 6.2-8.3 3.5-6.5"/>',flower:'<circle cx="12" cy="12" r="2.4"/><path d="M12 9.6V4.5M12 14.4v5.1M9.6 12H4.5M14.4 12h5.1M10.3 10.3L6.7 6.7M13.7 13.7l3.6 3.6M13.7 10.3l3.6-3.6M10.3 13.7l-3.6 3.6"/>',crown:'<path d="M4 17.5h16M5 15l-1-8 5 4 3-6 3 6 5-4-1 8z"/>'};
 const PF_PRESETS={p1:['star','#ffd27a','#f08a24'],p2:['moon','#9fb4ff','#5b4bd6'],p3:['bolt','#ffe680','#e0a400'],p4:['heart','#ff9db8','#e0386b'],p5:['leaf','#9be7a6','#2f9e57'],p6:['flame','#ffb27a','#e5482b'],p7:['wave','#8fe3f0','#2a8fb8'],p8:['pad','#c9a6ff','#7a3fe0'],p9:['note','#ffb3d9','#c2389a'],p10:['planet','#ffd9a0','#c06a2b'],p11:['flower','#ffe0f0','#e276a8'],p12:['crown','#fff0a8','#c99a1d']};
@@ -1106,7 +1137,7 @@ async function pfCard(host,key,onChange){const sh=document.createElement('div');
  const box=sh.firstChild;
  try{const {profile:p}=await pfApi('/api/profile?u='+encodeURIComponent(key));const ac=PF_ACCENTS.includes(p.accent)?p.accent:'var(--a)';
   box.style.setProperty('--pa',ac);
-  box.innerHTML=`<div class=pfban></div><button type=button class=pfx data-pfx aria-label=Close>${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button>${pfAvatar({...p,name:p.displayName},'pfav pfbig')}<b class=pfn></b><small class=pfu></small>${p.isAdmin?'<span class=pfbadge>Admin</span>':''}${p.isBanned?'<span class="pfbadge bad">Suspended</span>':''}<p class=pfbio></p><small class=pfj></small><div class=pfacts></div>`;
+  box.innerHTML=`<div class=pfban>${p.banner?`<img src="${esc(p.banner)}" alt="">`:''}</div><button type=button class=pfx data-pfx aria-label=Close>${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button>${pfAvatar({...p,name:p.displayName},'pfav pfbig')}<b class=pfn></b><small class=pfu></small>${p.isAdmin?'<span class=pfbadge>Admin</span>':''}${p.isBanned?'<span class="pfbadge bad">Suspended</span>':''}<p class=pfbio></p><small class=pfj></small><div class=pfacts></div>`;
   $('.pfn',box).textContent=p.displayName;$('.pfu',box).textContent='@'+p.username;const bio=$('.pfbio',box);bio.textContent=p.bio||'';bio.hidden=!p.bio;$('.pfj',box).textContent='Joined '+pfJoined(p.joined);
   const acts=$('.pfacts',box);
   if(p.isMe)acts.innerHTML='<button type=button class="btn on" data-pfe>Edit profile</button>';
@@ -1116,96 +1147,69 @@ async function pfCard(host,key,onChange){const sh=document.createElement('div');
    b.disabled=true;try{await pfApi('/api/admin/set-banned',{username:p.username,banned:ban});toast(ban?'@'+p.username+' suspended':'@'+p.username+' unsuspended');close();onChange&&onChange()}catch(err){toast(err.message);b.disabled=false}}}
  catch(err){box.innerHTML=`<button type=button class=pfx data-pfx aria-label=Close>${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button><div class=pfload></div>`;$('.pfload',box).textContent=err.message}}
 function openProfileEditor(){open('account');setTimeout(()=>{const b=document.querySelector('[data-acct]');if(b&&b.showTab)b.showTab('profile')},60)}
-/* Resize a picked image to a 160px square JPEG data URL small enough for the server cap. */
-function pfShrink(file){return new Promise((res,rej)=>{if(!/^image\//.test(file.type))return rej(new Error('Pick an image file.'));if(file.size>12e6)return rej(new Error('That picture is too big.'));
- const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const S=160,c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d'),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,S,S);URL.revokeObjectURL(u);
-  let q=.86,d=c.toDataURL('image/jpeg',q);while(d.length>60000&&q>.4){q-=.12;d=c.toDataURL('image/jpeg',q)}d.length>60000?rej(new Error('That picture is too big.')):res(d)};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('That picture couldn\'t be read.'))};im.src=u})}
+/* Upload a picked picture as raw bytes. GIFs go up untouched (animation kept);
+ * other formats are scaled down on a canvas first. The server re-checks the
+ * file type from its bytes and the size cap. kind: avatar (1 MB) | banner (2 MB). */
+const PF_CAP={avatar:1048576,banner:2097152};
+async function pfUpload(file,kind){const cap=PF_CAP[kind];
+ const head=new Uint8Array(await file.slice(0,12).arrayBuffer()),hx=[...head].map(x=>x.toString(16).padStart(2,'0')).join('');
+ const gif=hx.startsWith('47494638'),ok=gif||hx.startsWith('89504e47')||hx.startsWith('ffd8ff')||(hx.startsWith('52494646')&&hx.slice(16,24)=='57454250');
+ if(!ok)throw new Error('Pick a GIF, PNG, JPEG or WebP picture.');
+ let body=file;
+ if(gif){if(file.size>cap)throw new Error('That GIF is over '+(cap>>20)+' MB. Pick a smaller one.')}
+ else if(file.size>cap||kind=='avatar'){body=await new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=async()=>{URL.revokeObjectURL(u);
+   const W=kind=='avatar'?512:1500,H=kind=='avatar'?512:600,sc=Math.min(1,W/im.width,H/im.height),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*sc));c.height=Math.max(1,Math.round(im.height*sc));c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+   for(const q of [.9,.8,.65,.5]){const bl=await new Promise(r=>c.toBlob(r,'image/webp',q))||await new Promise(r=>c.toBlob(r,'image/jpeg',q));if(bl&&bl.size<=cap)return res(bl)}rej(new Error('That picture is too big.'))};
+  im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('That picture couldn\'t be read.'))};im.src=u})}
+ const r=await fetch('/api/lc/upload?kind='+kind,{method:'POST',headers:{authorization:'Bearer '+(SESSION?SESSION.t:''),'content-type':'application/octet-stream'},body});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||('Upload failed ('+r.status+').'));return d}
 
 /* Profile editor, rendered inside the Account app. */
-function lumioProfileEdit(box){box.innerHTML='<div class=pfload>Loading your profile…</div>';let P=null,draft={},busy=false;
- const paint=()=>{const v={...P,...draft},name=v.displayName??P.displayName;const prev={key:P.key,av:'avatar' in draft?(draft.avatar&&draft.avatar.startsWith('data:')?'tmp':draft.avatar):P.av,avv:P.avv,name:name||P.username,accent:v.accent||P.accent};
-  box.innerHTML=`<div class=pfe style="--pa:${PF_ACCENTS.includes(prev.accent)?prev.accent:'var(--a)'}"><div class=pfeh><span class=pfprev></span><div><b class=pfn></b><small class=pfu></small><small class=pfj></small></div></div>
+function lumioProfileEdit(box){box.innerHTML='<div class=pfload>Loading your profile…</div>';let P=null,draft={},busy=false,up='';
+ const paint=()=>{const v={...P,...draft},name=v.displayName??P.displayName;const prev={key:P.key,av:'avatar' in draft?draft.avatar:P.av,avv:P.avv,name:name||P.username,accent:v.accent||P.accent};
+  box.innerHTML=`<div class=pfe style="--pa:${PF_ACCENTS.includes(prev.accent)?prev.accent:'var(--a)'}"><div class="pfeh${P.banner?' hasban':''}">${P.banner?`<img class=pfebn src="${esc(P.banner)}" alt="">`:''}<span class=pfprev></span><div><b class=pfn></b><small class=pfu></small><small class=pfj></small></div></div>
   <label class=pfl>Picture</label><div class=pfgrid>${Object.keys(PF_PRESETS).map(k=>`<button type=button data-av=${k} class="${prev.av==k?'on':''}" aria-label="Avatar ${k.slice(1)}">${pfAvatar({av:k})}</button>`).join('')}</div>
-  <div class=pfrow><label class="btn pfup">Upload picture<input type=file accept="image/png,image/jpeg,image/webp" hidden></label>${prev.av?'<button type=button class=btn data-avx>Use my initial</button>':''}</div>
+  <div class=pfrow><label class="btn pfup">${up=='avatar'?'Uploading…':'Upload picture or GIF'}<input type=file data-up=avatar accept="image/gif,image/png,image/jpeg,image/webp" hidden ${up?'disabled':''}></label>${prev.av?'<button type=button class=btn data-avx>Use my initial</button>':''}</div>
+  <label class=pfl>Banner <small>GIF, PNG, JPEG or WebP, up to 2 MB</small></label><div class=pfrow><label class="btn pfup">${up=='banner'?'Uploading…':(P.banner?'Change banner':'Upload banner')}<input type=file data-up=banner accept="image/gif,image/png,image/jpeg,image/webp" hidden ${up?'disabled':''}></label>${P.banner?'<button type=button class=btn data-bnx>Remove banner</button>':''}</div>
   <label class=pfl for=pfdn>Display name</label><input id=pfdn class=pfin maxlength=24 autocomplete=nickname placeholder="${esc(P.username)}">
   <label class=pfl for=pfbio>Bio <small class=pfcnt></small></label><textarea id=pfbio class=pfin rows=3 maxlength=160 placeholder="A line about you (optional)"></textarea>
   <label class=pfl>Accent</label><div class=pfacc>${PF_ACCENTS.map(c=>`<button type=button data-ac="${c}" style="background:${c}" class="${prev.accent==c?'on':''}" aria-label="Accent ${c}"></button>`).join('')}</div>
   <p class=pferr role=alert hidden></p><button type=button class="btn on pfsave" ${busy?'disabled':''}>${busy?'Saving…':'Save profile'}</button></div>`;
-  $('.pfprev',box).innerHTML=prev.av=='tmp'?`<span class=pfav><img alt="" src="${draft.avatar}"></span>`:pfAvatar(prev);
+  $('.pfprev',box).innerHTML=pfAvatar(prev);
   $('.pfn',box).textContent=name||P.username;$('.pfu',box).textContent='@'+P.username;$('.pfj',box).textContent='Joined '+pfJoined(P.joined);
   const dn=$('#pfdn',box),bi=$('#pfbio',box),cnt=$('.pfcnt',box);dn.value=name===P.username&&!('displayName' in draft)?(P.displayName===P.username?'':P.displayName):(name||'');bi.value=v.bio||'';cnt.textContent=bi.value.length+'/160';
   dn.oninput=()=>{draft.displayName=dn.value;$('.pfn',box).textContent=dn.value.trim()||P.username};bi.oninput=()=>{draft.bio=bi.value;cnt.textContent=bi.value.length+'/160'};
-  $('input[type=file]',box).onchange=async e=>{const f=e.target.files[0];if(!f)return;try{draft.avatar=await pfShrink(f);paint()}catch(err){showErr(err.message)}}};
+  box.querySelectorAll('input[type=file]').forEach(inp=>inp.onchange=async e=>{const f=e.target.files[0],kind=inp.dataset.up;if(!f)return;up=kind;paint();
+   try{await pfUpload(f,kind);const d=await pfApi('/api/profile');P=d.profile;if(kind=='avatar')delete draft.avatar;up='';paint();toast(kind=='avatar'?'Picture updated':'Banner updated');window.dispatchEvent(new Event('lumio-profile'))}catch(err){up='';paint();showErr(err.message)}})};
  const showErr=m=>{const p=$('.pferr',box);if(!p)return;p.hidden=!m;p.textContent=m||''};
  box.onclick=async e=>{const t=e.target.closest('button');if(!t||!P)return;
-  if(t.dataset.av){draft.avatar=t.dataset.av;paint();return}if('avx' in t.dataset){draft.avatar=null;paint();return}if(t.dataset.ac){draft.accent=t.dataset.ac;paint();return}
+  if(t.dataset.av){draft.avatar=t.dataset.av;paint();return}if('avx' in t.dataset){draft.avatar=null;paint();return}
+  if('bnx' in t.dataset){t.disabled=true;try{const d=await pfApi('/api/profile',{banner:null});P=d.profile;paint();toast('Banner removed');window.dispatchEvent(new Event('lumio-profile'))}catch(err){showErr(err.message);t.disabled=false}return}if(t.dataset.ac){draft.accent=t.dataset.ac;paint();return}
   if(t.classList.contains('pfsave')){const body={};if('displayName' in draft)body.displayName=draft.displayName;if('bio' in draft)body.bio=draft.bio;if('accent' in draft)body.accent=draft.accent;if('avatar' in draft)body.avatar=draft.avatar;
    if(!Object.keys(body).length){toast('Nothing to save');return}busy=true;paint();
    try{const d=await pfApi('/api/profile',body);P=d.profile;draft={};busy=false;paint();toast('Profile saved');window.dispatchEvent(new Event('lumio-profile'))}catch(err){busy=false;paint();showErr(err.message)}}};
  pfApi('/api/profile').then(d=>{P=d.profile;paint()}).catch(err=>{box.innerHTML='<div class=pfload></div>';$('.pfload',box).textContent=err.message})}
 
-/* ---- Chat app ---- */
+/* ---- Chat app: /chat/ in an iframe ---- */
+const LC_CODE=/^[A-Za-z0-9]{4,20}$/;
+/* riseboosts.com/i/CODE lands on /?invite=CODE: keep the code for this tab,
+ * tidy the address bar, and open Chat with it once Lumio is unlocked. */
+let LC_INVITE=(()=>{try{const q=new URLSearchParams(location.search).get('invite');
+ if(q!=null){const u=new URL(location.href);u.searchParams.delete('invite');history.replaceState(null,'',u.pathname+u.search+u.hash);const c=LC_CODE.test(q)?q:'invalid';sessionStorage.setItem('lumio_invite',c);return c}
+ return sessionStorage.getItem('lumio_invite')||''}catch(e){return ''}})();
+if(LC_INVITE){PENDING='chat';const L=document.getElementById('lock');if(L&&!L.querySelector('.lcinv')){const n=document.createElement('div');n.className='lcinv';n.setAttribute('role','status');n.textContent=LC_INVITE=='invalid'?'That chat invite link isn\'t valid. Sign in to open Lumio Chat.':'You\'ve been invited to a Lumio Chat server. Sign in or create an account to join.';L.append(n)}}
+function lcBadge(n,any){const b=document.querySelector('#dock [data-a=chat]');if(!b)return;let s=b.querySelector('.lcb');
+ if(!n&&!any){if(s)s.remove();return}if(!s){s=document.createElement('span');s.className='lcb';b.append(s)}s.textContent=n?(n>99?'99+':String(n)):'';s.classList.toggle('dot',!n)}
+addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||e.data.lumioChat!==1)return;const d=e.data;
+ if(d.action=='signin'){if(d.invite&&LC_CODE.test(d.invite)){LC_INVITE=d.invite;try{sessionStorage.setItem('lumio_invite',d.invite)}catch(x){}PENDING='chat'}
+  if(AUTH.mode=='user'){toast('Your session ended. Sign in again.')}signOut().then(()=>{if(LC_INVITE)PENDING='chat'});return}
+ if('unread' in d){lcBadge(+d.unread||0,!!d.any);return}
+ if(d.profile)window.dispatchEvent(new Event('lumio-profile'))});
 function lumioChat(b){b.dataset.chat=1;
- const CIC={send:ic('<path d="M12 19V5M5 12l7-7 7 7"/>'),more:ic('<circle cx="5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="19" cy="12" r="1.3" fill="currentColor"/>'),del:ic('<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>'),down:ic('<path d="M12 5v14M5 12l7 7 7-7"/>')};
- let room=localStorage.getItem('lumio_chat_room')||'General',rooms=['General','Games','Random'],msgs=[],me=null,timer=0,fails=0,sending=false,stopped=false,lastErr='';
- b.innerHTML=`<div class=ch><header class=chh><div class=chrooms role=tablist></div><button type=button class=chme aria-label="My profile"></button><button type=button class=chmore aria-label="Chat menu" hidden>${CIC.more}</button></header>
- <div class=chmenu hidden><button type=button data-cm=clear>${CIC.del}<span>Clear this room</span></button></div>
- <div class=chban hidden role=status></div><div class=chlist role=log aria-live=polite></div><button type=button class=chnew hidden>${CIC.down}<span>New messages</span></button>
- <form class=chf><div class=chbox><textarea rows=1 maxlength=500 placeholder="Message #General" enterkeyhint=send aria-label=Message></textarea><small class=chcnt hidden></small><button type=submit class=chsend aria-label=Send>${CIC.send}</button></div></form></div>`;
- const C=$('.ch',b),L=$('.chlist',b),T=$('textarea',b),F=$('.chf',b),BAN=$('.chban',b),NEW=$('.chnew',b),MORE=$('.chmore',b),MENU=$('.chmenu',b),CNT=$('.chcnt',b);
- const banner=(t,btn)=>{BAN.hidden=!t;BAN.innerHTML=t?`<span></span>${btn?`<button type=button class=btn data-cb>${esc(btn)}</button>`:''}`:'';if(t)BAN.firstChild.textContent=t};
- const near=()=>L.scrollHeight-L.scrollTop-L.clientHeight<80;
- const time=ts=>{const d=new Date(ts),n=new Date();const t=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});return d.toDateString()==n.toDateString()?t:d.toLocaleDateString([],{month:'short',day:'numeric'})+' '+t};
- const paintRooms=()=>{$('.chrooms',b).innerHTML=rooms.map(r=>`<button type=button role=tab data-room="${esc(r)}" class="${r==room?'on':''}" aria-selected=${r==room}># ${esc(r)}</button>`).join('');T.placeholder='Message #'+room};
- const paintMe=()=>{const el=$('.chme',b);if(AUTH.mode!='user'){el.hidden=true;return}el.hidden=false;el.innerHTML=pfAvatar(MEP||{name:AUTH.name,key:(AUTH.name||'').toLowerCase()})};
- let MEP=null;const loadMe=()=>{if(AUTH.mode!='user')return;pfApi('/api/profile').then(d=>{const p=d.profile;MEP={...p,name:p.displayName};paintMe()}).catch(()=>{})};
- const row=(m,prev)=>{const grp=prev&&prev.key==m.key&&m.ts-prev.ts<5*60e3;const el=document.createElement('div');el.className='chm'+(grp?' grp':'')+(m.mine?' mine':'');el.dataset.id=m.id;
-  const ac=PF_ACCENTS.includes(m.accent)?m.accent:'';
-  el.innerHTML=`${grp?'<span class=chsp></span>':`<button type=button class=chav data-who="${esc(m.key)}" aria-label="Profile">${pfAvatar(m)}</button>`}<div class=chb>${grp?'':`<div class=chmeta><button type=button class=chn data-who="${esc(m.key)}"${ac?` style="color:color-mix(in srgb,${ac} 75%,#fff)"`:''}></button><time></time></div>`}<div class=cht></div></div>${m.mine||(me&&me.isAdmin)?`<button type=button class=chdel data-del=${m.id} aria-label="Delete message">${CIC.del}</button>`:''}`;
-  if(!grp){$('.chn',el).textContent=m.name;$('time',el).textContent=time(m.ts);$('time',el).title=new Date(m.ts).toLocaleString()}
-  $('.cht',el).textContent=m.text;return el};
- const render=keep=>{const at=near(),top=L.scrollTop;L.innerHTML='';if(!msgs.length){const e=document.createElement('div');e.className='chempty';const lk=F.hidden;e.innerHTML=`<b></b><small>${lk?'':'Messages here are visible to everyone signed in to Lumio.'}</small>`;e.firstChild.textContent=lk?(AUTH.mode!='user'?'Sign in to see the conversation in #'+room+'.':'Chat isn\'t available right now.'):'No messages in #'+room+' yet. Say hi!';L.append(e);return}
-  msgs.forEach((m,i)=>L.append(row(m,msgs[i-1])));if(!keep||at)L.scrollTop=L.scrollHeight;else L.scrollTop=top};
- const schedule=ms=>{clearTimeout(timer);if(stopped)return;timer=setTimeout(poll,ms)};
- async function poll(first){if(stopped)return;if(!b.isConnected){stopped=true;return}
-  if(document.visibilityState!='visible'||(b.closest('.win')||{}).classList?.contains('min')){schedule(2500);return}
-  if(AUTH.mode!='user'){msgs=[];F.hidden=true;render();banner('Sign in to your Lumio account to read and send messages.','Sign in');F.hidden=true;schedule(5000);return}
-  const lastId=msgs.length?msgs[msgs.length-1].id:0,since=msgs.length?msgs[0].id:0,r0=room;
-  try{const d=await pfApi('/api/chat/messages?room='+encodeURIComponent(room)+(first||!lastId?'':'&after='+lastId+'&since='+since));if(r0!=room)return;
-   me=d.me;rooms=d.rooms||rooms;MORE.hidden=!me.isAdmin;F.hidden=false;fails=0;
-   if(first||!lastId){msgs=d.messages;paintRooms();render()}
-   else{let changed=false;if(d.alive){const al=new Set(d.alive),n=msgs.length;msgs=msgs.filter(m=>m.id<since||al.has(m.id));changed=msgs.length!=n}
-    const add=d.messages.filter(m=>!msgs.some(x=>x.id==m.id));if(add.length){const was=near();msgs=msgs.concat(add).slice(-200);render(true);if(!was&&add.some(m=>!m.mine))NEW.hidden=false}else if(changed)render(true)}
-   banner(d.chatEnabled===false?'Chat is turned off for everyone else right now. Admins can still post.':'');schedule(2500)}
-  catch(err){fails++;if(err.code=='banned'){banner(err.message);F.hidden=true;msgs=[];render();schedule(30000);return}
-   if(err.status==401){banner('Your session ended. Sign in again to chat.','Sign in');F.hidden=true;schedule(10000);return}
-   if(err.code=='off'){banner(err.message);F.hidden=true;msgs=[];render();schedule(15000);return}
-   banner(fails>1?'Can\'t reach chat right now. Retrying…':'');schedule(Math.min(15000,2500*2**fails))}}
- const setRoom=r=>{if(r==room)return;room=r;try{localStorage.setItem('lumio_chat_room',r)}catch(e){}msgs=[];NEW.hidden=true;paintRooms();L.innerHTML='<div class=chempty><small>Loading…</small></div>';poll(true)};
- const grow=()=>{T.style.height='auto';T.style.height=Math.min(T.scrollHeight,120)+'px';const n=T.value.length;CNT.hidden=n<400;CNT.textContent=n+'/500'};
- async function send(){const text=T.value.trim();if(!text||sending)return;sending=true;$('.chsend',b).disabled=true;
-  try{const d=await pfApi('/api/chat/messages',{room,text});T.value='';grow();if(!msgs.some(x=>x.id==d.message.id)){msgs.push(d.message);render()}L.scrollTop=L.scrollHeight;banner('')}
-  catch(err){banner(err.message);if(err.status==401||err.code=='banned')F.hidden=true}finally{sending=false;$('.chsend',b).disabled=false;if(innerWidth>700)T.focus()}}
- F.onsubmit=e=>{e.preventDefault();send()};T.oninput=grow;
- T.onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey&&!e.isComposing&&!matchMedia('(pointer:coarse)').matches){e.preventDefault();send()}};
- L.onscroll=()=>{if(near())NEW.hidden=true};NEW.onclick=()=>{L.scrollTop=L.scrollHeight;NEW.hidden=true};
- b.onclick=async e=>{const t=e.target.closest('button');
-  if(!e.target.closest('.chmenu,.chmore'))MENU.hidden=true;
-  const m=e.target.closest('.chm');if(m&&!t){b.querySelectorAll('.chm.sel').forEach(x=>x!==m&&x.classList.remove('sel'));m.classList.toggle('sel')}
-  if(!t)return;
-  if(t.dataset.room){setRoom(t.dataset.room);return}
-  if(t.dataset.who){pfCard(C,t.dataset.who,()=>poll(true));return}
-  if(t.classList.contains('chme')){if(MEP)pfCard(C,MEP.key);return}
-  if(t.dataset.del){const id=+t.dataset.del;const mm=msgs.find(x=>x.id==id);if(!confirm(mm&&!mm.mine?'Delete this message from '+mm.name+'?':'Delete your message?'))return;
-   try{await pfApi('/api/chat/delete',{id});msgs=msgs.filter(x=>x.id!=id);render(true)}catch(err){toast(err.message)}return}
-  if(t===MORE){MENU.hidden=!MENU.hidden;return}
-  if(t.dataset.cm=='clear'){MENU.hidden=true;if(!confirm('Clear every message in #'+room+'? This can\'t be undone.'))return;try{const d=await pfApi('/api/admin/chat-clear',{room});toast('Cleared '+d.cleared+' message'+(d.cleared==1?'':'s'));msgs=[];render()}catch(err){toast(err.message)}return}
-  if('cb' in t.dataset){signOut();return}};
- const onVis=()=>{if(document.visibilityState=='visible')schedule(50)};document.addEventListener('visibilitychange',onVis);
- const onProf=()=>{loadMe();poll(true)};window.addEventListener('lumio-profile',onProf);
- const w=b.closest('.win');const prevClose=w&&w.onclose;if(w)w.onclose=()=>{stopped=true;clearTimeout(timer);document.removeEventListener('visibilitychange',onVis);window.removeEventListener('lumio-profile',onProf);prevClose&&prevClose()};
- b.repaint=()=>{paintMe();loadMe();poll(true)};
- paintRooms();paintMe();loadMe();poll(true)}
+ const inv=LC_INVITE;LC_INVITE='';try{sessionStorage.removeItem('lumio_invite')}catch(e){}document.querySelectorAll('#lock .lcinv').forEach(x=>x.remove());
+ b.innerHTML=`<iframe class=lcframe title="Lumio Chat" src="/chat/${inv?'?invite='+encodeURIComponent(inv):''}" allow="clipboard-write"></iframe>`;
+ const w=b.closest('.win');const prevClose=w&&w.onclose;if(w)w.onclose=()=>{lcBadge(0,false);prevClose&&prevClose()};
+ b.repaint=()=>{}}
 (function(){const d=document.getElementById('dock');if(!d)return;const fit=()=>d.style.setProperty('--dn',Math.max(1,d.querySelectorAll(':scope>button').length));fit();new MutationObserver(fit).observe(d,{childList:true})})();
 
 </script>
@@ -1253,7 +1257,7 @@ $('#sc',b).textContent=go?`Game over · ${sc} · tap or space to restart`:`Score
 b.closest('.win').onclose=()=>{clearInterval(h);removeEventListener('keydown',kd)}}},
 ai:{n:'Lumio AI',i:IC.ai,w:980,h:660,r(b){lumioAI(b)}},
 admin:{n:'Admin',i:ic('<path d="M12 3l7.5 3v5.6c0 4.4-3.1 8.2-7.5 9.4-4.4-1.2-7.5-5-7.5-9.4V6z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/>'),w:900,h:680,hide:1,r(b){lumioAdmin(b)}},
-chat:{n:'Chat',i:ic('<path d="M4 6.5A2.5 2.5 0 016.5 4h8A2.5 2.5 0 0117 6.5v5a2.5 2.5 0 01-2.5 2.5H9l-3.5 3v-3h0A2.5 2.5 0 014 11.5z"/><path d="M17 9h.5A2.5 2.5 0 0120 11.5v5a2.5 2.5 0 01-2 2.45V21l-3-2.5h-3.5a2.5 2.5 0 01-2.3-1.5"/>'),w:760,h:620,r(b){lumioChat(b)}},
+chat:{n:'Chat',i:ic('<path d="M4 6.5A2.5 2.5 0 016.5 4h8A2.5 2.5 0 0117 6.5v5a2.5 2.5 0 01-2.5 2.5H9l-3.5 3v-3h0A2.5 2.5 0 014 11.5z"/><path d="M17 9h.5A2.5 2.5 0 0120 11.5v5a2.5 2.5 0 01-2 2.45V21l-3-2.5h-3.5a2.5 2.5 0 01-2.3-1.5"/>'),w:1180,h:740,r(b){lumioChat(b)}},
 account:{n:'Account',i:IC.user,w:420,h:600,r(b){lumioAccount(b)}},
 settings:{n:'Settings',i:IC.gear,w:540,h:560,r(b){const seg=(k,opts)=>`<div class=row style="flex-wrap:wrap">${opts.map(o=>`<button class="btn ${st[k]==o[0]?'on':''}" data-k=${k} data-v=${o[0]}>${o[1]}</button>`).join('')}</div>`;
 const paint=()=>{b.innerHTML=`<div class=pad><h4 style="margin-top:0">Appearance</h4><div class=sw>${ACC.map(c=>`<i data-c=${c} class="${st.a==c?'on':''}" style="background:linear-gradient(${c} 60%,#fff8 60%)"></i>`).join('')}</div>

@@ -4,3 +4,5 @@
   Cache-Control: no-cache
 /lumio-build.json
   Cache-Control: no-store
+/chat/*
+  Cache-Control: no-cache
