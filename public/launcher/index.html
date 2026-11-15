@@ -269,6 +269,45 @@ body.kbd #dh,body.kbd #dock{display:none}
 #dock button:hover{color:#fff4e2}
 
 </style></head><body>
+<div id="pin" role="dialog" aria-label="Enter PIN"><form id="pinf" autocomplete="off" novalidate>
+<label for="pini">PIN</label>
+<input id="pini" name="pin" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" placeholder="Enter PIN" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="go">
+<button type="submit" id="pinb">Join</button>
+<p id="pine" role="alert" aria-live="assertive"></p>
+</form></div>
+<style>
+#pin{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:24px 18px calc(24px + env(safe-area-inset-bottom,0px));background:linear-gradient(160deg,#5b1fb8 0%,#46178f 45%,#2e0f63 100%);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#pin::before,#pin::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+#pin::before{width:70vmax;height:70vmax;left:-28vmax;top:-30vmax}
+#pin::after{width:60vmax;height:60vmax;right:-26vmax;bottom:-30vmax;background:rgba(0,0,0,.08)}
+html.pin-ok #pin{display:none}
+#pinf{position:relative;z-index:1;width:100%;max-width:320px;background:#fff;border-radius:6px;padding:16px;box-shadow:0 4px 0 rgba(0,0,0,.18),0 18px 40px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:10px}
+#pinf label{font-size:13px;font-weight:700;letter-spacing:.06em;color:#333;text-transform:uppercase}
+#pini{width:100%;height:48px;border:2px solid #ccc;border-radius:4px;font:700 18px/1 system-ui,-apple-system,sans-serif;text-align:center;color:#333;background:#fff;outline:0;-webkit-appearance:none;appearance:none;box-sizing:border-box}
+#pini::placeholder{color:#999;font-weight:700}
+#pini:focus{border-color:#333}
+#pinb{height:48px;border:0;border-radius:4px;background:#333;color:#fff;font:700 17px/1 system-ui,-apple-system,sans-serif;cursor:pointer;box-shadow:0 4px 0 #000;transition:transform .08s,box-shadow .08s}
+#pinb:active{transform:translateY(3px);box-shadow:0 1px 0 #000}
+#pine{margin:0;min-height:18px;font-size:14px;font-weight:600;color:#c01e3a;text-align:center}
+#pine:empty{display:none}
+#pinf.shake{animation:pinsh .4s}
+@keyframes pinsh{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+@media(min-width:701px){#pinf{max-width:320px;padding:18px}}
+</style>
+<script>
+(()=>{const R=document.documentElement,K='lumio_pin';
+ let okd=false;try{okd=sessionStorage.getItem(K)==='1'}catch(e){}
+ if(okd){R.classList.add('pin-ok');return}
+ const f=document.getElementById('pinf'),i=document.getElementById('pini'),e=document.getElementById('pine');
+ // while the PIN screen is up, keys must not reach the launcher underneath
+ addEventListener('keydown',ev=>{if(!R.classList.contains('pin-ok')){ev.stopImmediatePropagation();if(ev.target!==i&&ev.key.length===1)i.focus()}},true);
+ i.addEventListener('input',()=>{const v=i.value.replace(/\D/g,'');if(v!==i.value)i.value=v;e.textContent=''});
+ f.addEventListener('submit',ev=>{ev.preventDefault();
+  if(i.value==='1111'){try{sessionStorage.setItem(K,'1')}catch(x){}i.blur();R.classList.add('pin-ok');return}
+  e.textContent='Game not found. Check the PIN and try again.';f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');i.select()});
+ setTimeout(()=>{if(matchMedia('(pointer:fine)').matches)i.focus()},50)})();
+</script>
+
 <div id="wall" class="w-forest"></div>
 <div id="desk"></div>
 <div id="wid"><div><div id="wt"></div><div id="wd"></div></div><div><div style="font-size:11px;opacity:.7;margin-bottom:6px">QUICK NOTE</div><textarea id="wn" placeholder="Jot something down..."></textarea></div></div>
