@@ -1,0 +1,6 @@
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/lumio-build.json
+  Cache-Control: no-store
