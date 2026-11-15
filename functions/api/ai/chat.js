@@ -1,5 +1,6 @@
 import { json, guard, readBody, sessionUser, getSettings } from "../auth/_shared.js";
 import { clientIp, throttleCheck, throttleFail } from "../auth/_throttle.js";
+import { loadGames, systemPrompt, actionFilter } from "./_site.js";
 
 /* Lumio AI chat — Cloudflare Workers AI through the `AI` binding.
  *
@@ -9,21 +10,19 @@ import { clientIp, throttleCheck, throttleFail } from "../auth/_throttle.js";
  * Without the binding this endpoint answers 503 and the launcher says so;
  * it never makes up a reply.
  *
- * GET  /api/ai/chat  → { available, model }  (no auth; lets the UI explain setup)
+ * GET  /api/ai/chat  → { available }  (no auth; never names the model)
  * POST /api/ai/chat  { messages: [{ role: "user"|"assistant", content }] }
  *      Signed-in Tuffs accounts only (same bearer session as the rest of the
- *      site). Streams Workers AI server-sent events back unchanged.
+ *      site). The system prompt (./_site.js) describes the site and carries the
+ *      real games catalog. The reply streams back as server-sent events
+ *      `data: {"response": "..."}` … `data: [DONE]`, with [[open:game|app:id]]
+ *      action tags checked against the real catalog/app list on the way out.
  * Rate limits reuse the D1 auth throttle: 20 messages / 10 min per account
  * (then a 10 min pause) and 60 / hour per IP (then 30 min).
  */
 
 const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const FALLBACK_MODELS = ["@cf/meta/llama-3.1-8b-instruct", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"];
-const SYSTEM =
-  "You are Lumio AI, the assistant built into the Lumio launcher on the Tuffs site. " +
-  "Be friendly, clear and concise. Format answers in Markdown: short paragraphs, bullet or numbered lists, " +
-  "and fenced code blocks with a language tag for code. If you are not sure about something, say so " +
-  "instead of guessing. Refuse requests that could hurt someone.";
 const MAX_MESSAGES = 20, MAX_CHARS = 4000;
 const USER_MAX = 20, USER_WINDOW = 10 * 60 * 1000, USER_LOCK = 10 * 60 * 1000;
 const IP_MAX = 60, IP_WINDOW = 60 * 60 * 1000, IP_LOCK = 30 * 60 * 1000;
@@ -34,7 +33,7 @@ function model(env) {
 
 export async function onRequestGet(context) {
   const { env } = context;
-  return json({ available: !!(env.AI && typeof env.AI.run === "function"), model: model(env) });
+  return json({ available: !!(env.AI && typeof env.AI.run === "function") });
 }
 
 export async function onRequestPost(context) {
@@ -70,23 +69,53 @@ export async function onRequestPost(context) {
 
   // Try the configured model first, then current fallbacks, so one retired or
   // overloaded model doesn't take the whole app down.
-  const tried = [], input = { messages: [{ role: "system", content: SYSTEM }, ...messages], stream: true, max_tokens: 1024 };
+  const games = await loadGames(request, env);
+  const system = systemPrompt(games, messages[messages.length - 1].content, user.username);
+  const tried = [], input = { messages: [{ role: "system", content: system }, ...messages], stream: true, max_tokens: 1024 };
   let stream = null, reason = "";
   for (const m of [...new Set([model(env), ...FALLBACK_MODELS])]) {
     try {
       stream = await env.AI.run(m, input);
       if (stream) break;
     } catch (e) {
-      reason = String((e && e.message) || e).slice(0, 240);
+      // Shown to the user, so strip anything that names the model or provider.
+      reason = String((e && e.message) || e).replace(/@cf\/[^\s"',)]+/gi, "the model").replace(/workers ai|cloudflare|llama|\bmeta\b/gi, "service").slice(0, 200);
       tried.push(m);
       console.error("Lumio AI: env.AI.run failed", m, reason);
     }
   }
   if (!stream) {
     // 503, not 502: Cloudflare swaps a Function's 502 body for its own "error code: 502" page.
-    return json({ error: "Lumio AI couldn't answer right now. Try again in a moment.", code: "upstream", reason, tried }, 503);
+    return json({ error: "Lumio AI couldn't answer right now. Try again in a moment.", code: "upstream", reason }, 503);
   }
-  return new Response(stream, {
+  return new Response(rewrite(stream, games), {
     headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" },
   });
+}
+
+/* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
+ * → uniform `data: {"response": "..."}` events, run through the action filter. */
+function rewrite(stream, games) {
+  const filter = actionFilter(games), dec = new TextDecoder(), enc = new TextEncoder();
+  let buf = "";
+  const emit = (ctl, text) => { if (text) ctl.enqueue(enc.encode("data: " + JSON.stringify({ response: text }) + "\n\n")); };
+  return stream.pipeThrough(new TransformStream({
+    transform(chunk, ctl) {
+      buf += dec.decode(chunk, { stream: true });
+      let k;
+      while ((k = buf.indexOf("\n")) >= 0) {
+        const line = buf.slice(0, k).trim(); buf = buf.slice(k + 1);
+        if (!line.startsWith("data:")) continue;
+        const p = line.slice(5).trim();
+        if (!p || p === "[DONE]") continue;
+        let j; try { j = JSON.parse(p); } catch { continue; }
+        const tok = j.response || (j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content) || "";
+        if (tok) emit(ctl, filter.push(tok, false));
+      }
+    },
+    flush(ctl) {
+      emit(ctl, filter.push("", true));
+      ctl.enqueue(enc.encode("data: [DONE]\n\n"));
+    },
+  }));
 }

@@ -260,6 +260,12 @@ body.kbd #dh,body.kbd #dock{display:none}
 .aif textarea::placeholder{color:rgba(255,255,255,.55)}
 .ais{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:var(--a);color:#2a1608}.ais.stop{background:rgba(255,255,255,.85)}
 .ain{display:block;text-align:center;font-size:10.5px;opacity:.5;padding:5px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+.aiacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.aiop{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px 8px 10px;border-radius:12px;border:1px solid color-mix(in srgb,var(--a) 55%,transparent);background:color-mix(in srgb,var(--a) 22%,rgba(255,255,255,.06));color:#fff;font:600 13px/1.2 inherit;cursor:pointer;max-width:100%}
+.aiop svg{width:18px;height:18px;flex:none}
+.aiop span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aiop:hover{background:color-mix(in srgb,var(--a) 34%,rgba(255,255,255,.08))}
+.aiop:active{transform:scale(.97)}
 
 /* menubar logo + About use the app icon */
 #mb .lg{background:url(/launcher/icon.svg) center/cover;border-radius:4px}
@@ -267,6 +273,40 @@ body.kbd #dh,body.kbd #dock{display:none}
 /* consistent warm dock tiles */
 #dock button{background:linear-gradient(150deg,rgba(255,208,140,.30),rgba(255,170,90,.06) 60%,rgba(255,255,255,.03));border:1px solid rgba(255,216,165,.22);color:#ffe8c8;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 4px 12px rgba(0,0,0,.25)}
 #dock button:hover{color:#fff4e2}
+
+.adw{display:flex;flex-direction:column;height:100%;min-height:0}
+.adt{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);flex:none}
+.adt::-webkit-scrollbar{display:none}
+.adt button{flex:none;padding:8px 14px;border-radius:999px;font-size:13px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
+.adt button.on{background:var(--a);color:#2a1608;border-color:transparent;font-weight:600}
+.adn{display:none;margin:10px 12px 0;padding:8px 12px;border-radius:10px;font-size:12.5px;background:color-mix(in srgb,var(--a) 20%,rgba(255,255,255,.05));border:1px solid color-mix(in srgb,var(--a) 40%,transparent)}
+.adn.on{display:block}.adn.bad{background:rgba(255,90,90,.14);border-color:rgba(255,110,110,.45)}
+.adb{flex:1;min-height:0;overflow:auto;padding:12px 12px calc(16px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.adb h4{margin:16px 0 8px;font-size:13px;opacity:.85}
+.adm{font-size:12px;opacity:.72;line-height:1.5}.adm.bad{color:#ff9a9a;opacity:1}
+.adg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.ads{padding:12px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid var(--line)}
+.ads b{display:block;font-size:22px;font-weight:600}.ads small{font-size:11.5px;opacity:.72}
+.adr{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:13px;overflow-wrap:anywhere}
+.adr p{margin:4px 0;line-height:1.45}.adr small{display:block;font-size:11.5px;opacity:.7;margin-top:3px}
+.adrh{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.adp{font-style:normal;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--a) 30%,transparent)}
+.adp.bad{background:rgba(255,90,90,.3)}
+.adacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.adacts .btn,.adbar .btn,.adsave{min-height:36px;padding:8px 12px;font-size:12.5px}
+.btn.adx{color:#ffb0a8}
+.adbar{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.adbar input,.adbar select{flex:1;min-width:0}
+.adbar select{background:rgba(255,255,255,.12);border:1px solid var(--line);color:#fff;border-radius:20px;padding:8px 12px;font-size:13px}
+.adbar select option{color:#000}
+.adreset{padding:10px 12px;margin-bottom:10px;border-radius:12px;border:1px solid color-mix(in srgb,var(--a) 45%,transparent);background:rgba(255,255,255,.05)}
+.adann{border-radius:10px}
+.adsave{margin-top:12px;width:100%}
+#rst{position:fixed;inset:0;z-index:1500;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.45);backdrop-filter:blur(12px)}
+.rsf{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:16px;background:var(--glass);border:1px solid var(--line);text-align:center}
+.rsf small{opacity:.7;font-size:12px}
+@media (max-width:600px){.adacts .btn{flex:1 1 auto}}
+.adt[hidden]{display:none}
 
 </style></head><body>
 <div id="pin" role="dialog" aria-label="Enter PIN"><form id="pinf" autocomplete="off" novalidate>
@@ -351,7 +391,7 @@ function paintUser(){const n=AUTH.mode=='out'?'':AUTH.name,i=AUTH.mode=='out'?'?
  $('#lav').textContent=i;$('#lname').textContent=n;
  const ca=$('#ccav');if(ca){ca.textContent=i;$('#ccname').textContent=n||'Not signed in';$('#ccsub').textContent=AUTH.mode=='user'?(AUTH.admin?'Tuffs account · admin':'Tuffs account'):'Guest, nothing is saved to an account';const so=$('#cc [data-so]');if(so)so.textContent=AUTH.mode=='user'?'Sign out':'Sign in'}
  if(typeof repaintSettings=='function'&&document.querySelector('.stw'))repaintSettings();
- document.querySelectorAll('[data-acct]').forEach(b=>lumioAccount(b))}
+ document.querySelectorAll('[data-acct]').forEach(b=>lumioAccount(b));if(typeof adminDock=='function')adminDock()}
 function setAMode(m){AMODE=m;document.querySelectorAll('#af .seg2 button').forEach(b=>b.classList.toggle('on',b.dataset.m==m));$('#ac').hidden=m=='in';$('#ap').autocomplete=m=='in'?'current-password':'new-password';$('#ago').textContent=m=='in'?'Sign in':'Create account';$('#ae').textContent=''}
 function showLock(msg){const L=$('#lock');L.classList.remove('off');const out=AUTH.mode=='out';$('#af').hidden=!out;$('#lin').hidden=out;
  if(out){$('#ap').value='';$('#ac').value='';if(!$('#au').value&&SESSION&&SESSION.u)$('#au').value=SESSION.u;$('#ae').textContent=msg||''}
@@ -440,7 +480,15 @@ function lumioGames(b){b.innerHTML=`<div class=lgw><div class=lgh><input type=se
 /* Open a web address in the Lumio Browser app. */
 function browseTo(u){open('browser');const w=open_['browser'];const body=w&&w.querySelector('.body');if(body&&body.nav)body.nav(u)}
 
-/* ---- Lumio AI: chat UI for /api/ai/chat (Cloudflare Workers AI). Never invents replies. ---- */
+/* ---- Lumio AI: chat UI for /api/ai/chat. Never invents replies. ---- */
+/* Action tags from the server: [[open:game:<id>]] / [[open:app:<id>]]. Only real ids become buttons. */
+const AI_APPS=['browser','games','ai','manga','music','watch','account','settings','snake'];
+let AI_CAT=null;function aiCatalog(){return loadCatalog().then(l=>{AI_CAT=l;return l}).catch(()=>null)}
+function aiActs(t){const acts=[],seen=new Set();const txt=String(t||'').replace(/\[\[\s*open\s*:\s*(game|app)\s*:\s*([^\[\]\n]{1,80}?)\s*\]\]/gi,(m,k,id)=>{k=k.toLowerCase();const key=k+':'+id;if(!seen.has(key)&&acts.length<3){seen.add(key);acts.push({k,id})}return ''}).replace(/\[\[[^\]\n]{0,90}\]?$/,'').replace(/\n{3,}/g,'\n\n').trim();
+ return {txt,acts:acts.map(a=>{if(a.k=='app')return AI_APPS.includes(a.id)&&APPS[a.id]?{...a,label:'Open '+APPS[a.id].n}:null;
+  if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
+function aiRun(k,id){if(k=='app'){if(AI_APPS.includes(id)&&APPS[id])open(id);return true}
+ return aiCatalog().then(l=>{const g=l&&l.find(x=>x.id===id);if(g){playGame(g);return true}toast('That game isn\'t in the catalog');return false})}
 const AI_SUGGEST=[['Explain something','Explain how HTTPS keeps my data safe, in simple words.'],['Plan my study','Make me a 30-minute study plan for a math test tomorrow.'],['Write a story','Write a short story about a robot who loves video games.'],['Fix my code','Why does this JavaScript print undefined?\n\n```js\nfunction add(a, b) { a + b }\nconsole.log(add(2, 3))\n```']];
 function mdInline(s){const codes=[];s=s.replace(/`([^`\n]+)`/g,(m,c)=>{codes.push(c);return '\u0000'+(codes.length-1)+'\u0000'});s=esc(s);
  s=s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,(m,t,u)=>`<a href="${u}" data-ext>${t}</a>`);
@@ -481,14 +529,15 @@ function lumioAI(b){
  const scroll=()=>{M.scrollTop=M.scrollHeight};
  const bubble=(m,idx)=>m.r=='user'?`<div class="aim-r u"><div class=aiu>${esc(m.c).replace(/\n/g,'<br>')}</div></div>`
   :m.err?`<div class="aim-r a"><div class=aix><span>${esc(m.c)}</span><button type=button class=btn data-retry>Try again</button></div></div>`
-  :`<div class="aim-r a"><span class=aia>${IC.ai}</span><div class=aiw><div class=aimd>${md(m.c)}</div><div class=aiact><button type=button data-copy=${idx} aria-label="Copy reply">${ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 011-1h10"/>')} Copy</button></div></div></div>`;
+  :`<div class="aim-r a"><span class=aia>${IC.ai}</span><div class=aiw><div class=aimd>${aiBody(m.c)}</div><div class=aiact><button type=button data-copy=${idx} aria-label="Copy reply">${ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 011-1h10"/>')} Copy</button></div></div></div>`;
+ const aiBody=c=>{const a=aiActs(c);return md(a.txt)+(a.acts.length?`<div class=aiacts>${a.acts.map(x=>`<button type=button class=aiop data-act="${esc(x.k)}" data-id="${esc(x.id)}">${x.k=='game'?IC.pad:(APPS[x.id]?APPS[x.id].i:'')}<span>${esc(x.label)}</span></button>`).join('')}</div>`:'')};
  const draw=()=>{const c=cur();$('.ait',b).textContent=c&&c.title?c.title:'Lumio AI';
   if(!c||!c.msgs.length){M.innerHTML=`<div class=aiempty><span class=aibig>${IC.ai}</span><h3>How can I help${AUTH.mode=='user'?', '+esc(AUTH.name):''}?</h3><div class=aisg>${AI_SUGGEST.map((s,i)=>`<button type=button data-sg=${i}><b>${esc(s[0])}</b><small>${esc(s[1].split('\n')[0])}</small></button>`).join('')}</div></div>`;return}
   M.innerHTML=c.msgs.map(bubble).join('');scroll()};
  const hist=()=>{PN.innerHTML=`<div class=aiph><b>Chats</b>${D.chats.length?`<button type=button class=btn data-clear>Clear all</button>`:''}</div>`+(D.chats.length?D.chats.map(c=>`<div class="aipi${c.id==D.cur?' on':''}"><button type=button data-open="${c.id}">${esc(c.title||'New chat')}<small>${new Date(c.t).toLocaleDateString([],{month:'short',day:'numeric'})}</small></button><button type=button data-del="${c.id}" aria-label="Delete chat">${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button></div>`).join(''):`<p class=lbs style="padding:10px">No saved chats yet.</p>`)};
  const setBusy=v=>{busy=v;S.innerHTML=v?stopIc:sendIc;S.setAttribute('aria-label',v?'Stop':'Send');S.classList.toggle('stop',!!v)};
  const explain=st=>{
-  if(st==='no_ai'||st===404)return 'Lumio AI isn\'t switched on for this site yet. The site owner needs to add a Workers AI binding in Cloudflare.';
+  if(st==='no_ai'||st===404)return 'Lumio AI isn\'t switched on for this site yet.';
   return null};
  async function ask(){const c=cur();if(!c)return;
   if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
@@ -504,11 +553,13 @@ function lumioAI(b){
    if(r.status==401){fail(d.error||'Sign in again to use Lumio AI.');return}
    fail((explain(d.code||r.status)||d.error||('Lumio AI isn\'t available right now ('+r.status+').'))+why);if(d.code==='no_ai'||r.status==404)avail=false;return}
   const rd=r.body.getReader(),dec=new TextDecoder();let buf='',raf=0;
-  const paint=()=>{raf=0;box.innerHTML=md(ai.c)+'<span class=aicar></span>';const near=M.scrollHeight-M.scrollTop-M.clientHeight<120;if(near)scroll()};
+  const paint=()=>{raf=0;box.innerHTML=md(aiActs(ai.c).txt)+'<span class=aicar></span>';const near=M.scrollHeight-M.scrollTop-M.clientHeight<120;if(near)scroll()};
   try{for(;;){const{value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let k;while((k=buf.indexOf('\n'))>=0){const line=buf.slice(0,k).trim();buf=buf.slice(k+1);if(!line.startsWith('data:'))continue;const p=line.slice(5).trim();if(!p||p==='[DONE]')continue;
    let j;try{j=JSON.parse(p)}catch(e){continue}const tok=j.response||(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';if(tok){ai.c+=tok;if(!raf)raf=requestAnimationFrame(paint)}}}}
   catch(e){/* aborted or dropped: keep what arrived */}
-  setBusy(null);if(!ai.c.trim()){fail('Lumio AI didn\'t send an answer. Try again.');return}persist();draw()}
+  setBusy(null);if(!aiActs(ai.c).txt&&!aiActs(ai.c).acts.length){fail('Lumio AI didn\'t send an answer. Try again.');return}persist();draw();
+  const last=(msgs[msgs.length-1]||{}).content||'',acts=aiActs(ai.c).acts;
+  if(acts.length==1&&/^\s*(please\s+)?(open|launch|start|play|run)\b/i.test(last)&&!/\b(a|an|some|any)\s+\w*\s*game/i.test(last))setTimeout(()=>aiRun(acts[0].k,acts[0].id),400)}
  const send=v=>{v=(v||'').trim();if(!v||busy)return;if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
   let c=cur();if(!c){c={id:Date.now().toString(36),title:v.slice(0,48),msgs:[],t:Date.now()};D.chats.unshift(c);D.cur=c.id}
   c.msgs.push({r:'user',c:v});c.t=Date.now();T.value='';grow();persist();draw();ask()};
@@ -523,15 +574,101 @@ function lumioAI(b){
   if('open' in d){D.cur=d.open;PN.hidden=true;persist();draw();return}
   if('del' in d){D.chats=D.chats.filter(c=>c.id!=d.del);if(D.cur==d.del)D.cur=null;persist();hist();draw();return}
   if('clear' in d){if(confirm('Delete all saved Lumio AI chats on this device?')){D={chats:[],cur:null};persist();hist();draw()}return}
-  if('copy' in d){const c=cur();if(c&&c.msgs[+d.copy])copyText(c.msgs[+d.copy].c);return}
+  if('copy' in d){const c=cur();if(c&&c.msgs[+d.copy])copyText(aiActs(c.msgs[+d.copy].c).txt);return}
+  if('act' in d){aiRun(d.act,d.id);return}
   if('cc' in d){copyText(t.closest('.aicb').querySelector('code').textContent);return}
   if('retry' in d){const c=cur();if(c&&!busy){c.msgs=c.msgs.filter(m=>!m.err);persist();draw();ask()}return}
   if('ban' in d){if(AUTH.mode!='user')signOut();return}};
  b.closest('.win').onclose=()=>{if(busy)busy.abort()};
- draw();
+ draw();aiCatalog().then(()=>{if(!busy)draw()});
  if(AUTH.mode!='user')banner('Sign in to your Tuffs account to use Lumio AI. Guests can look around, but chats need an account.','Sign in');
- fetch('/api/ai/chat').then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{avail=!!d.available;if(!avail&&AUTH.mode=='user')banner('Lumio AI isn\'t switched on for this site yet. The site owner needs to add a Workers AI binding in Cloudflare.')}).catch(()=>{avail=false;if(AUTH.mode=='user')banner('Lumio AI isn\'t available on this site yet.')});
+ fetch('/api/ai/chat').then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{avail=!!d.available;if(!avail&&AUTH.mode=='user')banner('Lumio AI isn\'t switched on for this site yet.')}).catch(()=>{avail=false;if(AUTH.mode=='user')banner('Lumio AI isn\'t available on this site yet.')});
  setTimeout(()=>{if(innerWidth>700)T.focus()},80)}
+
+/* ---- Admin app (ported from the old Tuffs homepage panel). Only shown to accounts
+ * /api/auth/me says are admins; every /api/admin/* endpoint checks admin itself. ---- */
+function adminDock(){const d=document.getElementById('dock');if(!d)return;let b=d.querySelector('[data-a=admin]');
+ if(AUTH.mode=='user'&&AUTH.admin){if(!b){b=document.createElement('button');b.dataset.a='admin';b.dataset.n='Admin';b.innerHTML=APPS.admin.i;d.append(b)}}
+ else{if(b)b.remove();const w=typeof open_!='undefined'&&open_.admin;if(w){w.onclose&&w.onclose();w.remove();delete open_.admin}}}
+async function adminApi(path,body){const r=await fetch(path,{method:body?'POST':'GET',headers:{'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')},body:body?JSON.stringify(body):undefined});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||('Request failed ('+r.status+')'));return d}
+function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site'];let tab='Overview',alive=true;
+ b.innerHTML=`<div class=adw><div class=adt role=tablist hidden>${TABS.map(t=>`<button type=button role=tab data-tab="${t}">${t}</button>`).join('')}</div><div class=adn role=status></div><div class=adb><p class=adm>Checking admin access…</p></div></div>`;
+ const B=$('.adb',b),N=$('.adn',b);
+ const note=(t,bad)=>{N.textContent=t||'';N.className='adn'+(bad?' bad':'')+(t?' on':'')};
+ const when=t=>t?new Date(t).toLocaleString([],{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}):'';
+ const day=t=>t?new Date(t).toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'}):'';
+ const act=(label,key,attrs,danger)=>`<button type=button class="btn${danger?' adx':''}" data-do="${key}" ${attrs||''}>${esc(label)}</button>`;
+ const me=()=>(AUTH.name||'').toLowerCase();
+ let users=[],games=[],gov={};
+ const R={
+  async Overview(){const o=await adminApi('/api/admin/overview');
+   const stat=(n,l)=>`<div class=ads><b>${n}</b><small>${l}</small></div>`;
+   return `<div class=adg>${stat(o.users,'accounts')}${stat(o.admins,'admins')}${stat(o.banned,'suspended')}${stat(o.sessions,'active sessions')}${stat(o.newDay,'new in 24h')}${stat(o.newWeek,'new in 7 days')}${stat(o.chatTotal,'chat messages')}${stat(o.chatDay,'chat in 24h')}</div>
+   <h4>Chat rooms</h4><p class=adm>${['General','Games','Random'].map(r=>esc(r)+' '+(o.rooms[r]||0)).join(' · ')}</p>
+   <h4>Newest accounts</h4>${(o.latestUsers||[]).map(u=>`<div class=adr><div><b>${esc(u.username)}</b>${u.is_admin?'<i class=adp>Admin</i>':''}${u.is_banned?'<i class="adp bad">Suspended</i>':''}</div><small>joined ${day(u.created_at)}</small></div>`).join('')||'<p class=adm>No accounts yet.</p>'}
+   <h4>Latest chat</h4>${(o.latestChat||[]).map(m=>`<div class=adr><div><b>#${esc(m.room)} · ${esc(m.user)}</b><p>${esc(m.text)}</p></div><small>${when(m.ts)}</small></div>`).join('')||'<p class=adm>No chat messages.</p>'}`},
+  async Accounts(){const q=($('.adq',B)||{}).value||'';const d=await adminApi('/api/admin/users'+(q.trim()?'?q='+encodeURIComponent(q.trim()):''));users=d.users||[];
+   return `<div class=adbar><input class=adq type=search placeholder="Search accounts" value="${esc(q)}" aria-label="Search accounts" autocapitalize=none spellcheck=false><button type=button class=btn data-do=refresh>Refresh</button></div><div class=adreset hidden></div>`+
+   (users.length?users.map((x,i)=>{const self=x.username.toLowerCase()===me();return `<div class=adr><div class=adrh><b>${esc(x.username)}</b>${x.is_admin?'<i class=adp>Admin</i>':''}${x.is_banned?'<i class="adp bad">Suspended</i>':''}${self?'<i class=adp>You</i>':''}</div>
+    <small>joined ${day(x.created_at)} · last active ${day(x.last_active)} · ${x.sessions} active sessions · ${x.messages} chat messages</small>
+    <div class=adacts>${self?'':act(x.is_admin?'Remove admin':'Make admin','admin',`data-i=${i}`)}${!self&&!x.is_admin?act(x.is_banned?'Unsuspend':'Suspend','ban',`data-i=${i}`):''}${act('Reset link','reset',`data-i=${i}`)}${self?'':act('Sign out','logout',`data-i=${i}`)}${!self&&!x.is_admin?act('Delete','del',`data-i=${i}`,1):''}</div></div>`}).join(''):'<p class=adm>No accounts found.</p>')},
+  async Games(){const q=(($('.adq',B)||{}).value||'');
+   if(!games.length){const [d,o]=await Promise.all([fetch('/data/games.json').then(r=>r.json()),adminApi('/api/games')]);games=(d.games||[]).filter(g=>g&&g.id);gov=o.overrides||{}}
+   const ql=q.trim().toLowerCase(),list=games.filter(g=>!ql||String(g.title||'').toLowerCase().includes(ql)||String(g.id).toLowerCase().includes(ql)),hid=Object.values(gov).filter(o=>o.hidden).length;
+   return `<div class=adbar><input class=adq type=search placeholder="Search ${games.length} games" value="${esc(q)}" aria-label="Search games" autocapitalize=none spellcheck=false><button type=button class=btn data-do=greload>Refresh</button></div><p class=adm>${hid} hidden · ${Object.values(gov).filter(o=>o.title).length} renamed. Changes show for everyone.</p>`+
+   (list.slice(0,80).map(g=>{const o=gov[g.id]||{};return `<div class=adr><div class=adrh><b>${esc(o.title||g.title||g.id)}</b>${o.hidden?'<i class="adp bad">Hidden</i>':''}${o.title?'<i class=adp>Renamed</i>':''}</div><small>${esc(g.id)} · ${esc(g.category||'Games')}${o.title?' · original name: '+esc(g.title||g.id):''}</small>
+    <div class=adacts>${act('Rename','grename',`data-g="${esc(g.id)}"`)}${act(o.hidden?'Show game':'Hide game','ghide',`data-g="${esc(g.id)}"`)}${o.title||o.hidden?act('Reset','greset',`data-g="${esc(g.id)}"`):''}</div></div>`}).join('')||'<p class=adm>No games match.</p>')+(list.length>80?`<p class=adm>Showing 80 of ${list.length}. Search to narrow it down.</p>`:'')},
+  async Chat(){const room=($('.adroom',B)||{}).value||'All';const d=await adminApi('/api/admin/chat?room='+encodeURIComponent(room));
+   return `<div class=adbar><select class=adroom aria-label="Chat room">${['All','General','Games','Random'].map(r=>`<option${r==room?' selected':''}>${r}</option>`).join('')}</select><button type=button class=btn data-do=refresh>Refresh</button><button type=button class="btn adx" data-do=cclear>Clear</button></div>`+
+   ((d.messages||[]).map(m=>`<div class=adr><div class=adrh><b>#${esc(m.room)} · ${esc(m.user)}</b></div><p>${esc(m.text)}</p><small>${when(m.ts)}</small><div class=adacts>${act('Delete message','cdel',`data-id=${m.id}`,1)}</div></div>`).join('')||'<p class=adm>No messages.</p>')},
+  async Site(){const s=await adminApi('/api/admin/settings');
+   const tg=(k,l,d,on)=>`<div class=srow><span>${l}<small class=adm style="display:block">${d}</small></span><button type=button class="tg${on?' on':''}" data-st=${k} aria-pressed=${on} aria-label="${l}"></button></div>`;
+   return `<h4 style="margin-top:0">Announcement</h4><p class=adm>Shown to everyone at the top of the screen. Leave empty for none.</p><input class=adann maxlength=200 placeholder="Announcement text" value="${esc(s.announcement||'')}" aria-label="Announcement">
+   <h4>Controls</h4>${tg('signupsOpen','Signups open','Let new people create accounts',s.signupsOpen)}${tg('chatEnabled','Chat enabled','Turn chat on or off for everyone (admins keep access)',s.chatEnabled)}${tg('maintenance','Maintenance mode','Only admins can sign in while this is on',s.maintenance)}
+   <button type=button class="btn on adsave" data-do=save>Save site controls</button>`}};
+ const show=async t=>{tab=t||tab;b.querySelectorAll('[data-tab]').forEach(x=>{x.classList.toggle('on',x.dataset.tab==tab);x.setAttribute('aria-selected',x.dataset.tab==tab)});
+  const keep=$('.adq',B),kv=keep&&keep===document.activeElement;
+  try{const h=await R[tab]();if(!alive)return;B.innerHTML=h;if(kv){const q=$('.adq',B);if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}}catch(e){B.innerHTML=`<p class="adm bad">${esc(e.message)}</p>`}};
+ let qt;b.oninput=e=>{if(e.target.matches('.adq')){clearTimeout(qt);qt=setTimeout(()=>show(),250)}};
+ b.onchange=e=>{if(e.target.matches('.adroom'))show()};
+ b.onclick=async e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
+  if(d.tab){note('');show(d.tab);return}
+  if(d.st!==undefined){t.classList.toggle('on');t.setAttribute('aria-pressed',t.classList.contains('on'));return}
+  if(!d.do)return;const x=users[+d.i];
+  const run=async(fn,msg)=>{t.disabled=true;try{const r=await fn();if(msg)note(typeof msg=='function'?msg(r):msg);await show()}catch(err){note(err.message,1)}finally{t.disabled=false}};
+  switch(d.do){
+   case 'refresh':note('');show();break;
+   case 'greload':games=[];note('');show();break;
+   case 'admin':if(x.is_admin&&!confirm('Remove admin from '+x.username+'?'))return;run(()=>adminApi('/api/admin/set-admin',{username:x.username,isAdmin:!x.is_admin}),x.username+(x.is_admin?' is no longer an admin.':' is now an admin.'));break;
+   case 'ban':if(!x.is_banned&&!confirm('Suspend '+x.username+'? They will be signed out and blocked from signing in.'))return;run(()=>adminApi('/api/admin/set-banned',{username:x.username,banned:!x.is_banned}),x.username+(x.is_banned?' is unsuspended.':' is suspended.'));break;
+   case 'logout':run(()=>adminApi('/api/admin/logout-user',{username:x.username}),r=>'Signed '+x.username+' out ('+r.ended+' sessions ended).');break;
+   case 'del':if(!confirm('Delete account '+x.username+' and all their chat messages? This cannot be undone.'))return;run(()=>adminApi('/api/admin/delete',{username:x.username}),'Deleted '+x.username+'.');break;
+   case 'reset':{t.disabled=true;try{const r=await adminApi('/api/admin/reset-link',{username:x.username});const u=location.origin+r.path,box=$('.adreset',B);box.hidden=false;
+     box.innerHTML=`<b>Reset link for ${esc(r.username)}</b><small class=adm style="display:block;margin:4px 0 8px">Works once and expires in 24 hours. Send it only to them.</small><div class=adbar><input readonly value="${esc(u)}" aria-label="Reset link"><button type=button class=btn data-copy>Copy</button></div>`;
+     $('[data-copy]',box).onclick=()=>copyText(u);note('Reset link created for '+x.username+'.')}catch(err){note(err.message,1)}finally{t.disabled=false}break}
+   case 'grename':{const g=games.find(y=>y.id==d.g),o=gov[d.g]||{};const name=prompt('New name for this game (leave empty to restore the original name):',o.title||g.title||g.id);if(name===null)return;
+     run(async()=>{await adminApi('/api/admin/game',{id:d.g,title:name,hidden:!!o.hidden});const n=name.trim();if(n)gov[d.g]={...o,title:n};else if(o.hidden)gov[d.g]={hidden:true};else delete gov[d.g];CAT_P=null},'Game renamed.');break}
+   case 'ghide':{const o=gov[d.g]||{};run(async()=>{await adminApi('/api/admin/game',{id:d.g,title:o.title||'',hidden:!o.hidden});if(!o.hidden)gov[d.g]={...o,hidden:true};else if(o.title)gov[d.g]={title:o.title};else delete gov[d.g];CAT_P=null},o.hidden?'Game is visible again.':'Game hidden from the catalog.');break}
+   case 'greset':run(async()=>{await adminApi('/api/admin/game',{id:d.g,reset:true});delete gov[d.g];CAT_P=null},'Game reset to its original name and visibility.');break;
+   case 'cdel':run(()=>adminApi('/api/admin/chat-delete',{id:+d.id}),'Message deleted.');break;
+   case 'cclear':{const room=$('.adroom',B).value;if(!confirm(room=='All'?'Clear ALL chat messages in every room?':'Clear all messages in #'+room+'?'))return;run(()=>adminApi('/api/admin/chat-clear',{room}),r=>'Cleared '+r.cleared+' messages.');break}
+   case 'save':{const on=k=>$(`[data-st=${k}]`,B).classList.contains('on');run(()=>adminApi('/api/admin/settings',{announcement:$('.adann',B).value,signupsOpen:on('signupsOpen'),chatEnabled:on('chatEnabled'),maintenance:on('maintenance')}),'Site controls saved.');break}}};
+ b.closest('.win').onclose=()=>{alive=false};
+ // Ask the server first; the panel only renders for a confirmed admin.
+ fetch('/api/auth/me',{headers:{authorization:'Bearer '+(SESSION?SESSION.t:'')}}).then(r=>r.json().catch(()=>({}))).then(d=>{
+  if(!d.isAdmin){B.innerHTML='<p class="adm bad">Admins only. This account doesn\'t have admin access.</p>';AUTH.admin=false;const db=document.querySelector('#dock [data-a=admin]');if(db)db.remove();return}
+  b.querySelector('.adt').hidden=false;show('Overview')}).catch(()=>{B.innerHTML='<p class="adm bad">Couldn\'t check admin access. Try again.</p>'})}
+
+/* One-time password reset links from the Admin app: /#reset=<token>. */
+function lumioReset(){const m=location.hash.match(/^#reset=([0-9a-f]{64})$/i);if(!m)return;const tok=m[1];
+ const o=document.createElement('div');o.id='rst';o.innerHTML=`<form class=rsf novalidate><b>Set a new password</b><small>This reset link works once.</small><input type=password id=rp1 placeholder="New password" autocomplete=new-password aria-label="New password"><input type=password id=rp2 placeholder="Confirm new password" autocomplete=new-password aria-label="Confirm new password"><div class=er id=rpe role=alert></div><button type=submit class="btn acc wide">Save password</button><button type=button class=lnk data-cancel>Cancel</button></form>`;
+ document.body.append(o);const done=()=>{o.remove();history.replaceState(null,'',location.pathname+location.search)};
+ o.querySelector('[data-cancel]').onclick=done;
+ o.querySelector('form').onsubmit=async e=>{e.preventDefault();const a=$('#rp1').value,c=$('#rp2').value,er=$('#rpe');
+  if(a.length<4){er.textContent='Password must be at least 4 characters';return}if(a!==c){er.textContent='Passwords do not match';return}
+  const d=await authPost('/api/auth/reset',{token:tok,password:a});if(d.error){er.textContent=d.error;return}
+  done();signedIn(d,false);showLock();toast('Password changed. You\'re signed in as '+d.username)}}
 
 </script>
 <script>
@@ -577,6 +714,7 @@ x.fillStyle='#10151f';x.fillRect(0,0,320,320);x.fillStyle='#e55';x.fillRect(f[0]
 $('#sc',b).textContent=go?`Game over · ${sc} · tap or space to restart`:`Score ${sc} · arrow keys / swipe`},110);
 b.closest('.win').onclose=()=>{clearInterval(h);removeEventListener('keydown',kd)}}},
 ai:{n:'Lumio AI',i:IC.ai,w:640,h:560,r(b){lumioAI(b)}},
+admin:{n:'Admin',i:ic('<path d="M12 3l7.5 3v5.6c0 4.4-3.1 8.2-7.5 9.4-4.4-1.2-7.5-5-7.5-9.4V6z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/>'),w:900,h:680,hide:1,r(b){lumioAdmin(b)}},
 account:{n:'Account',i:IC.user,w:360,h:330,r(b){lumioAccount(b)}},
 settings:{n:'Settings',i:IC.gear,w:540,h:560,r(b){const seg=(k,opts)=>`<div class=row style="flex-wrap:wrap">${opts.map(o=>`<button class="btn ${st[k]==o[0]?'on':''}" data-k=${k} data-v=${o[0]}>${o[1]}</button>`).join('')}</div>`;
 const paint=()=>{b.innerHTML=`<div class=pad><h4 style="margin-top:0">Appearance</h4><div class=sw>${ACC.map(c=>`<i data-c=${c} class="${st.a==c?'on':''}" style="background:linear-gradient(${c} 60%,#fff8 60%)"></i>`).join('')}</div>
@@ -789,6 +927,9 @@ bootAuth();
  const vv=window.visualViewport;
  if(vv){const kb=()=>{const k=Math.max(0,innerHeight-vv.height-vv.offsetTop);document.documentElement.style.setProperty('--kb',k+'px');body.classList.toggle('kbd',k>80)};vv.addEventListener('resize',kb);vv.addEventListener('scroll',kb);kb()}
 })();
+
+/* Password reset links (/#reset=...) from the Admin app. */
+try{lumioReset()}catch(e){}
 
 </script>
 </body></html>
