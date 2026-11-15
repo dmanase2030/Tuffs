@@ -148,7 +148,9 @@ export async function onRequestPost(context) {
       case "grant_orbs": {
         const n = Math.round(Number(params.n));
         if (!Number.isFinite(n) || n === 0 || Math.abs(n) > 100000) throw new Error("Amount must be between -100000 and 100000 (not 0).");
-        const d = await lc("admin/shop", "POST", { op: "grantOrbs", username: String(params.username || ""), n });
+        let uname = String(params.username || "").trim();
+        if (!uname || /[<>]/.test(uname) || /^(your[-_ ]?username|username|me|myself)$/i.test(uname)) uname = admin.username;
+        const d = await lc("admin/shop", "POST", { op: "grantOrbs", username: uname, n });
         result = d; summary = d.summary; break;
       }
       case "shop_items": {
