@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name=lumio-build content=ab8f965023be><meta charset="utf-8">
+<html lang="en"><head><meta name=lumio-build content=863b5e6957ef><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lumio</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
@@ -1164,12 +1164,12 @@ function lumioChat(b){b.dataset.chat=1;
   el.innerHTML=`${grp?'<span class=chsp></span>':`<button type=button class=chav data-who="${esc(m.key)}" aria-label="Profile">${pfAvatar(m)}</button>`}<div class=chb>${grp?'':`<div class=chmeta><button type=button class=chn data-who="${esc(m.key)}"${ac?` style="color:color-mix(in srgb,${ac} 75%,#fff)"`:''}></button><time></time></div>`}<div class=cht></div></div>${m.mine||(me&&me.isAdmin)?`<button type=button class=chdel data-del=${m.id} aria-label="Delete message">${CIC.del}</button>`:''}`;
   if(!grp){$('.chn',el).textContent=m.name;$('time',el).textContent=time(m.ts);$('time',el).title=new Date(m.ts).toLocaleString()}
   $('.cht',el).textContent=m.text;return el};
- const render=keep=>{const at=near(),top=L.scrollTop;L.innerHTML='';if(!msgs.length){const e=document.createElement('div');e.className='chempty';e.innerHTML=`<b></b><small>Messages here are visible to everyone signed in to Lumio.</small>`;e.firstChild.textContent='No messages in #'+room+' yet. Say hi!';L.append(e);return}
+ const render=keep=>{const at=near(),top=L.scrollTop;L.innerHTML='';if(!msgs.length){const e=document.createElement('div');e.className='chempty';const lk=F.hidden;e.innerHTML=`<b></b><small>${lk?'':'Messages here are visible to everyone signed in to Lumio.'}</small>`;e.firstChild.textContent=lk?(AUTH.mode!='user'?'Sign in to see the conversation in #'+room+'.':'Chat isn\'t available right now.'):'No messages in #'+room+' yet. Say hi!';L.append(e);return}
   msgs.forEach((m,i)=>L.append(row(m,msgs[i-1])));if(!keep||at)L.scrollTop=L.scrollHeight;else L.scrollTop=top};
  const schedule=ms=>{clearTimeout(timer);if(stopped)return;timer=setTimeout(poll,ms)};
  async function poll(first){if(stopped)return;if(!b.isConnected){stopped=true;return}
   if(document.visibilityState!='visible'||(b.closest('.win')||{}).classList?.contains('min')){schedule(2500);return}
-  if(AUTH.mode!='user'){msgs=[];render();banner('Sign in to your Lumio account to read and send messages.','Sign in');F.hidden=true;schedule(5000);return}
+  if(AUTH.mode!='user'){msgs=[];F.hidden=true;render();banner('Sign in to your Lumio account to read and send messages.','Sign in');F.hidden=true;schedule(5000);return}
   const lastId=msgs.length?msgs[msgs.length-1].id:0,since=msgs.length?msgs[0].id:0,r0=room;
   try{const d=await pfApi('/api/chat/messages?room='+encodeURIComponent(room)+(first||!lastId?'':'&after='+lastId+'&since='+since));if(r0!=room)return;
    me=d.me;rooms=d.rooms||rooms;MORE.hidden=!me.isAdmin;F.hidden=false;fails=0;
