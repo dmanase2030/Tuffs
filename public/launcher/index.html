@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lumio</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" id="amt" content="Lumio">
+<link rel="apple-touch-icon" id="ati" href="/launcher/icon-180.png">
+<link rel="icon" type="image/svg+xml" href="/launcher/icon.svg">
+<link rel="manifest" href="/launcher/manifest.webmanifest">
+<meta name="theme-color" content="#1a120c">
+<style>
+:root{--a:#f0a040;--ink:#fff;--glass:rgba(60,34,22,.82);--line:rgba(255,255,255,.14);color-scheme:dark;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root{--ink:#fff}}
+*{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+html,body{height:100%;overflow:hidden;background:#111;color:var(--ink);user-select:none}
+button{cursor:pointer;color:inherit;background:none;border:0;font-size:inherit}
+#wall{position:fixed;inset:0;background-size:cover;transition:background .5s}
+.w-forest{background:radial-gradient(circle at 72% 30%,#ffe1a8 0 4%,#ffc66e55 9%,transparent 30%),radial-gradient(ellipse 90% 30% at 15% 72%,#b4521c 0 60%,transparent 61%),radial-gradient(ellipse 80% 28% at 85% 76%,#c86a22 0 60%,transparent 61%),radial-gradient(ellipse 120% 30% at 50% 92%,#7a3414 0 60%,transparent 61%),radial-gradient(ellipse 70% 24% at 40% 64%,#e0913a 0 60%,transparent 61%),linear-gradient(#f4c48a,#f0a868 38%,#d9773e 62%,#5a2410)}
+.w-city{background:radial-gradient(circle at 30% 80%,#ffb347 0 2%,transparent 3%),repeating-linear-gradient(90deg,#16202e 0 40px,#1d2b3d 40px 70px,#111a26 70px 120px),linear-gradient(#1b6f86,#e08a3a)}
+.w-rain{background:linear-gradient(160deg,#27344a,#42597a 60%,#1c2536)}
+.w-orbit{background:radial-gradient(circle at 70% 30%,#cfe4ff 0 5%,#6d8fd0 6% 9%,transparent 10%),#0a0f22}
+.w-moon{background:radial-gradient(circle at 25% 80%,#5d6d93 0 22%,transparent 23%),linear-gradient(#050914,#1a2342)}
+.w-dusk{background:linear-gradient(#2b2a55,#c8604a 60%,#f2a65a),#000}
+.w-neon{background:radial-gradient(circle at 30% 60%,#ff3ea5 0 12%,transparent 30%),radial-gradient(circle at 75% 40%,#3be0ff 0 10%,transparent 28%),#120a24}
+.w-sys{background:linear-gradient(135deg,#2c4a63,#6aa0b5)}
+#lock{position:fixed;inset:0;z-index:999;display:grid;place-items:center;text-align:center;cursor:pointer;transition:opacity .5s,transform .5s}
+#lock.off{opacity:0;transform:translateY(-30px);pointer-events:none}
+#lock .t{font-size:clamp(48px,12vw,96px);font-weight:300;text-shadow:0 2px 20px #0008}
+#lock small{display:block;opacity:.85;margin-top:6px}
+#side{position:fixed;left:10px;top:calc(10px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:6px;z-index:5}
+.ico{width:var(--is,52px);padding:7px 2px;border-radius:12px;background:rgba(20,28,40,.55);border:1px solid var(--line);font-size:9px;text-align:center;backdrop-filter:blur(8px)}
+.ico b{display:block;font-size:17px;font-weight:400}
+.ico:hover{background:rgba(20,28,40,.8)}
+#dock{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:6px 10px;border-radius:18px;background:rgba(15,22,32,.7);border:1px solid var(--line);backdrop-filter:blur(12px);z-index:50;align-items:center;max-width:calc(100% - 16px);overflow-x:auto}
+#dock button{width:38px;height:38px;border-radius:10px;font-size:18px;flex:none;position:relative}
+#dock button:hover{background:rgba(255,255,255,.12)}
+#dock button.run::after{content:"";position:absolute;bottom:1px;left:50%;width:14px;height:3px;margin-left:-7px;border-radius:2px;background:var(--a)}
+#clk{font-size:11px;text-align:right;padding:0 6px;flex:none;line-height:1.2}
+body.cros #dock{left:0;right:0;transform:none;bottom:0;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));border-radius:0;max-width:none}
+body.mac #dock button{width:46px;height:46px;font-size:24px}
+body.win #dock{left:0;right:0;transform:none;bottom:0;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));border-radius:0;justify-content:center;max-width:none}
+body.dockonly #side{display:none}
+.win{position:fixed;display:flex;flex-direction:column;background:var(--glass);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 50px #0009;backdrop-filter:blur(var(--bl,18px));overflow:hidden;min-width:300px;min-height:200px}
+.win.min{display:none}
+.bar{display:flex;align-items:center;gap:8px;padding:7px 10px;font-size:12px;cursor:grab;background:rgba(0,0,0,.18);flex:none}
+.bar span{flex:1}
+.bar button{width:22px;height:22px;border-radius:6px}
+.bar button:hover{background:rgba(255,255,255,.18)}
+.body{flex:1;overflow:auto;position:relative;min-height:0}
+.pad{padding:14px}
+.acc{background:var(--a)!important;color:#2a1608!important}
+.btn{padding:7px 12px;border-radius:9px;background:rgba(255,255,255,.1);font-size:12px}
+.btn.on{background:var(--a);color:#2a1608}
+h4{font-size:12px;opacity:.75;margin:14px 0 6px;font-weight:600}
+.sw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sw i{height:46px;border-radius:8px;cursor:pointer;border:2px solid transparent}
+.sw i.on{border-color:#fff}
+.wp{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.wp div{font-size:10px;text-align:center;cursor:pointer;border:2px solid transparent;border-radius:8px;padding:2px}
+.wp div.on{border-color:var(--a)}.wp div i{display:block;height:44px;border-radius:6px;margin-bottom:3px}
+input{background:rgba(255,255,255,.12);border:1px solid var(--line);color:#fff;border-radius:20px;padding:8px 14px;font-size:13px;outline:0;width:100%}
+.row{display:flex;gap:8px;align-items:center}
+.msg{max-width:80%;padding:8px 12px;border-radius:12px;margin:6px 0;font-size:13px;line-height:1.4;user-select:text}
+.me{margin-left:auto;background:var(--a);color:#2a1608}.ai{background:rgba(255,255,255,.12)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.tile{height:80px;border-radius:10px;padding:8px;font-size:12px;display:flex;align-items:flex-end;cursor:pointer;border:1px solid var(--line)}
+.tile:hover{outline:2px solid var(--a)}
+.prog{height:5px;border-radius:3px;background:rgba(255,255,255,.2);cursor:pointer;overflow:hidden}.prog i{display:block;height:100%;width:0;background:var(--a)}
+canvas{display:block;margin:auto;background:#10151f;border-radius:8px;max-width:100%}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#000c;padding:8px 14px;border-radius:20px;font-size:12px;z-index:2000;opacity:0;transition:.3s;pointer-events:none}
+#toast.on{opacity:1}
+body{-webkit-touch-callout:none}
+.win{animation:pop .18s ease-out}@keyframes pop{from{opacity:0;transform:scale(.96) translateY(8px)}}
+#lock{backdrop-filter:blur(10px);background:rgba(0,0,0,.25)}
+#dock button{transition:transform .15s,background .15s}#dock button:hover{transform:translateY(-4px) scale(1.12)}
+.w-aurora{background:radial-gradient(ellipse at 30% 20%,#3be0a0aa,transparent 55%),radial-gradient(ellipse at 75% 35%,#8a5cf0aa,transparent 55%),linear-gradient(#050d1c,#0b2a3a)}
+.w-sunset{background:radial-gradient(circle at 50% 62%,#ffd27a 0 8%,#ff8a4a 9% 20%,transparent 21%),linear-gradient(#3a2a6a,#d6507a 55%,#f2a65a 56%,#2a1a3a)}
+input[type=range]{padding:0;border:0;background:none;accent-color:var(--a);border-radius:0}
+input[type=color]{width:46px;height:30px;padding:0;border:0;border-radius:8px;background:none}
+.srow{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px}.srow span{flex:1}.srow input[type=range]{width:130px}.srow em{width:44px;font-style:normal;font-size:11px;opacity:.7;text-align:right}
+.tg{width:40px;height:22px;border-radius:11px;background:rgba(255,255,255,.2);position:relative;flex:none;transition:.2s}.tg::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}.tg.on{background:var(--a)}.tg.on::after{left:20px}
+.cm{position:fixed;z-index:3000;min-width:190px;padding:6px;border-radius:12px;background:rgba(20,26,36,.96);border:1px solid var(--line);box-shadow:0 10px 40px #000a}
+.cm button{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:13px}
+.cm button:hover{background:rgba(255,255,255,.12)}
+.sheet{position:fixed;inset:0;z-index:3500;display:grid;place-items:center;background:#0008}
+.sheet>div{width:min(340px,calc(100% - 32px));padding:20px;border-radius:16px;background:#1b2230;border:1px solid var(--line);font-size:13px;line-height:1.5}
+.sheet h3{font-size:16px;margin-bottom:8px}
+@media(max-width:700px){.win{inset:env(safe-area-inset-top,0px) 0 calc(62px + env(safe-area-inset-bottom,0px)) 0!important;width:auto!important;height:auto!important;border-radius:0}}
+</style><style>
+/* ===== Lumio shell ===== */
+#side{display:none}
+#mb{position:fixed;top:0;left:0;right:0;height:calc(30px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 10px 0;display:flex;align-items:center;gap:8px;background:rgba(8,10,16,.4);backdrop-filter:blur(var(--bl,18px)) saturate(1.5);border-bottom:1px solid rgba(255,255,255,.08);z-index:900;font-size:12px}
+#mb button{display:flex;align-items:center;gap:6px;padding:3px 8px;border-radius:6px;font-size:12px}
+#mb button:hover{background:rgba(255,255,255,.14)}
+#mb .lg{width:16px;height:16px;border-radius:5px;background:linear-gradient(135deg,var(--a),#fff7)}
+#mb .sp1{flex:1}#mb b{font-weight:700}
+#desk{position:fixed;inset:0;z-index:4;pointer-events:none}
+.di{position:absolute;width:88px;padding:6px 0;text-align:center;pointer-events:auto;touch-action:none;font-size:11px;text-shadow:0 1px 6px #000c;border-radius:10px}
+.di:hover{background:rgba(255,255,255,.1)}
+.di i{display:grid;place-items:center;width:var(--is,52px);height:var(--is,52px);margin:0 auto 5px;border-radius:14px;font-style:normal;font-size:calc(var(--is,52px) * .5);background:linear-gradient(145deg,var(--a),color-mix(in srgb,var(--a) 45%,#000));color:#fff;box-shadow:0 6px 16px #0006,inset 0 1px 0 #fff4}
+body.dockonly #desk,body.dockonly #wid{display:none}
+#wid{position:fixed;right:16px;top:calc(46px + env(safe-area-inset-top,0px));width:230px;z-index:3;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+#wid>div{pointer-events:auto;background:rgba(10,12,18,.42);backdrop-filter:blur(var(--bl,18px));border:1px solid var(--line);border-radius:16px;padding:14px}
+#wt{font-size:40px;font-weight:300;line-height:1}#wd{font-size:12px;opacity:.8;margin-top:6px}
+#wid textarea{width:100%;height:90px;resize:none;background:none;border:0;color:#fff;font:13px/1.4 system-ui,sans-serif;outline:0;user-select:text}
+@media(max-width:900px){#wid{display:none}}
+#dock{bottom:calc(12px + env(safe-area-inset-bottom,0px));gap:6px;padding:8px 10px;border-radius:22px;background:rgba(14,18,26,.45);overflow:visible;z-index:900}
+#dock button{width:46px;height:46px;border-radius:13px;font-size:22px;background:linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);transform:scale(var(--s,1));transform-origin:bottom center;transition:transform .12s;position:relative}
+#dock button:hover{transform:scale(var(--s,1.1))}
+#dock button::before{content:attr(data-n);position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);padding:3px 8px;border-radius:6px;background:#000c;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s}
+#dock button:hover::before{opacity:1}
+.win{border-radius:14px;border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 60px #000a}
+.win:not(.fg){box-shadow:0 8px 28px #0007}.win:not(.fg) .tb{opacity:.55}
+.tb{display:flex;align-items:center;padding:0 12px;height:38px;flex:none;cursor:grab;background:rgba(0,0,0,.22);font-size:12px;font-weight:600;position:relative;touch-action:none}
+.tb span{position:absolute;left:0;right:0;text-align:center;pointer-events:none}
+.tl{display:flex;gap:8px;position:relative;z-index:1}
+.tl button{width:13px;height:13px;border-radius:50%;padding:0}
+.t1{background:#ff5f57}.t2{background:#febc2e}.t3{background:#28c840}
+.win.max{inset:calc(30px + env(safe-area-inset-top,0px)) 0 0 0!important;width:auto!important;height:auto!important;border-radius:0}
+@media(max-width:700px){.win{inset:calc(30px + env(safe-area-inset-top,0px)) 0 calc(74px + env(safe-area-inset-bottom,0px)) 0!important;width:auto!important;height:auto!important;border-radius:0}.tl button{width:18px;height:18px}.tb{height:42px}#dock{overflow-x:auto;max-width:calc(100% - 16px)}#dock button{width:42px;height:42px;flex:none}#dock button::before{display:none}}
+#cc{position:fixed;right:10px;top:calc(36px + env(safe-area-inset-top,0px));width:290px;padding:14px;border-radius:18px;background:rgba(18,22,32,.8);backdrop-filter:blur(24px) saturate(1.5);border:1px solid var(--line);z-index:1100;display:none;box-shadow:0 20px 60px #000a}
+#cc.on{display:block;animation:pop .15s}
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.cg button{padding:12px 6px;border-radius:12px;background:rgba(255,255,255,.1);font-size:11px;display:flex;flex-direction:column;gap:6px;align-items:center}.cg button.on{background:var(--a);color:#2a1608}
+#cc .srow input[type=range]{width:100%}#cc .srow{padding:5px 0}
+#sp{position:fixed;inset:0;z-index:1200;display:none;background:#0006;backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;padding-top:16vh}
+#sp.on{display:flex}
+#sp>div{width:min(520px,calc(100% - 24px));border-radius:16px;background:rgba(20,24,34,.94);border:1px solid var(--line);box-shadow:0 24px 80px #000b;overflow:hidden}
+#sp input{border-radius:0;border:0;border-bottom:1px solid var(--line);padding:16px 18px;font-size:16px;background:transparent}
+#sp .it{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px 18px;font-size:14px}#sp .it:hover{background:rgba(255,255,255,.1)}
+#dim{position:fixed;inset:0;background:#000;pointer-events:none;z-index:2999;opacity:0}
+#lock{background:rgba(0,0,0,.28);backdrop-filter:blur(14px)}
+#lock .av{width:72px;height:72px;border-radius:50%;margin:26px auto 10px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--a),#0008);box-shadow:0 8px 30px #0006}
+
+/* phone fixes */
+#wid>div{background:rgba(12,14,20,.62)}
+#wid textarea::placeholder{color:rgba(255,255,255,.6)}
+@media(max-width:900px){#wid{display:flex;right:12px;top:calc(40px + env(safe-area-inset-top,0px));width:min(230px,calc(100vw - 124px));gap:8px}#wid>div{padding:12px;border-radius:14px}#wt{font-size:clamp(28px,9vw,40px)}#wid textarea{height:64px}}
+@media(max-width:700px){#dock{overflow:visible;max-width:calc(100vw - 16px);gap:5px;padding:7px 8px}#dock button{width:clamp(32px,calc((100vw - 76px) / 8),44px);height:clamp(32px,calc((100vw - 76px) / 8),44px);font-size:clamp(16px,4.6vw,20px)}#dock button svg{width:60%;height:60%}}
+#clk{white-space:nowrap}#an{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:420px){#mb{gap:2px;padding-left:6px;padding-right:4px}#mb button{padding:3px 6px}}
+@media(max-width:360px){#an{display:none}}
+
+/* ===== Tuffs launcher ===== */
+#lock{display:flex;overflow-y:auto;cursor:default;padding:calc(20px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
+#lock .lkc{margin:auto;width:100%;max-width:560px}
+#lock .t{white-space:nowrap}
+#lock .av{text-transform:uppercase;color:#fff;font-weight:600}
+#lin{display:flex;flex-direction:column;align-items:center;gap:2px}#lin[hidden],.lf[hidden]{display:none}
+#lin b{font-size:18px}#lin small{margin-top:4px}
+#lock .lnk{margin-top:10px;padding:8px 12px;font-size:13px;opacity:.85;text-decoration:underline;text-underline-offset:3px}
+#lock .lnk:hover{opacity:1}
+.lf{max-width:360px;margin:0 auto;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:rgba(14,12,12,.62);border:1px solid var(--line);backdrop-filter:blur(18px);text-align:left;cursor:default}
+.lf input{font-size:16px;padding:11px 14px;border-radius:12px;user-select:text}
+.lf input[hidden]{display:none}
+.lf .lnk{margin-top:0!important;align-self:center}
+.lnote{opacity:.6;font-size:11px;text-align:center}
+.seg2{display:flex;padding:3px;border-radius:12px;background:rgba(255,255,255,.08);gap:3px}
+.seg2 button{flex:1;padding:8px 6px;border-radius:9px;font-size:13px;font-weight:600;opacity:.75}
+.seg2 button.on{background:rgba(255,255,255,.16);opacity:1}
+.er{min-height:0;color:#ffb4a8;font-size:13px;line-height:1.4}.er:empty{display:none}
+.btn.wide{width:100%;padding:12px;font-size:15px;font-weight:600;border-radius:12px}
+.btn:disabled{opacity:.6;cursor:wait}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.ccu{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px}
+.ccu b,.ccu small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ccu small{opacity:.65;font-size:11px;margin-top:2px}
+.av3{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:600;background:linear-gradient(135deg,var(--a),#0008)}
+.acav{width:64px;height:64px;border-radius:50%;margin:8px auto;display:grid;place-items:center;font-size:28px;font-weight:600}
+/* phone: big Close button instead of tiny traffic lights */
+.bk{display:none}
+@media(max-width:700px){.tb{height:52px;padding:0 8px}.tl{display:none}.bk{display:flex;align-items:center;gap:2px;height:40px;padding:0 14px 0 8px;border-radius:20px;background:rgba(255,255,255,.16);font-size:15px;font-weight:600;position:relative;z-index:1}.bk:active{background:rgba(255,255,255,.26)}.tb span{font-size:14px;padding:0 96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+/* browser */
+.lb{position:absolute;inset:0;display:flex;flex-direction:column}
+.lbt{display:flex;gap:4px;align-items:center;padding:6px 8px;background:rgba(0,0,0,.18);flex:none}
+.lbb{width:34px;height:34px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:18px}.lbb:hover{background:rgba(255,255,255,.14)}
+.lbf{flex:1;min-width:0}.lbf input{padding:8px 12px;font-size:16px;user-select:text}
+.lbi{flex:1;width:100%;border:0;background:#fff;min-height:0}.lbi[hidden],.lbh[hidden]{display:none}
+.lbh{flex:1;overflow:auto;padding:28px 18px;text-align:center}
+.lbg{font-size:34px;opacity:.85}.lbs{font-size:13px;opacity:.85;line-height:1.5;margin-top:8px}
+.lbq{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}.lbq .btn{padding:9px 14px;font-size:13px}
+.lbn{font-size:11.5px;opacity:.6;max-width:360px;margin:18px auto 0;line-height:1.5}
+@media(max-width:420px){.lbt .lbb[data-b=fwd]{display:none}}
+/* games */
+.lgw{position:absolute;inset:0;display:flex;flex-direction:column}
+.lgh{padding:10px 10px 8px;flex:none;display:flex;flex-direction:column;gap:8px}
+.lgh input{font-size:16px;padding:9px 14px;user-select:text}
+.lgc{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.lgc::-webkit-scrollbar{display:none}.lgc .btn{flex:none;white-space:nowrap}
+.lgg{flex:1;overflow:auto;padding:4px 10px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;align-content:start}
+.gt{display:flex;flex-direction:column;text-align:left;border-radius:12px;padding:6px;background:rgba(255,255,255,.07);border:1px solid var(--line);min-width:0}
+.gt:hover,.gt:focus-visible{background:rgba(255,255,255,.14);border-color:var(--a)}
+.gth{position:relative;display:block;aspect-ratio:16/10;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 60%,#000),#1a1410)}
+.gth img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.gth em{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:26px;font-weight:700;opacity:.8}
+.gt b{font-size:12.5px;font-weight:600;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gt small{font-size:10.5px;opacity:.6;margin-top:1px}
+@media(max-width:700px){.lgg{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;padding:4px 8px 12px}}
+@media(max-width:340px){.lgg{grid-template-columns:1fr 1fr}}
+.lg2{position:absolute;inset:0;display:flex;flex-direction:column;background:#000}
+.lgb{display:flex;gap:6px;padding:6px 8px;flex:none;background:rgba(0,0,0,.4)}
+.lg2 iframe{flex:1;width:100%;border:0;min-height:0;background:#000}
+@media(min-width:701px){.lgc{scrollbar-width:thin;padding-bottom:6px}.lgc::-webkit-scrollbar{display:block;height:6px}.lgc::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:3px}}
+
+</style></head><body>
+<div id="wall" class="w-forest"></div>
+<div id="desk"></div>
+<div id="wid"><div><div id="wt"></div><div id="wd"></div></div><div><div style="font-size:11px;opacity:.7;margin-bottom:6px">QUICK NOTE</div><textarea id="wn" placeholder="Jot something down..."></textarea></div></div>
+<div id="mb"></div>
+<div id="dock"></div>
+<div id="cc"></div>
+<div id="sp"><div><input id="spq" placeholder="Search apps and actions"><div id="spr"></div></div></div>
+<div id="lock"><div class="lkc">
+<div class="t" id="lt"></div><div id="ld"></div>
+<div class="av" id="lav">?</div>
+<div id="lin" hidden><b id="lname"></b><small id="lhint">Tap or press any key to unlock</small><button type="button" class="lnk" id="lso">Not you? Sign out</button></div>
+<form id="af" class="lf" hidden novalidate>
+<div class="seg2" role="tablist"><button type="button" data-m="in" class="on">Sign in</button><button type="button" data-m="up">Create account</button></div>
+<input id="au" name="username" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="20" aria-label="Username">
+<input id="ap" name="password" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
+<input id="ac" name="confirm" type="password" placeholder="Confirm password" autocomplete="new-password" aria-label="Confirm password" hidden>
+<div class="er" id="ae" role="alert"></div>
+<button type="submit" class="btn acc wide" id="ago">Sign in</button>
+<button type="button" class="lnk" id="agu">Continue as guest</button>
+<small class="lnote">Same account as the main Tuffs site.</small>
+</form>
+</div></div>
+<div id="dim"></div>
+<div id="toast"></div>
+<script>
+/* ===== Tuffs launcher: accounts, proxy browser, game catalog =====
+ * Accounts use the same /api/auth/* endpoints and the same 'lumio_session'
+ * localStorage entry ({u,t} bearer token) as the main Tuffs site, so signing
+ * in here also signs you in there and vice versa. */
+let AUTH={mode:'out',name:'',admin:false},SESSION=null,PENDING=null,AMODE='in';
+try{SESSION=JSON.parse(localStorage.getItem('lumio_session')||'null')}catch(e){SESSION=null}
+const PROXY='/service/',SEARCH='https://duckduckgo.com/?q=';
+const QUICK=[['Google','https://www.google.com'],['YouTube','https://www.youtube.com'],['Wikipedia','https://www.wikipedia.org'],['Reddit','https://www.reddit.com']];
+const USER_RE=/^[\w.-]{3,20}$/;
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c])}
+function initial(){return ((AUTH.name||'Guest')[0]||'?').toUpperCase()}
+function saveSession(u,t){SESSION={u,t};try{localStorage.setItem('lumio_session',JSON.stringify(SESSION))}catch(e){}}
+function clearSession(){SESSION=null;try{localStorage.removeItem('lumio_session')}catch(e){}}
+async function authPost(path,body){try{const r=await fetch(path,{method:'POST',headers:{'content-type':'application/json',...(SESSION?{authorization:'Bearer '+SESSION.t}:{})},body:JSON.stringify(body||{})});const d=await r.json().catch(()=>({}));if(!r.ok)return{error:d.error||('Request failed ('+r.status+')'),status:r.status};return d}catch(e){return{error:'Network error. Try again.'}}}
+function paintUser(){const n=AUTH.mode=='out'?'':AUTH.name,i=AUTH.mode=='out'?'?':initial();
+ $('#lav').textContent=i;$('#lname').textContent=n;
+ const ca=$('#ccav');if(ca){ca.textContent=i;$('#ccname').textContent=n||'Not signed in';$('#ccsub').textContent=AUTH.mode=='user'?(AUTH.admin?'Tuffs account · admin':'Tuffs account'):'Guest, nothing is saved to an account';const so=$('#cc [data-so]');if(so)so.textContent=AUTH.mode=='user'?'Sign out':'Sign in'}
+ if(typeof repaintSettings=='function'&&document.querySelector('.stw'))repaintSettings();
+ document.querySelectorAll('[data-acct]').forEach(b=>lumioAccount(b))}
+function setAMode(m){AMODE=m;document.querySelectorAll('#af .seg2 button').forEach(b=>b.classList.toggle('on',b.dataset.m==m));$('#ac').hidden=m=='in';$('#ap').autocomplete=m=='in'?'current-password':'new-password';$('#ago').textContent=m=='in'?'Sign in':'Create account';$('#ae').textContent=''}
+function showLock(msg){const L=$('#lock');L.classList.remove('off');const out=AUTH.mode=='out';$('#af').hidden=!out;$('#lin').hidden=out;
+ if(out){$('#ap').value='';$('#ac').value='';if(!$('#au').value&&SESSION&&SESSION.u)$('#au').value=SESSION.u;$('#ae').textContent=msg||''}
+ else $('#lhint').textContent=msg||'Tap or press any key to unlock';
+ $('#lso').textContent=AUTH.mode=='guest'?'Sign in to an account':'Not you? Sign out';paintUser()}
+function lockNow(){document.querySelectorAll('.cm').forEach(m=>m.remove());showLock()}
+function unlock(){if(AUTH.mode=='out')return;$('#lock').classList.add('off');if(PENDING){const h=PENDING;PENDING=null;open(h)}}
+function signedIn(d,unlockNow){saveSession(d.username,d.token);AUTH={mode:'user',name:d.username,admin:!!d.isAdmin};try{sessionStorage.removeItem('lumio_guest')}catch(e){}paintUser();if(unlockNow)unlock()}
+function closeAll(){document.querySelectorAll('.win').forEach(w=>{w.onclose&&w.onclose();w.remove()});for(const k in open_)delete open_[k];dockUpd();fgName(null)}
+async function signOut(){if(AUTH.mode=='user'&&SESSION)authPost('/api/auth/logout',{});clearSession();try{sessionStorage.removeItem('lumio_guest')}catch(e){}
+ AUTH={mode:'out',name:'',admin:false};closeAll();setAMode('in');$('#au').value='';showLock()}
+async function bootAuth(){
+ const f=$('#af');setAMode('in');
+ f.querySelectorAll('.seg2 button').forEach(b=>b.onclick=()=>setAMode(b.dataset.m));
+ $('#lso').onclick=e=>{e.stopPropagation();signOut()};
+ $('#agu').onclick=()=>{AUTH={mode:'guest',name:'Guest',admin:false};try{sessionStorage.setItem('lumio_guest','1')}catch(e){}paintUser();unlock()};
+ let busy=false;
+ f.onsubmit=async e=>{e.preventDefault();if(busy)return;const u=$('#au').value.trim(),p=$('#ap').value,er=$('#ae');er.textContent='';
+  if(!u||!p){er.textContent='Enter your username and password.';return}
+  if(AMODE=='up'){if(!USER_RE.test(u)){er.textContent='Username must be 3–20 letters, numbers, dots, _ or -';return}if(p.length<4){er.textContent='Password must be at least 4 characters';return}if(p!==$('#ac').value){er.textContent='Passwords do not match';return}}
+  busy=true;const go=$('#ago'),lab=go.textContent;go.disabled=true;go.textContent=AMODE=='in'?'Signing in…':'Creating account…';
+  try{const d=await authPost(AMODE=='in'?'/api/auth/login':'/api/auth/signup',{username:u,password:p});
+   if(d.error)er.textContent=d.error;else{try{if(window.PasswordCredential&&navigator.credentials)navigator.credentials.store(new PasswordCredential({id:u,password:p})).catch(()=>{})}catch(_){}signedIn(d,true);toast(AMODE=='in'?'Welcome back, '+d.username:'Account created. Welcome, '+d.username)}}
+  finally{busy=false;go.disabled=false;go.textContent=lab}};
+ let guest=false;try{guest=sessionStorage.getItem('lumio_guest')=='1'}catch(e){}
+ if(SESSION&&SESSION.t){AUTH={mode:'user',name:SESSION.u||'',admin:false};showLock('Checking your account…');
+  try{const r=await fetch('/api/auth/me',{headers:{authorization:'Bearer '+SESSION.t}});const d=await r.json().catch(()=>({}));
+   if(r.ok){AUTH={mode:'user',name:d.username,admin:!!d.isAdmin};SESSION.u=d.username;saveSession(d.username,SESSION.t);showLock()}
+   else if(r.status==401){clearSession();AUTH={mode:'out',name:'',admin:false};showLock('You were signed out. Sign in again.')}
+   else{AUTH={mode:'out',name:'',admin:false};showLock(d.error||'Accounts are unavailable right now. Try again soon.')}}
+  catch(e){showLock('Offline. Tap to unlock with your saved sign-in.')}}
+ else if(guest){AUTH={mode:'guest',name:'Guest',admin:false};showLock()}
+ else showLock()}
+
+/* ---- Account app ---- */
+function lumioAccount(b){b.dataset.acct=1;const u=AUTH.mode=='user';
+ b.innerHTML=`<div class=pad style="text-align:center"><div class="acc acav">${esc(initial())}</div><b style="font-size:16px">${esc(AUTH.name||'Guest')}</b><p style="font-size:12px;opacity:.75;margin-top:6px;line-height:1.5">${u?(AUTH.admin?'Signed in to your Tuffs account (admin).':'Signed in to your Tuffs account. It works on the main Tuffs site too.'):'You are using Lumio as a guest. Your settings stay in this browser only.'}</p><div class=row style="justify-content:center;margin-top:14px;flex-wrap:wrap"><button class=btn data-lock>Lock screen</button><button class="btn ${u?'':'acc'}" data-out>${u?'Sign out':'Sign in or create account'}</button></div></div>`;
+ b.querySelector('[data-lock]').onclick=()=>lockNow();b.querySelector('[data-out]').onclick=()=>signOut()}
+
+/* ---- Browser app: pages load through the site's /service/ proxy ---- */
+function parseAddr(v){v=(v||'').trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(v))return 'https://'+v;return SEARCH+encodeURIComponent(v)}
+function proxify(u){if(/^\s*(javascript|data|vbscript):/i.test(u))return 'about:blank';return /^https?:\/\//i.test(u)?PROXY+encodeURIComponent(u):u}
+function unproxy(path){if(path.indexOf(PROXY)!==0)return null;try{return decodeURIComponent(path.slice(PROXY.length))}catch(e){return null}}
+function newTab(u){const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.append(a);a.click();a.remove()}
+function lumioBrowser(b){
+ b.innerHTML=`<div class=lb><div class=lbt><button class=lbb data-b=back aria-label=Back>${ic('<path d="M15 5l-7 7 7 7"/>')}</button><button class=lbb data-b=fwd aria-label=Forward>${ic('<path d="M9 5l7 7-7 7"/>')}</button><button class=lbb data-b=re aria-label=Reload>${ic('<path d="M20 12a8 8 0 11-2.3-5.6M20 4v5h-5"/>')}</button><form class=lbf><input name=q placeholder="Search or enter address" autocapitalize=none spellcheck=false enterkeyhint=go aria-label="Address"></form><button class=lbb data-b=ext aria-label="Open in new tab">${ic('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/>')}</button></div>
+ <div class=lbh><div class=lbg>${IC.globe}</div><p class=lbs>Search or type an address. Pages load through the Tuffs proxy.</p><div class=lbq>${QUICK.map(q=>`<button class=btn data-u="${esc(q[1])}">${esc(q[0])}</button>`).join('')}</div><p class=lbn>Simple sites work best. Logins, videos and heavy apps often don't load through this proxy.</p></div>
+ <div class="lbh lbx" hidden></div><iframe class=lbi hidden referrerpolicy=no-referrer allow="fullscreen;autoplay"></iframe></div>`;
+ const fr=$('.lbi',b),home=$('.lbh',b),fail=$('.lbx',b),inp=$('input',b);let url='';
+ const showFail=()=>{fr.hidden=true;fail.hidden=false;fail.innerHTML=`<b style="display:block;margin-bottom:8px">Couldn't load that page.</b><p class=lbs>The proxy couldn't open it. Some sites block proxies.</p>`};
+ const nav=v=>{const u=parseAddr(v);if(!u)return;url=u;inp.value=u;home.hidden=true;fail.hidden=true;fr.hidden=false;const src=proxify(u);fr.src=src;
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);fetch(src,{signal:ctl.signal,method:'GET'}).then(r=>{clearTimeout(tm);if(!r.ok&&url===u)showFail()}).catch(()=>{clearTimeout(tm)})};
+ fr.onload=()=>{try{const l=fr.contentWindow.location,real=unproxy(l.pathname);if(real){url=real+(l.search&&real.indexOf('?')<0?l.search:'');if(document.activeElement!==inp)inp.value=url}}catch(e){}};
+ $('.lbf',b).onsubmit=e=>{e.preventDefault();inp.blur();nav(inp.value)};
+ inp.onfocus=()=>inp.select();
+ b.onclick=e=>{const q=e.target.closest('[data-u]');if(q){nav(q.dataset.u);return}const t=e.target.closest('[data-b]');if(!t)return;const a=t.dataset.b;
+  try{if(a=='back'){if(fr.hidden)return;fr.contentWindow.history.back()}else if(a=='fwd')fr.contentWindow.history.forward();else if(a=='re'){if(url)nav(url)}else if(a=='ext'){if(url)newTab(proxify(url))}}catch(_){}};
+ setTimeout(()=>{if(innerWidth>700)inp.focus()},60)}
+
+/* ---- Games app: the real Tuffs catalog (public/data/games.json + admin overrides from /api/games) ---- */
+let CAT_P=null;
+function loadCatalog(){if(CAT_P)return CAT_P;CAT_P=Promise.all([fetch('/data/games.json').then(r=>{if(!r.ok)throw new Error('games.json '+r.status);return r.json()}),fetch('/api/games').then(r=>r.ok?r.json():{}).catch(()=>({}))]).then(([d,o])=>{const ov=(o&&o.overrides)||{};return (d.games||[]).filter(g=>g&&g.id&&!(ov[g.id]&&ov[g.id].hidden)).map(g=>({id:g.id,title:(ov[g.id]&&ov[g.id].title)||g.title||g.id,cat:g.category||'Games',url:g.external?g.entry:'/'+g.entry,ext:!!g.external,thumb:g.thumb?'/'+g.thumb:''})).sort((a,b)=>a.title.localeCompare(b.title,undefined,{numeric:true,sensitivity:'base'}))}).catch(e=>{CAT_P=null;throw e});return CAT_P}
+function playGame(g){const k='game_'+g.id.replace(/[^\w-]/g,'_');if(!APPS[k])APPS[k]={n:g.title,i:IC.pad,w:860,h:560,hide:1,r(b){b.innerHTML=`<div class=lg2><div class=lgb><button class=btn data-fs>Full screen</button><button class=btn data-nt>Open in new tab</button></div><iframe allow="fullscreen;autoplay;gamepad" allowfullscreen></iframe></div>`;const f=$('iframe',b),src=g.ext?proxify(g.url):g.url;f.src=src;
+ $('[data-fs]',b).onclick=()=>{const el=f;(el.requestFullscreen?el.requestFullscreen():Promise.reject()).catch(()=>{try{el.webkitEnterFullscreen&&el.webkitEnterFullscreen()}catch(e){}toast('Full screen is not supported here')})};$('[data-nt]',b).onclick=()=>newTab(new URL(src,location.href).href);
+ b.closest('.win').onclose=()=>{f.src='about:blank'}}};open(k)}
+function lumioGames(b){b.innerHTML=`<div class=lgw><div class=lgh><input type=search placeholder="Loading games…" aria-label="Search games" autocapitalize=none spellcheck=false><div class=lgc></div></div><div class=lgg><p class=lbs style="padding:20px;text-align:center">Loading games…</p></div></div>`;
+ const q=$('input',b),cats=$('.lgc',b),grid=$('.lgg',b);let all=[],cat='All';
+ const draw=()=>{const s=q.value.trim().toLowerCase(),l=all.filter(g=>(cat=='All'||g.cat==cat)&&(!s||g.title.toLowerCase().includes(s)||g.cat.toLowerCase().includes(s)));
+  grid.innerHTML=l.length?l.map(g=>`<button class=gt data-g="${esc(g.id)}" title="${esc(g.title)}"><span class=gth>${g.thumb?`<img src="${esc(g.thumb)}" alt="" loading=lazy decoding=async onerror="this.remove()">`:''}<em>${esc(g.title.slice(0,1))}</em></span><b>${esc(g.title)}</b><small>${esc(g.cat)}</small></button>`).join(''):`<p class=lbs style="padding:20px;text-align:center">No games match “${esc(q.value)}”.</p>`};
+ loadCatalog().then(l=>{all=l;q.placeholder=`Search ${l.length} games`;const cs=['All',...[...new Set(l.map(g=>g.cat))].sort()];cats.innerHTML=cs.map(c=>`<button class="btn ${c==cat?'on':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');draw()}).catch(()=>{grid.innerHTML=`<p class=lbs style="padding:20px;text-align:center">Couldn't load the game list. Check your connection and reopen Games.</p>`});
+ q.oninput=draw;
+ cats.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){cats.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
+ b.onclick=e=>{const c=e.target.closest('[data-c]');if(c){cat=c.dataset.c;cats.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===c));draw();return}const t=e.target.closest('[data-g]');if(t){const g=all.find(x=>x.id==t.dataset.g);if(g)playGame(g)}}}
+
+</script>
+<script>
+const $=(s,e=document)=>e.querySelector(s),H=(h)=>{const d=document.createElement('div');d.innerHTML=h;return d.firstElementChild};
+const st={a:'#f0a040',wall:'w-forest',style:'drift',chrome:'desktop',desk:['browser','settings'],custom:'',fit:'cover',dim:0,wblur:0,blur:18,op:.82,isz:52,h24:0};
+try{Object.assign(st,JSON.parse(localStorage.getItem('drift')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('drift',JSON.stringify(st))}catch(e){}};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)};
+function tick(){const d=new Date(),t=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit',hour12:!st.h24}),dt=d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'});
+$('#lt').textContent=t;$('#ld').textContent=dt;const c=$('#clk');if(c)c.innerHTML=t+'<br>'+d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})}
+$('#lock').onclick=e=>{if(AUTH.mode!='out'&&!e.target.closest('form,button,input'))unlock()};
+addEventListener('keydown',e=>{if(AUTH.mode!='out'&&!$('#lock').classList.contains('off')&&!e.target.closest('input,textarea')&&!e.ctrlKey&&!e.metaKey)unlock()});
+const WALLS=[['w-sys','System'],['w-forest','Autumn Forest'],['w-city','City Lights'],['w-rain','Rainy Window'],['w-orbit','Orbit'],['w-moon','Moonrise'],['w-dusk','Dusk Ridge'],['w-neon','Neon Alley'],['w-aurora','Aurora'],['w-sunset','Sunset']];
+const ACC=['#f0a040','#e6e0a0','#f08fb0','#6fe0c8','#9a6cf0','#6c8cf0','#b080f8','#40b0f0'];
+function applyStyle(){const R=document.documentElement.style;R.setProperty('--a',st.a);R.setProperty('--bl',st.blur+'px');R.setProperty('--glass','rgba(60,34,22,'+st.op+')');R.setProperty('--is',st.isz+'px');paintWall();
+document.body.className=({drift:'',chromeos:'cros',macos:'mac',win11:'win'})[st.style]+(st.chrome=='dock'?' dockonly':'');}
+/* ---------- apps ---------- */
+const ic=(p,f)=>`<svg viewBox="0 0 24 24" width="1em" height="1em" fill="${f||'none'}" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em">${p}</svg>`;
+const PL=ic('<path d="M8 5v14l11-7z"/>','currentColor'),PA=ic('<path d="M8 5v14M16 5v14"/>'),PV=ic('<path d="M6 5v14M18 5v14L8 12z"/>'),NX=ic('<path d="M18 5v14M6 5v14l10-7z"/>');
+const IC={globe:ic('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),film:ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>'),book:ic('<path d="M4 5h7a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-7v12h7z"/>'),music:ic('<path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/>'),pad:ic('<rect x="3" y="8" width="18" height="9" rx="4"/><path d="M8 10v5M5.5 12.5h5"/><circle cx="16" cy="12" r="1"/>'),snake:ic('<path d="M5 18h10a3 3 0 000-6H9a3 3 0 010-6h10"/>'),spark:ic('<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>'),user:ic('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'),gear:ic('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>')};
+const APPS={
+browser:{n:'Browser',i:IC.globe,w:960,h:620,r(b){lumioBrowser(b)}},
+watch:{n:'Watch',i:IC.film,w:560,h:380,r(b){b.innerHTML=`<div id=scr style="height:calc(100% - 52px);background:linear-gradient(#2a6f86,#14323f 55%,#8a6a3a 56%,#2a1e14);position:relative;display:grid;place-items:center"><div style="font-size:12px;opacity:.9;background:#0007;padding:4px 10px;border-radius:12px">The Getaway</div></div><div class=pad style="padding:8px 12px"><div class=row><button id=pp class="btn on">${PL}</button><div class=prog style="flex:1"><i id=pg></i></div><span id=tm style="font-size:11px">0:00 / 3:00</span></div></div>`;
+let p=0,on=0,h;const u=()=>{$('#pg',b).style.width=p/180*100+'%';$('#tm',b).textContent=`${Math.floor(p/60)}:${String(p%60).padStart(2,'0')} / 3:00`};
+$('#pp',b).onclick=()=>{on=!on;$('#pp',b).innerHTML=on?PA:PL;clearInterval(h);if(on)h=setInterval(()=>{p=(p+1)%181;u();$('#scr',b).style.filter=`hue-rotate(${p*2}deg)`},1000)};b.closest('.win').onclose=()=>clearInterval(h)}},
+manga:{n:'Manga',i:IC.book,w:480,h:420,r(b){b.innerHTML=`<div class=pad><h4 style="margin-top:0">Library</h4><div class=grid>${['Skyline','Tidebreak','Ember Run','Paper Moon','Night Shift','Wayfarer'].map((t,i)=>`<div class=tile style="background:linear-gradient(${i*60}deg,#5a3a2a,#2a3f5a)" onclick="toast('Reader not wired up yet')">${t}</div>`).join('')}</div></div>`}},
+music:{n:'Music',i:IC.music,w:340,h:430,r(b){const T=[['Boston','Stella Lefty',230],['Late Drive','Amber Hours',201],['Paper Planes','Low Tide',187]];let i=0,p=0,on=0,h;
+b.innerHTML=`<div class=pad style="text-align:center"><div id=art style="width:170px;height:170px;margin:4px auto 12px;border-radius:12px;border:2px solid #fff;background:linear-gradient(135deg,#c06a2a,#2a3f5a)"></div><div id=tt style="font-size:18px;font-weight:600"></div><div id=ta style="font-size:12px;opacity:.7;margin-bottom:12px"></div><div class=prog><i id=pg></i></div><div class=row style="justify-content:center;margin-top:14px;gap:14px;font-size:18px"><button id=pv>${PV}</button><button id=pl class="acc" style="width:44px;height:44px;border-radius:50%;display:grid;place-items:center">${PL}</button><button id=nx>${NX}</button></div></div>`;
+const s=()=>{$('#tt',b).textContent=T[i][0];$('#ta',b).textContent=T[i][1];$('#art',b).style.filter=`hue-rotate(${i*70}deg)`;$('#pg',b).style.width=p/T[i][2]*100+'%'};s();
+const set=n=>{i=(i+n+T.length)%T.length;p=0;s()};
+$('#pl',b).onclick=()=>{on=!on;$('#pl',b).innerHTML=on?PA:PL;clearInterval(h);if(on)h=setInterval(()=>{if(++p>=T[i][2])set(1);s()},1000)};
+$('#pv',b).onclick=()=>set(-1);$('#nx',b).onclick=()=>set(1);b.closest('.win').onclose=()=>clearInterval(h)}},
+games:{n:'Games',i:IC.pad,w:820,h:580,r(b){lumioGames(b)}},
+snake:{n:'Snake',i:IC.snake,w:380,h:440,hide:1,r(b){b.innerHTML=`<div class=pad><canvas id=c width=320 height=320></canvas><p id=sc style="text-align:center;font-size:12px;margin-top:8px">Score 0 · arrow keys / swipe</p></div>`;
+const c=$('#c',b),x=c.getContext('2d'),N=16,S=20;let sn,d,f,sc,h,go;
+const rs=()=>{sn=[[8,8],[7,8],[6,8]];d=[1,0];f=[12,5];sc=0;go=0};rs();
+const key=k=>{const m={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[k];if(m&&(m[0]+d[0]||m[1]+d[1]))d=m;if(go&&k==' ')rs()};
+const kd=e=>{if(b.isConnected&&b.closest('.win').style.zIndex==Z){key(e.key);if(e.key.startsWith('Arrow'))e.preventDefault()}};addEventListener('keydown',kd);
+let tx,ty;c.ontouchstart=e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY};c.ontouchend=e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;key(Math.abs(dx)>Math.abs(dy)?(dx>0?'ArrowRight':'ArrowLeft'):(dy>0?'ArrowDown':'ArrowUp'));if(go)rs()};
+c.onclick=()=>go&&rs();
+h=setInterval(()=>{if(go)return;const n=[(sn[0][0]+d[0]+N)%N,(sn[0][1]+d[1]+N)%N];if(sn.some(s=>s[0]==n[0]&&s[1]==n[1])){go=1}else{sn.unshift(n);if(n[0]==f[0]&&n[1]==f[1]){sc++;f=[Math.random()*N|0,Math.random()*N|0]}else sn.pop()}
+x.fillStyle='#10151f';x.fillRect(0,0,320,320);x.fillStyle='#e55';x.fillRect(f[0]*S+3,f[1]*S+3,14,14);x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--a');sn.forEach(s=>x.fillRect(s[0]*S+1,s[1]*S+1,18,18));
+$('#sc',b).textContent=go?`Game over · ${sc} · tap or space to restart`:`Score ${sc} · arrow keys / swipe`},110);
+b.closest('.win').onclose=()=>{clearInterval(h);removeEventListener('keydown',kd)}}},
+ai:{n:'Lumio AI',i:IC.spark,w:560,h:440,r(b){b.innerHTML=`<div style="display:flex;flex-direction:column;height:100%"><div id=log class=pad style="flex:1;overflow:auto"><div class="msg ai">Hi, I'm Lumio AI. Ask me anything. (This is a local demo that only knows a few topics.)</div></div><div class=pad style="padding:8px"><div class=row><input id=q placeholder="Message Lumio AI…"><button class="btn acc" id=s>Send</button></div></div></div>`;
+const R=[[/https|tls|ssl/,'HTTPS wraps your traffic in TLS. Your browser and the server agree on keys in a handshake, then encrypt everything, so anyone in between only sees scrambled bytes.'],[/hello|hi\b|hey/,'Hey! What are you working on?'],[/lumio|drift|os\b/,'Lumio is a desktop that lives in a browser tab: windows, a dock, apps, and themes, all in HTML/CSS/JS.'],[/game/,'Open the Games app and try Snake.']];
+const send=()=>{const i=$('#q',b),v=i.value.trim();if(!v)return;i.value='';const l=$('#log',b);const m=H('<div class="msg me"></div>');m.textContent=v;l.append(m);
+const a=H('<div class="msg ai">…</div>');l.append(a);const t=(R.find(r=>r[0].test(v.toLowerCase()))||[0,"I'm a local demo with canned answers. Connect a real model API on your own host to make me smarter."])[1];let k=0;const h=setInterval(()=>{a.textContent=t.slice(0,k+=3);l.scrollTop=l.scrollHeight;if(k>=t.length)clearInterval(h)},20)};
+$('#s',b).onclick=send;$('#q',b).onkeydown=e=>e.key=='Enter'&&send()}},
+account:{n:'Account',i:IC.user,w:360,h:330,r(b){lumioAccount(b)}},
+settings:{n:'Settings',i:IC.gear,w:540,h:560,r(b){const seg=(k,opts)=>`<div class=row style="flex-wrap:wrap">${opts.map(o=>`<button class="btn ${st[k]==o[0]?'on':''}" data-k=${k} data-v=${o[0]}>${o[1]}</button>`).join('')}</div>`;
+const paint=()=>{b.innerHTML=`<div class=pad><h4 style="margin-top:0">Appearance</h4><div class=sw>${ACC.map(c=>`<i data-c=${c} class="${st.a==c?'on':''}" style="background:linear-gradient(${c} 60%,#fff8 60%)"></i>`).join('')}</div>
+<h4>Chrome</h4>${seg('chrome',[['browser','Browser'],['dock','Dock'],['desktop','Desktop']])}
+<h4>Desktop style</h4>${seg('style',[['drift','Lumio'],['chromeos','ChromeOS'],['macos','macOS'],['win11','Windows 11']])}
+<h4>Wallpaper</h4><div class=wp>${WALLS.map(w=>`<div data-w=${w[0]} class="${st.wall==w[0]?'on':''}"><i class="${w[0]}"></i>${w[1]}</div>`).join('')}</div></div>`};paint();
+b.onclick=e=>{const t=e.target.closest('[data-c],[data-k],[data-w]');if(!t)return;if(t.dataset.c)st.a=t.dataset.c;if(t.dataset.k)st[t.dataset.k]=t.dataset.v;if(t.dataset.w)st.wall=t.dataset.w;save();applyStyle();paint()}}}
+};
+function paintWall(){const w=$('#wall'),c=st.wall=='custom'&&st.custom,t=st.fit=='tile';
+w.className=c?'':st.wall;w.style.cssText=c?`background:#000 url('${st.custom}') center/${t?'auto':st.fit} ${t?'repeat':'no-repeat'}`:'';
+w.style.filter=`brightness(${1-st.dim/100}) blur(${st.wblur}px)`;w.style.transform=st.wblur?'scale(1.08)':''}
+let repaintSettings=null;
+function upload(f){if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);st.custom=c.toDataURL('image/jpeg',.8);st.wall='custom';save();applyStyle();repaintSettings&&repaintSettings();toast('Wallpaper set')};im.onerror=()=>toast('Could not read that image');im.src=r.result};r.readAsDataURL(f)}
+APPS.settings.r=function(b){let tab='Appearance';
+const seg=(k,o)=>`<div class=row style='flex-wrap:wrap'>${o.map(x=>`<button class='btn ${st[k]==x[0]?'on':''}' data-k=${k} data-v=${x[0]}>${x[1]}</button>`).join('')}</div>`;
+const sl=(k,l,mn,mx,sp,u)=>`<div class=srow><span>${l}</span><input type=range min=${mn} max=${mx} step=${sp} value=${st[k]} data-s=${k} data-u='${u}'><em>${st[k]}${u}</em></div>`;
+const tg=(k,l)=>`<div class=srow><span>${l}</span><button class='tg ${st[k]?'on':''}' data-t=${k}></button></div>`;
+const T={
+Appearance:()=>`<h4 style='margin-top:0'>Accent color</h4><div class=sw>${ACC.map(c=>`<i data-c=${c} class='${st.a==c?'on':''}' style='background:linear-gradient(${c} 60%,#fff8 60%)'></i>`).join('')}</div><div class=srow><span>Custom color</span><input type=color value=${st.a} data-pick></div><h4>Windows</h4>${sl('blur','Glass blur',0,30,1,'px')}${sl('op','Opacity',0.5,1,0.02,'')}<h4>Clock</h4>${tg('h24','24-hour time')}`,
+Wallpaper:()=>`<div class=row style='gap:8px'><label class='btn acc' style='cursor:pointer'>Upload your own<input id=up type=file accept='image/*' hidden></label>${st.custom?`<button class=btn data-rm>Remove</button>`:''}</div><h4>Wallpapers</h4><div class=wp>${st.custom?`<div data-w=custom class='${st.wall=='custom'?'on':''}'><i style='background:url(${st.custom}) center/cover'></i>Custom</div>`:''}${WALLS.map(w=>`<div data-w=${w[0]} class='${st.wall==w[0]?'on':''}'><i class=${w[0]}></i>${w[1]}</div>`).join('')}</div><h4>Fit</h4>${seg('fit',[['cover','Fill'],['contain','Fit'],['tile','Tile']])}${sl('dim','Dim',0,70,5,'%')}${sl('wblur','Blur',0,20,1,'px')}`,
+Desktop:()=>`<h4 style='margin-top:0'>Desktop style</h4>${seg('style',[['drift','Lumio'],['chromeos','ChromeOS'],['macos','macOS'],['win11','Windows 11']])}<h4>Chrome</h4>${seg('chrome',[['browser','Browser'],['dock','Dock'],['desktop','Desktop']])}<h4>Icons</h4>${sl('isz','Icon size',40,72,4,'px')}<button class=btn data-rd style='margin-top:10px'>Reset desktop icons</button>`,
+About:()=>`<h4 style='margin-top:0'>Lumio</h4><p style='font-size:13px;line-height:1.5;opacity:.85'>A web desktop recreation. Hold any app to add it to the desktop. Settings and your wallpaper are saved in this browser.</p><button class=btn data-ra style='margin-top:12px'>Reset everything</button>`};
+const paint=()=>{b.innerHTML=`<div class=row style='padding:12px 14px 0;gap:6px;flex-wrap:wrap'>${Object.keys(T).map(t=>`<button class='btn ${t==tab?'on':''}' data-tab=${t}>${t}</button>`).join('')}</div><div class=pad>${T[tab]()}</div>`};
+paint();repaintSettings=paint;
+b.onclick=e=>{const t=e.target.closest('[data-c],[data-k],[data-w],[data-tab],[data-t],[data-rm],[data-rd],[data-ra]');if(!t)return;const d=t.dataset;
+if(d.tab)tab=d.tab;if(d.c)st.a=d.c;if(d.k)st[d.k]=d.v;if(d.w)st.wall=d.w;if(d.t)st[d.t]=st[d.t]?0:1;
+if('rm' in d){st.custom='';if(st.wall=='custom')st.wall='w-forest'}
+if('rd' in d){st.desk=['browser','settings'];renderSide();toast('Desktop icons reset')}
+if('ra' in d){try{localStorage.removeItem('drift')}catch(x){}location.reload();return}
+save();applyStyle();tick();paint()};
+b.oninput=e=>{const t=e.target;if(t.dataset.s){st[t.dataset.s]=parseFloat(t.value);t.nextElementSibling.textContent=t.value+t.dataset.u;applyStyle()}else if('pick' in t.dataset){st.a=t.value;applyStyle()}};
+b.onchange=e=>{if(e.target.id=='up')upload(e.target.files[0]);else{save();paint()}}};
+(()=>{
+const sty=document.createElement('style');sty.textContent=`.spw{position:absolute;inset:0;container-type:inline-size;background:#000}.sp{display:grid;grid-template-columns:220px 1fr;grid-template-rows:minmax(0,1fr) 76px;gap:8px;padding:8px;height:100%;font-size:13px;color:#fff}.sp-side{background:#121212;border-radius:10px;padding:14px 10px;overflow:auto;display:flex;flex-direction:column;gap:2px}.sp-side .nv{display:flex;gap:12px;align-items:center;padding:9px 10px;border-radius:8px;font-weight:600;color:#b3b3b3;width:100%;text-align:left}.sp-side .nv:hover,.sp-side .nv.on{color:#fff}.sp-side h5{margin:14px 10px 6px;font-size:11px;letter-spacing:.08em;color:#8a8a8a;font-weight:600}.sp-main{background:#121212;border-radius:10px;overflow:auto;position:relative}.sp-in{padding:18px 20px 24px;min-height:100%;background:linear-gradient(var(--g,#3a2a1a),#121212 260px)}.sp-tabs{display:none;gap:8px;margin-bottom:14px}.sp-tb{padding:6px 14px;border-radius:20px;background:#ffffff1a;font-size:12px}.sp-tb.on{background:#fff;color:#000}.sp-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px;margin-bottom:22px}.sp-c{background:#181818;border-radius:8px;padding:12px;cursor:pointer;position:relative;transition:background .2s;text-align:left}.sp-c:hover{background:#282828}.cv{aspect-ratio:1;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:28px;color:#fff9}.sp-c .cv{margin-bottom:10px;box-shadow:0 8px 20px #0006}.sp-c b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sp-c small{color:#a7a7a7;font-size:11px}.sp-c .go{position:absolute;right:18px;bottom:62px;width:40px;height:40px;border-radius:50%;background:#1ed760;color:#000;display:grid;place-items:center;opacity:0;transform:translateY(8px);transition:.2s;font-size:18px}.sp-c:hover .go{opacity:1;transform:none}.sp-q{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:24px}.sp-ch{display:flex;align-items:center;gap:10px;background:#ffffff1a;border-radius:6px;overflow:hidden;cursor:pointer;text-align:left;font-weight:700;width:100%}.sp-ch:hover{background:#ffffff2e}.sp-ch .cv{width:52px;height:52px;border-radius:0;flex:none;font-size:20px}.sp-r{display:grid;grid-template-columns:32px 1fr 28px 48px;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;cursor:pointer;color:#b3b3b3}.sp-r:hover{background:#ffffff1a;color:#fff}.sp-r .ti{display:flex;gap:10px;align-items:center;min-width:0}.sp-r .cv{width:40px;height:40px;border-radius:4px;flex:none;font-size:14px}.sp-r .tn{color:#fff;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sp-r.cur .tn,.sp-r.cur .n{color:#1ed760}.sp-r .n{text-align:center}.sp-r .du{text-align:right;font-size:12px}.lk{opacity:0}.sp-r:hover .lk,.lk.on{opacity:1}.lk.on,.bl.on{color:#1ed760}.sp-h{display:flex;gap:18px;align-items:flex-end;margin-bottom:18px}.sp-h .cv{width:150px;height:150px;font-size:56px;flex:none;box-shadow:0 10px 40px #0008}.sp-h h1{font-size:clamp(24px,6cqw,46px);margin:4px 0 8px;line-height:1.05}.sp-bar{grid-column:1/3;display:grid;grid-template-columns:1fr 1.5fr 1fr;align-items:center;gap:12px;padding:0 6px}.sp-bt{display:flex;align-items:center;gap:10px;min-width:0}.sp-bt .cv{width:52px;height:52px;border-radius:4px;flex:none;font-size:0}.sp-ct{display:flex;flex-direction:column;align-items:center;gap:6px}.sp-ct .rw{display:flex;align-items:center;gap:16px;font-size:18px}.sp-ct .rw button{color:#b3b3b3}.sp-ct .rw button:hover{color:#fff}.sp-ct .rw button.on{color:#1ed760}.sp-pp{width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center}.sp-ct .rw .sp-pp{color:#000}.sp-pg{display:flex;gap:8px;align-items:center;width:100%;font-size:11px;color:#a7a7a7}.sp-pr{flex:1;height:4px;border-radius:2px;background:#4d4d4d;cursor:pointer}.sp-pr i{display:block;height:100%;width:0;border-radius:2px;background:#fff}.sp-pr:hover i{background:#1ed760}.sp-vl{display:flex;justify-content:flex-end;align-items:center;gap:8px;color:#b3b3b3}.sp input[type=range]{accent-color:#fff}@container (max-width:620px){.sp{grid-template-columns:1fr}.sp-side,.sp-vl,.sp-pg,.sp-ct .x{display:none}.sp-bar{grid-column:1;grid-template-columns:1fr auto}.sp-tabs{display:flex}.sp-h .cv{width:96px;height:96px;font-size:34px}}`;document.head.append(sty);
+const I={home:ic(`<path d='M4 11l8-7 8 7v9h-5v-6H9v6H4z'/>`),sea:ic(`<circle cx='11' cy='11' r='6'/><path d='M20 20l-4-4'/>`),lib:ic(`<path d='M5 4v16M10 4v16M15 5l4 14'/>`),hrt:f=>ic(`<path d='M12 20s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.5-7 10-7 10z'/>`,f?'currentColor':'none'),shf:ic(`<path d='M3 7h4l10 10h4M3 17h4l3-3M14 10l3-3h4M18 4l3 3-3 3M18 14l3 3-3 3'/>`),rep:ic(`<path d='M4 11V9a3 3 0 013-3h12M16 3l3 3-3 3M20 13v2a3 3 0 01-3 3H5M8 21l-3-3 3-3'/>`),vol:ic(`<path d='M4 10v4h4l5 4V6L8 10zM16 9a4 4 0 010 6'/>`)};
+const P=[['Boston','Stella Lefty',230],['Late Drive','Amber Hours',201],['Paper Planes','Low Tide',187],['Neon Rain','Vela',214],['Golden Hour','Mara Voss',198],['Slow Burn','The Quiet Fires',243],['Skyline','Juno Park',176],['Afterglow','Hollow Pines',221],['Moonwalk','Kite and Key',205],['Ember','Lia North',189],['Static Bloom','Pale Orchid',232],['Harbor Lights','Teal Coast',210],['Runaway','Sundial',194],['Daydream','Rowan Lake',227],['Voltage','Nova Static',183],['Hearts Align','Wren',216]];
+const T=P.map((t,i)=>({i,n:t[0],a:t[1],d:t[2],h:(i*47+20)%360}));
+const L=[['Daily Mix 1',[0,3,6,9,12,15],20],['Late Night Drive',[1,4,7,10,13,2],240],['Focus Flow',[5,8,11,14,0,3],160],['Chill Hits',[2,5,8,11,14,1],190],['Throwback',[6,9,12,15,4,7],30],['Workout Boost',[10,13,0,3,6,9],350]].map(x=>({n:x[0],ids:x[1],h:x[2]}));
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const cov=h=>`background:linear-gradient(135deg,hsl(${h} 70% 48%),hsl(${(h+50)%360} 70% 22%));`;
+const cvE=(h,l)=>`<div class=cv style='${cov(h)}'>${l||''}</div>`;
+APPS.music.w=800;APPS.music.h=540;
+APPS.music.r=function(b){st.likes=st.likes||[];
+let view='home',pl=0,gh=30,q=T.map(t=>t.i),qi=0,on=0,p=0,sh=0,rp=0,ctx=q.slice(),res='',h;
+const cur=()=>T[q[qi]];
+const row=(t,n)=>`<div class=sp-r data-t='${t.i}'><span class=n>${n}</span><div class=ti>${cvE(t.h)}<div style='min-width:0'><div class=tn>${t.n}</div><div style='font-size:12px'>${t.a}</div></div></div><button class='lk ${st.likes.includes(t.i)?'on':''}' data-l='${t.i}'>${I.hrt(st.likes.includes(t.i))}</button><span class=du>${fmt(t.d)}</span></div>`;
+const card=k=>`<div class=sp-c data-pl='${k}'>${cvE(L[k].h,L[k].n[0])}<b>${L[k].n}</b><small>${L[k].ids.length} songs</small><button class=go data-pp='${k}'>${PL}</button></div>`;
+const tabs=()=>[['home','Home'],['search','Search'],['library','Library']].map(v=>`<button class='sp-tb ${view==v[0]?'on':''}' data-v=${v[0]}>${v[1]}</button>`).join('');
+const hr=new Date().getHours(),greet=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+const V={
+home:()=>{gh=30;ctx=q.length?T.map(t=>t.i):[];return `<div class=sp-tabs>${tabs()}</div><h2 style='font-size:24px;margin-bottom:14px'>${greet}</h2><div class=sp-q>${[0,1,2,3,4,5].map(k=>`<button class=sp-ch data-pl='${k}'>${cvE(L[k].h,L[k].n[0])}<span>${L[k].n}</span></button>`).join('')}</div><h3 style='margin:0 0 12px;font-size:18px'>Made for you</h3><div class=sp-g>${L.map((_,k)=>card(k)).join('')}</div><h3 style='margin:0 0 8px;font-size:18px'>Popular right now</h3>${T.slice(0,6).map((t,n)=>row(t,n+1)).join('')}`},
+list:()=>{const lk=pl=='liked',l=lk?{n:'Liked Songs',ids:st.likes,h:280}:L[pl];ctx=l.ids.slice();gh=l.h;return `<div class=sp-tabs>${tabs()}</div><div class=sp-h>${cvE(l.h,lk?I.hrt(1):l.n[0])}<div><small style='font-weight:600'>Playlist</small><h1>${l.n}</h1><small style='color:#b3b3b3'>${l.ids.length} songs</small></div></div><div style='margin-bottom:14px'><button class=sp-pp style='width:52px;height:52px;background:#1ed760;color:#000;font-size:22px' data-pp='${pl}'>${PL}</button></div>${l.ids.length?l.ids.map((id,n)=>row(T[id],n+1)).join(''):`<p style='color:#a7a7a7'>Songs you like will appear here.</p>`}`},
+search:()=>{gh=200;return `<div class=sp-tabs>${tabs()}</div><input id=sq placeholder='What do you want to play?' value='${res.replace(/'/g,'')}' style='margin-bottom:18px;max-width:420px'><div id=sr>${srH()}</div>`},
+library:()=>{gh=140;return `<div class=sp-tabs>${tabs()}</div><h2 style='font-size:24px;margin-bottom:14px'>Your Library</h2><div class=sp-g><div class=sp-c data-pl=liked>${cvE(280,I.hrt(1))}<b>Liked Songs</b><small>${st.likes.length} songs</small></div>${L.map((_,k)=>card(k)).join('')}</div>`}};
+const srH=()=>{if(!res)return `<h3 style='margin-bottom:12px'>Browse all</h3><div class=sp-g>${['Pop','Hip-Hop','Chill','Focus','Rock','Workout','Indie','Dance'].map((g,i)=>`<button class=sp-c data-g='${g}' style='height:90px;background:hsl(${i*45} 60% 38%);font-weight:800;font-size:16px'>${g}</button>`).join('')}</div>`;
+const r=T.filter(t=>(t.n+' '+t.a).toLowerCase().includes(res.toLowerCase()));ctx=r.map(t=>t.i);return r.length?r.map((t,n)=>row(t,n+1)).join(''):`<p style='color:#a7a7a7'>No results found for that search.</p>`};
+b.innerHTML=`<div class=spw><div class=sp><nav class=sp-side><button class=nv data-v=home>${I.home} Home</button><button class=nv data-v=search>${I.sea} Search</button><button class=nv data-v=library>${I.lib} Your Library</button><h5>PLAYLISTS</h5><button class=nv data-pl=liked>${I.hrt(1)} Liked Songs</button>${L.map((l,k)=>`<button class=nv data-pl='${k}'>${l.n}</button>`).join('')}</nav><div class=sp-main><div class=sp-in id=sm></div></div><div class=sp-bar><div class=sp-bt><div class=cv id=bc></div><div style='min-width:0'><div id=bn style='font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'></div><div id=ba style='font-size:11px;color:#a7a7a7'></div></div><button class=bl id=bl data-l=cur></button></div><div class=sp-ct><div class=rw><button class=x data-c=shf>${I.shf}</button><button class=x data-c=prev>${PV}</button><button class=sp-pp id=bp data-c=play>${PL}</button><button data-c=next>${NX}</button><button class=x data-c=rep>${I.rep}</button></div><div class=sp-pg><span id=pt>0:00</span><div class=sp-pr data-seek><i id=pf></i></div><span id=pd>0:00</span></div></div><div class=sp-vl>${I.vol}<input type=range min=0 max=100 value=70 data-vol style='width:90px'></div></div></div></div>`;
+const upd=()=>{const t=cur(),lk=st.likes.includes(t.i),bl=$('#bl',b);$('#bn',b).textContent=t.n;$('#ba',b).textContent=t.a;$('#bc',b).style.cssText=cov(t.h);bl.innerHTML=I.hrt(lk);bl.classList.toggle('on',lk);$('#bp',b).innerHTML=on?PA:PL;$('#pt',b).textContent=fmt(p);$('#pd',b).textContent=fmt(t.d);$('#pf',b).style.width=p/t.d*100+'%';
+b.querySelector('[data-c=shf]').classList.toggle('on',!!sh);b.querySelector('[data-c=rep]').classList.toggle('on',!!rp);b.querySelectorAll('.sp-r').forEach(r=>r.classList.toggle('cur',+r.dataset.t==t.i))};
+const show=()=>{const m=$('#sm',b);m.innerHTML=V[view]();m.style.setProperty('--g','hsl('+gh+' 45% 26%)');m.parentElement.scrollTop=0;b.querySelectorAll('.sp-side .nv').forEach(n=>n.classList.toggle('on',n.dataset.v==view||(view=='list'&&n.dataset.pl==String(pl))));upd()};
+const playIds=(ids,i)=>{q=ids.slice();qi=i;p=0;on=1;upd()};
+const next=auto=>{if(sh&&q.length>1){let n;do n=Math.random()*q.length|0;while(n==qi);qi=n}else if(qi<q.length-1)qi++;else if(rp||!auto)qi=0;else{on=0;p=0;upd();return}p=0;upd()};
+const ctl=c=>{if(c=='play')on=!on;else if(c=='next')next(0);else if(c=='prev'){if(p>3)p=0;else{qi=(qi-1+q.length)%q.length;p=0}}else if(c=='shf')sh=!sh;else if(c=='rep')rp=!rp;upd()};
+const like=id=>{const i=st.likes.indexOf(id);i<0?st.likes.push(id):st.likes.splice(i,1);save();if(view=='list'&&pl=='liked'||view=='library')show();else{b.querySelectorAll(`.lk[data-l='${id}']`).forEach(x=>{const o=st.likes.includes(id);x.classList.toggle('on',o);x.innerHTML=I.hrt(o)});upd()}};
+b.onclick=e=>{const t=e.target.closest('[data-v],[data-pl],[data-pp],[data-t],[data-l],[data-c],[data-seek],[data-g]');if(!t)return;const d=t.dataset;
+if(d.seek!==undefined){const r=t.getBoundingClientRect();p=Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*cur().d);upd();return}
+if(d.pp!==undefined){const ids=d.pp=='liked'?st.likes:L[+d.pp].ids;if(ids.length)playIds(ids,0);return}
+if(d.l!==undefined){like(d.l=='cur'?q[qi]:+d.l);return}
+if(d.t!==undefined){const i=ctx.indexOf(+d.t);playIds(ctx,i<0?0:i);return}
+if(d.c){ctl(d.c);return}
+if(d.g!==undefined){res=d.g;view='search';show();return}
+if(d.v){view=d.v;if(view=='search')res='';show();return}
+if(d.pl!==undefined){view='list';pl=d.pl=='liked'?'liked':+d.pl;show()}};
+b.oninput=e=>{const t=e.target;if(t.id=='sq'){res=t.value;$('#sr',b).innerHTML=srH();upd()}};
+h=setInterval(()=>{if(!on)return;p++;if(p>=cur().d)next(1);else upd()},1000);
+b.closest('.win').onclose=()=>clearInterval(h);show()};
+})();
+(()=>{
+const sty=document.createElement('style');sty.textContent=`.stw{position:absolute;inset:0;container-type:inline-size}.st{display:grid;grid-template-columns:200px 1fr;height:100%}.sn{padding:14px 10px;background:rgba(0,0,0,.2);display:flex;flex-direction:column;gap:2px;overflow:auto}.pf{display:flex;gap:10px;align-items:center;padding:6px 8px 14px}.pf small{display:block;opacity:.6;font-size:11px}.av2{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),#0008);font-weight:700;flex:none}.sn button{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:9px;font-size:13px;width:100%;text-align:left;white-space:nowrap}.sn button:hover{background:rgba(255,255,255,.08)}.sn button.on{background:rgba(255,255,255,.14)}.si{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:14px;color:#fff;flex:none}.sc{overflow:auto;padding:18px 22px 28px}.sc h2{font-size:22px;margin-bottom:6px}.sc h6{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin:18px 4px 8px}.sg{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:12px}.sr{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px;font-size:13px}.sr+.sr{border-top:1px solid rgba(255,255,255,.08)}.sr small{display:block;opacity:.6;font-size:11px;margin-top:2px}.sr .v{opacity:.65;font-size:12px;text-align:right}.seg{display:inline-flex;padding:3px;border-radius:10px;background:rgba(0,0,0,.28);flex-wrap:wrap}.seg button{padding:5px 12px;border-radius:8px;font-size:12px}.seg button.on{background:var(--a);color:#2a1608;font-weight:600}.sl{display:flex;align-items:center;gap:10px}.sl input{width:150px}.sl em{width:42px;font-style:normal;font-size:12px;opacity:.7;text-align:right}.dots{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.dots i{width:28px;height:28px;border-radius:50%;cursor:pointer;box-shadow:inset 0 0 0 1px #0004;transition:transform .12s}.dots i:hover{transform:scale(1.12)}.dots i.on{box-shadow:0 0 0 2px #1b1410,0 0 0 4px #fff}.dc{width:28px;height:28px;border-radius:50%;background:conic-gradient(#f55,#fd5,#5f5,#5df,#55f,#f5f,#f55);position:relative;overflow:hidden;cursor:pointer}.dc input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}.pb{padding:6px 14px;border-radius:8px;background:rgba(255,255,255,.14);font-size:12px}.pb.danger{background:#c0392b}.prev{height:150px;border-radius:14px;margin:10px 0 12px;display:grid;place-items:center;font-size:38px;font-weight:300;text-shadow:0 2px 14px #0008;background-size:cover;border:1px solid rgba(255,255,255,.12)}.wg{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-top:14px}.wg div{font-size:11px;text-align:center;cursor:pointer}.wg i{display:block;aspect-ratio:16/10;border-radius:9px;margin-bottom:4px;border:2px solid transparent}.wg .on i{border-color:var(--a)}.ab{text-align:center;padding:10px 0 4px}.lgx{display:block;width:64px;height:64px;border-radius:18px;margin:0 auto 10px;background:linear-gradient(135deg,var(--a),#fff7)}@container (max-width:560px){.st{grid-template-columns:1fr;grid-template-rows:auto 1fr}.sn{flex-direction:row;overflow-x:auto;padding:8px}.pf{display:none}.sl input{width:110px}.sc{padding:14px}}`;document.head.append(sty);
+const TABS=[['Appearance','#f0a040',`<circle cx='12' cy='12' r='8'/><path d='M12 4v16'/>`],['Wallpaper','#3b82f6',`<rect x='3' y='5' width='18' height='14' rx='2'/><circle cx='9' cy='10' r='1.5'/><path d='M4 18l5-5 4 4 3-3 4 4'/>`],['Desktop','#8b5cf6',`<rect x='3' y='4' width='18' height='12' rx='2'/><path d='M8 20h8M12 16v4'/>`],['About','#64748b',`<circle cx='12' cy='12' r='9'/><path d='M12 11v5M12 8h.01'/>`]];
+APPS.settings.w=720;APPS.settings.h=520;
+APPS.settings.r=function(b){let tab='Appearance';
+const seg=(k,o)=>`<div class=seg>${o.map(x=>`<button class='${st[k]==x[0]?'on':''}' data-k=${k} data-v=${x[0]}>${x[1]}</button>`).join('')}</div>`;
+const sl=(k,mn,mx,m,u)=>`<span class=sl><input type=range min=${mn} max=${mx} step=1 value=${Math.round(st[k]*m)} data-s=${k} data-m=${m} data-u='${u}'><em>${Math.round(st[k]*m)}${u}</em></span>`;
+const tg=k=>`<button class='tg ${st[k]?'on':''}' data-t=${k}></button>`;
+const row=(l,c,s)=>`<div class=sr><div><div>${l}</div>${s?`<small>${s}</small>`:''}</div>${c}</div>`;
+const grp=(t,r)=>`${t?`<h6>${t}</h6>`:''}<div class=sg>${r.join('')}</div>`;
+const P={
+Appearance:()=>grp('Accent color',[`<div class=sr><div class=dots>${ACC.map(c=>`<i data-c=${c} class='${st.a==c?'on':''}' style='background:${c}'></i>`).join('')}<label class=dc title='Custom color'><input type=color value=${st.a} data-pick></label></div></div>`])+grp('Windows',[row('Glass blur',sl('blur',0,30,1,'px')),row('Window opacity',sl('op',50,100,100,'%'))])+grp('Display',[row('Brightness',sl('bri',30,100,1,'%')),row('24-hour clock',tg('h24'))]),
+Wallpaper:()=>{const c=st.wall=='custom'&&st.custom,t=st.fit=='tile',tm=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit',hour12:!st.h24});
+return `<div class='prev ${c?'':st.wall}' style='${c?`background:#000 url(${st.custom}) center/${t?'auto':st.fit} ${t?'repeat':'no-repeat'}`:''}'>${tm}</div><div class=row style='gap:8px'><label class='pb acc' style='cursor:pointer'>Upload your own<input id=up type=file accept='image/*' hidden></label>${st.custom?`<button class=pb data-rm>Remove</button>`:''}</div><div class=wg>${st.custom?`<div data-w=custom class='${st.wall=='custom'?'on':''}'><i style='background:url(${st.custom}) center/cover'></i>Custom</div>`:''}${WALLS.map(w=>`<div data-w=${w[0]} class='${st.wall==w[0]?'on':''}'><i class=${w[0]}></i>${w[1]}</div>`).join('')}</div>`+grp('Adjust',[row('Fit',seg('fit',[['cover','Fill'],['contain','Fit'],['tile','Tile']])),row('Dim',sl('dim',0,70,1,'%')),row('Blur',sl('wblur',0,20,1,'px'))])},
+Desktop:()=>grp('Style',[`<div class=sr>${seg('style',[['drift','Lumio'],['chromeos','ChromeOS'],['macos','macOS'],['win11','Windows 11']])}</div>`])+grp('Layout',[row('Desktop icons and widgets',seg('chrome',[['desktop','Show'],['dock','Hide']])),row('Icon size',sl('isz',40,72,1,'px'))])+grp('',[row('Reset desktop icons',`<button class=pb data-rd>Reset</button>`,'Back to Browser and Settings only')]),
+About:()=>`<div class=ab><span class=lgx></span><h3>Lumio</h3><small style='opacity:.65'>Version 1.0. A desktop in your browser.</small></div>`+grp('Shortcuts',[row('Search',`<span class=v>Ctrl or Cmd + K</span>`),row('App menu',`<span class=v>Hold or right-click an icon</span>`),row('Snap a window',`<span class=v>Drag its title bar to an edge</span>`)])+grp('',[row('Reset everything',`<button class='pb danger' data-ra>Reset</button>`,'Clears settings, wallpaper and notes')])};
+const paint=(fresh,nt)=>{const y=fresh?0:(($('.sc',b)||{}).scrollTop||0);if(nt)tab=nt;b.innerHTML=`<div class=stw><div class=st><nav class=sn><div class=pf><span class=av2>${esc(initial())}</span><div><b>${esc(AUTH.name||'Guest')}</b><small>${AUTH.mode=='user'?'Tuffs account':'Guest'}</small></div></div>${TABS.map(t=>`<button class='${t[0]==tab?'on':''}' data-tab=${t[0]}><span class=si style='background:${t[1]}'>${ic(t[2])}</span>${t[0]}</button>`).join('')}</nav><main class=sc><h2>${tab}</h2>${P[tab]()}</main></div></div>`;$('.sc',b).scrollTop=y};
+paint(1);repaintSettings=paint;
+b.onclick=e=>{const t=e.target.closest('[data-c],[data-k],[data-w],[data-tab],[data-t],[data-rm],[data-rd],[data-ra]');if(!t)return;const d=t.dataset;
+if(d.tab){paint(1,d.tab);return}
+if(d.c)st.a=d.c;if(d.k)st[d.k]=d.v;if(d.w)st.wall=d.w;if(d.t)st[d.t]=st[d.t]?0:1;
+if('rm' in d){st.custom='';if(st.wall=='custom')st.wall='w-forest'}
+if('rd' in d){st.desk=['browser','settings'];st.pos={};renderSide();toast('Desktop icons reset')}
+if('ra' in d){try{localStorage.removeItem('drift')}catch(x){}location.reload();return}
+save();applyStyle();tick();paint()};
+b.oninput=e=>{const t=e.target;if(t.dataset.s){st[t.dataset.s]=t.value/(+t.dataset.m);t.nextElementSibling.textContent=t.value+t.dataset.u;applyStyle()}else if('pick' in t.dataset){st.a=t.value;applyStyle()}};
+b.onchange=e=>{if(e.target.id=='up')upload(e.target.files[0]);else{save();if('pick' in e.target.dataset)paint()}}};
+})();
+/* ---------- Lumio shell ---------- */
+if(st.bri==null)st.bri=100;if(!st.pos)st.pos={};
+tick=function(){const d=new Date(),t=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit',hour12:!st.h24}),dt=d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'});
+[['lt',t],['ld',dt],['wt',t],['wd',dt]].forEach(x=>{const e=$('#'+x[0]);if(e)e.textContent=x[1]});
+const c=$('#clk');if(c)c.textContent=d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})+'  '+t};
+const _as=applyStyle;applyStyle=function(){_as();$('#dim').style.opacity=(100-st.bri)/100*.75};
+const sIc=ic(`<circle cx='11' cy='11' r='6'/><path d='M20 20l-4-4'/>`),cIc=ic(`<path d='M4 7h10M18 7h2M4 17h2M10 17h10'/><circle cx='16' cy='7' r='2'/><circle cx='8' cy='17' r='2'/>`);
+$('#mb').innerHTML=`<button data-sp><span class=lg></span><b>Lumio</b></button><span id=an style='opacity:.85'>Lumio</span><span class=sp1></span><button data-sp>${sIc}</button><button id=bcc>${cIc}</button><span id=clk style='padding:0 6px'></span>`;
+$('#cc').innerHTML=`<div class=cg><button class=on data-tg>${IC.globe}Wi-Fi</button><button class=on data-tg>${IC.music}Sound</button><button data-tg>${IC.spark}Focus</button></div><div class=srow><span>Brightness</span></div><div class=srow><input type=range min=30 max=100 value=${st.bri} data-bri></div><div class=srow><span>Volume</span></div><div class=srow><input type=range min=0 max=100 value=70></div><div class=sw style='grid-template-columns:repeat(8,1fr);margin:6px 0 12px'>${ACC.map(c=>`<i data-c2=${c} style='height:22px;background:${c}'></i>`).join('')}</div><div class=row><button class=btn data-lk style='flex:1'>Lock</button><button class=btn data-a=settings style='flex:1'>Settings</button></div><div class=ccu><span class=av3 id=ccav></span><div style='flex:1;min-width:0'><b id=ccname></b><small id=ccsub></small></div><button class=btn data-so>Sign out</button></div>`;
+$('#cc').onclick=e=>{const t=e.target.closest('[data-tg],[data-c2],[data-lk],[data-so]');if(!t)return;if(t.dataset.tg!==undefined)t.classList.toggle('on');else if(t.dataset.c2){st.a=t.dataset.c2;save();applyStyle()}else if(t.dataset.so!==undefined){$('#cc').classList.remove('on');signOut()}else{$('#cc').classList.remove('on');lockNow()}};
+$('#cc').oninput=e=>{if(e.target.dataset.bri!==undefined){st.bri=+e.target.value;applyStyle()}};$('#cc').onchange=()=>save();
+let Z=10,off=0;const open_={};
+const fgName=w=>{$('#an').textContent=w?w.dataset.n:'Lumio'};
+function front(w){if(Z>800){Z=10;[...document.querySelectorAll('.win')].sort((a,b)=>a.style.zIndex-b.style.zIndex).forEach(x=>x.style.zIndex=++Z)}w.style.zIndex=++Z;document.querySelectorAll('.win').forEach(x=>x.classList.toggle('fg',x==w));fgName(w)}
+function dockUpd(){document.querySelectorAll('#dock [data-a]').forEach(b=>b.classList.toggle('run',!!open_[b.dataset.a]))}
+function open(id){const A=APPS[id];if(open_[id]&&id!='snake'){const w=open_[id];w.classList.remove('min');front(w);dockUpd();return}
+const w=H(`<div class=win data-n='${esc(A.n)}'><div class=tb><div class=tl><button class=t1 data-x aria-label=Close></button><button class=t2 data-m aria-label=Minimize></button><button class=t3 data-z aria-label=Maximize></button></div><button class=bk data-bk aria-label='Close ${esc(A.n)}'><svg viewBox='0 0 24 24' width=20 height=20 fill=none stroke=currentColor stroke-width=2.4 stroke-linecap=round stroke-linejoin=round><path d='M15 5l-7 7 7 7'/></svg>Close</button><span>${esc(A.n)}</span></div><div class=body></div></div>`);
+const W=Math.min(A.w,innerWidth-20),Hh=Math.min(A.h,innerHeight-120);w.style.cssText=`width:${W}px;height:${Hh}px;left:${Math.max(10,(innerWidth-W)/2+(off%5)*28-56)}px;top:${Math.max(40,(innerHeight-Hh)/2+(off%5)*24-30)}px`;off++;
+document.body.append(w);const k=id=='snake'?'snake'+Date.now():id;open_[k]=w;w.k=k;front(w);A.r($('.body',w));dockUpd();
+w.onpointerdown=()=>front(w);
+const cls=()=>{w.onclose&&w.onclose();w.remove();delete open_[w.k];dockUpd();fgName(null);const nx=[...document.querySelectorAll('.win:not(.min)')].sort((a,b)=>b.style.zIndex-a.style.zIndex)[0];if(nx)front(nx)};$('[data-x]',w).onclick=cls;$('[data-bk]',w).onclick=cls;
+$('[data-m]',w).onclick=()=>{w.classList.add('min');dockUpd();fgName(null)};
+const mx=()=>w.classList.toggle('max');$('[data-z]',w).onclick=mx;
+const tb=$('.tb',w);tb.ondblclick=e=>{if(!e.target.closest('button'))mx()};
+tb.onpointerdown=e=>{if(e.target.closest('button')||innerWidth<=700||w.classList.contains('max'))return;const ox=e.clientX-w.offsetLeft,oy=e.clientY-w.offsetTop;tb.setPointerCapture(e.pointerId);
+tb.onpointermove=m=>{w.style.left=Math.max(-w.offsetWidth+80,Math.min(innerWidth-80,m.clientX-ox))+'px';w.style.top=Math.max(30,Math.min(innerHeight-40,m.clientY-oy))+'px'};
+tb.onpointerup=e=>{tb.onpointermove=null;const x=e.clientX,y=e.clientY,T0=34,hh=innerHeight-T0;if(y<T0+6)w.classList.add('max');else if(x<8)w.style.cssText+=`;left:0;top:${T0}px;width:${innerWidth/2}px;height:${hh}px`;else if(x>innerWidth-8)w.style.cssText+=`;left:${innerWidth/2}px;top:${T0}px;width:${innerWidth/2}px;height:${hh}px`}}}
+const vis=Object.keys(APPS).filter(k=>!APPS[k].hide);
+$('#dock').innerHTML=vis.map(k=>`<button data-a=${k} data-n='${APPS[k].n}'>${APPS[k].i}</button>`).join('');
+$('#dock').onpointermove=e=>{if(e.pointerType!='mouse')return;document.querySelectorAll('#dock button').forEach(b=>{const r=b.getBoundingClientRect(),d=Math.abs(e.clientX-(r.left+r.width/2));b.style.setProperty('--s',(1+.55*Math.exp(-(d*d)/6050)).toFixed(2))})};
+$('#dock').onpointerleave=()=>document.querySelectorAll('#dock button').forEach(b=>b.style.removeProperty('--s'));
+const GX=96,GY=104;
+const defPos=i=>{const rows=Math.max(1,Math.floor((innerHeight-150)/GY));return [16+Math.floor(i/rows)*GX,46+(i%rows)*GY]};
+const renderSide=()=>{$('#desk').innerHTML=st.desk.filter(k=>APPS[k]&&!APPS[k].hide).map((k,i)=>{const p=st.pos[k]||defPos(i);return `<button class=di data-a=${k} style='left:${p[0]}px;top:${p[1]}px'><i>${APPS[k].i}</i>${APPS[k].n}</button>`}).join('')};
+let dg=null,dragged=0,lp,lpFired=0,sx=0,sy=0;
+$('#desk').addEventListener('pointerdown',e=>{const t=e.target.closest('.di');if(t)dg={t,x:e.clientX,y:e.clientY,l:t.offsetLeft,tp:t.offsetTop,m:0}});
+addEventListener('pointermove',e=>{if(!dg)return;const dx=e.clientX-dg.x,dy=e.clientY-dg.y;if(!dg.m&&Math.hypot(dx,dy)>8)dg.m=1;if(dg.m){dg.t.style.left=Math.max(0,Math.min(innerWidth-88,dg.l+dx))+'px';dg.t.style.top=Math.max(34,Math.min(innerHeight-90,dg.tp+dy))+'px'}});
+addEventListener('pointerup',()=>{if(!dg)return;if(dg.m){const t=dg.t,l=Math.max(16,Math.round((t.offsetLeft-16)/GX)*GX+16),tp=Math.max(46,Math.round((t.offsetTop-46)/GY)*GY+46);t.style.left=l+'px';t.style.top=tp+'px';st.pos[t.dataset.a]=[l,tp];save();dragged=1;setTimeout(()=>dragged=0,60)}dg=null});
+const cm=()=>document.querySelectorAll('.cm').forEach(m=>m.remove());
+function menu(t,x,y){cm();const id=t.dataset.a,m=H(`<div class=cm><button data-o>Open ${APPS[id].n}</button><button data-h>${st.desk.includes(id)?'Remove from Desktop':'Add to Desktop'}</button></div>`);
+m.style.left=Math.max(8,Math.min(x,innerWidth-210))+'px';m.style.top=Math.max(8,y>innerHeight/2?y-96:y)+'px';document.body.append(m);
+$('[data-o]',m).onclick=()=>{cm();open(id)};$('[data-h]',m).onclick=()=>{cm();pin(id)}}
+function pin(id){const had=st.desk.includes(id);st.desk=had?st.desk.filter(k=>k!=id):[...st.desk,id];save();renderSide();toast(st.chrome=='dock'&&!had?'Added. Set Chrome to Desktop in Settings to see it':APPS[id].n+(had?' removed from Desktop':' added to Desktop'))}
+document.addEventListener('pointerdown',e=>{if(e.target.closest('.cm'))return;cm();lpFired=0;const t=e.target.closest('[data-a]');if(!t)return;sx=e.clientX;sy=e.clientY;clearTimeout(lp);lp=setTimeout(()=>{if(!dg||!dg.m){lpFired=1;menu(t,sx,sy)}},500)});
+document.addEventListener('pointermove',e=>{if(Math.hypot(e.clientX-sx,e.clientY-sy)>10)clearTimeout(lp)});
+['pointerup','pointercancel'].forEach(v=>document.addEventListener(v,()=>clearTimeout(lp)));
+document.addEventListener('contextmenu',e=>{const t=e.target.closest('[data-a]');if(t){e.preventDefault();clearTimeout(lp);lpFired=1;menu(t,e.clientX,e.clientY)}});
+const ACTS=[['Lock screen',()=>lockNow()],['Sign out',()=>signOut()],['Next wallpaper',()=>{const i=WALLS.findIndex(w=>w[0]==st.wall);st.wall=WALLS[(i+1)%WALLS.length][0];save();applyStyle()}],['Toggle desktop icons',()=>{st.chrome=st.chrome=='dock'?'desktop':'dock';save();applyStyle()}]];
+function spR(q){q=q.toLowerCase();$('#spr').innerHTML=vis.filter(k=>APPS[k].n.toLowerCase().includes(q)).map(k=>`<button class=it data-sa=${k}>${APPS[k].i} ${APPS[k].n}</button>`).join('')+ACTS.map((x,i)=>x[0].toLowerCase().includes(q)?`<button class=it data-act=${i}>${IC.gear} ${x[0]}</button>`:'').join('')}
+function spOpen(){if(!$('#lock').classList.contains('off'))return;$('#sp').classList.add('on');const i=$('#spq');i.value='';spR('');i.focus()}
+$('#spq').oninput=e=>spR(e.target.value);
+$('#sp').onclick=e=>{const t=e.target.closest('[data-sa],[data-act]');if(t){$('#sp').classList.remove('on');t.dataset.sa?open(t.dataset.sa):ACTS[+t.dataset.act][1]()}else if(e.target.id=='sp')$('#sp').classList.remove('on')};
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=='k'){e.preventDefault();spOpen()}else if(e.key=='Escape'){$('#sp').classList.remove('on');$('#cc').classList.remove('on')}else if(e.key=='Enter'&&$('#sp').classList.contains('on')){const f=$('#spr .it');f&&f.click()}});
+document.addEventListener('click',e=>{if(!e.target.closest('#cc,#bcc'))$('#cc').classList.remove('on');if(e.target.closest('[data-sp]')){spOpen();return}if(e.target.closest('#bcc')){$('#cc').classList.toggle('on');return}if(lpFired||dragged){lpFired=0;return}const t=e.target.closest('[data-a]');if(t)open(t.dataset.a)});
+$('#wn').value=st.note||'';$('#wn').oninput=e=>{st.note=e.target.value;save()};
+renderSide();applyStyle();tick();setInterval(tick,10000);
+const route=()=>{const h=location.hash.slice(1);if(Object.keys(APPS).includes(h)&&!APPS[h].hide){if(AUTH.mode!='out'&&$('#lock').classList.contains('off'))open(h);else PENDING=h}};
+route();addEventListener('hashchange',route);
+bootAuth();
+</script></body></html>
