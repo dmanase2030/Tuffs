@@ -12,7 +12,7 @@ import { loadGames, systemPrompt, actionFilter, promptGuard, repoFiles } from ".
  *
  * GET  /api/ai/chat  → { available }  (no auth; never names the model)
  * POST /api/ai/chat  { messages: [{ role: "user"|"assistant", content }] }
- *      Signed-in Tuffs accounts only (same bearer session as the rest of the
+ *      Signed-in accounts only (same bearer session as the rest of the
  *      site). The system prompt (./_site.js) describes the site and carries the
  *      real games catalog. The reply streams back as server-sent events
  *      `data: {"response": "..."}` … `data: [DONE]`, with [[open:game|app:id]]
@@ -43,7 +43,7 @@ export async function onRequestPost(context) {
   if (blocked) return blocked;
 
   const user = await sessionUser(request, env);
-  if (!user) return json({ error: "Sign in to your Tuffs account to use Lumio AI.", code: "signin" }, 401);
+  if (!user) return json({ error: "Sign in to your Lumio account to use Lumio AI.", code: "signin" }, 401);
   const settings = await getSettings(env.DB);
   if (settings.maintenance && !user.is_admin) return json({ error: "Lumio is under maintenance — please try again later." }, 503);
   if (!env.AI || typeof env.AI.run !== "function") {

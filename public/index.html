@@ -530,7 +530,7 @@ let AI_CAT=null;function aiCatalog(){return loadCatalog().then(l=>{AI_CAT=l;retu
 function aiRun(k,id){if(k=='app'){if(AI_APPS.includes(id)&&APPS[id])open(id);return true}
  return aiCatalog().then(l=>{const g=l&&l.find(x=>x.id===id);if(g){playGame(g);return true}toast('That game isn\'t in the catalog');return false})}
 const AI_SUGGEST=[['Find a game','Find me a fun racing game to play'],['Open 2048','Open 2048'],['Use the Browser','How do I use the Browser app to visit a website?'],['Study plan','Make me a 30-minute study plan for a math test tomorrow.']];
-const AI_SUGGEST_ADMIN=[['Site stats','Show me the site stats'],['Announcement','Post an announcement: New games are coming this weekend!'],['Maintenance','Turn on maintenance mode'],['Propose code','Propose a code change that adds a public/hello.html page saying Hello from Tuffs']];
+const AI_SUGGEST_ADMIN=[['Site stats','Show me the site stats'],['Announcement','Post an announcement: New games are coming this weekend!'],['Maintenance','Turn on maintenance mode'],['Propose code','Propose a code change that adds a public/hello.html page saying Hello from Lumio']];
 function mdInline(s){const codes=[];s=s.replace(/`([^`\n]+)`/g,(m,c)=>{codes.push(c);return '\u0000'+(codes.length-1)+'\u0000'});s=esc(s);
  s=s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,(m,t,u)=>`<a href="${u}" data-ext>${t}</a>`);
  s=s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,!?;:'"])/g,(m,p,u)=>`${p}<a href="${u}" data-ext>${u}</a>`);
@@ -646,7 +646,7 @@ function lumioAI(b){
     if(!r.ok)throw new Error(d.error||('Failed ('+r.status+')'));m.cs[ci]={...prev,s:'pr',url:d.url,num:d.number}}}
   catch(e){m.cs[ci]={...prev,s:'err',msg:e.message}}persist();if(cur()===c)draw()}
  async function ask(){const c=cur();if(!c)return;
-  if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
+  if(AUTH.mode!='user'){banner('Sign in to your Lumio account to use Lumio AI.','Sign in');return}
   const msgs=c.msgs.filter(m=>!m.err).map(m=>({role:m.r,content:m.c}));
   c.msgs.push({r:'assistant',c:''});const ai=c.msgs[c.msgs.length-1];draw();
   const row=M.lastElementChild,box=row.querySelector('.aimd');row.querySelector('.aiact').hidden=true;box.innerHTML='<span class=aity><i></i><i></i><i></i></span>';scroll();
@@ -666,7 +666,7 @@ function lumioAI(b){
   setBusy(null);const fin=aiParse(ai.c,isAdmin());if(!fin.txt&&!fin.acts.length&&!fin.cards.length){fail('Lumio AI didn\'t send an answer. Try again.');return}persist();draw();
   const last=(msgs[msgs.length-1]||{}).content||'';
   if(fin.acts.length==1&&!fin.cards.length&&/^\s*(please\s+)?(open|launch|start|play|run)\b/i.test(last)&&!/\b(a|an|some|any)\s+\w*\s*game/i.test(last))setTimeout(()=>aiRun(fin.acts[0].k,fin.acts[0].id),400)}
- const send=v=>{v=(v||'').trim();if(!v||busy)return;if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
+ const send=v=>{v=(v||'').trim();if(!v||busy)return;if(AUTH.mode!='user'){banner('Sign in to your Lumio account to use Lumio AI.','Sign in');return}
   let c=cur();if(!c){c={id:Date.now().toString(36),title:v.slice(0,48),msgs:[],t:Date.now()};D.chats.unshift(c);D.cur=c.id}
   c.msgs.push({r:'user',c:v});c.t=Date.now();T.value='';grow();persist();draw();hist();ask()};
  $('.aif',b).onsubmit=e=>{e.preventDefault();if(busy){busy.abort();return}send(T.value)};
@@ -690,7 +690,7 @@ function lumioAI(b){
   if('ban' in d){if(AUTH.mode!='user')signOut();return}};
  b.closest('.win').onclose=()=>{if(busy)busy.abort()};
  draw();hist();aiCatalog().then(()=>{if(!busy)draw()});
- if(AUTH.mode!='user')banner('Sign in to your Tuffs account to use Lumio AI. Guests can look around, but chats need an account.','Sign in');
+ if(AUTH.mode!='user')banner('Sign in to your Lumio account to use Lumio AI. Guests can look around, but chats need an account.','Sign in');
  fetch('/api/ai/chat').then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{avail=!!d.available;if(!avail&&AUTH.mode=='user')banner('Lumio AI isn\'t switched on for this site yet.')}).catch(()=>{avail=false;if(AUTH.mode=='user')banner('Lumio AI isn\'t available on this site yet.')});
  setTimeout(()=>{if(innerWidth>700)T.focus()},80)}
 
