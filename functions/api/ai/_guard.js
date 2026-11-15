@@ -19,7 +19,7 @@ const PROBE = [
   /\b(api\s*keys?|secrets?|tokens?|env(ironment)?\s*var(iable)?s?|credentials)\b[^.?!\n]{0,30}\b(does|do|is|are)\s+(lumio|this site|the site|this website|you)\s+(use|using|have|need)\b/i,
   // the model / provider behind Lumio AI
   /\b(what|which)\s+(ai\s+|llm\s+|language\s+|large language\s+|underlying\s+)*model\s+(are|is|do|does|powers|runs|is behind)\s+(you|lumio|this ai|it)\b/i,
-  /\bare you\s+(really\s+)?(based on\s+|built on\s+|powered by\s+|running on\s+|made by\s+)?(an?\s+)?(gpt|chatgpt|openai|llama|meta|claude|anthropic|gemini|google|grok|xai|mistral|deepseek|qwen|cloudflare)\b/i,
+  /\bare you\s+(really\s+)?(based on\s+|built on\s+|powered by\s+|running on\s+|made by\s+)?(an?\s+)?(gpt|chatgpt|openai|llama|meta|claude|anthropic|gemini|google|grok|xai|mistral|deepseek|qwen|cloudflare|groq)\b/i,
   /\b(who|what|which)\s+(company\s+|companies\s+|provider\s+)?(made|built|created|trained|developed|owns|runs|hosts)\s+(you|lumio ai|this ai)\b/i,
   /\b(which|what)\s+(company|provider|llm|ai)\b[^.?!\n]{0,40}\b(powers|runs|is behind|made|built|trained)\s+(you|lumio ai|this ai)\b/i,
   /\bwhat\s+(powers|runs)\s+(you|lumio ai)\b/i,
@@ -28,7 +28,10 @@ export function isProbe(text) { const t = String(text || ""); return PROBE.some(
 
 /* Literal fragments only the hidden instructions contain. Common words and
  * normal markdown (tables, HTML) never match these. */
-export const MARKERS = [/\[\[open:(game|app):<id>\]\]/i, /lumio-(admin|code)\b[^`]*\{\s*"action"\s*:\s*"\.\.\."/i, /##\s*privacy rules/i];
+export const MARKERS = [/\[\[open:(game|app):<id>\]\]/i, /lumio-(admin|code)\b[^`]*\{\s*"action"\s*:\s*"\.\.\."/i, /##\s*privacy rules/i,
+  // a reply that names the model or provider behind Lumio AI
+  /\bI(?:'m| am)\b[^.!?\n]{0,60}\b(trained|developed|made|built|created|powered|provided)\s+by\s+(google|deepmind|openai|meta|groq|alibaba|mistral|cloudflare)\b/i,
+  /\bI(?:'m| am)\s+(?:called\s+|actually\s+)?(gemini|gemma|llama|qwen|chatgpt|gpt-?[\w.]*|mistral)\b/i];
 
 /* Stops a reply that echoes a long verbatim stretch (about 14 words) of the
  * hidden instructions. Short shared phrases ("Lumio AI", "open a game") don't count. */

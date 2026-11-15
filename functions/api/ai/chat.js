@@ -2,7 +2,7 @@ import { json, guard, readBody, sessionUser, getSettings } from "../auth/_shared
 import { clientIp, throttleCheck, throttleFail } from "../auth/_throttle.js";
 import { loadGames, systemPrompt, actionFilter, repoFiles } from "./_site.js";
 import { REFUSAL, isProbe, MARKERS, promptGuard } from "./_guard.js";
-import { CHAT_MODELS, modelOrder, runModels, publicReason } from "./_models.js";
+import { CHAT_MODELS, modelOrder, runModels, publicReason, aiAvailable } from "./_models.js";
 
 /* Lumio AI chat — Cloudflare Workers AI through the `AI` binding.
  *
@@ -31,7 +31,7 @@ const IP_MAX = 60, IP_WINDOW = 60 * 60 * 1000, IP_LOCK = 30 * 60 * 1000;
 
 export async function onRequestGet(context) {
   const { env } = context;
-  return json({ available: !!(env.AI && typeof env.AI.run === "function") });
+  return json({ available: aiAvailable(env) });
 }
 
 export async function onRequestPost(context) {
@@ -43,7 +43,7 @@ export async function onRequestPost(context) {
   if (!user) return json({ error: "Sign in to your Lumio account to use Lumio AI.", code: "signin" }, 401);
   const settings = await getSettings(env.DB);
   if (settings.maintenance && !user.is_admin) return json({ error: "Lumio is under maintenance — please try again later." }, 503);
-  if (!env.AI || typeof env.AI.run !== "function") {
+  if (!aiAvailable(env)) {
     return json({ error: "Lumio AI isn't switched on for this site yet.", code: "no_ai" }, 503);
   }
 

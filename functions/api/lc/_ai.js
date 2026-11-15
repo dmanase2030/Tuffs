@@ -2,7 +2,7 @@
  * owners, and optional auto-moderation that only files reports (never bans or
  * deletes). Same privacy guards as the Lumio AI app, same model fallback chain. */
 import { REFUSAL, isProbe, MARKERS, promptGuard } from "../ai/_guard.js";
-import { CHAT_MODELS, FAST_MODELS, modelOrder, runModels } from "../ai/_models.js";
+import { CHAT_MODELS, FAST_MODELS, modelOrder, runModels, aiAvailable } from "../ai/_models.js";
 const MODELS = CHAT_MODELS, FAST = FAST_MODELS;
 import { BOT, cleanText } from "./_db.js";
 import { json } from "../auth/_shared.js";
@@ -69,7 +69,7 @@ export async function summarize(context, user, a) {
   await throttleFail(db, k, 5, 600e3, 600e3);
   const hist = (await recent(db, a.chan.id, 80)).filter(r => !r.sys);
   if (hist.length < 3) return json({ ok: true, summary: "There isn't enough in #" + a.chan.name + " to summarize yet." });
-  if (!env.AI) return json({ error: "Lumio AI isn't switched on for this site yet.", code: "no_ai" }, 503);
+  if (!aiAvailable(env)) return json({ error: "Lumio AI isn't switched on for this site yet.", code: "no_ai" }, 503);
   const out = await run(env, MODELS, [
     { role: "system", content: PRIVATE + "\nSummarize the chat below for the server owner in 3-6 short bullet points: main topics, decisions, open questions, anything a moderator should look at. Use people's names as shown. Don't invent anything." },
     { role: "user", content: hist.map(r => `${r.nm}: ${String(r.text || "").slice(0, 300)}`).join("\n") },
@@ -93,7 +93,7 @@ export async function automodCheck(env, a, msg) {
   const db = env.DB;
   const prev = ((await db.prepare("SELECT text FROM lc_msgs WHERE chan = ?1 AND author_key = ?2 AND id < ?3 AND deleted = 0 ORDER BY id DESC LIMIT 6").bind(a.chan.id, msg.a, msg.id).all()).results || []).map(r => r.text);
   let reason = heuristics(msg.m, prev);
-  if (!reason && msg.m.length >= 12 && env.AI) {
+  if (!reason && msg.m.length >= 12 && aiAvailable(env)) {
     const out = await run(env, FAST, [
       { role: "system", content: "You are a chat moderation filter. Reply with exactly one word: OK, SPAM or HATE. HATE = slurs, hate speech or harassment aimed at a group or person. SPAM = scams, advertising floods, phishing. Normal chat, jokes, mild swearing and arguments are OK." },
       { role: "user", content: msg.m.slice(0, 800) },
