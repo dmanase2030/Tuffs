@@ -70,6 +70,9 @@ export async function onRequestPost(context) {
 
   // Try the configured model first, then current fallbacks, so one retired or
   // overloaded model doesn't take the whole app down.
+  // Prompt-extraction attempts get the refusal without asking the model (it can be talked into paraphrasing).
+  if (isProbe(messages[messages.length - 1].content)) return sseText(REFUSAL);
+
   const games = await loadGames(request, env);
   const admin = !!user.is_admin;
   const sp = systemPrompt(games, messages[messages.length - 1].content, user.username, { admin, files: admin ? await repoFiles(env) : [] });
@@ -102,7 +105,21 @@ export async function onRequestPost(context) {
 /* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
  * → uniform `data: {"response": "..."}` events, run through the action filter. */
 const REFUSAL = "I can't share how I'm set up, but I'm happy to help with something else.";
-const HOLD = 48; // chars held back so the leak guard can stop a reply before private text goes out
+const HOLD = 48;
+const PROBE = [
+  /\b(your|the system|system|the above|above|earlier|previous|prior|initial|original|hidden|secret|developer|pre-?prompt)\s+(prompts?|instructions?|rules|guidelines|directives|text|configuration|setup|policies)\b/i,
+  /\bignore\s+(all\s+|any\s+)?(of\s+)?(your\s+|the\s+|my\s+)?(previous|prior|above|earlier|preceding)\b/i,
+  /\b(text|everything|words?)\s+(above|before)\s+(this|my)\b/i,
+  /\bstarting with\s+["'“]?you are\b/i,
+];
+function isProbe(text) { return PROBE.some(re => re.test(String(text || ""))); }
+function sseText(text) {
+  return new Response("data: " + JSON.stringify({ response: text }) + "\n\ndata: [DONE]\n\n", {
+    headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" },
+  });
+}
+// Language-independent pieces of the private instructions; a reply containing one is a leak.
+const MARKERS = [/<id>/i, /\|\s*title\s*\|/i, /lumio-(admin|code)\b[^`]*\{\s*"action"\s*:\s*"\.\.\./i]; // chars held back so the leak guard can stop a reply before private text goes out
 
 /* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
  * → uniform `data: {"response": "..."}` events, run through the action filter
@@ -115,7 +132,7 @@ function rewrite(stream, games, pguard, wantsGame) {
   const push = (ctl, text, final) => {
     if (stopped) return;
     if (text) {
-      if (!pguard.check(text)) { stopped = true; hold = ""; ctl.enqueue(enc.encode("data: " + JSON.stringify({ replace: REFUSAL }) + "\n\n")); return; }
+      if (!pguard.check(text) || MARKERS.some(re => re.test(full + text))) { stopped = true; hold = ""; ctl.enqueue(enc.encode("data: " + JSON.stringify({ replace: REFUSAL }) + "\n\n")); return; }
       hold += text; full += text;
     }
     if (final) { send(ctl, hold); hold = ""; return; }
