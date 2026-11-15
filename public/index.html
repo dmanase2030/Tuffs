@@ -792,10 +792,11 @@ function aiParse(t,admin){const acts=[],seen=new Set(),cards=[];let pending=fals
   if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
 function aiActs(t){return aiParse(t,false)}
 const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats',chat_servers:'List chat servers',chat_reports:'Show chat reports',chat_resolve:'Resolve a chat report',chat_delete_message:'Delete a chat message',chat_server_ban:'Ban from a chat server',chat_transfer:'Transfer a chat server',chat_delete_server:'Delete a chat server',grant_orbs:'Give or take Orbs',shop_items:'List shop items',shop_save_item:'Save a shop item',set_admin:'Change admin status',logout_user:'Sign out an account',reset_link:'Make a reset link',delete_user:'Delete an account',users:'List accounts',room_clear:'Clear a chat room',room_delete:'Delete a room message'};
+const aiUserName=d=>{const u=String((d&&d.username)||'').trim();return(!u||/[<>]/.test(u)||/^(your[-_ ]?username|username|me|myself)$/i.test(u))?(AUTH.name||u):u};
 function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'announce':return d.text?[['Text',d.text]]:[['Text','(remove the announcement)']];
  case 'settings':return ['signupsOpen','chatEnabled','maintenance'].filter(k=>typeof d[k]=='boolean').map(k=>[{signupsOpen:'Signups',chatEnabled:'Chat',maintenance:'Maintenance mode'}[k],b(d[k])]);
- case 'ban':case 'unban':return [['Account',d.username||'?']];
+ case 'ban':case 'unban':return [['Account',aiUserName(d)]];
  case 'game_add':return [['Title',d.title||'?'],['Link',d.url||'?'],['Category',d.category||'Games']];
  case 'game_edit':{const g=AI_CAT&&AI_CAT.find(x=>x.id==d.id);return [['Game',g?g.title:d.id],['New name',d.title||'(original name)']]}
  case 'game_hide':{const g=AI_CAT&&AI_CAT.find(x=>x.id==d.id);return [['Game',g?g.title:d.id],['Change',d.hidden?'Hide from catalog':'Show in catalog']]}
@@ -804,16 +805,16 @@ function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'chat_reports':return [['Shows','open reported messages']];
  case 'chat_resolve':return [['Report','#'+(d.id??'?')],['Change',d.delete?'Delete the reported message':'Dismiss the report']];
  case 'chat_delete_message':return [['Message','#'+(d.mid??'?')]];
- case 'chat_server_ban':return [['Server',d.sid||'?'],['Account',d.username||'?'],['Reason',d.reason||'(none)']];
+ case 'chat_server_ban':return [['Server',d.sid||'?'],['Account',aiUserName(d)],['Reason',d.reason||'(none)']];
  case 'chat_transfer':return [['Server',d.sid||'?'],['New owner',d.to||'?']];
  case 'chat_delete_server':return [['Server',d.sid||'?'],['Change','Delete the server and its messages']];
- case 'grant_orbs':return [['Account',d.username||'?'],['Orbs',(Number(d.n)>0?'+':'')+(d.n??'?')]];
+ case 'grant_orbs':return [['Account',aiUserName(d)],['Orbs',(Number(d.n)>0?'+':'')+(d.n??'?')]];
  case 'shop_items':return [['Shows','every shop item, its price and owner count']];
  case 'shop_save_item':return [['Item',d.n||'?'],['Category',d.cat||'?'],['Price',(d.p??'?')+' Orbs'],['Style',(d.v&&d.v.fx)||'?'],['Listed',d.on===false?'No':'Yes']];
- case 'set_admin':return [['Account',d.username||'?'],['Change',d.admin?'Make site admin':'Remove admin']];
- case 'logout_user':return [['Account',d.username||'?'],['Change','Sign out on every device']];
- case 'reset_link':return [['Account',d.username||'?'],['Change','Create a one-time reset link (24h)']];
- case 'delete_user':return [['Account',d.username||'?'],['Change','Delete the account for good']];
+ case 'set_admin':return [['Account',aiUserName(d)],['Change',d.admin?'Make site admin':'Remove admin']];
+ case 'logout_user':return [['Account',aiUserName(d)],['Change','Sign out on every device']];
+ case 'reset_link':return [['Account',aiUserName(d)],['Change','Create a one-time reset link (24h)']];
+ case 'delete_user':return [['Account',aiUserName(d)],['Change','Delete the account for good']];
  case 'users':return [['Shows','accounts, admins and suspensions']];
  case 'room_clear':return [['Room',d.room||'?'],['Change','Delete every message in it']];
  case 'room_delete':return [['Message','#'+(d.id??'?')],['Where','built-in rooms chat']];
@@ -886,7 +887,7 @@ function lumioAI(b){
   if(mode=='no'){m.cs[ci]={...(m.cs[ci]||{}),s:'cancel'};persist();draw();return}
   if(mode=='diff'){m.cs[ci]={s:'diff'};draw();diffFor(c,m,mi,cd,ci);return}
   const prev=m.cs[ci]||{};m.cs[ci]={...prev,s:'run'};draw();
-  try{if(cd.k=='admin'){const r=await fetch('/api/ai/admin-action',{method:'POST',headers:auth(),body:JSON.stringify(cd.data)});const d=await r.json().catch(()=>({}));
+  try{if(cd.k=='admin'){if(cd.data.username)cd.data.username=aiUserName(cd.data);const r=await fetch('/api/ai/admin-action',{method:'POST',headers:auth(),body:JSON.stringify(cd.data)});const d=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(d.error||('Failed ('+r.status+')'));
     const st={s:'done',msg:d.summary||'Done.'};if(d.action=='stats'&&d.result){const x=d.result;st.msg='Live numbers from the site database.';st.stats=[['accounts',x.users],['admins',x.admins],['suspended',x.banned],['active sessions',x.sessions],['new in 24h',x.newDay],['new in 7 days',x.newWeek],['chat messages',x.chatTotal],['chat in 24h',x.chatDay]]}
     if(/^game_/.test(cd.data.action)){CAT_P=null;aiCatalog()}m.cs[ci]=st}
