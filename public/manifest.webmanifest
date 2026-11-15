@@ -1,8 +1,8 @@
 {
   "name": "Lumio",
   "short_name": "Lumio",
-  "start_url": "/launcher/",
-  "scope": "/launcher/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#1a120c",
   "theme_color": "#1a120c",
