@@ -9,6 +9,7 @@ import {
   loadCtx, permsOf, can, isOwner, rank, above, roleEditable, roleAssignable, audit, bump, sysMsg, dropImage, userByName,
 } from "./_db.js";
 import { json } from "../auth/_shared.js";
+import { shopOp, questBump, ownsSticker, STICKER_RE } from "./_shop.js";
 import { botReply, automodCheck, summarize, wantsBot } from "./_ai.js";
 
 const NOPE = "You don't have permission to do that.";
@@ -320,6 +321,7 @@ export async function runOp(context, user, body) {
       if (!m || !(await access(db, me, m.chan))) return err("That message is gone.", 404);
       if (m.author_key !== me) return err("You can only edit your own messages.", 403);
       const t = cleanText(body.text, MAX_TEXT); if (!t.trim()) return err("Message can't be empty.");
+      if (STICKER_RE.test(t.trim()) && t !== m.text) return err("Stickers can't be edited in. Send a new message.");
       if (t !== m.text) await db.prepare("UPDATE lc_msgs SET text = ?1, edited_at = ?2, updated_at = ?2 WHERE id = ?3").bind(t, now, m.id).run();
       return ok({ ed: now });
     }
@@ -345,6 +347,7 @@ export async function runOp(context, user, body) {
       await db.batch([
         has ? db.prepare("DELETE FROM lc_reacts WHERE msg_id = ?1 AND user_key = ?2 AND emoji = ?3").bind(m.id, me, e) : db.prepare("INSERT INTO lc_reacts (msg_id, user_key, emoji, ts) VALUES (?1, ?2, ?3, ?4)").bind(m.id, me, e, now),
         db.prepare("UPDATE lc_msgs SET updated_at = ?1 WHERE id = ?2").bind(now, m.id),
+        ...(has || m.author_key === me ? [] : [questBump(db, me, "react")]),
       ]);
       return ok({ on: !has });
     }
@@ -394,6 +397,7 @@ export async function runOp(context, user, body) {
       return ok();
     }
   }
+  if (op.startsWith("shop")) { const r = await shopOp(context, user, body); if (r) return r; }
   return err("Unknown action.");
 }
 
@@ -440,6 +444,8 @@ async function sendMsg(context, user, body) {
   if (text.length > MAX_TEXT) return err(`Messages are up to ${MAX_TEXT} characters.`);
   let att = body.att ? String(body.att) : null;
   if (!text.trim() && !att) return err("Message can't be empty.");
+  const stk = STICKER_RE.exec(text.trim());
+  if (/\[\[sticker:/.test(text) && (!stk || att)) return err("Send a sticker on its own.");
   const a = await access(db, me, chan);
   if (!a) return err("You can't send messages here.", 403);
   if (a.ctx && !can(a.ctx, "SEND", me)) return err("You don't have permission to send messages in this channel.", 403);
@@ -452,6 +458,7 @@ async function sendMsg(context, user, body) {
   if (wait) return err(`You're sending messages too fast. Wait ${wait} s.`, 429, "rate");
   await throttleFail(db, k1, SEND_MAX, SEND_WINDOW, SEND_LOCK);
   await throttleFail(db, k2, SEND_MAX * 3, SEND_WINDOW, SEND_LOCK);
+  if (stk && !(await ownsSticker(db, me, stk[1]))) return err("Get that sticker pack in the Shop first.", 403, "sticker");
   if (att) {
     const img = await db.prepare("SELECT 1 FROM lc_images WHERE id = ?1 AND owner_key = ?2 AND kind = 'attach'").bind(att, me).first();
     if (!img) att = null;
@@ -479,6 +486,8 @@ async function sendMsg(context, user, body) {
   else st.push(db.prepare(`UPDATE lc_chans SET last_id = ?1, last_a = ?2${everyone ? ", all_id = ?1" : ""} WHERE id = ?3`).bind(id, me, chan));
   st.push(db.prepare("INSERT INTO lc_reads (user_key, chan, last_id) VALUES (?1, ?2, ?3) ON CONFLICT(user_key, chan) DO UPDATE SET last_id = MAX(last_id, excluded.last_id)").bind(me, chan, id));
   st.push(db.prepare("DELETE FROM lc_typing WHERE chan = ?1 AND user_key = ?2").bind(chan, me));
+  st.push(questBump(db, me, "msgs"));
+  if (re && reAuthor !== me) st.push(questBump(db, me, "reply"));
   await db.batch(st);
   const msg = { id, ts: now, a: me, m: text, re: re || undefined, att: att || undefined, rx: {} };
   let aiLimited = false;

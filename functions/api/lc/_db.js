@@ -4,6 +4,7 @@
  * source of truth on the server: the app runs the same rules for its buttons,
  * but every change is re-checked here before it is written. */
 import { json } from "../auth/_shared.js";
+import { SHOP_SCHEMA } from "./_catalog.js";
 
 export const BOT = "~ai";            // Lumio AI's member key (can't be a real username: "~" isn't allowed)
 export const LUMIO = "lumio";        // the default public community server
@@ -54,7 +55,7 @@ let READY = false;
 /* Additive schema only (CREATE ... IF NOT EXISTS, one ADD COLUMN). Runs once per isolate. */
 export async function ensure(db) {
   if (READY) return;
-  await db.batch(SCHEMA.map(s => db.prepare(s)));
+  await db.batch([...SCHEMA, ...SHOP_SCHEMA].map(s => db.prepare(s)));
   try { await db.prepare("ALTER TABLE profiles ADD COLUMN banner TEXT").run(); } catch { /* already there */ }
   await ensureLumio(db);
   READY = true;
@@ -154,7 +155,7 @@ export async function sysMsg(db, sid, text) {
 }
 
 /* ---------- people ---------- */
-const PROFILE_COLS = "u.username, u.username_key, u.created_at, u.is_admin, p.display_name, p.avatar, p.banner, p.bio, p.accent, p.updated_at, pr.st, pr.status, pr.seen";
+const PROFILE_COLS = "u.username, u.username_key, u.created_at, u.is_admin, p.display_name, p.avatar, p.banner, p.bio, p.accent, p.updated_at, pr.st, pr.status, pr.seen, (SELECT GROUP_CONCAT(e.slot || ':' || e.item_id) FROM lc_equip e WHERE e.user_key = u.username_key) AS eqs";
 const PROFILE_FROM = "FROM users u LEFT JOIN profiles p ON p.username_key = u.username_key LEFT JOIN lc_presence pr ON pr.user_key = u.username_key";
 export function shapeUser(r, now = Date.now()) {
   const av = r.avatar || "";
@@ -164,6 +165,7 @@ export function shapeUser(r, now = Date.now()) {
     av: av ? (av.startsWith("data:") || av.startsWith("img:") ? "img" : av) : "", avv: r.updated_at || 0,
     bn: r.banner ? String(r.banner) : "", bio: r.bio || "", listen: r.status || "",
     st: online ? (r.st && r.st !== "off" ? r.st : "off") : "off", since: r.created_at || 0, admin: !!r.is_admin,
+    eq: r.eqs ? Object.fromEntries(String(r.eqs).split(",").map(x => x.split(":"))) : {},
   };
 }
 export const BOT_USER = { id: BOT, name: "Lumio AI", user: "lumio-ai", c: "#f2a54a", av: "", avv: 0, bn: "", bio: "Mention @lumio-ai in a channel and I'll answer. I can't see anything outside this chat.", listen: "Ask me anything", st: "online", since: 0, bot: true };
