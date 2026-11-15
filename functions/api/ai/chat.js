@@ -2,6 +2,7 @@ import { json, guard, readBody, sessionUser, getSettings } from "../auth/_shared
 import { clientIp, throttleCheck, throttleFail } from "../auth/_throttle.js";
 import { loadGames, systemPrompt, actionFilter, repoFiles } from "./_site.js";
 import { REFUSAL, isProbe, MARKERS, promptGuard } from "./_guard.js";
+import { CHAT_MODELS, modelOrder, runModels, publicReason } from "./_models.js";
 
 /* Lumio AI chat — Cloudflare Workers AI through the `AI` binding.
  *
@@ -22,18 +23,11 @@ import { REFUSAL, isProbe, MARKERS, promptGuard } from "./_guard.js";
  * (then a 10 min pause) and 60 / hour per IP (then 30 min).
  */
 
-// One model for everyone (chat and admin proposals), on Workers AI's free daily
-// allowance. If it errors for any reason (daily quota 4006, capacity, retired
-// model) the next one is tried.
-const DEFAULT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
-const FALLBACK_MODELS = ["@cf/meta/llama-3.1-8b-instruct-fast", "@cf/meta/llama-3.1-8b-instruct"];
+// Models live in ./_models.js (shared with the chat bot). If one errors for any
+// reason (daily quota 4006, capacity, retired model 5028) the next one is tried.
 const MAX_MESSAGES = 20, MAX_CHARS = 4000, ADMIN_MAX_CHARS = 12000;
 const USER_MAX = 20, USER_WINDOW = 10 * 60 * 1000, USER_LOCK = 10 * 60 * 1000;
 const IP_MAX = 60, IP_WINDOW = 60 * 60 * 1000, IP_LOCK = 30 * 60 * 1000;
-
-function model(env) {
-  return typeof env.AI_MODEL === "string" && env.AI_MODEL.startsWith("@cf/") ? env.AI_MODEL : DEFAULT_MODEL;
-}
 
 export async function onRequestGet(context) {
   const { env } = context;
@@ -83,24 +77,15 @@ export async function onRequestPost(context) {
   const games = await loadGames(request, env);
   const admin = !!user.is_admin;
   const sp = systemPrompt(games, messages[messages.length - 1].content, user.username, { admin, files: admin ? await repoFiles(env) : [] });
-  const tried = [], input = { messages: [{ role: "system", content: sp.text }, ...messages], stream: true, max_tokens: admin ? 4096 : 1024 };
+  const input = { messages: [{ role: "system", content: sp.text }, ...messages], stream: true, max_tokens: admin ? 4096 : 1024 };
   // Admins get room for whole files in a code proposal.
-  const order = [model(env), ...FALLBACK_MODELS];
-  let stream = null, reason = "";
-  for (const m of [...new Set(order)]) {
-    try {
-      stream = await env.AI.run(m, input);
-      if (stream) break;
-    } catch (e) {
-      // Shown to the user, so strip anything that names the model or provider.
-      reason = String((e && e.message) || e).replace(/@cf\/[^\s"',)]+/gi, "the model").replace(/workers ai|cloudflare|llama|\bmeta\b/gi, "service").slice(0, 200);
-      tried.push(m);
-      console.error("Lumio AI: env.AI.run failed", m, reason);
-    }
-  }
+  const run = await runModels(env, modelOrder(env, CHAT_MODELS), input);
+  const stream = run.result;
   if (!stream) {
     // 503, not 502: Cloudflare swaps a Function's 502 body for its own "error code: 502" page.
-    return json({ error: "Lumio AI couldn't answer right now. Try again in a moment.", code: "upstream", reason }, 503);
+    // The reason never names the model or provider.
+    const why = publicReason(run.kinds);
+    return json({ error: why || "Lumio AI couldn't answer right now. Try again in a moment.", code: run.kinds.includes("quota") ? "quota" : "upstream" }, 503);
   }
   const lastText = messages[messages.length - 1].content;
   const wantsGame = /\b(play|game|games|open|launch|recommend|suggest)\b/i.test(lastText);
