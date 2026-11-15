@@ -351,6 +351,71 @@ body.kbd .ain{display:none}body.kbd .aicomp{padding-bottom:6px}
 @media (max-width:600px){.adacts .btn{flex:1 1 auto}}
 .adt[hidden]{display:none}
 
+/* ===== Browser (tabs) ===== */
+.br{position:absolute;inset:0;display:flex;flex-direction:column;background:rgba(18,12,9,.35)}
+.brtabs{display:flex;align-items:flex-end;gap:2px;padding:6px 8px 0;overflow-x:auto;scrollbar-width:none;flex:none;background:rgba(0,0,0,.22)}
+.brtabs::-webkit-scrollbar{display:none}
+.br.narrow .brtabs{display:none}
+.brtab{display:flex;align-items:center;gap:8px;min-width:120px;max-width:220px;flex:1 1 180px;height:36px;padding:0 6px 0 12px;border-radius:11px 11px 0 0;font-size:12.5px;cursor:pointer;color:rgba(255,255,255,.75);position:relative;transition:background .15s}
+.brtab:hover{background:rgba(255,255,255,.06)}
+.brtab.on{background:rgba(52,34,24,.95);color:#fff}
+.brtab:not(.on)+.brtab:not(.on)::before{content:'';position:absolute;left:-1px;top:10px;bottom:10px;width:1px;background:rgba(255,255,255,.12)}
+.brtt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brtx{width:24px;height:24px;flex:none;border-radius:7px;display:grid;place-items:center;opacity:.55}.brtx:hover{opacity:1;background:rgba(255,255,255,.12)}.brtx svg{width:14px;height:14px}
+.brplus{width:32px;height:32px;flex:none;margin:0 0 2px 4px;border-radius:9px;display:grid;place-items:center}.brplus:hover{background:rgba(255,255,255,.1)}.brplus svg{width:18px;height:18px}
+.brfav{width:18px;height:18px;flex:none;display:grid;place-items:center}.brfav img{width:16px;height:16px;border-radius:4px}.brfav i{font-style:normal;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:5px;display:grid;place-items:center;background:color-mix(in srgb,var(--a) 45%,#000);color:#fff}.brfav i svg{width:14px;height:14px}
+.brbar{display:flex;align-items:center;gap:4px;padding:7px 8px;background:rgba(52,34,24,.95);border-bottom:1px solid rgba(255,255,255,.07);flex:none}
+.brb{width:36px;height:36px;flex:none;border-radius:10px;display:grid;place-items:center}.brb:hover{background:rgba(255,255,255,.1)}.brb svg{width:19px;height:19px}
+.bra{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:38px;padding:0 6px 0 12px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);transition:border-color .15s,background .15s}
+.bra:focus-within{border-color:color-mix(in srgb,var(--a) 75%,transparent);background:rgba(0,0,0,.4)}
+.bra input{outline:none;box-shadow:none;flex:1;min-width:0;background:none;border:0;border-radius:0;padding:0;font-size:15px;height:100%;color:#fff;user-select:text}
+.brlock{display:grid;place-items:center;color:#ffcf8a;flex:none}.brlock svg{width:16px;height:16px}
+.brcount{display:none;width:36px;height:36px;flex:none;place-items:center;border-radius:10px}.brcount span{min-width:22px;height:22px;padding:0 4px;border:2px solid currentColor;border-radius:6px;display:grid;place-items:center;font-size:11.5px;font-weight:700}
+.br.narrow .brcount{display:grid}.br.narrow [data-b=fwd],.br.narrow [data-b=re]{display:none}
+.br.narrow.ntp [data-b=back]{display:none}
+.brnote{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:8px 12px;font-size:12.5px;line-height:1.45;background:rgba(240,160,64,.16);border-bottom:1px solid rgba(240,160,64,.35);flex:none}.brnote[hidden]{display:none}.brnote .lnk{font-size:12.5px;color:#ffcf8a;text-decoration:underline}
+.brview{flex:1;min-height:0;position:relative}
+.brv{position:absolute;inset:0;display:flex}.brv[hidden]{display:none}
+.brfr{flex:1;width:100%;border:0;background:#fff}.brfr[hidden],.brpage[hidden]{display:none}
+.brpage{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:radial-gradient(90% 60% at 50% 0%,rgba(255,180,90,.16),transparent 70%)}
+/* new tab page */
+.brntp{max-width:640px;margin:0 auto;padding:clamp(24px,8vh,72px) 18px 28px;text-align:center}
+.brlogo{display:inline-flex;align-items:center;gap:12px;margin-bottom:22px}.brlogo img{width:52px;height:52px;border-radius:15px;box-shadow:0 8px 30px color-mix(in srgb,var(--a) 40%,transparent)}.brlogo b{font-size:32px;font-weight:700;letter-spacing:-.02em}
+.brsearch{display:flex;align-items:center;gap:10px;height:52px;padding:0 18px;border-radius:26px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 34px rgba(0,0,0,.3);transition:border-color .15s,background .15s}
+.brsearch:focus-within{border-color:color-mix(in srgb,var(--a) 80%,transparent);background:rgba(255,255,255,.13)}
+.brsearch span{display:grid;opacity:.7}.brsearch svg{width:20px;height:20px}
+.brsearch input{outline:none;box-shadow:none;flex:1;min-width:0;background:none;border:0;padding:0;font-size:16px;height:100%;color:#fff}
+.brsc{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px 6px;margin-top:30px}
+.brtile{position:relative}
+.brtb{width:100%;display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 4px;border-radius:14px}.brtb:hover{background:rgba(255,255,255,.07)}
+.brti{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.brti img{width:30px;height:30px;border-radius:6px}.brti i{font-style:normal;font-size:20px;font-weight:700}.brti.add{border-style:dashed;opacity:.8}.brti svg{width:22px;height:22px}
+.brtb small{font-size:12px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.85}
+.brtdel{position:absolute;top:2px;right:8px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(30,20,14,.95);border:1px solid rgba(255,255,255,.15);opacity:0;transition:opacity .15s}.brtdel svg{width:12px;height:12px}
+.brtile:hover .brtdel,.brtdel:focus{opacity:1}@media (pointer:coarse){.brtdel{opacity:.85}}
+.bradd{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid var(--line)}.bradd[hidden]{display:none}
+.bradd input{flex:1 1 150px;font-size:15px}.bradd .btn{padding:9px 14px;font-size:13px}
+.brrec{margin-top:26px;text-align:left;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:6px}
+.brrech{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 4px;font-size:12.5px}.brrech .lnk{font-size:12px;opacity:.7}
+.brri{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:10px;font-size:13.5px}.brri:hover{background:rgba(255,255,255,.07)}
+.brrt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.brri small{opacity:.55;font-size:11.5px;flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis}
+.brfoot{font-size:11.5px;opacity:.55;margin-top:22px;line-height:1.5}
+/* menu + tab sheet */
+.brmenu{position:absolute;top:96px;right:10px;z-index:8;min-width:230px;padding:6px;border-radius:14px;background:rgba(36,24,17,.98);border:1px solid var(--line);box-shadow:0 18px 50px #000a}
+.br.narrow .brmenu{top:54px}.brmenu[hidden]{display:none}
+.brmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:9px;font-size:13.5px;text-align:left}.brmenu button:hover{background:rgba(255,255,255,.08)}.brmenu svg{width:17px;height:17px;flex:none}
+.brmh{font-size:11px;text-transform:uppercase;letter-spacing:.06em;opacity:.5;padding:10px 12px 4px;border-top:1px solid rgba(255,255,255,.08);margin-top:4px}
+.brdot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.5);flex:none}.brmenu .on .brdot{border-color:var(--a);background:radial-gradient(var(--a) 45%,transparent 50%)}
+.brsheet{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;background:rgba(24,16,11,.98);backdrop-filter:blur(16px);animation:brup .22s ease-out}.brsheet[hidden]{display:none}
+@keyframes brup{from{transform:translateY(16px);opacity:0}}
+.brsh{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-size:16px}.brsh .btn{padding:8px 16px;font-size:13.5px;font-weight:600}
+.brgrid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;padding:6px 14px 14px;align-content:start}
+.brcard{border-radius:14px;overflow:hidden;background:rgba(255,255,255,.07);border:2px solid transparent;cursor:pointer}.brcard.on{border-color:var(--a)}
+.brch{display:flex;align-items:center;gap:6px;padding:8px 6px 8px 10px;font-size:12.5px;background:rgba(255,255,255,.06)}.brch span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brch button{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none}.brch svg{width:14px;height:14px}
+.brcb{height:92px;display:grid;place-items:center;padding:8px;font-size:12px;opacity:.6;text-align:center;overflow-wrap:anywhere}
+.brnewbig{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 14px calc(14px + env(safe-area-inset-bottom,0px));min-height:46px;font-size:14.5px;font-weight:600;border-radius:14px}.brnewbig svg{width:18px;height:18px}
+
 </style></head><body>
 <div id="pin" role="dialog" aria-label="Enter PIN"><form id="pinf" autocomplete="off" novalidate>
 <label for="pini">PIN</label>
@@ -781,6 +846,101 @@ function lumioReset(){const m=location.hash.match(/^#reset=([0-9a-f]{64})$/i);if
   const d=await authPost('/api/auth/reset',{token:tok,password:a});if(d.error){er.textContent=d.error;return}
   done();signedIn(d,false);showLock();toast('Password changed. You\'re signed in as '+d.username)}}
 
+/* ---- Browser app: real tabs, Firefox-style new tab page, Brave Search with a Bing fallback.
+ * Every page loads through the site's /service/ proxy. Tabs last for the browser session. ---- */
+const ENGINES={brave:{n:'Brave Search',u:'https://search.brave.com/search?q='},bing:{n:'Bing',u:'https://www.bing.com/search?q='}};
+const BRS={get(k,d){try{const v=JSON.parse(localStorage.getItem('lumio_br_'+k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem('lumio_br_'+k,JSON.stringify(v))}catch(e){}}};
+function brEngine(){const e=BRS.get('engine','brave');return ENGINES[e]?e:'brave'}
+function brSearchUrl(q,eng){return ENGINES[eng||brEngine()].u+encodeURIComponent(q)}
+function brParse(v){v=(v||'').trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(v))return 'https://'+v;return brSearchUrl(v)}
+function brHost(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return ''}}
+function brFav(u){const h=brHost(u);return h?proxify('https://www.google.com/s2/favicons?domain='+encodeURIComponent(h)+'&sz=64'):''}
+function brIsBraveSearch(u){return /^https:\/\/search\.brave\.com\/search\?/i.test(u||'')}
+function brQuery(u){try{const x=new URL(u);if(/search\.brave\.com$|bing\.com$/.test(x.hostname))return x.searchParams.get('q')}catch(e){}return null}
+
+function lumioTabs(b){
+ const ICX={plus:ic('<path d="M12 5v14M5 12h14"/>'),x:ic('<path d="M6 6l12 12M18 6L6 18"/>'),back:ic('<path d="M15 5l-7 7 7 7"/>'),fwd:ic('<path d="M9 5l7 7-7 7"/>'),re:ic('<path d="M20 12a8 8 0 11-2.3-5.6M20 4v5h-5"/>'),
+  menu:ic('<circle cx="12" cy="5.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="18.5" r="1.3" fill="currentColor"/>'),
+  shield:ic('<path d="M12 3l7.5 3v5.6c0 4.4-3.1 8.2-7.5 9.4-4.4-1.2-7.5-5-7.5-9.4V6z"/>'),search:ic('<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>'),
+  home:ic('<path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z"/>'),ext:ic('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/>')};
+ let S;try{S=JSON.parse(sessionStorage.getItem('lumio_tabs')||'null')}catch(e){}
+ if(!S||!Array.isArray(S.tabs)||!S.tabs.length)S={tabs:[{id:'t'+Date.now().toString(36),url:'',title:'New tab'}],cur:null};
+ if(!S.tabs.some(t=>t.id==S.cur))S.cur=S.tabs[0].id;
+ const save=()=>{try{sessionStorage.setItem('lumio_tabs',JSON.stringify({tabs:S.tabs.map(({id,url,title})=>({id,url,title})),cur:S.cur}))}catch(e){}};
+ b.innerHTML=`<div class=br><div class=brtabs role=tablist></div>
+ <div class=brbar><button class=brb data-b=back aria-label=Back>${ICX.back}</button><button class=brb data-b=fwd aria-label=Forward>${ICX.fwd}</button><button class=brb data-b=re aria-label=Reload>${ICX.re}</button>
+ <form class=bra><span class=brlock aria-hidden=true></span><input name=q placeholder="Search or enter address" autocapitalize=none autocomplete=off spellcheck=false enterkeyhint=go aria-label="Address"></form>
+ <button class=brcount data-b=tabs aria-label="Show tabs"><span>1</span></button><button class=brb data-b=menu aria-label="Menu">${ICX.menu}</button></div>
+ <div class=brnote hidden role=status></div><div class=brview></div>
+ <div class=brmenu hidden role=menu></div><div class=brsheet hidden><div class=brsh><b>Tabs</b><button class=btn data-b=done>Done</button></div><div class=brgrid></div><button class="btn on brnewbig" data-b=new>${ICX.plus}<span>New tab</span></button></div></div>`;
+ const R=$('.br',b),TS=$('.brtabs',b),V=$('.brview',b),inp=$('.bra input',b),lock=$('.brlock',b),note=$('.brnote',b),menu=$('.brmenu',b),sheet=$('.brsheet',b);
+ new ResizeObserver(()=>R.classList.toggle('narrow',R.clientWidth<640)).observe(R);
+ const cur=()=>S.tabs.find(t=>t.id==S.cur);
+ const label=t=>t.url?(t.title||brHost(t.url)||t.url):'New tab';
+ const favImg=t=>t.url?`<img src="${esc(brFav(t.url))}" alt="" loading=lazy onerror="this.replaceWith(Object.assign(document.createElement('i'),{textContent:'${esc((brHost(t.url)[0]||'?').toUpperCase())}'}))">`:`<i>${ICX.search}</i>`;
+ const paintTabs=()=>{TS.innerHTML=S.tabs.map(t=>`<div class="brtab${t.id==S.cur?' on':''}" role=tab aria-selected=${t.id==S.cur} data-t="${t.id}"><span class=brfav>${favImg(t)}</span><span class=brtt>${esc(label(t))}</span><button class=brtx data-x="${t.id}" aria-label="Close tab">${ICX.x}</button></div>`).join('')+`<button class=brplus data-b=new aria-label="New tab">${ICX.plus}</button>`;
+  $('.brcount span',b).textContent=S.tabs.length;
+  if(!sheet.hidden)paintSheet()};
+ const paintSheet=()=>{$('.brgrid',b).innerHTML=S.tabs.map(t=>`<div class="brcard${t.id==S.cur?' on':''}" data-t="${t.id}"><div class=brch><span class=brfav>${favImg(t)}</span><span>${esc(label(t))}</span><button data-x="${t.id}" aria-label="Close tab">${ICX.x}</button></div><div class=brcb>${t.url?esc(brHost(t.url)):'New tab'}</div></div>`).join('')};
+ const paintBar=()=>{const t=cur();if(document.activeElement!==inp)inp.value=t.url?(brQuery(t.url)!=null?brQuery(t.url):t.url):'';
+  lock.innerHTML=t.url?ICX.shield:ICX.search;lock.title=t.url?'Loaded through the Lumio proxy':'';R.classList.toggle('ntp',!t.url)};
+ const showNote=(html)=>{if(!html){note.hidden=true;note.innerHTML='';return}note.hidden=false;note.innerHTML=html};
+ // ---- new tab page ----
+ const shortcuts=()=>BRS.get('shortcuts',QUICK.map(q=>({t:q[0],u:q[1]})));
+ const ntp=t=>{const sc=shortcuts(),rec=BRS.get('recent',[]);const eng=ENGINES[brEngine()].n;
+  return `<div class=brntp><div class=brlogo><img src="/launcher/icon.svg" alt=""><b>Lumio</b></div>
+  <form class=brsearch><span>${ICX.search}</span><input name=q placeholder="Search with ${esc(eng)} or enter address" autocapitalize=none autocomplete=off spellcheck=false enterkeyhint=search aria-label="Search"></form>
+  <div class=brsc>${sc.map((s,i)=>`<div class=brtile><button class=brtb data-go="${esc(s.u)}"><span class=brti><img src="${esc(brFav(s.u))}" alt="" loading=lazy onerror="this.replaceWith(Object.assign(document.createElement('i'),{textContent:'${esc((s.t[0]||'?').toUpperCase())}'}))"></span><small>${esc(s.t)}</small></button><button class=brtdel data-scdel=${i} aria-label="Remove ${esc(s.t)}">${ICX.x}</button></div>`).join('')}
+  ${sc.length<12?`<div class=brtile><button class=brtb data-scadd><span class="brti add">${ICX.plus}</span><small>Add</small></button></div>`:''}</div>
+  <form class=bradd hidden><input name=t placeholder="Name" maxlength=24 aria-label="Shortcut name"><input name=u placeholder="Address, e.g. example.com" autocapitalize=none spellcheck=false aria-label="Shortcut address"><button class="btn on">Save</button><button type=button class=btn data-sccancel>Cancel</button></form>
+  ${rec.length?`<div class=brrec><div class=brrech><b>Recently visited</b><button class=lnk data-recclear>Clear</button></div>${rec.slice(0,6).map(r=>`<button class=brri data-go="${esc(r.u)}"><span class=brfav><img src="${esc(brFav(r.u))}" alt="" loading=lazy onerror="this.remove()"></span><span class=brrt>${esc(r.t||brHost(r.u))}</span><small>${esc(brHost(r.u))}</small></button>`).join('')}</div>`:''}
+  <p class=brfoot>Pages open through the Lumio proxy. Simple sites work best; logins, video and heavy apps often don't.</p></div>`};
+ // ---- tab views ----
+ const views={};
+ const view=t=>{let v=views[t.id];if(v)return v;v=document.createElement('div');v.className='brv';v.innerHTML=`<div class=brpage hidden></div><iframe class=brfr hidden allow="fullscreen;autoplay;clipboard-write" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-pointer-lock allow-presentation"></iframe>`;V.append(v);views[t.id]=v;
+  const fr=v.querySelector('iframe');
+  fr.onload=()=>{let doc=null;try{doc=fr.contentDocument;const l=fr.contentWindow.location,real=unproxy(l.pathname);if(real&&!/^about:/.test(l.href)){t.url=real+(/^https?%3A/i.test(l.pathname.slice(PROXY.length))&&real.indexOf('?')>=0?'':l.search)}const ti=doc&&doc.title;if(ti)t.title=ti.slice(0,80)}catch(e){}
+   // Brave Search often answers the proxy with a captcha; switch that search to Bing.
+   const capt=()=>{try{const d=fr.contentDocument;return!!d&&/search\.brave\.com/.test(t.url)&&(/captcha/i.test(d.title||'')||/flagged as being suspicious|captcha/i.test((d.body&&d.body.innerText||'').slice(0,3000)))}catch(e){return false}};
+   const fall=()=>{const q=brQuery(t.url);if(q==null)return false;t.fellBack=1;go(t,brSearchUrl(q,'bing'),true);showNote(`Brave Search asked for a captcha through the proxy, so this search opened in Bing. <button class=lnk data-eng=bing>Use Bing by default</button><button class=lnk data-direct="${esc('https://search.brave.com/search?q='+encodeURIComponent(q))}">Open Brave in a new tab</button>`);return true};
+   if(capt()&&fall())return;
+   if(doc&&/search\.brave\.com/.test(t.url)){const u0=t.url;setTimeout(()=>{if(t.url==u0&&capt())fall()},1500)}
+   if(t.url)remember(t);save();paintTabs();if(t.id==S.cur)paintBar()};
+  return v};
+ const remember=t=>{if(!t.url||brQuery(t.url)!=null)return;const r=BRS.get('recent',[]).filter(x=>x.u!=t.url);r.unshift({u:t.url,t:t.title||'',ts:Date.now()});BRS.set('recent',r.slice(0,8))};
+ const showTab=t=>{Object.entries(views).forEach(([id,v])=>v.hidden=id!=t.id);const v=view(t),pg=v.querySelector('.brpage'),fr=v.querySelector('iframe');v.hidden=false;
+  if(!t.url){fr.hidden=true;pg.hidden=false;pg.innerHTML=ntp(t);const f=pg.querySelector('.brsearch');f.onsubmit=e=>{e.preventDefault();const q=f.q.value;if(q.trim())go(t,brParse(q))};
+   const af=pg.querySelector('.bradd');af.onsubmit=e=>{e.preventDefault();const u=brParse(af.u.value);if(!u||!/^https?:/.test(u)||brQuery(u)!=null){af.u.focus();return}const n=af.t.value.trim()||brHost(u);const sc=shortcuts();sc.push({t:n,u});BRS.set('shortcuts',sc);showTab(t)};
+   if(innerWidth>700)setTimeout(()=>{const i=pg.querySelector('.brsearch input');if(i&&t.id==S.cur)i.focus()},50)}
+  else{pg.hidden=true;fr.hidden=false;if(!fr.dataset.loaded){fr.dataset.loaded=1;fr.src=proxify(t.url)}}
+  paintBar()};
+ const go=(t,u,keepNote)=>{if(!u)return;if(!keepNote)showNote('');t.url=u;t.title=brQuery(u)!=null?brQuery(u)+' - '+(/brave/.test(u)?'Brave Search':'Bing'):brHost(u);const v=view(t),fr=v.querySelector('iframe');v.querySelector('.brpage').hidden=true;fr.hidden=false;fr.dataset.loaded=1;fr.src=proxify(u);
+  if(!brIsBraveSearch(u)){const src=proxify(u),ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);fetch(src,{signal:ctl.signal}).then(r=>{clearTimeout(tm);if(!r.ok&&t.url===u&&r.status>=500)showNote(`This page answered with error ${r.status} through the proxy. Some sites block proxies. <button class=lnk data-direct="${esc(u)}">Open it in a new browser tab</button>`)}).catch(()=>clearTimeout(tm))}
+  save();paintTabs();if(t.id==S.cur)paintBar()};
+ const select=id=>{S.cur=id;save();showNote('');paintTabs();showTab(cur())};
+ const add=u=>{const t={id:'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),url:'',title:'New tab'};S.tabs.push(t);select(t.id);if(u)go(t,u);else if(R.classList.contains('narrow'))setTimeout(()=>{const i=V.querySelector('.brv:not([hidden]) .brsearch input');if(i)i.focus()},60);return t};
+ const close=id=>{const i=S.tabs.findIndex(t=>t.id==id);if(i<0)return;if(views[id]){views[id].remove();delete views[id]}S.tabs.splice(i,1);
+  if(!S.tabs.length){add();return}if(S.cur==id)S.cur=S.tabs[Math.min(i,S.tabs.length-1)].id;select(S.cur)};
+ const openMenu=()=>{const t=cur(),e=brEngine();menu.innerHTML=`<button data-m=new>${ICX.plus}<span>New tab</span></button>${t.url?`<button data-m=ext>${ICX.ext}<span>Open page outside Lumio</span></button><button data-m=copy>${ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 011-1h10"/>')}<span>Copy link</span></button><button data-m=home>${ICX.home}<span>New tab page</span></button>`:''}<div class=brmh>Search engine</div>${Object.entries(ENGINES).map(([k,v])=>`<button data-eng=${k} class="${k==e?'on':''}"><span class=brdot></span><span>${v.n}</span></button>`).join('')}<button data-m=close>${ICX.x}<span>Close tab</span></button>`;menu.hidden=false};
+ b.onclick=e=>{const el=e.target.closest('button,[data-t],.brtab');if(!menu.hidden&&!e.target.closest('.brmenu')&&!e.target.closest('[data-b=menu]'))menu.hidden=true;if(!el)return;const d=el.dataset;
+  if(d.x){e.stopPropagation();close(d.x);return}
+  if(d.t&&!e.target.closest('[data-x]')){select(d.t);if(!sheet.hidden)sheet.hidden=true;return}
+  if(d.go){go(cur(),d.go);return}
+  if('scadd' in d){const f=V.querySelector('.brv:not([hidden]) .bradd');f.hidden=false;f.t.focus();return}
+  if('sccancel' in d){el.closest('.bradd').hidden=true;return}
+  if(d.scdel!=null){const sc=shortcuts();sc.splice(+d.scdel,1);BRS.set('shortcuts',sc);showTab(cur());return}
+  if('recclear' in d){BRS.set('recent',[]);showTab(cur());return}
+  if(d.direct){newTab(d.direct);return}
+  if(d.eng){BRS.set('engine',d.eng);menu.hidden=true;showNote(d.eng=='bing'&&!note.hidden?'Bing is now your default search.':'');if(!cur().url)showTab(cur());toast(ENGINES[d.eng].n+' is now the default search');return}
+  if(d.m){menu.hidden=true;const t=cur();if(d.m=='new')add();else if(d.m=='ext'&&t.url)newTab(proxify(t.url));else if(d.m=='copy'&&t.url)copyText(t.url);else if(d.m=='home'){t.url='';t.title='New tab';const v=views[t.id];if(v){v.remove();delete views[t.id]}save();paintTabs();showTab(t)}else if(d.m=='close')close(t.id);return}
+  const a=d.b;if(!a)return;const t=cur(),fr=views[t.id]&&views[t.id].querySelector('iframe');
+  try{if(a=='back'){if(t.url&&fr)fr.contentWindow.history.back()}else if(a=='fwd'){if(fr)fr.contentWindow.history.forward()}else if(a=='re'){if(t.url&&fr){showNote('');fr.src=proxify(t.url)}}
+   else if(a=='new'){sheet.hidden=true;add()}else if(a=='menu'){if(menu.hidden)openMenu();else menu.hidden=true}else if(a=='tabs'){paintSheet();sheet.hidden=false}else if(a=='done')sheet.hidden=true}catch(_){}};
+ $('.bra',b).onsubmit=e=>{e.preventDefault();inp.blur();const u=brParse(inp.value);if(u)go(cur(),u)};
+ inp.onfocus=()=>inp.select();
+ b.nav=u=>{const t=cur();if(t.url)add(u);else go(t,u)};
+ paintTabs();showTab(cur())}
+
 </script>
 <script>
 const $=(s,e=document)=>e.querySelector(s),H=(h)=>{const d=document.createElement('div');d.innerHTML=h;return d.firstElementChild};
@@ -801,7 +961,7 @@ const ic=(p,f)=>`<svg viewBox="0 0 24 24" width="1em" height="1em" fill="${f||'n
 const PL=ic('<path d="M8 5v14l11-7z"/>','currentColor'),PA=ic('<path d="M8 5v14M16 5v14"/>'),PV=ic('<path d="M6 5v14M18 5v14L8 12z"/>'),NX=ic('<path d="M18 5v14M6 5v14l10-7z"/>');
 const IC={globe:ic('<circle cx="12" cy="12" r="8.5"/><ellipse cx="12" cy="12" rx="3.6" ry="8.5"/><path d="M3.8 9h16.4M3.8 15h16.4"/>'),film:ic('<rect x="3" y="4.5" width="18" height="12.5" rx="3"/><path d="M10.4 8.3v5l4.2-2.5z" fill="currentColor"/><path d="M8.5 20.2h7"/>'),book:ic('<path d="M12 6.6C10 5.1 7 4.6 3.5 5.1v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5v-13C17 4.6 14 5.1 12 6.6z"/><path d="M12 6.6v13"/>'),music:ic('<path d="M9 17.5V6.6l11-2.4v10.9M9 10l11-2.4"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.1" r="2.5"/>'),pad:ic('<path d="M7.6 7h8.8a5 5 0 015 5.5l-.4 3.5a2.6 2.6 0 01-4.6 1.3L15 15.6H9l-1.4 1.7A2.6 2.6 0 013 16l-.4-3.5A5 5 0 017.6 7z"/><path d="M8 9.9v4M6 11.9h4"/><circle cx="15.6" cy="10.9" r=".7" fill="currentColor"/><circle cx="17.6" cy="12.9" r=".7" fill="currentColor"/>'),snake:ic('<path d="M4 18h10a3 3 0 000-6h-4a3 3 0 010-6h6.5"/><circle cx="19" cy="6" r="1.7"/>'),spark:ic('<path d="M12 3.5l1.9 5.6 5.6 1.9-5.6 1.9L12 18.5l-1.9-5.6L4.5 11l5.6-1.9z"/>'),ai:ic('<path d="M20.2 11.3a8 8 0 01-11.6 7.1L3.8 19.8l1.4-4.3a8 8 0 1115-4.2z"/><path d="M12.2 7.4l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="currentColor" stroke-width="1"/>'),user:ic('<circle cx="12" cy="8.5" r="3.8"/><path d="M4.6 20c.8-3.5 3.8-5.5 7.4-5.5s6.6 2 7.4 5.5"/>'),gear:ic('<circle cx="12" cy="12" r="3"/><path d="M12 3.4l1.4 2.1 2.4-.7.8 2.4 2.4.8-.7 2.4 2.1 1.4-2.1 1.4.7 2.4-2.4.8-.8 2.4-2.4-.7L12 20.6l-1.4-2.1-2.4.7-.8-2.4-2.4-.8.7-2.4L3.4 12l2.1-1.4-.7-2.4 2.4-.8.8-2.4 2.4.7z"/>')};
 IC.ai=IC.ai||IC.spark;const APPS={
-browser:{n:'Browser',i:IC.globe,w:960,h:620,r(b){lumioBrowser(b)}},
+browser:{n:'Browser',i:IC.globe,w:1040,h:680,r(b){lumioTabs(b)}},
 watch:{n:'Watch',i:IC.film,w:560,h:380,r(b){b.innerHTML=`<div id=scr style="height:calc(100% - 52px);background:linear-gradient(#2a6f86,#14323f 55%,#8a6a3a 56%,#2a1e14);position:relative;display:grid;place-items:center"><div style="font-size:12px;opacity:.9;background:#0007;padding:4px 10px;border-radius:12px">The Getaway</div></div><div class=pad style="padding:8px 12px"><div class=row><button id=pp class="btn on">${PL}</button><div class=prog style="flex:1"><i id=pg></i></div><span id=tm style="font-size:11px">0:00 / 3:00</span></div></div>`;
 let p=0,on=0,h;const u=()=>{$('#pg',b).style.width=p/180*100+'%';$('#tm',b).textContent=`${Math.floor(p/60)}:${String(p%60).padStart(2,'0')} / 3:00`};
 $('#pp',b).onclick=()=>{on=!on;$('#pp',b).innerHTML=on?PA:PL;clearInterval(h);if(on)h=setInterval(()=>{p=(p+1)%181;u();$('#scr',b).style.filter=`hue-rotate(${p*2}deg)`},1000)};b.closest('.win').onclose=()=>clearInterval(h)}},
