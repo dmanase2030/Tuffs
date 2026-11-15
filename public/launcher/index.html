@@ -212,6 +212,55 @@ body.dah.touchy.dhid #dh{display:flex;opacity:1}
 body.kbd #dh,body.kbd #dock{display:none}
 @media(max-width:700px){body.dah .win{bottom:max(calc(24px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}body:not(.dah) .win{bottom:max(calc(74px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}}
 
+/* ===== Lumio AI ===== */
+.ai{position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(rgba(0,0,0,.08),rgba(0,0,0,.2))}
+.aih{display:flex;align-items:center;gap:6px;padding:8px 10px;flex:none;border-bottom:1px solid var(--line)}
+.ait{flex:1;text-align:center;font-size:14px}
+.aib{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:19px}.aib:hover{background:rgba(255,255,255,.12)}
+.aip{position:absolute;top:53px;left:8px;width:min(300px,calc(100% - 16px));max-height:calc(100% - 140px);overflow:auto;z-index:5;padding:8px;border-radius:14px;background:rgba(24,18,14,.97);border:1px solid var(--line);box-shadow:0 14px 40px #000a}
+.aip[hidden],.aie[hidden]{display:none}
+.aiph{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 8px;font-size:13px}
+.aipi{display:flex;align-items:center;border-radius:10px}.aipi.on,.aipi:hover{background:rgba(255,255,255,.08)}
+.aipi button:first-child{flex:1;min-width:0;text-align:left;padding:9px 10px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aipi small{display:block;opacity:.55;font-size:11px;margin-top:2px}
+.aipi button:last-child{width:32px;height:32px;border-radius:8px;opacity:.6;font-size:15px}.aipi button:last-child:hover{opacity:1;background:rgba(255,255,255,.1)}
+.aim{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:14px;user-select:text;overscroll-behavior:contain}
+.aim-r{display:flex;gap:10px;max-width:100%}.aim-r.u{justify-content:flex-end}
+.aiu{max-width:82%;padding:9px 13px;border-radius:18px 18px 6px 18px;background:var(--a);color:#2a1608;font-size:14px;line-height:1.45;white-space:normal;overflow-wrap:anywhere}
+.aia{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:16px;color:#2a1608;background:linear-gradient(145deg,#ffd38a,var(--a));margin-top:2px}
+.aiw{flex:1;min-width:0}
+.aimd{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.aimd>*+*{margin-top:8px}.aimd h3,.aimd h4,.aimd h5,.aimd h6{font-size:15px;margin-top:12px}
+.aimd ul,.aimd ol{padding-left:20px}.aimd li+li{margin-top:3px}
+.aimd a{color:#ffcf8a;text-decoration:underline;text-underline-offset:2px}
+.aimd code{font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(255,255,255,.12);padding:1px 5px;border-radius:5px}
+.aimd blockquote{border-left:3px solid var(--a);padding-left:10px;opacity:.9}
+.aimd hr{border:0;border-top:1px solid var(--line)}
+.aicb{border-radius:10px;overflow:hidden;background:#140f0c;border:1px solid var(--line)}
+.aicbh{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;font-size:11px;opacity:.85;background:rgba(255,255,255,.05)}
+.aicbh button{font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.1)}
+.aicb pre{margin:0;padding:10px 12px;overflow-x:auto}.aicb code{background:none;padding:0;font-size:12.5px;white-space:pre}
+.aiact{display:flex;gap:6px;margin-top:6px}.aiact[hidden]{display:none}
+.aiact button{display:flex;align-items:center;gap:4px;font-size:11.5px;padding:4px 8px;border-radius:7px;opacity:.7}.aiact button:hover{opacity:1;background:rgba(255,255,255,.1)}
+.aix{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:rgba(255,120,90,.12);border:1px solid rgba(255,140,110,.35);font-size:13px;line-height:1.45;color:#ffd2c4}
+.aity{display:inline-flex;gap:4px;padding:6px 2px}.aity i{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.4;animation:aib 1.2s infinite}.aity i:nth-child(2){animation-delay:.15s}.aity i:nth-child(3){animation-delay:.3s}
+@keyframes aib{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:.9;transform:translateY(-3px)}}
+.aicar{display:inline-block;width:7px;height:15px;margin-left:2px;vertical-align:-2px;background:var(--a);border-radius:2px;animation:aic 1s steps(2) infinite}@keyframes aic{50%{opacity:0}}
+.aiempty{margin:auto;text-align:center;padding:10px 4px;width:100%;max-width:520px}
+.aibig{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:18px;font-size:30px;color:#2a1608;background:linear-gradient(145deg,#ffd38a,var(--a));box-shadow:0 8px 26px #0006}
+.aiempty h3{font-size:19px;font-weight:600;margin:12px 0 16px}
+.aisg{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left}
+.aisg button{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid var(--line);min-width:0}.aisg button:hover{background:rgba(255,255,255,.13);border-color:var(--a)}
+.aisg b{display:block;font-size:13px}.aisg small{display:block;font-size:11.5px;opacity:.65;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:380px){.aisg{grid-template-columns:1fr}}
+.aie{margin:0 12px 6px;padding:9px 12px;border-radius:12px;background:rgba(240,160,64,.14);border:1px solid rgba(240,160,64,.4);font-size:12.5px;line-height:1.45;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.aie span{flex:1;min-width:180px}
+.aif{display:flex;align-items:flex-end;gap:8px;margin:0 10px;padding:6px 6px 6px 14px;border-radius:22px;background:rgba(255,255,255,.1);border:1px solid var(--line);flex:none}
+.aif:focus-within{border-color:var(--a)}
+.aif textarea{flex:1;min-width:0;resize:none;background:none;border:0;outline:0;color:#fff;font:16px/1.4 system-ui,-apple-system,sans-serif;padding:6px 0;max-height:140px;user-select:text}
+.aif textarea::placeholder{color:rgba(255,255,255,.55)}
+.ais{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:var(--a);color:#2a1608}.ais.stop{background:rgba(255,255,255,.85)}
+.ain{display:block;text-align:center;font-size:10.5px;opacity:.5;padding:5px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+
 </style></head><body>
 <div id="wall" class="w-forest"></div>
 <div id="desk"></div>
@@ -336,6 +385,101 @@ function lumioGames(b){b.innerHTML=`<div class=lgw><div class=lgh><input type=se
  b.onclick=e=>{const c=e.target.closest('[data-c]');if(c){cat=c.dataset.c;cats.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===c));draw();return}const t=e.target.closest('[data-g]');if(t){const g=all.find(x=>x.id==t.dataset.g);if(g)playGame(g)}}}
 
 
+/* Open a web address in the Lumio Browser app. */
+function browseTo(u){open('browser');const w=open_['browser'];const body=w&&w.querySelector('.body');if(body&&body.nav)body.nav(u)}
+
+/* ---- Lumio AI: chat UI for /api/ai/chat (Cloudflare Workers AI). Never invents replies. ---- */
+const AI_SUGGEST=[['Explain something','Explain how HTTPS keeps my data safe, in simple words.'],['Plan my study','Make me a 30-minute study plan for a math test tomorrow.'],['Write a story','Write a short story about a robot who loves video games.'],['Fix my code','Why does this JavaScript print undefined?\n\n```js\nfunction add(a, b) { a + b }\nconsole.log(add(2, 3))\n```']];
+function mdInline(s){const codes=[];s=s.replace(/`([^`\n]+)`/g,(m,c)=>{codes.push(c);return '\u0000'+(codes.length-1)+'\u0000'});s=esc(s);
+ s=s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,(m,t,u)=>`<a href="${u}" data-ext>${t}</a>`);
+ s=s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,!?;:'"])/g,(m,p,u)=>`${p}<a href="${u}" data-ext>${u}</a>`);
+ s=s.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>').replace(/(^|[^*\w])\*([^*\n]+)\*(?!\w)/g,'$1<em>$2</em>').replace(/(^|[^_\w])_([^_\n]+)_(?!\w)/g,'$1<em>$2</em>').replace(/~~([^~\n]+)~~/g,'<del>$1</del>');
+ return s.replace(/\u0000(\d+)\u0000/g,(m,i)=>`<code>${esc(codes[+i])}</code>`)}
+function mdBlocks(t){const L=t.split('\n');let h='',i=0;
+ while(i<L.length){const l=L[i];
+  if(!l.trim()){i++;continue}
+  let m;
+  if((m=l.match(/^(#{1,6})\s+(.*)$/))){const n=Math.min(6,m[1].length+2);h+=`<h${n}>${mdInline(m[2])}</h${n}>`;i++;continue}
+  if(/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)){h+='<hr>';i++;continue}
+  if(/^\s*>/.test(l)){const q=[];while(i<L.length&&/^\s*>/.test(L[i]))q.push(L[i++].replace(/^\s*>\s?/,''));h+=`<blockquote>${mdBlocks(q.join('\n'))}</blockquote>`;continue}
+  const ul=/^\s*[-*+]\s+/,ol=/^\s*\d+[.)]\s+/;
+  if(ul.test(l)||ol.test(l)){const isO=ol.test(l),re=isO?ol:ul,items=[];let start=isO?parseInt(l,10):1;
+   while(i<L.length&&(re.test(L[i])||(/^\s{2,}\S/.test(L[i])&&items.length))){if(re.test(L[i]))items.push(L[i].replace(re,''));else items[items.length-1]+=' '+L[i].trim();i++}
+   h+=(isO?`<ol${start>1?` start=${start}`:''}>`:'<ul>')+items.map(x=>`<li>${mdInline(x)}</li>`).join('')+(isO?'</ol>':'</ul>');continue}
+  const p=[];while(i<L.length&&L[i].trim()&&!/^(#{1,6}\s|\s*>|\s*[-*+]\s+|\s*\d+[.)]\s+)/.test(L[i]))p.push(L[i++]);
+  if(!p.length)p.push(L[i++]);
+  h+=`<p>${p.map(mdInline).join('<br>')}</p>`}
+ return h}
+function md(src){return String(src||'').split('```').map((p,i)=>{if(!(i%2))return mdBlocks(p);const nl=p.indexOf('\n');let lang=nl>=0?p.slice(0,nl).trim():'',code=nl>=0?p.slice(nl+1):p;if(!/^[\w+#.-]{0,20}$/.test(lang)){lang='';code=p}code=code.replace(/\n$/,'');return `<div class=aicb><div class=aicbh><span>${esc(lang||'code')}</span><button type=button data-cc>Copy</button></div><pre><code>${esc(code)}</code></pre></div>`}).join('')}
+function copyText(t){const ok=()=>toast('Copied');if(navigator.clipboard&&isSecureContext)return navigator.clipboard.writeText(t).then(ok).catch(()=>fb());fb();function fb(){const x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;opacity:0';document.body.append(x);x.select();try{document.execCommand('copy');ok()}catch(e){toast('Copy failed')}x.remove()}}
+function lumioAI(b){
+ const KEY=()=>'lumio_ai:'+(AUTH.mode=='user'?AUTH.name.toLowerCase():'guest');
+ const load=()=>{try{const d=JSON.parse(localStorage.getItem(KEY())||'null');if(d&&Array.isArray(d.chats))return d}catch(e){}return{chats:[],cur:null}};
+ let D=load(),busy=null,avail=null;
+ const persist=()=>{D.chats=D.chats.filter(c=>c.msgs.length).slice(0,30);try{localStorage.setItem(KEY(),JSON.stringify(D))}catch(e){}};
+ const cur=()=>D.chats.find(c=>c.id==D.cur);
+ b.innerHTML=`<div class=ai><div class=aih><button type=button class=aib data-hist aria-label="Chat history">${ic('<path d="M4 6h16M4 12h16M4 18h10"/>')}</button><b class=ait>Lumio AI</b><button type=button class=aib data-new aria-label="New chat">${ic('<path d="M12 5v14M5 12h14"/>')}</button></div>
+ <div class=aip hidden></div><div class=aim role=log aria-live=polite></div><div class=aie hidden role=alert></div>
+ <form class=aif><textarea rows=1 placeholder="Message Lumio AI" enterkeyhint=send aria-label="Message"></textarea><button class=ais type=submit aria-label=Send>${ic('<path d="M12 19V5M5 12l7-7 7 7"/>')}</button></form>
+ <small class=ain>Lumio AI can make mistakes. Check important info.</small></div>`;
+ const M=$('.aim',b),T=$('textarea',b),S=$('.ais',b),E=$('.aie',b),PN=$('.aip',b);
+ const sendIc=S.innerHTML,stopIc=ic('<rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/>');
+ const grow=()=>{T.style.height='auto';T.style.height=Math.min(T.scrollHeight,140)+'px'};
+ const banner=(msg,btn)=>{if(!msg){E.hidden=true;E.innerHTML='';return}E.hidden=false;E.innerHTML=`<span>${esc(msg)}</span>${btn?`<button type=button class=btn data-ban>${esc(btn)}</button>`:''}`};
+ const scroll=()=>{M.scrollTop=M.scrollHeight};
+ const bubble=(m,idx)=>m.r=='user'?`<div class="aim-r u"><div class=aiu>${esc(m.c).replace(/\n/g,'<br>')}</div></div>`
+  :m.err?`<div class="aim-r a"><div class=aix><span>${esc(m.c)}</span><button type=button class=btn data-retry>Try again</button></div></div>`
+  :`<div class="aim-r a"><span class=aia>${IC.ai}</span><div class=aiw><div class=aimd>${md(m.c)}</div><div class=aiact><button type=button data-copy=${idx} aria-label="Copy reply">${ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 011-1h10"/>')} Copy</button></div></div></div>`;
+ const draw=()=>{const c=cur();$('.ait',b).textContent=c&&c.title?c.title:'Lumio AI';
+  if(!c||!c.msgs.length){M.innerHTML=`<div class=aiempty><span class=aibig>${IC.ai}</span><h3>How can I help${AUTH.mode=='user'?', '+esc(AUTH.name):''}?</h3><div class=aisg>${AI_SUGGEST.map((s,i)=>`<button type=button data-sg=${i}><b>${esc(s[0])}</b><small>${esc(s[1].split('\n')[0])}</small></button>`).join('')}</div></div>`;return}
+  M.innerHTML=c.msgs.map(bubble).join('');scroll()};
+ const hist=()=>{PN.innerHTML=`<div class=aiph><b>Chats</b>${D.chats.length?`<button type=button class=btn data-clear>Clear all</button>`:''}</div>`+(D.chats.length?D.chats.map(c=>`<div class="aipi${c.id==D.cur?' on':''}"><button type=button data-open="${c.id}">${esc(c.title||'New chat')}<small>${new Date(c.t).toLocaleDateString([],{month:'short',day:'numeric'})}</small></button><button type=button data-del="${c.id}" aria-label="Delete chat">${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button></div>`).join(''):`<p class=lbs style="padding:10px">No saved chats yet.</p>`)};
+ const setBusy=v=>{busy=v;S.innerHTML=v?stopIc:sendIc;S.setAttribute('aria-label',v?'Stop':'Send');S.classList.toggle('stop',!!v)};
+ const explain=st=>{
+  if(st==='no_ai'||st===404)return 'Lumio AI isn\'t switched on for this site yet. The site owner needs to add a Workers AI binding in Cloudflare.';
+  return null};
+ async function ask(){const c=cur();if(!c)return;
+  if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
+  const msgs=c.msgs.filter(m=>!m.err).map(m=>({role:m.r,content:m.c}));
+  c.msgs.push({r:'assistant',c:''});const ai=c.msgs[c.msgs.length-1];draw();
+  const row=M.lastElementChild,box=row.querySelector('.aimd');row.querySelector('.aiact').hidden=true;box.innerHTML='<span class=aity><i></i><i></i><i></i></span>';scroll();
+  const ctl=new AbortController();setBusy(ctl);banner('');
+  const fail=msg=>{c.msgs.pop();c.msgs.push({r:'assistant',c:msg,err:1});persist();draw()};
+  let r;try{r=await fetch('/api/ai/chat',{method:'POST',signal:ctl.signal,headers:{'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')},body:JSON.stringify({messages:msgs})})}
+  catch(e){setBusy(null);if(e.name==='AbortError'){c.msgs.pop();persist();draw();return}fail('Couldn\'t reach Lumio AI. Check your connection and try again.');return}
+  if(!r.ok||!/event-stream/.test(r.headers.get('content-type')||'')){setBusy(null);let d={};try{d=await r.json()}catch(e){}
+   if(r.status==401){fail(d.error||'Sign in again to use Lumio AI.');return}
+   fail(explain(d.code||r.status)||d.error||('Lumio AI isn\'t available right now ('+r.status+').'));if(d.code==='no_ai'||r.status==404)avail=false;return}
+  const rd=r.body.getReader(),dec=new TextDecoder();let buf='',raf=0;
+  const paint=()=>{raf=0;box.innerHTML=md(ai.c)+'<span class=aicar></span>';const near=M.scrollHeight-M.scrollTop-M.clientHeight<120;if(near)scroll()};
+  try{for(;;){const{value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let k;while((k=buf.indexOf('\n'))>=0){const line=buf.slice(0,k).trim();buf=buf.slice(k+1);if(!line.startsWith('data:'))continue;const p=line.slice(5).trim();if(!p||p==='[DONE]')continue;
+   let j;try{j=JSON.parse(p)}catch(e){continue}const tok=j.response!=null?j.response:(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';if(tok){ai.c+=tok;if(!raf)raf=requestAnimationFrame(paint)}}}}
+  catch(e){/* aborted or dropped: keep what arrived */}
+  setBusy(null);if(!ai.c.trim()){fail('Lumio AI didn\'t send an answer. Try again.');return}persist();draw()}
+ const send=v=>{v=(v||'').trim();if(!v||busy)return;if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
+  let c=cur();if(!c){c={id:Date.now().toString(36),title:v.slice(0,48),msgs:[],t:Date.now()};D.chats.unshift(c);D.cur=c.id}
+  c.msgs.push({r:'user',c:v});c.t=Date.now();T.value='';grow();persist();draw();ask()};
+ $('.aif',b).onsubmit=e=>{e.preventDefault();if(busy){busy.abort();return}send(T.value)};
+ T.onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('.aif',b).requestSubmit()}};
+ T.oninput=grow;
+ b.onclick=e=>{const t=e.target.closest('button,a[data-ext]');if(!t)return;const d=t.dataset;
+  if('ext' in d){e.preventDefault();browseTo(t.getAttribute('href'));return}
+  if('sg' in d){send(AI_SUGGEST[+d.sg][1]);return}
+  if('new' in d){if(busy)busy.abort();D.cur=null;PN.hidden=true;persist();draw();banner('');T.focus();return}
+  if('hist' in d){PN.hidden=!PN.hidden;if(!PN.hidden)hist();return}
+  if('open' in d){D.cur=d.open;PN.hidden=true;persist();draw();return}
+  if('del' in d){D.chats=D.chats.filter(c=>c.id!=d.del);if(D.cur==d.del)D.cur=null;persist();hist();draw();return}
+  if('clear' in d){if(confirm('Delete all saved Lumio AI chats on this device?')){D={chats:[],cur:null};persist();hist();draw()}return}
+  if('copy' in d){const c=cur();if(c&&c.msgs[+d.copy])copyText(c.msgs[+d.copy].c);return}
+  if('cc' in d){copyText(t.closest('.aicb').querySelector('code').textContent);return}
+  if('retry' in d){const c=cur();if(c&&!busy){c.msgs=c.msgs.filter(m=>!m.err);persist();draw();ask()}return}
+  if('ban' in d){if(AUTH.mode!='user')signOut();return}};
+ b.closest('.win').onclose=()=>{if(busy)busy.abort()};
+ draw();
+ if(AUTH.mode!='user')banner('Sign in to your Tuffs account to use Lumio AI. Guests can look around, but chats need an account.','Sign in');
+ fetch('/api/ai/chat').then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{avail=!!d.available;if(!avail&&AUTH.mode=='user')banner('Lumio AI isn\'t switched on for this site yet. The site owner needs to add a Workers AI binding in Cloudflare.')}).catch(()=>{avail=false;if(AUTH.mode=='user')banner('Lumio AI isn\'t available on this site yet.')});
+ setTimeout(()=>{if(innerWidth>700)T.focus()},80)}
+
 </script>
 <script>
 const $=(s,e=document)=>e.querySelector(s),H=(h)=>{const d=document.createElement('div');d.innerHTML=h;return d.firstElementChild};
@@ -355,7 +499,7 @@ document.body.className=({drift:'',chromeos:'cros',macos:'mac',win11:'win'})[st.
 const ic=(p,f)=>`<svg viewBox="0 0 24 24" width="1em" height="1em" fill="${f||'none'}" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-.15em">${p}</svg>`;
 const PL=ic('<path d="M8 5v14l11-7z"/>','currentColor'),PA=ic('<path d="M8 5v14M16 5v14"/>'),PV=ic('<path d="M6 5v14M18 5v14L8 12z"/>'),NX=ic('<path d="M18 5v14M6 5v14l10-7z"/>');
 const IC={globe:ic('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),film:ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>'),book:ic('<path d="M4 5h7a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-7v12h7z"/>'),music:ic('<path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/>'),pad:ic('<rect x="3" y="8" width="18" height="9" rx="4"/><path d="M8 10v5M5.5 12.5h5"/><circle cx="16" cy="12" r="1"/>'),snake:ic('<path d="M5 18h10a3 3 0 000-6H9a3 3 0 010-6h10"/>'),spark:ic('<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>'),user:ic('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'),gear:ic('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>')};
-const APPS={
+IC.ai=IC.ai||IC.spark;const APPS={
 browser:{n:'Browser',i:IC.globe,w:960,h:620,r(b){lumioBrowser(b)}},
 watch:{n:'Watch',i:IC.film,w:560,h:380,r(b){b.innerHTML=`<div id=scr style="height:calc(100% - 52px);background:linear-gradient(#2a6f86,#14323f 55%,#8a6a3a 56%,#2a1e14);position:relative;display:grid;place-items:center"><div style="font-size:12px;opacity:.9;background:#0007;padding:4px 10px;border-radius:12px">The Getaway</div></div><div class=pad style="padding:8px 12px"><div class=row><button id=pp class="btn on">${PL}</button><div class=prog style="flex:1"><i id=pg></i></div><span id=tm style="font-size:11px">0:00 / 3:00</span></div></div>`;
 let p=0,on=0,h;const u=()=>{$('#pg',b).style.width=p/180*100+'%';$('#tm',b).textContent=`${Math.floor(p/60)}:${String(p%60).padStart(2,'0')} / 3:00`};
@@ -379,11 +523,7 @@ h=setInterval(()=>{if(go)return;const n=[(sn[0][0]+d[0]+N)%N,(sn[0][1]+d[1]+N)%N
 x.fillStyle='#10151f';x.fillRect(0,0,320,320);x.fillStyle='#e55';x.fillRect(f[0]*S+3,f[1]*S+3,14,14);x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--a');sn.forEach(s=>x.fillRect(s[0]*S+1,s[1]*S+1,18,18));
 $('#sc',b).textContent=go?`Game over · ${sc} · tap or space to restart`:`Score ${sc} · arrow keys / swipe`},110);
 b.closest('.win').onclose=()=>{clearInterval(h);removeEventListener('keydown',kd)}}},
-ai:{n:'Lumio AI',i:IC.spark,w:560,h:440,r(b){b.innerHTML=`<div style="display:flex;flex-direction:column;height:100%"><div id=log class=pad style="flex:1;overflow:auto"><div class="msg ai">Hi, I'm Lumio AI. Ask me anything. (This is a local demo that only knows a few topics.)</div></div><div class=pad style="padding:8px"><div class=row><input id=q placeholder="Message Lumio AI…"><button class="btn acc" id=s>Send</button></div></div></div>`;
-const R=[[/https|tls|ssl/,'HTTPS wraps your traffic in TLS. Your browser and the server agree on keys in a handshake, then encrypt everything, so anyone in between only sees scrambled bytes.'],[/hello|hi\b|hey/,'Hey! What are you working on?'],[/lumio|drift|os\b/,'Lumio is a desktop that lives in a browser tab: windows, a dock, apps, and themes, all in HTML/CSS/JS.'],[/game/,'Open the Games app and try Snake.']];
-const send=()=>{const i=$('#q',b),v=i.value.trim();if(!v)return;i.value='';const l=$('#log',b);const m=H('<div class="msg me"></div>');m.textContent=v;l.append(m);
-const a=H('<div class="msg ai">…</div>');l.append(a);const t=(R.find(r=>r[0].test(v.toLowerCase()))||[0,"I'm a local demo with canned answers. Connect a real model API on your own host to make me smarter."])[1];let k=0;const h=setInterval(()=>{a.textContent=t.slice(0,k+=3);l.scrollTop=l.scrollHeight;if(k>=t.length)clearInterval(h)},20)};
-$('#s',b).onclick=send;$('#q',b).onkeydown=e=>e.key=='Enter'&&send()}},
+ai:{n:'Lumio AI',i:IC.ai,w:640,h:560,r(b){lumioAI(b)}},
 account:{n:'Account',i:IC.user,w:360,h:330,r(b){lumioAccount(b)}},
 settings:{n:'Settings',i:IC.gear,w:540,h:560,r(b){const seg=(k,opts)=>`<div class=row style="flex-wrap:wrap">${opts.map(o=>`<button class="btn ${st[k]==o[0]?'on':''}" data-k=${k} data-v=${o[0]}>${o[1]}</button>`).join('')}</div>`;
 const paint=()=>{b.innerHTML=`<div class=pad><h4 style="margin-top:0">Appearance</h4><div class=sw>${ACC.map(c=>`<i data-c=${c} class="${st.a==c?'on':''}" style="background:linear-gradient(${c} 60%,#fff8 60%)"></i>`).join('')}</div>
