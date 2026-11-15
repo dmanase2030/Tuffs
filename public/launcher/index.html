@@ -200,6 +200,18 @@ body.dockonly #desk,body.dockonly #wid{display:none}
 .lg2 iframe{flex:1;width:100%;border:0;min-height:0;background:#000}
 @media(min-width:701px){.lgc{scrollbar-width:thin;padding-bottom:6px}.lgc::-webkit-scrollbar{display:block;height:6px}.lgc::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:3px}}
 
+/* ===== dock auto-hide ===== */
+#dock{transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .25s}
+body.dah #dock.hid{transform:translate(-50%,calc(100% + 26px + env(safe-area-inset-bottom,0px)));opacity:0;pointer-events:none}
+body.dah.cros #dock.hid,body.dah.win #dock.hid{transform:translateY(calc(100% + 8px))}
+#dz{position:fixed;left:0;right:0;bottom:0;height:6px;z-index:899;display:none}
+body.dah:not(.touchy) #dz{display:block}
+#dh{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:140px;height:calc(22px + env(safe-area-inset-bottom,0px));padding:0 0 calc(7px + env(safe-area-inset-bottom,0px));display:none;align-items:flex-end;justify-content:center;z-index:899;opacity:0;transition:opacity .25s}
+#dh i{display:block;width:96px;height:5px;border-radius:3px;background:rgba(255,255,255,.75);box-shadow:0 1px 6px #0008}
+body.dah.touchy.dhid #dh{display:flex;opacity:1}
+body.kbd #dh,body.kbd #dock{display:none}
+@media(max-width:700px){body.dah .win{bottom:max(calc(24px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}body:not(.dah) .win{bottom:max(calc(74px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}}
+
 </style></head><body>
 <div id="wall" class="w-forest"></div>
 <div id="desk"></div>
@@ -301,6 +313,7 @@ function lumioBrowser(b){
  const nav=v=>{const u=parseAddr(v);if(!u)return;url=u;inp.value=u;home.hidden=true;fail.hidden=true;fr.hidden=false;const src=proxify(u);fr.src=src;
   const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);fetch(src,{signal:ctl.signal,method:'GET'}).then(r=>{clearTimeout(tm);if(!r.ok&&url===u)showFail()}).catch(()=>{clearTimeout(tm)})};
  fr.onload=()=>{try{const l=fr.contentWindow.location,real=unproxy(l.pathname);if(real){url=real+(/^https?%3A/i.test(l.pathname.slice(PROXY.length))&&real.indexOf('?')>=0?'':l.search);if(document.activeElement!==inp)inp.value=url}}catch(e){}};
+ b.nav=nav;
  $('.lbf',b).onsubmit=e=>{e.preventDefault();inp.blur();nav(inp.value)};
  inp.onfocus=()=>inp.select();
  b.onclick=e=>{const q=e.target.closest('[data-u]');if(q){nav(q.dataset.u);return}const t=e.target.closest('[data-b]');if(!t)return;const a=t.dataset.b;
@@ -321,6 +334,7 @@ function lumioGames(b){b.innerHTML=`<div class=lgw><div class=lgh><input type=se
  q.oninput=draw;
  cats.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){cats.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
  b.onclick=e=>{const c=e.target.closest('[data-c]');if(c){cat=c.dataset.c;cats.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===c));draw();return}const t=e.target.closest('[data-g]');if(t){const g=all.find(x=>x.id==t.dataset.g);if(g)playGame(g)}}}
+
 
 </script>
 <script>
@@ -461,7 +475,7 @@ const P={
 Appearance:()=>grp('Accent color',[`<div class=sr><div class=dots>${ACC.map(c=>`<i data-c=${c} class='${st.a==c?'on':''}' style='background:${c}'></i>`).join('')}<label class=dc title='Custom color'><input type=color value=${st.a} data-pick></label></div></div>`])+grp('Windows',[row('Glass blur',sl('blur',0,30,1,'px')),row('Window opacity',sl('op',50,100,100,'%'))])+grp('Display',[row('Brightness',sl('bri',30,100,1,'%')),row('24-hour clock',tg('h24'))]),
 Wallpaper:()=>{const c=st.wall=='custom'&&st.custom,t=st.fit=='tile',tm=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit',hour12:!st.h24});
 return `<div class='prev ${c?'':st.wall}' style='${c?`background:#000 url(${st.custom}) center/${t?'auto':st.fit} ${t?'repeat':'no-repeat'}`:''}'>${tm}</div><div class=row style='gap:8px'><label class='pb acc' style='cursor:pointer'>Upload your own<input id=up type=file accept='image/*' hidden></label>${st.custom?`<button class=pb data-rm>Remove</button>`:''}</div><div class=wg>${st.custom?`<div data-w=custom class='${st.wall=='custom'?'on':''}'><i style='background:url(${st.custom}) center/cover'></i>Custom</div>`:''}${WALLS.map(w=>`<div data-w=${w[0]} class='${st.wall==w[0]?'on':''}'><i class=${w[0]}></i>${w[1]}</div>`).join('')}</div>`+grp('Adjust',[row('Fit',seg('fit',[['cover','Fill'],['contain','Fit'],['tile','Tile']])),row('Dim',sl('dim',0,70,1,'%')),row('Blur',sl('wblur',0,20,1,'px'))])},
-Desktop:()=>grp('Style',[`<div class=sr>${seg('style',[['drift','Lumio'],['chromeos','ChromeOS'],['macos','macOS'],['win11','Windows 11']])}</div>`])+grp('Layout',[row('Desktop icons and widgets',seg('chrome',[['desktop','Show'],['dock','Hide']])),row('Icon size',sl('isz',40,72,1,'px'))])+grp('',[row('Reset desktop icons',`<button class=pb data-rd>Reset</button>`,'Back to Browser and Settings only')]),
+Desktop:()=>grp('Style',[`<div class=sr>${seg('style',[['drift','Lumio'],['chromeos','ChromeOS'],['macos','macOS'],['win11','Windows 11']])}</div>`])+grp('Layout',[row('Auto-hide dock',tg('dah'),'Slides away until you point at the bottom edge (or tap the handle on touch screens)'),row('Desktop icons and widgets',seg('chrome',[['desktop','Show'],['dock','Hide']])),row('Icon size',sl('isz',40,72,1,'px'))])+grp('',[row('Reset desktop icons',`<button class=pb data-rd>Reset</button>`,'Back to Browser and Settings only')]),
 About:()=>`<div class=ab><span class=lgx></span><h3>Lumio</h3><small style='opacity:.65'>Version 1.0. A desktop in your browser.</small></div>`+grp('Shortcuts',[row('Search',`<span class=v>Ctrl or Cmd + K</span>`),row('App menu',`<span class=v>Hold or right-click an icon</span>`),row('Snap a window',`<span class=v>Drag its title bar to an edge</span>`)])+grp('',[row('Reset everything',`<button class='pb danger' data-ra>Reset</button>`,'Clears settings, wallpaper and notes')])};
 const paint=(fresh,nt)=>{const y=fresh?0:(($('.sc',b)||{}).scrollTop||0);if(nt)tab=nt;b.innerHTML=`<div class=stw><div class=st><nav class=sn><div class=pf><span class=av2>${esc(initial())}</span><div><b>${esc(AUTH.name||'Guest')}</b><small>${AUTH.mode=='user'?'Tuffs account':'Guest'}</small></div></div>${TABS.map(t=>`<button class='${t[0]==tab?'on':''}' data-tab=${t[0]}><span class=si style='background:${t[1]}'>${ic(t[2])}</span>${t[0]}</button>`).join('')}</nav><main class=sc><h2>${tab}</h2>${P[tab]()}</main></div></div>`;$('.sc',b).scrollTop=y};
 paint(1);repaintSettings=paint;
@@ -534,4 +548,54 @@ renderSide();applyStyle();tick();setInterval(tick,10000);
 const route=()=>{const h=location.hash.slice(1);if(Object.keys(APPS).includes(h)&&!APPS[h].hide){if(AUTH.mode!='out'&&$('#lock').classList.contains('off'))open(h);else PENDING=h}};
 route();addEventListener('hashchange',route);
 bootAuth();
-</script></body></html>
+</script><script>
+/* ===== Dock auto-hide =====
+ * Mouse/trackpad: the dock slides away when the pointer leaves it and comes
+ * back when the pointer touches the bottom edge (#dz) or the dock.
+ * Touch: same, but a small pill (#dh) stays; tap it or swipe up from the
+ * bottom edge to show the dock, and it hides a few seconds after the last
+ * tap outside it. Settings → Desktop → "Auto-hide dock" turns it off. */
+(()=>{
+ if(st.dah==null){st.dah=1;save()}
+ const D=$('#dock'),body=document.body;
+ const dz=document.createElement('div');dz.id='dz';dz.setAttribute('aria-hidden','true');
+ const dh=document.createElement('button');dh.id='dh';dh.type='button';dh.setAttribute('aria-label','Show dock');dh.innerHTML='<i></i>';
+ body.append(dz,dh);
+ let t=0;const coarse=matchMedia('(hover: none), (pointer: coarse)');
+ const on=()=>!!st.dah;
+ const busy=()=>!!document.querySelector('.cm')||D.matches(':hover')||D.contains(document.activeElement);
+ const show=()=>{clearTimeout(t);D.classList.remove('hid');body.classList.remove('dhid')};
+ const hide=()=>{clearTimeout(t);if(!on())return;if(busy()){later(800);return}D.classList.add('hid');body.classList.add('dhid');D.querySelectorAll('button').forEach(x=>x.style.removeProperty('--s'))};
+ const later=ms=>{clearTimeout(t);if(on())t=setTimeout(hide,ms)};
+ window.dockShow=show;window.dockHideSoon=later;
+ const apply=()=>{body.classList.toggle('dah',on());body.classList.toggle('touchy',coarse.matches);if(on())later(1600);else show()};
+ // mouse
+ D.addEventListener('pointerenter',e=>{if(e.pointerType=='mouse')show()});
+ D.addEventListener('pointerleave',e=>{if(e.pointerType=='mouse')later(700)});
+ dz.addEventListener('pointerenter',e=>{if(e.pointerType=='mouse'||e.pointerType=='pen')show()});
+ dz.addEventListener('pointerleave',e=>{if(e.pointerType=='mouse'&&!D.matches(':hover'))later(900)});
+ // keyboard: tabbing into the dock shows it
+ D.addEventListener('focusin',show);D.addEventListener('focusout',()=>later(1200));
+ // touch
+ dh.addEventListener('click',e=>{e.stopPropagation();show();later(5000)});
+ document.addEventListener('pointerdown',e=>{if(!on()||e.pointerType=='mouse')return;if(D.contains(e.target)){clearTimeout(t);later(5000)}else if(!D.classList.contains('hid')&&e.target!==dh)later(2500)},true);
+ let sy=null;
+ addEventListener('touchstart',e=>{const y=e.touches[0].clientY;sy=on()&&y>innerHeight-36?y:null},{passive:true});
+ addEventListener('touchmove',e=>{if(sy!=null&&sy-e.touches[0].clientY>24){sy=null;show();later(5000)}},{passive:true});
+ // opening an app from the dock: get out of the way soon after
+ D.addEventListener('click',()=>{if(on())later(coarse.matches?1500:1200)});
+ // context menu from the dock keeps it up; re-check after it closes
+ new MutationObserver(()=>{if(!document.querySelector('.cm')&&on()&&!D.matches(':hover'))later(1200)}).observe(body,{childList:true});
+ coarse.addEventListener&&coarse.addEventListener('change',apply);
+ // settings toggle
+ const _ap=applyStyle;applyStyle=function(){_ap();apply()};
+ // the lock screen covers everything; show the dock again right after unlocking so people see it
+ new MutationObserver(()=>{if($('#lock').classList.contains('off')){show();later(2200)}}).observe($('#lock'),{attributes:true,attributeFilter:['class']});
+ apply();
+ // keyboard on phones: keep windows above it
+ const vv=window.visualViewport;
+ if(vv){const kb=()=>{const k=Math.max(0,innerHeight-vv.height-vv.offsetTop);document.documentElement.style.setProperty('--kb',k+'px');body.classList.toggle('kbd',k>80)};vv.addEventListener('resize',kb);vv.addEventListener('scroll',kb);kb()}
+})();
+
+</script>
+</body></html>
