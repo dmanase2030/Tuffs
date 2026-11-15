@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name=lumio-build content=161b0cb62b9a><meta charset="utf-8">
+<html lang="en"><head><meta name=lumio-build content=7bd75e72b7a3><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lumio</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
@@ -205,10 +205,10 @@ body.kbd #dh,body.kbd #dock{display:none}
 @media(max-width:700px){body.dah .win{bottom:max(calc(24px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}body:not(.dah) .win{bottom:max(calc(74px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}}
 
 /* ===== Lumio AI ===== */
-.ai{position:absolute;inset:0;display:flex;overflow:hidden;background:radial-gradient(120% 80% at 50% -10%,rgba(255,190,110,.12),transparent 60%),linear-gradient(rgba(20,12,8,.25),rgba(12,8,6,.45));--aiw:760px}
+.ai{position:absolute;inset:0;display:flex;overflow:hidden;background:radial-gradient(120% 80% at 50% -10%,rgba(255,190,110,.14),transparent 60%),linear-gradient(#2b1a0f,#16100b);--aiw:760px}
 .aimain{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
 /* sidebar: persistent when wide, drawer when narrow */
-.aisd{width:264px;flex:none;display:flex;flex-direction:column;gap:6px;padding:12px 10px;background:rgba(22,14,10,.72);border-right:1px solid var(--line);backdrop-filter:blur(18px)}
+.aisd{width:264px;flex:none;display:flex;flex-direction:column;gap:6px;padding:12px 10px;background:rgba(22,14,10,.95);border-right:1px solid var(--line);backdrop-filter:blur(18px)}
 .ai:not(.wide) .aisd{position:absolute;top:0;bottom:0;left:0;z-index:6;width:min(300px,86%);transform:translateX(-102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:12px 0 40px #0008;background:rgba(28,18,12,.97)}
 .ai.dopen .aisd{transform:none}
 .aiscrim{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s}
@@ -791,7 +791,7 @@ function aiParse(t,admin){const acts=[],seen=new Set(),cards=[];let pending=fals
  return {txt,pending,cards,acts:acts.map(a=>{if(a.k=='app')return AI_APPS.includes(a.id)&&APPS[a.id]?{...a,label:'Open '+APPS[a.id].n}:null;
   if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
 function aiActs(t){return aiParse(t,false)}
-const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats',chat_servers:'List chat servers',chat_reports:'Show chat reports',chat_resolve:'Resolve a chat report',chat_delete_message:'Delete a chat message',chat_server_ban:'Ban from a chat server',chat_transfer:'Transfer a chat server',chat_delete_server:'Delete a chat server'};
+const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats',chat_servers:'List chat servers',chat_reports:'Show chat reports',chat_resolve:'Resolve a chat report',chat_delete_message:'Delete a chat message',chat_server_ban:'Ban from a chat server',chat_transfer:'Transfer a chat server',chat_delete_server:'Delete a chat server',grant_orbs:'Give or take Orbs',shop_items:'List shop items',shop_save_item:'Save a shop item',set_admin:'Change admin status',logout_user:'Sign out an account',reset_link:'Make a reset link',delete_user:'Delete an account',users:'List accounts',room_clear:'Clear a chat room',room_delete:'Delete a room message'};
 function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'announce':return d.text?[['Text',d.text]]:[['Text','(remove the announcement)']];
  case 'settings':return ['signupsOpen','chatEnabled','maintenance'].filter(k=>typeof d[k]=='boolean').map(k=>[{signupsOpen:'Signups',chatEnabled:'Chat',maintenance:'Maintenance mode'}[k],b(d[k])]);
@@ -807,6 +807,16 @@ function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'chat_server_ban':return [['Server',d.sid||'?'],['Account',d.username||'?'],['Reason',d.reason||'(none)']];
  case 'chat_transfer':return [['Server',d.sid||'?'],['New owner',d.to||'?']];
  case 'chat_delete_server':return [['Server',d.sid||'?'],['Change','Delete the server and its messages']];
+ case 'grant_orbs':return [['Account',d.username||'?'],['Orbs',(Number(d.n)>0?'+':'')+(d.n??'?')]];
+ case 'shop_items':return [['Shows','every shop item, its price and owner count']];
+ case 'shop_save_item':return [['Item',d.n||'?'],['Category',d.cat||'?'],['Price',(d.p??'?')+' Orbs'],['Style',(d.v&&d.v.fx)||'?'],['Listed',d.on===false?'No':'Yes']];
+ case 'set_admin':return [['Account',d.username||'?'],['Change',d.admin?'Make site admin':'Remove admin']];
+ case 'logout_user':return [['Account',d.username||'?'],['Change','Sign out on every device']];
+ case 'reset_link':return [['Account',d.username||'?'],['Change','Create a one-time reset link (24h)']];
+ case 'delete_user':return [['Account',d.username||'?'],['Change','Delete the account for good']];
+ case 'users':return [['Shows','accounts, admins and suspensions']];
+ case 'room_clear':return [['Room',d.room||'?'],['Change','Delete every message in it']];
+ case 'room_delete':return [['Message','#'+(d.id??'?')],['Where','built-in rooms chat']];
  default:return []}}
 function aiDiffHtml(diff){return diff.split('\n').map(l=>{const c=l.startsWith('+++')||l.startsWith('---')?'h':l[0]=='+'?'a':l[0]=='-'?'d':l.startsWith('@@')?'h':'';return `<span class="dl ${c}">${esc(l)||' '}</span>`}).join('')}
 
