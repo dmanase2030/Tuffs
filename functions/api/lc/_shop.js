@@ -5,7 +5,7 @@
  * or two tabs can't buy twice or claim twice. Prices always come from D1. */
 import { json } from "../auth/_shared.js";
 import { err } from "./_db.js";
-import { CATS, SEED, QUESTS, WELCOME_ORBS, dayKey, cleanItemData, STICKERS } from "./_catalog.js";
+import { CATS, SEED, QUESTS, WELCOME_ORBS, dayKey, cleanItemData, STICKERS, RETIRED } from "./_catalog.js";
 
 let SEEDED = false;
 export async function seedShop(db) {
@@ -13,7 +13,23 @@ export async function seedShop(db) {
   const now = Date.now();
   await db.batch(SEED.map((it, i) => db.prepare("INSERT OR IGNORE INTO lc_items (id, cat, name, descr, price, data, active, pos, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, 1, ?7, ?8, ?8)")
     .bind(it.id, it.cat, it.name, it.desc, it.price, JSON.stringify(it.data), i, now)));
+  await retire(db, now);
   SEEDED = true;
+}
+
+/* Retired categories (Animated Banners): hide the items, take them off everyone, and give back
+ * what people paid. Nothing is deleted from the ledger or ownership history; the refund is
+ * written once per purchase (guarded by its own ledger row), so this is safe to run every time. */
+async function retire(db, now) {
+  for (const cat of RETIRED) {
+    const owed = `FROM lc_owned o JOIN lc_items i ON i.id = o.item_id WHERE i.cat = '${cat}' AND o.price > 0 AND NOT EXISTS (SELECT 1 FROM lc_ledger l WHERE l.user_key = o.user_key AND l.item_id = o.item_id AND l.reason = 'refund:retired')`;
+    await db.batch([
+      db.prepare("UPDATE lc_items SET active = 0, updated_at = ?2 WHERE cat = ?1 AND active = 1").bind(cat, now),
+      db.prepare(`UPDATE lc_wallet SET orbs = orbs + (SELECT COALESCE(SUM(o.price), 0) ${owed} AND o.user_key = lc_wallet.user_key), spent = spent - (SELECT COALESCE(SUM(o.price), 0) ${owed} AND o.user_key = lc_wallet.user_key) WHERE user_key IN (SELECT o.user_key ${owed})`),
+      db.prepare(`INSERT INTO lc_ledger (user_key, delta, reason, item_id, ts) SELECT o.user_key, o.price, 'refund:retired', o.item_id, ?1 ${owed}`).bind(now),
+      db.prepare("DELETE FROM lc_equip WHERE slot = ?1").bind(cat),
+    ]);
+  }
 }
 
 const shapeItem = (r, now, admin) => {
@@ -57,7 +73,7 @@ export async function shopState(db, user) {
   ]);
   return {
     cats: Object.fromEntries(Object.entries(CATS).map(([k, v]) => [k, v.n])),
-    items: (items.results || []).map(r => shapeItem(r, now, false)),
+    items: (items.results || []).filter(r => CATS[r.cat]).map(r => shapeItem(r, now, false)),
     owned: Object.fromEntries((owned.results || []).map(r => [r.item_id, r.ts])),
     eq: Object.fromEntries((eq.results || []).map(r => [r.slot, r.item_id])),
     wallet: { orbs: w.orbs, earned: w.earned, spent: w.spent },
@@ -80,7 +96,7 @@ export async function shopOp(context, user, body) {
   switch (String(body.op || "")) {
     case "shopBuy": {
       const it = await db.prepare("SELECT * FROM lc_items WHERE id = ?1").bind(String(body.item || "")).first();
-      if (!it) return err("That item isn't in the shop.", 404);
+      if (!it || !CATS[it.cat]) return err("That item isn't in the shop.", 404);
       if (!it.active || (it.start_at && it.start_at > now) || (it.end_at && it.end_at <= now)) return err("That item isn't available right now.", 409);
       const w = await wallet(db, me);
       const have = await db.prepare("SELECT 1 FROM lc_owned WHERE user_key = ?1 AND item_id = ?2").bind(me, it.id).first();
@@ -136,7 +152,7 @@ export async function shopAdmin(context, user, method, body) {
   if (method === "GET") {
     const rows = (await db.prepare("SELECT i.*, (SELECT COUNT(*) FROM lc_owned o WHERE o.item_id = i.id) AS owners FROM lc_items i ORDER BY cat, pos, created_at").all()).results || [];
     const tot = await db.prepare("SELECT COUNT(*) AS wallets, COALESCE(SUM(orbs), 0) AS orbs FROM lc_wallet").first();
-    return json({ cats: Object.fromEntries(Object.entries(CATS).map(([k, v]) => [k, { n: v.n, fx: v.fx }])), stickers: STICKERS, items: rows.map(r => shapeItem(r, now, true)), totals: tot });
+    return json({ cats: Object.fromEntries(Object.entries(CATS).map(([k, v]) => [k, { n: v.n, fx: v.fx }])), stickers: STICKERS, items: rows.filter(r => CATS[r.cat]).map(r => shapeItem(r, now, true)), totals: tot });
   }
   switch (String(body.op || "")) {
     case "saveItem": {
@@ -155,7 +171,7 @@ export async function shopAdmin(context, user, method, body) {
       let id = String(body.id || "");
       if (id) {
         const cur = await db.prepare("SELECT cat FROM lc_items WHERE id = ?1").bind(id).first();
-        if (!cur) return err("No such item.", 404);
+        if (!cur || !CATS[cur.cat]) return err("No such item.", 404);
         if (cur.cat !== cat) return err("An item can't change category.");
         await db.prepare("UPDATE lc_items SET name = ?2, descr = ?3, price = ?4, data = ?5, active = ?6, start_at = ?7, end_at = ?8, updated_at = ?9 WHERE id = ?1")
           .bind(id, name, descr, price, JSON.stringify(data), active, from, until, now).run();

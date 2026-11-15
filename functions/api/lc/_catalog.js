@@ -9,7 +9,6 @@ export const CATS = {
   name_color: { n: "Name Colors", fx: ["solid", "gradient", "shimmer", "glow", "rainbow"] },
   name_font: { n: "Name Fonts", fx: ["serif", "mono", "rounded", "condensed", "script", "wide", "pixel", "slab"] },
   deco: { n: "Avatar Decorations", fx: ["ring", "dual", "orbit", "halo", "sparkle", "flame", "crown", "petals", "pulse", "dashed"] },
-  banner_fx: { n: "Animated Banners", fx: ["aurora", "waves", "stars", "grid", "sunset", "rain", "bokeh", "stripes"] },
   entrance: { n: "Profile Entrances", fx: ["rise", "zoom", "flip", "slide", "glitch", "burst", "drop", "spin"] },
   flair: { n: "Profile Flair", fx: ["eq", "pulse", "wave", "orbit", "spark"] },
   theme: { n: "Chat Themes", fx: ["midnight", "forest", "ember", "ocean", "paper", "rose", "slate", "mono", "dune"] },
@@ -55,15 +54,6 @@ export const SEED = [
   S("dc_petals", "deco", "Petals", 480, "petals", ["#ff9ec7"], "Petals drifting around."),
   S("dc_pulse", "deco", "Heartbeat", 360, "pulse", ["#3ddc97"], "A ring that pulses."),
   S("dc_dashed", "deco", "Dash", 240, "dashed", ["#c0c4cc"], "A slowly turning dashed ring."),
-  // animated banners
-  S("bf_aurora", "banner_fx", "Aurora", 500, "aurora", ["#1fd1a5", "#6a5cff", "#0b1d3a"], "Northern lights drifting."),
-  S("bf_waves", "banner_fx", "Tide", 420, "waves", ["#3b82f6", "#0ea5e9", "#082f49"], "Layered waves rolling by."),
-  S("bf_stars", "banner_fx", "Night Sky", 420, "stars", ["#ffffff", "#0b1023"], "Twinkling stars."),
-  S("bf_grid", "banner_fx", "Synth Grid", 560, "grid", ["#ff4fd8", "#1a0b2e"], "A retro grid scrolling forever."),
-  S("bf_sunset", "banner_fx", "Sunset", 380, "sunset", ["#ff7a45", "#ffcf6b", "#5b2a86"], "A slow sunset gradient."),
-  S("bf_rain", "banner_fx", "Rainy Window", 460, "rain", ["#9fb4c7", "#1e293b"], "Rain streaking down."),
-  S("bf_bokeh", "banner_fx", "Bokeh", 480, "bokeh", ["#ffd36e", "#ff6f91", "#141414"], "Soft drifting lights."),
-  S("bf_stripes", "banner_fx", "Candy", 300, "stripes", ["#ff9ec7", "#ffffff"], "Moving candy stripes."),
   // entrances (play when someone opens your profile)
   S("en_rise", "entrance", "Rise", 150, "rise", null, "Your card rises in."),
   S("en_zoom", "entrance", "Pop In", 200, "zoom", null, "A springy zoom."),
@@ -134,6 +124,9 @@ export function cleanItemData(cat, data) {
   }
   return out;
 }
+
+/* Categories that were taken out of the shop. Their items are hidden, unequipped and refunded (see _shop.js). */
+export const RETIRED = ["banner_fx"];
 
 export const SHOP_SCHEMA = [
   "CREATE TABLE IF NOT EXISTS lc_items (id TEXT PRIMARY KEY, cat TEXT NOT NULL, name TEXT NOT NULL, descr TEXT, price INTEGER NOT NULL DEFAULT 0, data TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1, start_at INTEGER, end_at INTEGER, pos INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)",
