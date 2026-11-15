@@ -21,6 +21,7 @@ export async function onRequestPost(context) {
   const username = String(body.username || "").trim();
   const password = String(body.password || "");
   if (!USERNAME_RE.test(username)) return json({ error: "Username must be 3–20 letters, numbers, dots, _ or -" }, 400);
+  if (/^lumio[-_.]?ai$/i.test(username)) return json({ error: "That username is taken." }, 409);
   if (password.length < 4) return json({ error: "Password must be at least 4 characters" }, 400);
 
   const key = username.toLowerCase();

@@ -5,6 +5,7 @@ import { onRequestGet as overviewGet } from "../admin/overview.js";
 import { onRequestGet as settingsGet, onRequestPost as settingsPost } from "../admin/settings.js";
 import { onRequestPost as bannedPost } from "../admin/set-banned.js";
 import { onRequestPost as gamePost } from "../admin/game.js";
+import { onRequest as lcHandler } from "../lc/[[path]].js";
 
 /* POST /api/ai/admin-action { action, ...params }
  * Runs an admin action that Lumio AI prepared and the admin confirmed in the app.
@@ -12,7 +13,8 @@ import { onRequestPost as gamePost } from "../admin/game.js";
  * Every attempt by an admin is written to the ai_admin_log table.
  * GET /api/ai/admin-action → the 30 most recent log rows (admins only). */
 
-const ACTIONS = new Set(["announce", "settings", "ban", "unban", "game_add", "game_edit", "game_hide", "stats"]);
+const ACTIONS = new Set(["announce", "settings", "ban", "unban", "game_add", "game_edit", "game_hide", "stats",
+  "chat_servers", "chat_reports", "chat_resolve", "chat_delete_message", "chat_server_ban", "chat_transfer", "chat_delete_server"]);
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -42,6 +44,15 @@ export async function onRequestPost(context) {
     const headers = { authorization: request.headers.get("authorization") || "", "content-type": "application/json" };
     const req = new Request(new URL(path, request.url), { method, headers, body: payload ? JSON.stringify(payload) : undefined });
     const res = await handler({ ...context, request: req });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Request failed (" + res.status + ")");
+    return data;
+  };
+  // Lumio Chat admin routes, called with the admin's own session so /api/lc re-checks it.
+  const lc = async (path, method, payload) => {
+    const headers = { authorization: request.headers.get("authorization") || "", "content-type": "application/json" };
+    const req = new Request(new URL("/api/lc/" + path, request.url), { method, headers, body: payload ? JSON.stringify(payload) : undefined });
+    const res = await lcHandler({ ...context, request: req, params: { path: path.split("?")[0].split("/") } });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || "Request failed (" + res.status + ")");
     return data;
@@ -93,6 +104,38 @@ export async function onRequestPost(context) {
         result = await call(gamePost, "/api/admin/game", "POST", payload);
         summary = action === "game_edit" ? (result.title ? "Renamed " + id + " to " + result.title + "." : "Name of " + id + " reset.") : (result.hidden ? id + " is hidden." : id + " is visible.");
         break;
+      }
+      case "chat_servers": {
+        const d = await lc("admin/servers", "GET");
+        result = { servers: d.servers.slice(0, 50).map(x => ({ id: x.id, name: x.n, owner: x.owner, members: x.members, messages: x.msgs, reports: x.reports })) };
+        summary = d.servers.length ? d.servers.slice(0, 15).map(x => `${x.n} (${x.id}) · owner ${x.owner} · ${x.members} members${x.reports ? " · " + x.reports + " open reports" : ""}`).join("\n") : "No chat servers yet.";
+        break;
+      }
+      case "chat_reports": {
+        const d = await lc("admin/reports", "GET");
+        result = { reports: d.reports.slice(0, 30).map(r => ({ id: r.id, server: r.server, author: r.author, text: String(r.text || "").slice(0, 200), reason: r.reason, ai: r.ai, mid: r.mid })) };
+        summary = d.reports.length ? d.reports.slice(0, 10).map(r => `#${r.id} in ${r.server}${r.chan ? " #" + r.chan : ""}: ${r.author}: "${String(r.text || "").slice(0, 80)}" (${r.ai ? "AI flag" : "reported"}: ${r.reason})`).join("\n") : "No open reports.";
+        break;
+      }
+      case "chat_resolve": {
+        const d = await lc("admin/act", "POST", { op: "resolveReport", id: Number(params.id) || 0, del: !!params.delete });
+        result = d; summary = d.summary; break;
+      }
+      case "chat_delete_message": {
+        const d = await lc("admin/act", "POST", { op: "deleteMessage", mid: Number(params.mid) || 0 });
+        result = d; summary = d.summary; break;
+      }
+      case "chat_server_ban": {
+        const d = await lc("admin/act", "POST", { op: "serverBan", sid: String(params.sid || ""), username: String(params.username || ""), reason: String(params.reason || "") });
+        result = d; summary = d.summary; break;
+      }
+      case "chat_transfer": {
+        const d = await lc("admin/act", "POST", { op: "transferServer", sid: String(params.sid || ""), to: String(params.to || "") });
+        result = d; summary = d.summary; break;
+      }
+      case "chat_delete_server": {
+        const d = await lc("admin/act", "POST", { op: "deleteServer", sid: String(params.sid || "") });
+        result = d; summary = d.summary; break;
       }
       case "stats": {
         const o = await call(overviewGet, "/api/admin/overview", "GET");
