@@ -63,6 +63,8 @@ async function plan(edits, env) {
     const f = files.get(path);
     if (typeof e.content === "string") {
       if (e.content.length > MAX_FILE) throw new Error(path + " is too big.");
+      // Rewriting a whole existing server file from memory loses what's there; ask for a targeted change.
+      if (f.old != null && path.startsWith("functions/")) throw new Error(path + " already exists. Server files can only be changed with find/replace, not rewritten whole.");
       f.now = e.content;
     } else if (typeof e.find === "string" && e.find && typeof e.replace === "string") {
       if (f.now == null) throw new Error(path + " doesn't exist yet. Give the full content for a new file.");

@@ -1,6 +1,7 @@
 import { json, guard, readBody, sessionUser, getSettings } from "../auth/_shared.js";
 import { clientIp, throttleCheck, throttleFail } from "../auth/_throttle.js";
-import { loadGames, systemPrompt, actionFilter, promptGuard, repoFiles } from "./_site.js";
+import { loadGames, systemPrompt, actionFilter, repoFiles } from "./_site.js";
+import { REFUSAL, isProbe, MARKERS, promptGuard } from "./_guard.js";
 
 /* Lumio AI chat — Cloudflare Workers AI through the `AI` binding.
  *
@@ -58,6 +59,10 @@ export async function onRequestPost(context) {
     .filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim())
     .slice(-MAX_MESSAGES)
     .map(m => ({ role: m.role, content: m.content.slice(0, user.is_admin ? ADMIN_MAX_CHARS : MAX_CHARS) }));
+  // Drop earlier refused exchanges: left in the history, the model starts repeating the refusal.
+  for (let i = messages.length - 2; i >= 0; i--) {
+    if (messages[i].role === "assistant" && messages[i].content.trim() === REFUSAL) messages.splice(i > 0 && messages[i - 1].role === "user" ? i - 1 : i, i > 0 && messages[i - 1].role === "user" ? 2 : 1);
+  }
   if (!messages.length || messages[messages.length - 1].role !== "user") {
     return json({ error: "Send a message first." }, 400);
   }
@@ -106,22 +111,12 @@ export async function onRequestPost(context) {
 
 /* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
  * → uniform `data: {"response": "..."}` events, run through the action filter. */
-const REFUSAL = "I can't share how I'm set up, but I'm happy to help with something else.";
-const HOLD = 48;
-const PROBE = [
-  /\b(your|the system|system|the above|above|earlier|previous|prior|initial|original|hidden|secret|developer|pre-?prompt)\s+(prompts?|instructions?|rules|guidelines|directives|text|configuration|setup|policies)\b/i,
-  /\bignore\s+(all\s+|any\s+)?(of\s+)?(your\s+|the\s+|my\s+)?(previous|prior|above|earlier|preceding)\b/i,
-  /\b(text|everything|words?)\s+(above|before)\s+(this|my)\b/i,
-  /\bstarting with\s+["'“]?you are\b/i,
-];
-function isProbe(text) { return PROBE.some(re => re.test(String(text || ""))); }
+const HOLD = 48; // chars held back so the leak guard can stop a reply before private text goes out
 function sseText(text) {
   return new Response("data: " + JSON.stringify({ response: text }) + "\n\ndata: [DONE]\n\n", {
     headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" },
   });
 }
-// Language-independent pieces of the private instructions; a reply containing one is a leak.
-const MARKERS = [/<id>/i, /\|\s*title\s*\|/i, /lumio-(admin|code)\b[^`]*\{\s*"action"\s*:\s*"\.\.\./i]; // chars held back so the leak guard can stop a reply before private text goes out
 
 /* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
  * → uniform `data: {"response": "..."}` events, run through the action filter
