@@ -1,6 +1,6 @@
 import { json, guard, readBody, sessionUser, getSettings } from "../auth/_shared.js";
 import { clientIp, throttleCheck, throttleFail } from "../auth/_throttle.js";
-import { loadGames, systemPrompt, actionFilter } from "./_site.js";
+import { loadGames, systemPrompt, actionFilter, promptGuard, repoFiles } from "./_site.js";
 
 /* Lumio AI chat — Cloudflare Workers AI through the `AI` binding.
  *
@@ -22,6 +22,7 @@ import { loadGames, systemPrompt, actionFilter } from "./_site.js";
  */
 
 const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
+const ADMIN_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 const FALLBACK_MODELS = ["@cf/meta/llama-3.1-8b-instruct", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"];
 const MAX_MESSAGES = 20, MAX_CHARS = 4000;
 const USER_MAX = 20, USER_WINDOW = 10 * 60 * 1000, USER_LOCK = 10 * 60 * 1000;
@@ -70,10 +71,13 @@ export async function onRequestPost(context) {
   // Try the configured model first, then current fallbacks, so one retired or
   // overloaded model doesn't take the whole app down.
   const games = await loadGames(request, env);
-  const system = systemPrompt(games, messages[messages.length - 1].content, user.username);
-  const tried = [], input = { messages: [{ role: "system", content: system }, ...messages], stream: true, max_tokens: 1024 };
+  const admin = !!user.is_admin;
+  const sp = systemPrompt(games, messages[messages.length - 1].content, user.username, { admin, files: admin ? await repoFiles(env) : [] });
+  const tried = [], input = { messages: [{ role: "system", content: sp.text }, ...messages], stream: true, max_tokens: admin ? 2048 : 1024 };
+  // Admins get the larger model first: it follows the action/proposal formats more reliably.
+  const order = admin ? [ADMIN_MODEL, model(env), ...FALLBACK_MODELS] : [model(env), ...FALLBACK_MODELS];
   let stream = null, reason = "";
-  for (const m of [...new Set([model(env), ...FALLBACK_MODELS])]) {
+  for (const m of [...new Set(order)]) {
     try {
       stream = await env.AI.run(m, input);
       if (stream) break;
@@ -88,19 +92,26 @@ export async function onRequestPost(context) {
     // 503, not 502: Cloudflare swaps a Function's 502 body for its own "error code: 502" page.
     return json({ error: "Lumio AI couldn't answer right now. Try again in a moment.", code: "upstream", reason }, 503);
   }
-  return new Response(rewrite(stream, games), {
+  return new Response(rewrite(stream, games, promptGuard(sp.private)), {
     headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" },
   });
 }
 
 /* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
  * → uniform `data: {"response": "..."}` events, run through the action filter. */
-function rewrite(stream, games) {
+const REFUSAL = "I can't share how I'm set up, but I'm happy to help with something else.";
+function rewrite(stream, games, pguard) {
   const filter = actionFilter(games), dec = new TextDecoder(), enc = new TextEncoder();
-  let buf = "";
-  const emit = (ctl, text) => { if (text) ctl.enqueue(enc.encode("data: " + JSON.stringify({ response: text }) + "\n\n")); };
+  let buf = "", stopped = false;
+  // If the reply starts echoing the private instructions, stop and tell the app to replace the whole reply.
+  const emit = (ctl, text) => {
+    if (!text || stopped) return;
+    if (!pguard.check(text)) { stopped = true; ctl.enqueue(enc.encode("data: " + JSON.stringify({ replace: REFUSAL }) + "\n\n")); return; }
+    ctl.enqueue(enc.encode("data: " + JSON.stringify({ response: text }) + "\n\n"));
+  };
   return stream.pipeThrough(new TransformStream({
     transform(chunk, ctl) {
+      if (stopped) return;
       buf += dec.decode(chunk, { stream: true });
       let k;
       while ((k = buf.indexOf("\n")) >= 0) {

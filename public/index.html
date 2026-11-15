@@ -213,59 +213,102 @@ body.kbd #dh,body.kbd #dock{display:none}
 @media(max-width:700px){body.dah .win{bottom:max(calc(24px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}body:not(.dah) .win{bottom:max(calc(74px + env(safe-area-inset-bottom,0px)),var(--kb,0px))!important}}
 
 /* ===== Lumio AI ===== */
-.ai{position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(rgba(0,0,0,.08),rgba(0,0,0,.2))}
-.aih{display:flex;align-items:center;gap:6px;padding:8px 10px;flex:none;border-bottom:1px solid var(--line)}
-.ait{flex:1;text-align:center;font-size:14px}
-.aib{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:19px}.aib:hover{background:rgba(255,255,255,.12)}
-.aip{position:absolute;top:53px;left:8px;width:min(300px,calc(100% - 16px));max-height:calc(100% - 140px);overflow:auto;z-index:5;padding:8px;border-radius:14px;background:rgba(24,18,14,.97);border:1px solid var(--line);box-shadow:0 14px 40px #000a}
-.aip[hidden],.aie[hidden]{display:none}
-.aiph{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 8px;font-size:13px}
-.aipi{display:flex;align-items:center;border-radius:10px}.aipi.on,.aipi:hover{background:rgba(255,255,255,.08)}
-.aipi button:first-child{flex:1;min-width:0;text-align:left;padding:9px 10px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.aipi small{display:block;opacity:.55;font-size:11px;margin-top:2px}
-.aipi button:last-child{width:32px;height:32px;border-radius:8px;opacity:.6;font-size:15px}.aipi button:last-child:hover{opacity:1;background:rgba(255,255,255,.1)}
-.aim{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:14px;user-select:text;overscroll-behavior:contain}
-.aim-r{display:flex;gap:10px;max-width:100%}.aim-r.u{justify-content:flex-end}
-.aiu{max-width:82%;padding:9px 13px;border-radius:18px 18px 6px 18px;background:var(--a);color:#2a1608;font-size:14px;line-height:1.45;white-space:normal;overflow-wrap:anywhere}
-.aia{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:16px;color:#2a1608;background:linear-gradient(145deg,#ffd38a,var(--a));margin-top:2px}
+.ai{position:absolute;inset:0;display:flex;overflow:hidden;background:radial-gradient(120% 80% at 50% -10%,rgba(255,190,110,.12),transparent 60%),linear-gradient(rgba(20,12,8,.25),rgba(12,8,6,.45));--aiw:760px}
+.aimain{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
+/* sidebar: persistent when wide, drawer when narrow */
+.aisd{width:264px;flex:none;display:flex;flex-direction:column;gap:6px;padding:12px 10px;background:rgba(22,14,10,.72);border-right:1px solid var(--line);backdrop-filter:blur(18px)}
+.ai:not(.wide) .aisd{position:absolute;top:0;bottom:0;left:0;z-index:6;width:min(300px,86%);transform:translateX(-102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:12px 0 40px #0008;background:rgba(28,18,12,.97)}
+.ai.dopen .aisd{transform:none}
+.aiscrim{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+.ai.dopen:not(.wide) .aiscrim{opacity:1;pointer-events:auto}
+.ai.wide.sdoff .aisd{display:none}
+.aisdh{display:flex;align-items:center;gap:8px;padding:2px 4px 8px}.aisdh b{flex:1;font-size:15px;letter-spacing:.01em}
+.ai.wide .aisdh [data-close]{display:none}
+.aimark{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:#2a1608;background:linear-gradient(145deg,#ffe0a6,var(--a))}.aimark svg{width:17px;height:17px}
+.ainew{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;font-size:13.5px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid var(--line)}.ainew:hover{background:rgba(255,255,255,.13)}.ainew svg{width:17px;height:17px}
+.aisl{flex:1;overflow-y:auto;margin:4px -4px 0;padding:0 4px;overscroll-behavior:contain}
+.aisg2{font-size:11px;text-transform:uppercase;letter-spacing:.06em;opacity:.5;padding:12px 8px 4px}
+.aipi{display:flex;align-items:center;border-radius:10px}.aipi.on{background:color-mix(in srgb,var(--a) 22%,transparent)}.aipi:hover{background:rgba(255,255,255,.07)}
+.aipi button:first-child{flex:1;min-width:0;text-align:left;padding:10px 10px;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aipi button:last-child{width:34px;height:34px;border-radius:8px;opacity:0;display:grid;place-items:center}.aipi:hover button:last-child,.aipi.on button:last-child{opacity:.6}.aipi button:last-child:hover{opacity:1;background:rgba(255,255,255,.1)}
+@media (pointer:coarse){.aipi button:last-child{opacity:.55}}
+.aipi button:last-child svg{width:15px;height:15px}
+.aiemptyl{font-size:12.5px;opacity:.6;padding:12px 8px;line-height:1.5}
+.aisf{padding:4px 8px}.aisf .lnk{font-size:12px;opacity:.7}
+/* header */
+.aih{display:flex;align-items:center;gap:6px;padding:8px 10px;flex:none;border-bottom:1px solid rgba(255,255,255,.07)}
+.aiti{flex:1;min-width:0;text-align:center;line-height:1.2}.aiti b{display:block;font-size:14.5px;letter-spacing:.01em}
+.ait{display:block;font-size:11.5px;opacity:.6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ait:empty{display:none}
+.aib{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none}.aib:hover{background:rgba(255,255,255,.1)}.aib svg{width:20px;height:20px}
+/* messages */
+.aim{flex:1;overflow-y:auto;padding:18px max(14px,calc((100% - var(--aiw)) / 2)) 10px;display:flex;flex-direction:column;gap:18px;user-select:text;overscroll-behavior:contain;scroll-behavior:auto}
+.aim-r{display:flex;gap:10px;max-width:100%;animation:aiin .25s ease-out}@keyframes aiin{from{opacity:0;transform:translateY(6px)}}
+.aim-r.u{justify-content:flex-end}
+.aiu{max-width:min(82%,560px);padding:10px 14px;border-radius:20px 20px 6px 20px;background:linear-gradient(160deg,#ffcf8a,var(--a));color:#2a1608;font-size:15px;line-height:1.45;overflow-wrap:anywhere;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.aia{flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:#2a1608;background:linear-gradient(145deg,#ffe0a6,var(--a));margin-top:1px;box-shadow:0 3px 10px rgba(0,0,0,.3)}.aia svg{width:18px;height:18px}
 .aiw{flex:1;min-width:0}
-.aimd{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
-.aimd>*+*{margin-top:8px}.aimd h3,.aimd h4,.aimd h5,.aimd h6{font-size:15px;margin-top:12px}
-.aimd ul,.aimd ol{padding-left:20px}.aimd li+li{margin-top:3px}
+.aimd{font-size:15px;line-height:1.62;overflow-wrap:anywhere;color:rgba(255,255,255,.94)}
+.aimd>*+*{margin-top:10px}.aimd h3,.aimd h4,.aimd h5,.aimd h6{font-size:15.5px;margin-top:14px}
+.aimd ul,.aimd ol{padding-left:22px}.aimd li+li{margin-top:4px}.aimd li::marker{color:var(--a)}
+.aimd strong{color:#fff}
 .aimd a{color:#ffcf8a;text-decoration:underline;text-underline-offset:2px}
-.aimd code{font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(255,255,255,.12);padding:1px 5px;border-radius:5px}
-.aimd blockquote{border-left:3px solid var(--a);padding-left:10px;opacity:.9}
+.aimd code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(255,255,255,.1);padding:1px 6px;border-radius:6px}
+.aimd blockquote{border-left:3px solid var(--a);padding-left:12px;opacity:.9}
 .aimd hr{border:0;border-top:1px solid var(--line)}
-.aicb{border-radius:10px;overflow:hidden;background:#140f0c;border:1px solid var(--line)}
-.aicbh{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;font-size:11px;opacity:.85;background:rgba(255,255,255,.05)}
-.aicbh button{font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.1)}
-.aicb pre{margin:0;padding:10px 12px;overflow-x:auto}.aicb code{background:none;padding:0;font-size:12.5px;white-space:pre}
-.aiact{display:flex;gap:6px;margin-top:6px}.aiact[hidden]{display:none}
-.aiact button{display:flex;align-items:center;gap:4px;font-size:11.5px;padding:4px 8px;border-radius:7px;opacity:.7}.aiact button:hover{opacity:1;background:rgba(255,255,255,.1)}
-.aix{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:rgba(255,120,90,.12);border:1px solid rgba(255,140,110,.35);font-size:13px;line-height:1.45;color:#ffd2c4}
-.aity{display:inline-flex;gap:4px;padding:6px 2px}.aity i{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.4;animation:aib 1.2s infinite}.aity i:nth-child(2){animation-delay:.15s}.aity i:nth-child(3){animation-delay:.3s}
-@keyframes aib{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:.9;transform:translateY(-3px)}}
-.aicar{display:inline-block;width:7px;height:15px;margin-left:2px;vertical-align:-2px;background:var(--a);border-radius:2px;animation:aic 1s steps(2) infinite}@keyframes aic{50%{opacity:0}}
-.aiempty{margin:auto;text-align:center;padding:10px 4px;width:100%;max-width:520px}
-.aibig{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:18px;font-size:30px;color:#2a1608;background:linear-gradient(145deg,#ffd38a,var(--a));box-shadow:0 8px 26px #0006}
-.aiempty h3{font-size:19px;font-weight:600;margin:12px 0 16px}
-.aisg{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left}
-.aisg button{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid var(--line);min-width:0}.aisg button:hover{background:rgba(255,255,255,.13);border-color:var(--a)}
-.aisg b{display:block;font-size:13px}.aisg small{display:block;font-size:11.5px;opacity:.65;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media(max-width:380px){.aisg{grid-template-columns:1fr}}
-.aie{margin:0 12px 6px;padding:9px 12px;border-radius:12px;background:rgba(240,160,64,.14);border:1px solid rgba(240,160,64,.4);font-size:12.5px;line-height:1.45;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.aie span{flex:1;min-width:180px}
-.aif{display:flex;align-items:flex-end;gap:8px;margin:0 10px;padding:6px 6px 6px 14px;border-radius:22px;background:rgba(255,255,255,.1);border:1px solid var(--line);flex:none}
-.aif:focus-within{border-color:var(--a)}
-.aif textarea{flex:1;min-width:0;resize:none;background:none;border:0;outline:0;color:#fff;font:16px/1.4 system-ui,-apple-system,sans-serif;padding:6px 0;max-height:140px;user-select:text}
-.aif textarea::placeholder{color:rgba(255,255,255,.55)}
-.ais{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:var(--a);color:#2a1608}.ais.stop{background:rgba(255,255,255,.85)}
-.ain{display:block;text-align:center;font-size:10.5px;opacity:.5;padding:5px 10px calc(8px + env(safe-area-inset-bottom,0px))}
-.aiacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.aiop{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px 8px 10px;border-radius:12px;border:1px solid color-mix(in srgb,var(--a) 55%,transparent);background:color-mix(in srgb,var(--a) 22%,rgba(255,255,255,.06));color:#fff;font:600 13px/1.2 inherit;cursor:pointer;max-width:100%}
-.aiop svg{width:18px;height:18px;flex:none}
-.aiop span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.aiop:hover{background:color-mix(in srgb,var(--a) 34%,rgba(255,255,255,.08))}
-.aiop:active{transform:scale(.97)}
+.aicb{border-radius:12px;overflow:hidden;background:#140d09;border:1px solid var(--line)}
+.aicbh{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:11.5px;opacity:.85;background:rgba(255,255,255,.05)}
+.aicbh button{font-size:11.5px;padding:4px 9px;border-radius:7px;background:rgba(255,255,255,.1)}
+.aicb pre{margin:0;padding:12px;overflow-x:auto}.aicb code{background:none;padding:0;font-size:13px;white-space:pre}
+.aiact{display:flex;gap:4px;margin-top:8px;opacity:.75}.aiact[hidden]{display:none}
+.aiact button{display:flex;align-items:center;gap:5px;font-size:12px;padding:5px 9px;border-radius:8px}.aiact button:hover{background:rgba(255,255,255,.1)}.aiact svg{width:14px;height:14px}
+.aix{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 13px;border-radius:14px;background:rgba(255,120,90,.12);border:1px solid rgba(255,140,110,.35);font-size:13.5px;line-height:1.45;color:#ffd8cc;flex:1;min-width:0}
+.aity{display:inline-flex;gap:4px;padding:6px 2px}.aity i{width:7px;height:7px;border-radius:50%;background:var(--a);opacity:.4;animation:aib 1.2s infinite}.aity i:nth-child(2){animation-delay:.15s}.aity i:nth-child(3){animation-delay:.3s}
+@keyframes aib{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:.95;transform:translateY(-3px)}}
+.aicar{display:inline-block;width:8px;height:16px;margin-left:2px;vertical-align:-3px;background:var(--a);border-radius:3px;animation:aic 1s ease-in-out infinite}@keyframes aic{50%{opacity:.15}}
+/* empty state */
+.aiempty{margin:auto;text-align:center;padding:12px 2px;width:100%;max-width:560px}
+.aibig{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:20px;color:#2a1608;background:linear-gradient(145deg,#ffe3ad,var(--a));box-shadow:0 10px 40px color-mix(in srgb,var(--a) 45%,transparent),inset 0 1px 0 #fff8;animation:aiglow 4s ease-in-out infinite}.aibig svg{width:34px;height:34px}
+@keyframes aiglow{50%{box-shadow:0 10px 54px color-mix(in srgb,var(--a) 65%,transparent),inset 0 1px 0 #fff8}}
+.aiempty h3{font-size:22px;font-weight:650;margin:16px 0 6px;letter-spacing:-.01em}
+.aiempty p{font-size:13.5px;opacity:.7;line-height:1.5;margin:0 auto 18px;max-width:420px}
+.aisg{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left}
+.aisg button{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid var(--line);min-width:0;transition:background .15s,border-color .15s,transform .1s}.aisg button:hover{background:rgba(255,255,255,.11);border-color:color-mix(in srgb,var(--a) 70%,transparent)}.aisg button:active{transform:scale(.98)}
+.aisg b{display:block;font-size:13.5px}.aisg small{display:block;font-size:12px;opacity:.62;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:360px){.aisg{grid-template-columns:1fr}.aiempty h3{font-size:19px}}
+.aie{margin:0 auto 8px;width:calc(100% - 24px);max-width:var(--aiw);padding:10px 12px;border-radius:12px;background:rgba(240,160,64,.14);border:1px solid rgba(240,160,64,.4);font-size:13px;line-height:1.45;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.aie span{flex:1;min-width:180px}.aie[hidden]{display:none}
+/* composer */
+.aicomp{flex:none;padding:6px 12px 0;width:100%;max-width:calc(var(--aiw) + 24px);margin:0 auto}
+.aif{display:flex;align-items:flex-end;gap:8px;padding:7px 7px 7px 16px;border-radius:24px;background:rgba(255,255,255,.09);border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.25);transition:border-color .15s}
+.aif:focus-within{border-color:color-mix(in srgb,var(--a) 80%,transparent)}
+.aif textarea{flex:1;min-width:0;resize:none;background:none;border:0;outline:0;color:#fff;font:16px/1.45 system-ui,-apple-system,sans-serif;padding:7px 0;max-height:160px;user-select:text}
+.aif textarea::placeholder{color:rgba(255,255,255,.5)}
+.ais{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--a);color:#2a1608;transition:transform .1s}.ais:active{transform:scale(.92)}.ais svg{width:19px;height:19px}.ais.stop{background:rgba(255,255,255,.9)}
+.ain{display:block;text-align:center;font-size:10.5px;opacity:.45;padding:6px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+body.kbd .ain{display:none}body.kbd .aicomp{padding-bottom:6px}
+/* open-game/app buttons */
+.aiacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.aiop{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 15px 8px 11px;border-radius:13px;border:1px solid color-mix(in srgb,var(--a) 55%,transparent);background:color-mix(in srgb,var(--a) 20%,rgba(255,255,255,.05));color:#fff;font:600 13.5px/1.2 inherit;cursor:pointer;max-width:100%;transition:background .15s,transform .1s}
+.aiop svg{width:18px;height:18px;flex:none}.aiop span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aiop:hover{background:color-mix(in srgb,var(--a) 34%,rgba(255,255,255,.08))}.aiop:active{transform:scale(.97)}
+/* admin + code cards */
+.aicard{margin-top:12px;border-radius:16px;padding:14px;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid color-mix(in srgb,var(--a) 45%,transparent);box-shadow:0 8px 26px rgba(0,0,0,.25)}
+.aicard.bad{border-color:rgba(255,130,110,.45)}.aicard.bad p{font-size:13px;opacity:.8;margin-top:4px}
+.aicardh{display:flex;gap:10px;align-items:center}.aicardh small{display:block;font-size:11px;opacity:.65;letter-spacing:.02em}.aicardh b{display:block;font-size:15px;margin-top:1px}
+.aicardi{width:36px;height:36px;border-radius:11px;flex:none;display:grid;place-items:center;color:#2a1608;background:linear-gradient(145deg,#ffe0a6,var(--a))}.aicardi svg{width:19px;height:19px}
+.aikvs{margin-top:12px;border-radius:12px;background:rgba(0,0,0,.18);padding:4px 12px}
+.aikv{display:flex;gap:12px;justify-content:space-between;padding:8px 0;font-size:13.5px}.aikv+.aikv{border-top:1px solid rgba(255,255,255,.07)}.aikv span{opacity:.65;flex:none}.aikv b{text-align:right;overflow-wrap:anywhere;font-weight:600}
+.aicbtn{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}.aicbtn .btn{min-height:40px;padding:9px 16px;font-size:13.5px;border-radius:11px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center}
+@media(max-width:480px){.aicbtn .btn{flex:1;justify-content:center}}
+.aistat{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:13px;line-height:1.45;opacity:.85}.aistat svg{width:18px;height:18px;flex:none;color:#9be39b}
+.aistat.ok{opacity:1}.aistat.bad{color:#ffb4a6;opacity:1}.aistat.warn{padding:10px 12px;border-radius:11px;background:rgba(240,160,64,.14);border:1px solid rgba(240,160,64,.4);opacity:1}
+.aistats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:10px}
+.aistats div{padding:10px;border-radius:12px;background:rgba(0,0,0,.2)}.aistats b{display:block;font-size:20px}.aistats small{font-size:11.5px;opacity:.65}
+.aicsum{font-size:13.5px;opacity:.8;margin-top:10px;line-height:1.5}
+.aidf{margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#120b08}
+.aidf summary{display:flex;gap:8px;align-items:center;padding:8px 10px;font-size:12.5px;cursor:pointer;background:rgba(255,255,255,.05)}.aidf summary code{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aibadge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(120,170,255,.25)}.aibadge.a{background:rgba(110,210,120,.28)}
+.aidiff{margin:0;max-height:320px;overflow:auto;padding:8px 0;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.dl{display:block;padding:0 12px;white-space:pre}.dl.a{background:rgba(80,200,110,.16);color:#c8f5cf}.dl.d{background:rgba(255,100,90,.16);color:#ffc9c2}.dl.h{color:#ffcf8a;opacity:.8}
 
 /* menubar logo + About use the app icon */
 #mb .lg{background:url(/launcher/icon.svg) center/cover;border-radius:4px}
@@ -463,7 +506,7 @@ function lumioManga(b){lumioBrowser(b);
  b.nav(MANGA)}
 /* ---- Games app: the real Tuffs catalog (public/data/games.json + admin overrides from /api/games) ---- */
 let CAT_P=null;
-function loadCatalog(){if(CAT_P)return CAT_P;CAT_P=Promise.all([fetch('/data/games.json').then(r=>{if(!r.ok)throw new Error('games.json '+r.status);return r.json()}),fetch('/api/games').then(r=>r.ok?r.json():{}).catch(()=>({}))]).then(([d,o])=>{const ov=(o&&o.overrides)||{};return (d.games||[]).filter(g=>g&&g.id&&!(ov[g.id]&&ov[g.id].hidden)).map(g=>({id:g.id,title:(ov[g.id]&&ov[g.id].title)||g.title||g.id,cat:g.category||'Games',url:g.external?g.entry:'/'+g.entry,ext:!!g.external,thumb:g.thumb?'/'+g.thumb:''})).sort((a,b)=>a.title.localeCompare(b.title,undefined,{numeric:true,sensitivity:'base'}))}).catch(e=>{CAT_P=null;throw e});return CAT_P}
+function loadCatalog(){if(CAT_P)return CAT_P;CAT_P=Promise.all([fetch('/data/games.json').then(r=>{if(!r.ok)throw new Error('games.json '+r.status);return r.json()}),fetch('/api/games').then(r=>r.ok?r.json():{}).catch(()=>({}))]).then(([d,o])=>{const ov=(o&&o.overrides)||{};const cu=((o&&o.custom)||[]).map(g=>({id:g.id,title:g.title,category:g.category,entry:g.url,external:true}));return (d.games||[]).concat(cu).filter(g=>g&&g.id&&!(ov[g.id]&&ov[g.id].hidden)).map(g=>({id:g.id,title:(ov[g.id]&&ov[g.id].title)||g.title||g.id,cat:g.category||'Games',url:g.external?g.entry:'/'+g.entry,ext:!!g.external,thumb:g.thumb?'/'+g.thumb:''})).sort((a,b)=>a.title.localeCompare(b.title,undefined,{numeric:true,sensitivity:'base'}))}).catch(e=>{CAT_P=null;throw e});return CAT_P}
 function playGame(g){const k='game_'+g.id.replace(/[^\w-]/g,'_');if(!APPS[k])APPS[k]={n:g.title,i:IC.pad,w:860,h:560,hide:1,r(b){b.innerHTML=`<div class=lg2><div class=lgb><button class=btn data-fs>Full screen</button><button class=btn data-nt>Open in new tab</button></div><iframe allow="fullscreen;autoplay;gamepad" allowfullscreen></iframe></div>`;const f=$('iframe',b),src=g.ext?proxify(g.url):g.url;f.src=src;
  $('[data-fs]',b).onclick=()=>{const el=f;(el.requestFullscreen?el.requestFullscreen():Promise.reject()).catch(()=>{try{el.webkitEnterFullscreen&&el.webkitEnterFullscreen()}catch(e){}toast('Full screen is not supported here')})};$('[data-nt]',b).onclick=()=>newTab(new URL(src,location.href).href);
  b.closest('.win').onclose=()=>{f.src='about:blank'}}};open(k)}
@@ -484,12 +527,10 @@ function browseTo(u){open('browser');const w=open_['browser'];const body=w&&w.qu
 /* Action tags from the server: [[open:game:<id>]] / [[open:app:<id>]]. Only real ids become buttons. */
 const AI_APPS=['browser','games','ai','manga','music','watch','account','settings','snake'];
 let AI_CAT=null;function aiCatalog(){return loadCatalog().then(l=>{AI_CAT=l;return l}).catch(()=>null)}
-function aiActs(t){const acts=[],seen=new Set();const txt=String(t||'').replace(/\[\[\s*open\s*:\s*(game|app)\s*:\s*([^\[\]\n]{1,80}?)\s*\]\]/gi,(m,k,id)=>{k=k.toLowerCase();const key=k+':'+id;if(!seen.has(key)&&acts.length<3){seen.add(key);acts.push({k,id})}return ''}).replace(/\[\[[^\]\n]{0,90}\]?$/,'').replace(/\n{3,}/g,'\n\n').trim();
- return {txt,acts:acts.map(a=>{if(a.k=='app')return AI_APPS.includes(a.id)&&APPS[a.id]?{...a,label:'Open '+APPS[a.id].n}:null;
-  if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
 function aiRun(k,id){if(k=='app'){if(AI_APPS.includes(id)&&APPS[id])open(id);return true}
  return aiCatalog().then(l=>{const g=l&&l.find(x=>x.id===id);if(g){playGame(g);return true}toast('That game isn\'t in the catalog');return false})}
-const AI_SUGGEST=[['Explain something','Explain how HTTPS keeps my data safe, in simple words.'],['Plan my study','Make me a 30-minute study plan for a math test tomorrow.'],['Write a story','Write a short story about a robot who loves video games.'],['Fix my code','Why does this JavaScript print undefined?\n\n```js\nfunction add(a, b) { a + b }\nconsole.log(add(2, 3))\n```']];
+const AI_SUGGEST=[['Find a game','Find me a fun racing game to play'],['Open 2048','Open 2048'],['Use the Browser','How do I use the Browser app to visit a website?'],['Study plan','Make me a 30-minute study plan for a math test tomorrow.']];
+const AI_SUGGEST_ADMIN=[['Site stats','Show me the site stats'],['Announcement','Post an announcement: New games are coming this weekend!'],['Maintenance','Turn on maintenance mode'],['Propose code','Propose a code change that adds a public/hello.html page saying Hello from Tuffs']];
 function mdInline(s){const codes=[];s=s.replace(/`([^`\n]+)`/g,(m,c)=>{codes.push(c);return '\u0000'+(codes.length-1)+'\u0000'});s=esc(s);
  s=s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,(m,t,u)=>`<a href="${u}" data-ext>${t}</a>`);
  s=s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,!?;:'"])/g,(m,p,u)=>`${p}<a href="${u}" data-ext>${u}</a>`);
@@ -512,33 +553,98 @@ function mdBlocks(t){const L=t.split('\n');let h='',i=0;
  return h}
 function md(src){return String(src||'').split('```').map((p,i)=>{if(!(i%2))return mdBlocks(p);const nl=p.indexOf('\n');let lang=nl>=0?p.slice(0,nl).trim():'',code=nl>=0?p.slice(nl+1):p;if(!/^[\w+#.-]{0,20}$/.test(lang)){lang='';code=p}code=code.replace(/\n$/,'');return `<div class=aicb><div class=aicbh><span>${esc(lang||'code')}</span><button type=button data-cc>Copy</button></div><pre><code>${esc(code)}</code></pre></div>`}).join('')}
 function copyText(t){const ok=()=>toast('Copied');if(navigator.clipboard&&isSecureContext)return navigator.clipboard.writeText(t).then(ok).catch(()=>fb());fb();function fb(){const x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;opacity:0';document.body.append(x);x.select();try{document.execCommand('copy');ok()}catch(e){toast('Copy failed')}x.remove()}}
+/* Parse a reply: [[open:...]] tags → buttons, ```lumio-admin / ```lumio-code blocks → cards (admins only). */
+function aiParse(t,admin){const acts=[],seen=new Set(),cards=[];let pending=false;
+ let txt=String(t||'').replace(/```lumio-(admin|code)[^\n]*\n?([\s\S]*?)```/g,(m,k,body)=>{let data=null,err='';try{data=JSON.parse(body.trim())}catch(e){err='The action was not valid JSON.'}if(admin)cards.push({k,data,err});return '\n'});
+ txt=txt.replace(/```lumio-(admin|code)[\s\S]*$/,()=>{pending=admin;return ''});
+ txt=txt.replace(/\[\[\s*open\s*:\s*(game|app)\s*:\s*([^\[\]\n]{1,80}?)\s*\]\]/gi,(m,k,id)=>{k=k.toLowerCase();const key=k+':'+id;if(!seen.has(key)&&acts.length<3){seen.add(key);acts.push({k,id})}return ''}).replace(/\[\[[^\]\n]{0,90}\]?$/,'').replace(/\n{3,}/g,'\n\n').trim();
+ return {txt,pending,cards,acts:acts.map(a=>{if(a.k=='app')return AI_APPS.includes(a.id)&&APPS[a.id]?{...a,label:'Open '+APPS[a.id].n}:null;
+  if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
+function aiActs(t){return aiParse(t,false)}
+const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats'};
+function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
+ case 'announce':return d.text?[['Text',d.text]]:[['Text','(remove the announcement)']];
+ case 'settings':return ['signupsOpen','chatEnabled','maintenance'].filter(k=>typeof d[k]=='boolean').map(k=>[{signupsOpen:'Signups',chatEnabled:'Chat',maintenance:'Maintenance mode'}[k],b(d[k])]);
+ case 'ban':case 'unban':return [['Account',d.username||'?']];
+ case 'game_add':return [['Title',d.title||'?'],['Link',d.url||'?'],['Category',d.category||'Games']];
+ case 'game_edit':{const g=AI_CAT&&AI_CAT.find(x=>x.id==d.id);return [['Game',g?g.title:d.id],['New name',d.title||'(original name)']]}
+ case 'game_hide':{const g=AI_CAT&&AI_CAT.find(x=>x.id==d.id);return [['Game',g?g.title:d.id],['Change',d.hidden?'Hide from catalog':'Show in catalog']]}
+ case 'stats':return [['Shows','accounts, sessions and chat numbers from the database']];
+ default:return []}}
+function aiDiffHtml(diff){return diff.split('\n').map(l=>{const c=l.startsWith('+++')||l.startsWith('---')?'h':l[0]=='+'?'a':l[0]=='-'?'d':l.startsWith('@@')?'h':'';return `<span class="dl ${c}">${esc(l)||' '}</span>`}).join('')}
+
 function lumioAI(b){
  const KEY=()=>'lumio_ai:'+(AUTH.mode=='user'?AUTH.name.toLowerCase():'guest');
+ const isAdmin=()=>AUTH.mode=='user'&&!!AUTH.admin;
  const load=()=>{try{const d=JSON.parse(localStorage.getItem(KEY())||'null');if(d&&Array.isArray(d.chats))return d}catch(e){}return{chats:[],cur:null}};
  let D=load(),busy=null,avail=null;
- const persist=()=>{D.chats=D.chats.filter(c=>c.msgs.length).slice(0,30);try{localStorage.setItem(KEY(),JSON.stringify(D))}catch(e){}};
+ const persist=()=>{D.chats=D.chats.filter(c=>c.msgs.length).slice(0,40);try{localStorage.setItem(KEY(),JSON.stringify(D))}catch(e){}};
  const cur=()=>D.chats.find(c=>c.id==D.cur);
- b.innerHTML=`<div class=ai><div class=aih><button type=button class=aib data-hist aria-label="Chat history">${ic('<path d="M4 6h16M4 12h16M4 18h10"/>')}</button><b class=ait>Lumio AI</b><button type=button class=aib data-new aria-label="New chat">${ic('<path d="M12 5v14M5 12h14"/>')}</button></div>
- <div class=aip hidden></div><div class=aim role=log aria-live=polite></div><div class=aie hidden role=alert></div>
- <form class=aif><textarea rows=1 placeholder="Message Lumio AI" enterkeyhint=send aria-label="Message"></textarea><button class=ais type=submit aria-label=Send>${ic('<path d="M12 19V5M5 12l7-7 7 7"/>')}</button></form>
- <small class=ain>Lumio AI can make mistakes. Check important info.</small></div>`;
- const M=$('.aim',b),T=$('textarea',b),S=$('.ais',b),E=$('.aie',b),PN=$('.aip',b);
- const sendIc=S.innerHTML,stopIc=ic('<rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/>');
- const grow=()=>{T.style.height='auto';T.style.height=Math.min(T.scrollHeight,140)+'px'};
+ const sendIcHtml=ic('<path d="M12 19V5M5 12l7-7 7 7"/>');
+ b.innerHTML=`<div class=ai><aside class=aisd aria-label="Conversations"><div class=aisdh><span class=aimark>${IC.ai}</span><b>Lumio AI</b><button type=button class=aib data-close aria-label="Close conversations">${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button></div>
+ <button type=button class=ainew data-new>${ic('<path d="M12 5v14M5 12h14"/>')}<span>New chat</span></button><div class=aisl></div><div class=aisf></div></aside><div class=aiscrim data-close></div>
+ <section class=aimain><header class=aih><button type=button class=aib data-hist aria-label="Conversations">${ic('<path d="M4 7h16M4 12h16M4 17h10"/>')}</button><div class=aiti><b>Lumio AI</b><small class=ait></small></div><button type=button class=aib data-new aria-label="New chat">${ic('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>')}</button></header>
+ <div class=aim role=log aria-live=polite></div><div class=aie hidden role=alert></div>
+ <div class=aicomp><form class=aif><textarea rows=1 placeholder="Message Lumio AI" enterkeyhint=send aria-label="Message"></textarea><button class=ais type=submit aria-label=Send>${sendIcHtml}</button></form>
+ <small class=ain>Lumio AI can make mistakes. Check important info.</small></div></section></div>`;
+ const A=$('.ai',b),M=$('.aim',b),T=$('textarea',b),S=$('.ais',b),E=$('.aie',b),SL=$('.aisl',b);
+ const stopIc=ic('<rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/>');
+ new ResizeObserver(()=>A.classList.toggle('wide',A.clientWidth>=760)).observe(A);
+ const grow=()=>{T.style.height='auto';T.style.height=Math.min(T.scrollHeight,160)+'px'};
  const banner=(msg,btn)=>{if(!msg){E.hidden=true;E.innerHTML='';return}E.hidden=false;E.innerHTML=`<span>${esc(msg)}</span>${btn?`<button type=button class=btn data-ban>${esc(btn)}</button>`:''}`};
  const scroll=()=>{M.scrollTop=M.scrollHeight};
+ const drawer=v=>A.classList.toggle('dopen',v);
+ // ---- cards ----
+ const cardHtml=(m,mi,c,ci)=>{const st=(m.cs||{})[ci]||{};
+  if(c.err||!c.data)return `<div class="aicard bad"><b>Couldn't read this action</b><p>${esc(c.err||'Missing details.')}</p></div>`;
+  if(c.k=='admin'){const d=c.data,lab=AI_ADMIN_LABEL[d.action];if(!lab)return `<div class="aicard bad"><b>Unknown admin action</b><p>${esc(String(d.action||''))}</p></div>`;
+   const rows=aiAdminDesc(d).map(r=>`<div class=aikv><span>${esc(r[0])}</span><b>${esc(String(r[1]))}</b></div>`).join('');
+   const foot=st.s=='done'?`<div class="aistat ok">${ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>')}<span>${esc(st.msg)}</span></div>${st.stats?`<div class=aistats>${st.stats.map(x=>`<div><b>${x[1]}</b><small>${esc(x[0])}</small></div>`).join('')}</div>`:''}`
+    :st.s=='err'?`<div class="aistat bad"><span>${esc(st.msg)}</span></div><div class=aicbtn><button type=button class="btn on" data-card=${mi}:${ci} data-go>Try again</button></div>`
+    :st.s=='cancel'?`<div class=aistat><span>Cancelled. Nothing was changed.</span></div>`
+    :st.s=='run'?`<div class=aistat><span class=aity><i></i><i></i><i></i></span><span>Working…</span></div>`
+    :`<div class=aicbtn><button type=button class=btn data-card=${mi}:${ci} data-no>Cancel</button><button type=button class="btn on" data-card=${mi}:${ci} data-go>Confirm</button></div>`;
+   return `<div class=aicard><div class=aicardh><span class=aicardi>${APPS.admin?APPS.admin.i:''}</span><div><small>Admin action · needs your OK</small><b>${esc(lab)}</b></div></div>${rows?`<div class=aikvs>${rows}</div>`:''}${foot}</div>`}
+  const d=c.data,files=st.files;
+  const body=files?files.map(f=>`<details class=aidf open><summary><span class="aibadge ${f.status=='added'?'a':''}">${f.status=='added'?'New':'Edit'}</span><code>${esc(f.path)}</code></summary><pre class=aidiff>${aiDiffHtml(f.diff)}</pre></details>`).join(''):st.s=='err'?'':`<div class=aistat><span class=aity><i></i><i></i><i></i></span><span>Preparing the diff…</span></div>`;
+  const foot=st.s=='pr'?`<div class="aistat ok">${ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>')}<span>Pull request opened. Nothing is live until it's reviewed and merged.</span></div><div class=aicbtn><a class="btn on" href="${esc(st.url)}" target=_blank rel=noopener>View pull request #${esc(String(st.num))}</a></div>`
+   :st.s=='err'?`<div class="aistat bad"><span>${esc(st.msg)}</span></div>${files?'':`<div class=aicbtn><button type=button class=btn data-card=${mi}:${ci} data-diff>Try again</button></div>`}`
+   :st.s=='run'?`<div class=aistat><span class=aity><i></i><i></i><i></i></span><span>Opening a pull request…</span></div>`
+   :st.s=='cancel'?`<div class=aistat><span>Discarded.</span></div>`
+   :files?(st.canOpen?`<div class=aicbtn><button type=button class=btn data-card=${mi}:${ci} data-no>Discard</button><button type=button class="btn on" data-card=${mi}:${ci} data-pr>Open pull request</button></div>`
+     :`<div class="aistat warn"><span>Code proposals need a GitHub token before they can open a pull request. The site owner has to add a <b>GITHUB_TOKEN</b> secret to the site's Pages project.</span></div>`):'';
+  return `<div class="aicard code"><div class=aicardh><span class=aicardi>${ic('<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>')}</span><div><small>Code proposal · opens a pull request, never edits the live site</small><b>${esc(d.title||'Code change')}</b></div></div>${d.summary?`<p class=aicsum>${esc(d.summary)}</p>`:''}${body}${foot}</div>`};
+ const aiBody=(m,mi)=>{const p=aiParse(m.c,isAdmin());return md(p.txt)+p.cards.map((c,ci)=>cardHtml(m,mi,c,ci)).join('')+(p.acts.length?`<div class=aiacts>${p.acts.map(x=>`<button type=button class=aiop data-act="${esc(x.k)}" data-id="${esc(x.id)}">${x.k=='game'?IC.pad:(APPS[x.id]?APPS[x.id].i:'')}<span>${esc(x.label)}</span></button>`).join('')}</div>`:'')};
  const bubble=(m,idx)=>m.r=='user'?`<div class="aim-r u"><div class=aiu>${esc(m.c).replace(/\n/g,'<br>')}</div></div>`
-  :m.err?`<div class="aim-r a"><div class=aix><span>${esc(m.c)}</span><button type=button class=btn data-retry>Try again</button></div></div>`
-  :`<div class="aim-r a"><span class=aia>${IC.ai}</span><div class=aiw><div class=aimd>${aiBody(m.c)}</div><div class=aiact><button type=button data-copy=${idx} aria-label="Copy reply">${ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 011-1h10"/>')} Copy</button></div></div></div>`;
- const aiBody=c=>{const a=aiActs(c);return md(a.txt)+(a.acts.length?`<div class=aiacts>${a.acts.map(x=>`<button type=button class=aiop data-act="${esc(x.k)}" data-id="${esc(x.id)}">${x.k=='game'?IC.pad:(APPS[x.id]?APPS[x.id].i:'')}<span>${esc(x.label)}</span></button>`).join('')}</div>`:'')};
- const draw=()=>{const c=cur();$('.ait',b).textContent=c&&c.title?c.title:'Lumio AI';
-  if(!c||!c.msgs.length){M.innerHTML=`<div class=aiempty><span class=aibig>${IC.ai}</span><h3>How can I help${AUTH.mode=='user'?', '+esc(AUTH.name):''}?</h3><div class=aisg>${AI_SUGGEST.map((s,i)=>`<button type=button data-sg=${i}><b>${esc(s[0])}</b><small>${esc(s[1].split('\n')[0])}</small></button>`).join('')}</div></div>`;return}
-  M.innerHTML=c.msgs.map(bubble).join('');scroll()};
- const hist=()=>{PN.innerHTML=`<div class=aiph><b>Chats</b>${D.chats.length?`<button type=button class=btn data-clear>Clear all</button>`:''}</div>`+(D.chats.length?D.chats.map(c=>`<div class="aipi${c.id==D.cur?' on':''}"><button type=button data-open="${c.id}">${esc(c.title||'New chat')}<small>${new Date(c.t).toLocaleDateString([],{month:'short',day:'numeric'})}</small></button><button type=button data-del="${c.id}" aria-label="Delete chat">${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button></div>`).join(''):`<p class=lbs style="padding:10px">No saved chats yet.</p>`)};
- const setBusy=v=>{busy=v;S.innerHTML=v?stopIc:sendIc;S.setAttribute('aria-label',v?'Stop':'Send');S.classList.toggle('stop',!!v)};
- const explain=st=>{
-  if(st==='no_ai'||st===404)return 'Lumio AI isn\'t switched on for this site yet.';
-  return null};
+  :m.err?`<div class="aim-r a"><span class=aia>${IC.ai}</span><div class=aix><span>${esc(m.c)}</span><button type=button class=btn data-retry>Try again</button></div></div>`
+  :`<div class="aim-r a"><span class=aia>${IC.ai}</span><div class=aiw><div class=aimd>${aiBody(m,idx)}</div><div class=aiact><button type=button data-copy=${idx} aria-label="Copy reply">${ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 011-1h10"/>')} Copy</button>${idx==cur().msgs.length-1?`<button type=button data-retry aria-label="Regenerate">${ic('<path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 5v6h-6"/>')} Retry</button>`:''}</div></div></div>`;
+ const greet=()=>{const h=new Date().getHours();return h<5?'Up late':h<12?'Good morning':h<18?'Good afternoon':'Good evening'};
+ const draw=()=>{const c=cur();$('.ait',b).textContent=c&&c.title?c.title:'';
+  if(!c||!c.msgs.length){const sg=isAdmin()?AI_SUGGEST.slice(0,2).concat(AI_SUGGEST_ADMIN):AI_SUGGEST;
+   M.innerHTML=`<div class=aiempty><span class=aibig>${IC.ai}</span><h3>${greet()}${AUTH.mode=='user'?', '+esc(AUTH.name):''}</h3><p>Ask anything, find a game, or get help with Lumio.${isAdmin()?' As an admin you can also run site actions and propose code changes.':''}</p><div class=aisg>${sg.map((s,i)=>`<button type=button data-sg="${esc(s[1])}"><b>${esc(s[0])}</b><small>${esc(s[1])}</small></button>`).join('')}</div></div>`;return}
+  M.innerHTML=c.msgs.map(bubble).join('');scroll();autoCards()};
+ const groups=()=>{const now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();const g={Today:[],'Previous 7 days':[],Older:[]};
+  for(const c of D.chats){const k=c.t>=t0?'Today':c.t>=t0-6*864e5?'Previous 7 days':'Older';g[k].push(c)}return g};
+ const hist=()=>{const g=groups();SL.innerHTML=D.chats.length?Object.entries(g).filter(x=>x[1].length).map(([k,l])=>`<div class=aisg2>${k}</div>`+l.map(c=>`<div class="aipi${c.id==D.cur?' on':''}"><button type=button data-open="${c.id}">${esc(c.title||'New chat')}</button><button type=button data-del="${c.id}" aria-label="Delete chat">${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button></div>`).join('')).join(''):`<p class=aiemptyl>Your chats show up here. They're saved on this device.</p>`;
+  $('.aisf',b).innerHTML=D.chats.length?`<button type=button class=lnk data-clear>Clear all chats</button>`:''};
+ const setBusy=v=>{busy=v;S.innerHTML=v?stopIc:sendIcHtml;S.setAttribute('aria-label',v?'Stop':'Send');S.classList.toggle('stop',!!v);A.classList.toggle('busy',!!v)};
+ const explain=st=>st==='no_ai'||st===404?'Lumio AI isn\'t switched on for this site yet.':null;
+ const auth=()=>({'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')});
+ // code proposals: fetch the diff once per card
+ const autoCards=()=>{if(!isAdmin())return;const c=cur();if(!c)return;c.msgs.forEach((m,mi)=>{if(m.r!='assistant'||m.err)return;aiParse(m.c,true).cards.forEach((cd,ci)=>{if(cd.k!='code'||!cd.data)return;m.cs=m.cs||{};if(m.cs[ci])return;m.cs[ci]={s:'diff'};diffFor(c,m,mi,cd,ci)})})};
+ async function diffFor(c,m,mi,cd,ci){try{const r=await fetch('/api/ai/propose',{method:'POST',headers:auth(),body:JSON.stringify({...cd.data,dryRun:true})});const d=await r.json().catch(()=>({}));
+   m.cs[ci]=r.ok?{s:'ready',files:d.files,canOpen:!!d.canOpen}:{s:'err',msg:d.error||('Couldn\'t prepare the diff ('+r.status+').')}}catch(e){m.cs[ci]={s:'err',msg:'Network error. Try again.'}}persist();if(cur()===c&&!busy)draw()}
+ async function runCard(c,mi,ci,mode){const m=c.msgs[mi],cd=aiParse(m.c,true).cards[ci];if(!cd||!cd.data)return;m.cs=m.cs||{};
+  if(mode=='no'){m.cs[ci]={...(m.cs[ci]||{}),s:'cancel'};persist();draw();return}
+  if(mode=='diff'){m.cs[ci]={s:'diff'};draw();diffFor(c,m,mi,cd,ci);return}
+  const prev=m.cs[ci]||{};m.cs[ci]={...prev,s:'run'};draw();
+  try{if(cd.k=='admin'){const r=await fetch('/api/ai/admin-action',{method:'POST',headers:auth(),body:JSON.stringify(cd.data)});const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||('Failed ('+r.status+')'));
+    const st={s:'done',msg:d.summary||'Done.'};if(d.action=='stats'&&d.result){const x=d.result;st.msg='Live numbers from the site database.';st.stats=[['accounts',x.users],['admins',x.admins],['suspended',x.banned],['active sessions',x.sessions],['new in 24h',x.newDay],['new in 7 days',x.newWeek],['chat messages',x.chatTotal],['chat in 24h',x.chatDay]]}
+    if(/^game_/.test(cd.data.action)){CAT_P=null;aiCatalog()}m.cs[ci]=st}
+   else{const r=await fetch('/api/ai/propose',{method:'POST',headers:auth(),body:JSON.stringify(cd.data)});const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||('Failed ('+r.status+')'));m.cs[ci]={...prev,s:'pr',url:d.url,num:d.number}}}
+  catch(e){m.cs[ci]={...prev,s:'err',msg:e.message}}persist();if(cur()===c)draw()}
  async function ask(){const c=cur();if(!c)return;
   if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
   const msgs=c.msgs.filter(m=>!m.err).map(m=>({role:m.r,content:m.c}));
@@ -546,41 +652,44 @@ function lumioAI(b){
   const row=M.lastElementChild,box=row.querySelector('.aimd');row.querySelector('.aiact').hidden=true;box.innerHTML='<span class=aity><i></i><i></i><i></i></span>';scroll();
   const ctl=new AbortController();setBusy(ctl);banner('');
   const fail=msg=>{c.msgs.pop();c.msgs.push({r:'assistant',c:msg,err:1});persist();draw()};
-  let r;try{r=await fetch('/api/ai/chat',{method:'POST',signal:ctl.signal,headers:{'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')},body:JSON.stringify({messages:msgs})})}
+  let r;try{r=await fetch('/api/ai/chat',{method:'POST',signal:ctl.signal,headers:auth(),body:JSON.stringify({messages:msgs})})}
   catch(e){setBusy(null);if(e.name==='AbortError'){c.msgs.pop();persist();draw();return}fail('Couldn\'t reach Lumio AI. Check your connection and try again.');return}
   if(!r.ok||!/event-stream/.test(r.headers.get('content-type')||'')){setBusy(null);let d={},raw='';try{raw=await r.text();d=JSON.parse(raw)}catch(e){d={reason:raw.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,120)}}
    const why=d.reason?' Reason: '+d.reason:'';
    if(r.status==401){fail(d.error||'Sign in again to use Lumio AI.');return}
    fail((explain(d.code||r.status)||d.error||('Lumio AI isn\'t available right now ('+r.status+').'))+why);if(d.code==='no_ai'||r.status==404)avail=false;return}
-  const rd=r.body.getReader(),dec=new TextDecoder();let buf='',raf=0;
-  const paint=()=>{raf=0;box.innerHTML=md(aiActs(ai.c).txt)+'<span class=aicar></span>';const near=M.scrollHeight-M.scrollTop-M.clientHeight<120;if(near)scroll()};
+  const rd=r.body.getReader(),dec=new TextDecoder();let buf='',raf=0,shown='';
+  const paint=()=>{raf=0;const p=aiParse(ai.c,isAdmin());const html=md(p.txt)+(p.pending||p.cards.length?`<div class=aistat><span class=aity><i></i><i></i><i></i></span><span>${p.cards.some(x=>x.k=='code')||/lumio-code/.test(ai.c)?'Drafting a code proposal…':'Preparing an action…'}</span></div>`:'<span class=aicar></span>');if(html===shown)return;shown=html;box.innerHTML=html;const near=M.scrollHeight-M.scrollTop-M.clientHeight<160;if(near)scroll()};
   try{for(;;){const{value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let k;while((k=buf.indexOf('\n'))>=0){const line=buf.slice(0,k).trim();buf=buf.slice(k+1);if(!line.startsWith('data:'))continue;const p=line.slice(5).trim();if(!p||p==='[DONE]')continue;
-   let j;try{j=JSON.parse(p)}catch(e){continue}const tok=j.response||(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';if(tok){ai.c+=tok;if(!raf)raf=requestAnimationFrame(paint)}}}}
+   let j;try{j=JSON.parse(p)}catch(e){continue}if(typeof j.replace=='string'){ai.c=j.replace;if(!raf)raf=requestAnimationFrame(paint);continue}const tok=j.response||(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';if(tok){ai.c+=tok;if(!raf)raf=requestAnimationFrame(paint)}}}}
   catch(e){/* aborted or dropped: keep what arrived */}
-  setBusy(null);if(!aiActs(ai.c).txt&&!aiActs(ai.c).acts.length){fail('Lumio AI didn\'t send an answer. Try again.');return}persist();draw();
-  const last=(msgs[msgs.length-1]||{}).content||'',acts=aiActs(ai.c).acts;
-  if(acts.length==1&&/^\s*(please\s+)?(open|launch|start|play|run)\b/i.test(last)&&!/\b(a|an|some|any)\s+\w*\s*game/i.test(last))setTimeout(()=>aiRun(acts[0].k,acts[0].id),400)}
+  setBusy(null);const fin=aiParse(ai.c,isAdmin());if(!fin.txt&&!fin.acts.length&&!fin.cards.length){fail('Lumio AI didn\'t send an answer. Try again.');return}persist();draw();
+  const last=(msgs[msgs.length-1]||{}).content||'';
+  if(fin.acts.length==1&&!fin.cards.length&&/^\s*(please\s+)?(open|launch|start|play|run)\b/i.test(last)&&!/\b(a|an|some|any)\s+\w*\s*game/i.test(last))setTimeout(()=>aiRun(fin.acts[0].k,fin.acts[0].id),400)}
  const send=v=>{v=(v||'').trim();if(!v||busy)return;if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
   let c=cur();if(!c){c={id:Date.now().toString(36),title:v.slice(0,48),msgs:[],t:Date.now()};D.chats.unshift(c);D.cur=c.id}
-  c.msgs.push({r:'user',c:v});c.t=Date.now();T.value='';grow();persist();draw();ask()};
+  c.msgs.push({r:'user',c:v});c.t=Date.now();T.value='';grow();persist();draw();hist();ask()};
  $('.aif',b).onsubmit=e=>{e.preventDefault();if(busy){busy.abort();return}send(T.value)};
  T.onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('.aif',b).requestSubmit()}};
  T.oninput=grow;
- b.onclick=e=>{const t=e.target.closest('button,a[data-ext]');if(!t)return;const d=t.dataset;
+ T.onfocus=()=>setTimeout(scroll,300);
+ b.onclick=e=>{const t=e.target.closest('button,a[data-ext],.aiscrim');if(!t)return;const d=t.dataset;
   if('ext' in d){e.preventDefault();browseTo(t.getAttribute('href'));return}
-  if('sg' in d){send(AI_SUGGEST[+d.sg][1]);return}
-  if('new' in d){if(busy)busy.abort();D.cur=null;PN.hidden=true;persist();draw();banner('');T.focus();return}
-  if('hist' in d){PN.hidden=!PN.hidden;if(!PN.hidden)hist();return}
-  if('open' in d){D.cur=d.open;PN.hidden=true;persist();draw();return}
+  if('close' in d){drawer(false);return}
+  if('sg' in d){send(d.sg);return}
+  if('new' in d){if(busy)busy.abort();D.cur=null;drawer(false);persist();draw();hist();banner('');if(!matchMedia('(pointer:coarse)').matches)T.focus();return}
+  if('hist' in d){if(A.classList.contains('wide'))A.classList.toggle('sdoff');else drawer(!A.classList.contains('dopen'));hist();return}
+  if('open' in d){D.cur=d.open;drawer(false);persist();draw();hist();return}
   if('del' in d){D.chats=D.chats.filter(c=>c.id!=d.del);if(D.cur==d.del)D.cur=null;persist();hist();draw();return}
   if('clear' in d){if(confirm('Delete all saved Lumio AI chats on this device?')){D={chats:[],cur:null};persist();hist();draw()}return}
-  if('copy' in d){const c=cur();if(c&&c.msgs[+d.copy])copyText(aiActs(c.msgs[+d.copy].c).txt);return}
+  if('copy' in d){const c=cur();if(c&&c.msgs[+d.copy])copyText(aiParse(c.msgs[+d.copy].c,false).txt);return}
   if('act' in d){aiRun(d.act,d.id);return}
+  if('card' in d){const c=cur();if(!c||!isAdmin())return;const [mi,ci]=d.card.split(':').map(Number);runCard(c,mi,ci,'go' in d?'go':'pr' in d?'pr':'diff' in d?'diff':'no');return}
   if('cc' in d){copyText(t.closest('.aicb').querySelector('code').textContent);return}
-  if('retry' in d){const c=cur();if(c&&!busy){c.msgs=c.msgs.filter(m=>!m.err);persist();draw();ask()}return}
+  if('retry' in d){const c=cur();if(c&&!busy){c.msgs=c.msgs.filter(m=>!m.err);if(c.msgs.length&&c.msgs[c.msgs.length-1].r=='assistant')c.msgs.pop();persist();draw();ask()}return}
   if('ban' in d){if(AUTH.mode!='user')signOut();return}};
  b.closest('.win').onclose=()=>{if(busy)busy.abort()};
- draw();aiCatalog().then(()=>{if(!busy)draw()});
+ draw();hist();aiCatalog().then(()=>{if(!busy)draw()});
  if(AUTH.mode!='user')banner('Sign in to your Tuffs account to use Lumio AI. Guests can look around, but chats need an account.','Sign in');
  fetch('/api/ai/chat').then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{avail=!!d.available;if(!avail&&AUTH.mode=='user')banner('Lumio AI isn\'t switched on for this site yet.')}).catch(()=>{avail=false;if(AUTH.mode=='user')banner('Lumio AI isn\'t available on this site yet.')});
  setTimeout(()=>{if(innerWidth>700)T.focus()},80)}
@@ -592,7 +701,7 @@ function adminDock(){const d=document.getElementById('dock');if(!d)return;let b=
  else{if(b)b.remove();const w=typeof open_!='undefined'&&open_.admin;if(w){w.onclose&&w.onclose();w.remove();delete open_.admin}}}
 async function adminApi(path,body){const r=await fetch(path,{method:body?'POST':'GET',headers:{'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')},body:body?JSON.stringify(body):undefined});
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||('Request failed ('+r.status+')'));return d}
-function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site'];let tab='Overview',alive=true;
+function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','AI log'];let tab='Overview',alive=true;
  b.innerHTML=`<div class=adw><div class=adt role=tablist hidden>${TABS.map(t=>`<button type=button role=tab data-tab="${t}">${t}</button>`).join('')}</div><div class=adn role=status></div><div class=adb><p class=adm>Checking admin access…</p></div></div>`;
  const B=$('.adb',b),N=$('.adn',b);
  const note=(t,bad)=>{N.textContent=t||'';N.className='adn'+(bad?' bad':'')+(t?' on':'')};
@@ -622,6 +731,8 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site'];
   async Chat(){const room=($('.adroom',B)||{}).value||'All';const d=await adminApi('/api/admin/chat?room='+encodeURIComponent(room));
    return `<div class=adbar><select class=adroom aria-label="Chat room">${['All','General','Games','Random'].map(r=>`<option${r==room?' selected':''}>${r}</option>`).join('')}</select><button type=button class=btn data-do=refresh>Refresh</button><button type=button class="btn adx" data-do=cclear>Clear</button></div>`+
    ((d.messages||[]).map(m=>`<div class=adr><div class=adrh><b>#${esc(m.room)} · ${esc(m.user)}</b></div><p>${esc(m.text)}</p><small>${when(m.ts)}</small><div class=adacts>${act('Delete message','cdel',`data-id=${m.id}`,1)}</div></div>`).join('')||'<p class=adm>No messages.</p>')},
+  async 'AI log'(){const d=await adminApi('/api/ai/admin-action');const l=d.log||[];
+   return `<p class=adm>Every admin action Lumio AI ran, and every code proposal, newest first.</p>`+(l.map(x=>`<div class=adr><div class=adrh><b>${esc(x.action)}</b>${x.ok?'<i class=adp>Done</i>':'<i class="adp bad">Failed</i>'}</div><p>${esc(x.result||'')}</p><small>${esc(x.username)} · ${when(x.created_at)}</small></div>`).join('')||'<p class=adm>No AI admin actions yet.</p>')},
   async Site(){const s=await adminApi('/api/admin/settings');
    const tg=(k,l,d,on)=>`<div class=srow><span>${l}<small class=adm style="display:block">${d}</small></span><button type=button class="tg${on?' on':''}" data-st=${k} aria-pressed=${on} aria-label="${l}"></button></div>`;
    return `<h4 style="margin-top:0">Announcement</h4><p class=adm>Shown to everyone at the top of the screen. Leave empty for none.</p><input class=adann maxlength=200 placeholder="Announcement text" value="${esc(s.announcement||'')}" aria-label="Announcement">
@@ -713,7 +824,7 @@ h=setInterval(()=>{if(go)return;const n=[(sn[0][0]+d[0]+N)%N,(sn[0][1]+d[1]+N)%N
 x.fillStyle='#10151f';x.fillRect(0,0,320,320);x.fillStyle='#e55';x.fillRect(f[0]*S+3,f[1]*S+3,14,14);x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--a');sn.forEach(s=>x.fillRect(s[0]*S+1,s[1]*S+1,18,18));
 $('#sc',b).textContent=go?`Game over · ${sc} · tap or space to restart`:`Score ${sc} · arrow keys / swipe`},110);
 b.closest('.win').onclose=()=>{clearInterval(h);removeEventListener('keydown',kd)}}},
-ai:{n:'Lumio AI',i:IC.ai,w:640,h:560,r(b){lumioAI(b)}},
+ai:{n:'Lumio AI',i:IC.ai,w:980,h:660,r(b){lumioAI(b)}},
 admin:{n:'Admin',i:ic('<path d="M12 3l7.5 3v5.6c0 4.4-3.1 8.2-7.5 9.4-4.4-1.2-7.5-5-7.5-9.4V6z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/>'),w:900,h:680,hide:1,r(b){lumioAdmin(b)}},
 account:{n:'Account',i:IC.user,w:360,h:330,r(b){lumioAccount(b)}},
 settings:{n:'Settings',i:IC.gear,w:540,h:560,r(b){const seg=(k,opts)=>`<div class=row style="flex-wrap:wrap">${opts.map(o=>`<button class="btn ${st[k]==o[0]?'on':''}" data-k=${k} data-v=${o[0]}>${o[1]}</button>`).join('')}</div>`;
