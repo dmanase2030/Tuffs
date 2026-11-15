@@ -50,6 +50,13 @@ export async function onRequest(context) {
       return json(await history(db, c, Number(q.get("before")) || 0));
     }
     if (method === "GET" && route === "shop") return json(await shopState(db, user));
+    if (method === "GET" && route === "search") return await search(db, me, new URL(request.url).searchParams);
+    if (method === "GET" && route === "pins") {
+      const c = new URL(request.url).searchParams.get("c") || "";
+      if (!(await access(db, me, c))) return err("You can't see this channel.", 403);
+      const rows = (await db.prepare("SELECT * FROM lc_msgs WHERE chan = ?1 AND pinned_at IS NOT NULL AND deleted = 0 ORDER BY pinned_at DESC LIMIT 50").bind(c).all()).results || [];
+      return json({ c, ...(await shapeMsgs(db, rows)) });
+    }
     if (method === "GET" && route === "explore") {
       const rows = (await db.prepare("SELECT s.id, s.name, s.color, s.icon, s.descr, (SELECT COUNT(*) FROM lc_members m WHERE m.server_id = s.id) AS members FROM lc_servers s WHERE s.public = 1 ORDER BY members DESC LIMIT 50").all()).results || [];
       return json({ servers: rows.map(r => ({ id: r.id, n: r.name, c: r.color, icon: r.icon || "", desc: r.descr || "", members: r.members })) });
@@ -112,7 +119,7 @@ async function state(db, user, only) {
     const L = inList(ids.length);
     const [cats, chans, roles, mems, bans, invs, aud, reps] = await db.batch([
       db.prepare(`SELECT * FROM lc_cats WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
-      db.prepare(`SELECT id, server_id, cat_id, name, topic, pos, last_id, last_a, all_id FROM lc_chans WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
+      db.prepare(`SELECT id, server_id, cat_id, name, topic, pos, last_id, last_a, all_id, slow FROM lc_chans WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
       db.prepare(`SELECT * FROM lc_roles WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
       db.prepare(`SELECT m.* FROM lc_members m JOIN users u ON u.username_key = m.user_key WHERE m.server_id IN (${L}) AND u.is_banned = 0`).bind(...ids),
       db.prepare(`SELECT * FROM lc_bans WHERE server_id IN (${L}) ORDER BY ts DESC`).bind(...ids),
@@ -135,7 +142,7 @@ async function state(db, user, only) {
         id: s.id, n: s.name, c: s.color || "#7c5cff", icon: s.icon || "", desc: s.descr || "", ownerId: s.owner_key, ver: s.ver, public: !!s.public,
         set: { pause: !!s.pause, welcome: !!s.welcome, ai: !!s.ai, automod: !!s.automod },
         cats: (C[s.id] || []).map(k => ({ id: k.id, n: k.name, col: false })),
-        chans: (CH[s.id] || []).map(c => ({ id: c.id, n: c.name, cat: c.cat_id || null, topic: c.topic || "", last: c.last_id, lastA: c.last_a || "", all: c.all_id })),
+        chans: (CH[s.id] || []).map(c => ({ id: c.id, n: c.name, cat: c.cat_id || null, topic: c.topic || "", last: c.last_id, lastA: c.last_a || "", all: c.all_id, slow: c.slow || 0 })),
         roles: rl, members,
         bans: P.has("BAN") ? (B[s.id] || []).map(b => ({ uid: b.user_key, reason: b.reason || "", ts: b.ts, by: b.by_key })) : [],
         invites: (IV[s.id] || []).filter(i => P.has("MANAGE_SERVER") || i.by_key === me).map(i => ({ code: i.code, by: i.by_key, uses: i.uses, max: i.max_uses, exp: i.expires_at, ts: i.created_at })),
@@ -184,12 +191,42 @@ async function shapeMsgs(db, rows) {
   }
   const msgs = rows.map(r => r.deleted ? { id: r.id, del: 1, v: r.updated_at } : {
     id: r.id, ts: r.created_at, a: r.sys ? "" : r.author_key, m: r.text, sys: r.sys ? 1 : undefined, re: r.reply_to || undefined,
-    rq: r.reply_to ? (quotes[r.reply_to] || null) : undefined, ed: r.edited_at || undefined, att: r.att || undefined, rx: rx[r.id] || {}, v: r.updated_at,
+    rq: r.reply_to ? (quotes[r.reply_to] || null) : undefined, ed: r.edited_at || undefined, att: r.att || undefined, rx: rx[r.id] || {}, v: r.updated_at, pin: r.pinned_at || undefined,
   });
   const keys = new Set();
   for (const m of msgs) { if (m.a) keys.add(m.a); if (m.rq) keys.add(m.rq.a); for (const e in m.rx || {}) m.rx[e].forEach(k => keys.add(k)); }
   return { msgs, users: await usersByKeys(db, [...keys]) };
 }
+/* Search messages you're allowed to read: one channel/DM (c=) or every channel of a server you're in (sid=).
+ * "from:username" narrows to one author. Plain LIKE matching with escaped wildcards; 25 newest hits per page. */
+async function search(db, me, q) {
+  let raw = String(q.get("q") || "").slice(0, 100).trim(), from = null;
+  raw = raw.replace(/(^|\s)from:@?([\w.\-]{1,20})/i, (_, s, u) => { from = u.toLowerCase(); return s; }).trim();
+  if (!raw && !from) return err("Type something to search for.");
+  const before = Number(q.get("before")) || 0;
+  let chans = [];
+  const c = q.get("c"), sid = q.get("sid");
+  if (sid) {
+    const mem = await db.prepare("SELECT 1 FROM lc_members WHERE server_id = ?1 AND user_key = ?2").bind(sid, me).first();
+    if (!mem) return err("You can't search this server.", 403);
+    chans = ((await db.prepare("SELECT id FROM lc_chans WHERE server_id = ?1").bind(sid).all()).results || []).map(r => r.id);
+  } else if (c) {
+    if (!(await access(db, me, c))) return err("You can't search this conversation.", 403);
+    chans = [c];
+  } else return err("Pick a server or conversation to search.");
+  if (!chans.length) return json({ msgs: [], users: {}, more: false });
+  chans = chans.slice(0, 90);
+  const binds = [...chans], where = [`chan IN (${inList(chans.length)})`, "deleted = 0", "sys = 0"];
+  if (raw) { binds.push("%" + raw.replace(/[\\%_]/g, m => "\\" + m) + "%"); where.push(`text LIKE ?${binds.length} ESCAPE '\\'`); }
+  if (from) { binds.push(from); where.push(`author_key = ?${binds.length}`); }
+  if (before) { binds.push(before); where.push(`id < ?${binds.length}`); }
+  const rows = (await db.prepare(`SELECT * FROM lc_msgs WHERE ${where.join(" AND ")} ORDER BY id DESC LIMIT 26`).bind(...binds).all()).results || [];
+  const more = rows.length > 25;
+  const out = await shapeMsgs(db, rows.slice(0, 25));
+  out.msgs.forEach((m, i) => { m.c = rows[i].chan; });
+  return json({ ...out, more });
+}
+
 async function history(db, c, before) {
   const rows = ((await db.prepare(`SELECT * FROM lc_msgs WHERE chan = ?1 AND deleted = 0 ${before ? "AND id < ?2" : ""} ORDER BY id DESC LIMIT 50`).bind(...(before ? [c, before] : [c])).all()).results || []).reverse();
   const out = await shapeMsgs(db, rows);

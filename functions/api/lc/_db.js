@@ -57,6 +57,11 @@ export async function ensure(db) {
   if (READY) return;
   await db.batch([...SCHEMA, ...SHOP_SCHEMA].map(s => db.prepare(s)));
   try { await db.prepare("ALTER TABLE profiles ADD COLUMN banner TEXT").run(); } catch { /* already there */ }
+  // additive columns: pinned messages and per-channel slowmode
+  for (const s of ["ALTER TABLE lc_msgs ADD COLUMN pinned_at INTEGER", "ALTER TABLE lc_msgs ADD COLUMN pinned_by TEXT", "ALTER TABLE lc_chans ADD COLUMN slow INTEGER NOT NULL DEFAULT 0"]) {
+    try { await db.prepare(s).run(); } catch { /* already there */ }
+  }
+  try { await db.prepare("CREATE INDEX IF NOT EXISTS idx_lc_msgs_pins ON lc_msgs(chan, pinned_at)").run(); } catch { /* fine */ }
   await ensureLumio(db);
   READY = true;
 }

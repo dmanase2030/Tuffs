@@ -136,6 +136,8 @@ export const SHOP_SCHEMA = [
   "CREATE INDEX IF NOT EXISTS idx_lc_ledger_user ON lc_ledger(user_key, id)",
   "CREATE TABLE IF NOT EXISTS lc_owned (user_key TEXT NOT NULL, item_id TEXT NOT NULL, price INTEGER NOT NULL DEFAULT 0, ts INTEGER NOT NULL, PRIMARY KEY (user_key, item_id))",
   "CREATE TABLE IF NOT EXISTS lc_equip (user_key TEXT NOT NULL, slot TEXT NOT NULL, item_id TEXT NOT NULL, PRIMARY KEY (user_key, slot))",
+  "CREATE TABLE IF NOT EXISTS lc_payments (session_id TEXT PRIMARY KEY, user_key TEXT NOT NULL, pack TEXT NOT NULL, orbs INTEGER NOT NULL, cents INTEGER NOT NULL, status TEXT NOT NULL, event_id TEXT, created_at INTEGER NOT NULL, paid_at INTEGER)",
+  "CREATE INDEX IF NOT EXISTS idx_lc_payments_user ON lc_payments(user_key, created_at)",
   "CREATE TABLE IF NOT EXISTS lc_quests (user_key TEXT NOT NULL, day TEXT NOT NULL, q TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, claimed INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (user_key, day, q))",
 ];
 
@@ -148,3 +150,11 @@ export const QUESTS = [
 ];
 export const WELCOME_ORBS = 150;
 export const dayKey = (t = Date.now()) => new Date(t).toISOString().slice(0, 10); // UTC day
+
+/* Real-money Orb packs (USD cents). The server only ever charges and credits these numbers. */
+export const PACKS = [
+  { id: "orbs_s", orbs: 550, cents: 199, n: "Handful" },
+  { id: "orbs_m", orbs: 1500, cents: 499, n: "Pouch" },
+  { id: "orbs_l", orbs: 3500, cents: 999, n: "Chest" },
+  { id: "orbs_xl", orbs: 8000, cents: 1999, n: "Vault" },
+];

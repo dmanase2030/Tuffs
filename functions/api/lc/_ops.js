@@ -13,6 +13,8 @@ import { shopOp, questBump, ownsSticker, STICKER_RE } from "./_shop.js";
 import { botReply, automodCheck, summarize, wantsBot } from "./_ai.js";
 
 const NOPE = "You don't have permission to do that.";
+export const SLOW = [0, 5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 21600];
+const slowLabel = s => s < 60 ? s + "s" : s < 3600 ? s / 60 + "m" : s / 3600 + "h";
 const ok = (extra = {}) => json({ ok: true, ...extra });
 const name = async (db, k) => k === BOT ? "Lumio AI" : ((await db.prepare("SELECT COALESCE(p.display_name, u.username) AS n FROM users u LEFT JOIN profiles p ON p.username_key = u.username_key WHERE u.username_key = ?1").bind(k).first()) || {}).n || k;
 const roleOf = (ctx, rid) => ctx.roles.find(r => r.id === (rid === "everyone" ? "@" + ctx.srv.id : rid));
@@ -151,10 +153,13 @@ export async function runOp(context, user, body) {
       const set = {};
       if (body.n != null) { const n = slug(body.n); if (!n) return err("Channel name can't be empty."); if (n !== ch.name) set.name = n; }
       if (body.topic != null) set.topic = cleanLine(body.topic, 200);
+      if (body.slow != null) { const v = Number(body.slow); if (!SLOW.includes(v)) return err("Pick a slowmode from the list."); if (v !== (ch.slow || 0)) set.slow = v; }
       if (body.cat !== undefined) { let cat = body.cat ? String(body.cat) : null; if (cat && !(await db.prepare("SELECT 1 FROM lc_cats WHERE id = ?1 AND server_id = ?2").bind(cat, c.srv.id).first())) cat = null; set.cat_id = cat; }
       const ks = Object.keys(set); if (!ks.length) return ok();
       await db.prepare(`UPDATE lc_chans SET ${ks.map((k, i) => k + " = ?" + (i + 2)).join(", ")} WHERE id = ?1`).bind(ch.id, ...ks.map(k => set[k])).run();
-      if (set.name) await audit(db, c.srv.id, me, `renamed #${ch.name} to #${set.name}`); else await bump(db, c.srv.id);
+      if (set.name) await audit(db, c.srv.id, me, `renamed #${ch.name} to #${set.name}`);
+      else if (set.slow != null) await audit(db, c.srv.id, me, set.slow ? `set slowmode in #${ch.name} to ${slowLabel(set.slow)}` : `turned off slowmode in #${ch.name}`);
+      else await bump(db, c.srv.id);
       return ok();
     }
     case "deleteChannel": {
@@ -351,6 +356,20 @@ export async function runOp(context, user, body) {
       ]);
       return ok({ on: !has });
     }
+    case "pin": {
+      const m = await db.prepare("SELECT * FROM lc_msgs WHERE id = ?1 AND deleted = 0 AND sys = 0").bind(Number(body.mid) || 0).first();
+      const a = m && await access(db, me, m.chan); if (!a) return err("That message is gone.", 404);
+      if (a.ctx && !can(a.ctx, "MANAGE_MESSAGES", me)) return err("You need Manage Messages to pin or unpin.", 403);
+      const on = !!body.on;
+      if (on && !m.pinned_at) {
+        const n = await db.prepare("SELECT COUNT(*) AS n FROM lc_msgs WHERE chan = ?1 AND pinned_at IS NOT NULL AND deleted = 0").bind(m.chan).first();
+        if (n.n >= 50) return err("This channel already has 50 pins. Unpin one first.");
+      }
+      if (on === !!m.pinned_at) return ok({ pin: on });
+      await db.prepare("UPDATE lc_msgs SET pinned_at = ?1, pinned_by = ?2, updated_at = ?3 WHERE id = ?4").bind(on ? now : null, on ? me : null, now, m.id).run();
+      if (a.sid) await audit(db, a.sid, me, `${on ? "pinned" : "unpinned"} a message in #${a.chan.name}`);
+      return ok({ pin: on });
+    }
     case "read": {
       const ch = String(body.c || ""), id = Math.max(0, Number(body.id) || 0);
       if (!(await access(db, me, ch))) return ok();
@@ -449,6 +468,15 @@ async function sendMsg(context, user, body) {
   const a = await access(db, me, chan);
   if (!a) return err("You can't send messages here.", 403);
   if (a.ctx && !can(a.ctx, "SEND", me)) return err("You don't have permission to send messages in this channel.", 403);
+  if (a.ctx) {
+    // slowmode: one message per N seconds, except for people who manage the channel or its messages
+    const slow = ((await db.prepare("SELECT slow FROM lc_chans WHERE id = ?1").bind(chan).first()) || {}).slow || 0;
+    if (slow && !can(a.ctx, "MANAGE_CHANNELS", me) && !can(a.ctx, "MANAGE_MESSAGES", me)) {
+      const last = await db.prepare("SELECT created_at FROM lc_msgs WHERE chan = ?1 AND author_key = ?2 AND sys = 0 ORDER BY id DESC LIMIT 1").bind(chan, me).first();
+      const left = last ? Math.ceil((last.created_at + slow * 1000 - now) / 1000) : 0;
+      if (left > 0) return json({ error: `Slowmode is on. You can send another message in ${left} s.`, code: "slow", wait: left }, 429);
+    }
+  }
   if (a.dm) {
     const o = await db.prepare("SELECT is_banned FROM users WHERE username_key = ?1").bind(a.other).first();
     if (!o || o.is_banned) return err("You can't message this person.", 403);
@@ -461,7 +489,7 @@ async function sendMsg(context, user, body) {
   if (stk && !(await ownsSticker(db, me, stk[1]))) return err("Get that sticker pack in the Shop first.", 403, "sticker");
   if (att) {
     const img = await db.prepare("SELECT 1 FROM lc_images WHERE id = ?1 AND owner_key = ?2 AND kind = 'attach'").bind(att, me).first();
-    if (!img) att = null;
+    if (!img) return err("That image couldn't be attached. Try adding it again.", 400, "att");
   }
   let re = Number(body.re) || null;
   let reAuthor = null;
