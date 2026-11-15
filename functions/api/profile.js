@@ -1,6 +1,7 @@
 import { json, guard, readBody, sessionUser } from "./auth/_shared.js";
 import { clientIp, throttleCheck, throttleFail } from "./auth/_throttle.js";
 import { ensureProfiles, validateProfile, shapeProfile } from "./auth/_profile.js";
+import { dropImage } from "./lc/_db.js";
 
 /* GET  /api/profile            → your own profile
  * GET  /api/profile?u=<name>   → someone's public profile card
@@ -17,7 +18,7 @@ export async function onRequestGet(context) {
   const key = String(new URL(request.url).searchParams.get("u") || me.username_key).trim().toLowerCase().slice(0, 40);
   const u = await env.DB.prepare("SELECT username, username_key, created_at, is_admin, is_banned FROM users WHERE username_key = ?1").bind(key).first();
   if (!u || (u.is_banned && !me.is_admin)) return json({ error: "No such account." }, 404);
-  const p = await env.DB.prepare("SELECT display_name, avatar, bio, accent, updated_at FROM profiles WHERE username_key = ?1").bind(key).first();
+  const p = await env.DB.prepare("SELECT * FROM profiles WHERE username_key = ?1").bind(key).first();
   const out = shapeProfile(u, p);
   out.isMe = key === me.username_key;
   if (me.is_admin) out.isBanned = !!u.is_banned;
@@ -42,11 +43,18 @@ export async function onRequestPost(context) {
   const cols = Object.keys(v.row);
   const now = Date.now();
   await env.DB.prepare("INSERT OR IGNORE INTO profiles (username_key, updated_at) VALUES (?1, ?2)").bind(me.username_key, now).run();
+  const old = ("avatar" in v.row || "banner" in v.row) ? await env.DB.prepare("SELECT * FROM profiles WHERE username_key = ?1").bind(me.username_key).first() : null;
   if (cols.length) {
     await env.DB.prepare(`UPDATE profiles SET ${cols.map((c, i) => `${c} = ?${i + 1}`).join(", ")}, updated_at = ?${cols.length + 1} WHERE username_key = ?${cols.length + 2}`)
       .bind(...cols.map(c => v.row[c]), now, me.username_key).run();
   }
+  if (old) {
+    const gone = [];
+    if ("avatar" in v.row && /^img:/.test(old.avatar || "") && v.row.avatar !== old.avatar) gone.push(old.avatar.slice(4));
+    if ("banner" in v.row && old.banner) gone.push(old.banner);
+    for (const id of gone) { try { await dropImage(env.DB, id); } catch { /* chat tables not there */ } }
+  }
   const u = await env.DB.prepare("SELECT username, username_key, created_at, is_admin FROM users WHERE username_key = ?1").bind(me.username_key).first();
-  const p = await env.DB.prepare("SELECT display_name, avatar, bio, accent, updated_at FROM profiles WHERE username_key = ?1").bind(me.username_key).first();
+  const p = await env.DB.prepare("SELECT * FROM profiles WHERE username_key = ?1").bind(me.username_key).first();
   return json({ profile: { ...shapeProfile(u, p), isMe: true } });
 }

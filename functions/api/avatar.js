@@ -1,4 +1,5 @@
 import { ensureProfiles } from "./auth/_profile.js";
+import { serveImage } from "./lc/_db.js";
 
 /* GET /api/avatar?u=<name>&v=<version> → the uploaded profile picture as an image.
  * Public so <img> tags can load it; only real images that passed the upload
@@ -13,6 +14,8 @@ export async function onRequestGet(context) {
   const row = await env.DB.prepare(
     "SELECT p.avatar, p.updated_at FROM profiles p JOIN users u ON u.username_key = p.username_key WHERE p.username_key = ?1 AND u.is_banned = 0"
   ).bind(key).first();
+  // pictures uploaded through Lumio Chat (GIF/PNG/JPEG/WebP, bytes kept exactly as uploaded)
+  if (row && /^img:i[a-z0-9]{6,24}$/.test(row.avatar || "")) return serveImage(context, row.avatar.slice(4));
   const m = row && /^data:(image\/(?:png|jpeg|webp));base64,(.+)$/.exec(row.avatar || "");
   if (!m) return new Response("Not found", { status: 404, headers: { "cache-control": "no-store" } });
   const bin = atob(m[2]), bytes = new Uint8Array(bin.length);

@@ -7,10 +7,15 @@ export const ACCENTS = ["#f2a54a", "#ff7a59", "#ff5d8f", "#b07cff", "#5b8cff", "
 export const MAX_AVATAR = 64000; // characters of data URL (~46 KB image)
 export const MAX_BIO = 160, MAX_NAME = 24;
 
+let profilesReady = false;
 export async function ensureProfiles(db) {
+  if (profilesReady) return;
   await db.prepare(
     "CREATE TABLE IF NOT EXISTS profiles (username_key TEXT PRIMARY KEY, display_name TEXT, avatar TEXT, bio TEXT, accent TEXT, updated_at INTEGER NOT NULL DEFAULT 0)"
   ).run();
+  // banner (an uploaded image id served from /api/lc/img/<id>) was added with Lumio Chat
+  try { await db.prepare("ALTER TABLE profiles ADD COLUMN banner TEXT").run(); } catch { /* already there */ }
+  profilesReady = true;
 }
 
 const clean = (v, max) => String(v == null ? "" : v)
@@ -51,6 +56,10 @@ export function validateProfile(body) {
     if (!ACCENTS.includes(a)) return { error: "Pick one of the accent colors." };
     row.accent = a;
   }
+  if ("banner" in body) {
+    if (body.banner !== null && body.banner !== "") return { error: "Upload a banner from Lumio Chat settings." };
+    row.banner = null;
+  }
   if ("avatar" in body) {
     const v = body.avatar;
     if (v === null || v === "") row.avatar = null;
@@ -60,14 +69,16 @@ export function validateProfile(body) {
   return { row };
 }
 
-/* Public shape. `av` is a preset id, "img" for an uploaded picture, or null. */
+/* Public shape. `av` is a preset id, "img" for an uploaded picture (old data URL
+ * or "img:<id>" uploaded through Lumio Chat, GIFs included), or null. */
 export function shapeProfile(u, p) {
   const avatar = p && p.avatar;
   return {
     username: u.username,
     key: u.username_key,
     displayName: (p && p.display_name) || u.username,
-    av: avatar ? (avatar.startsWith("data:") ? "img" : avatar) : null,
+    av: avatar ? (avatar.startsWith("data:") || avatar.startsWith("img:") ? "img" : avatar) : null,
+    banner: p && p.banner ? "/api/lc/img/" + p.banner : "",
     avv: (p && p.updated_at) || 0,
     bio: (p && p.bio) || "",
     accent: (p && p.accent) || null,
