@@ -56,7 +56,7 @@ function lineDiff(a, b, ctx = 2) {
 async function plan(edits, env) {
   if (!Array.isArray(edits) || !edits.length || edits.length > 8) throw new Error("A proposal needs 1–8 edits.");
   const files = new Map();
-  for (const e of edits) {
+  for (let e of edits) {
     const path = String((e && e.path) || "").trim();
     if (!PATH_RE.test(path) || path.includes("..") || path.includes("//")) throw new Error("Proposals can only change files under public/ or functions/ (got " + (path || "no path") + ").");
     if (!files.has(path)) { const old = await current(path, env); files.set(path, { path, old, now: old }); }
@@ -66,6 +66,11 @@ async function plan(edits, env) {
       f.now = e.content;
     } else if (typeof e.find === "string" && e.find && typeof e.replace === "string") {
       if (f.now == null) throw new Error(path + " doesn't exist yet. Give the full content for a new file.");
+      // Models often add or drop blank lines / trailing spaces around the snippet.
+      if (f.now.split(e.find).length !== 2) {
+        const t = e.find.replace(/^\s*\n/, "").replace(/\s+$/, "");
+        if (t && f.now.split(t).length === 2) { e = { ...e, find: t, replace: e.replace.replace(/^\s*\n/, "").replace(/\s+$/, "") }; }
+      }
       const n = f.now.split(e.find).length - 1;
       if (n !== 1) throw new Error(n ? `The text to change appears ${n} times in ${path}; it must be unique.` : `Couldn't find the text to change in ${path}. Paste the current code so I can match it exactly.`);
       f.now = f.now.replace(e.find, () => e.replace);

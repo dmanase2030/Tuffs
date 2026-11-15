@@ -21,10 +21,12 @@ import { loadGames, systemPrompt, actionFilter, promptGuard, repoFiles } from ".
  * (then a 10 min pause) and 60 / hour per IP (then 30 min).
  */
 
-const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
-const ADMIN_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
-const FALLBACK_MODELS = ["@cf/meta/llama-3.1-8b-instruct", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"];
-const MAX_MESSAGES = 20, MAX_CHARS = 4000;
+// One model for everyone (chat and admin proposals), on Workers AI's free daily
+// allowance. If it errors for any reason (daily quota 4006, capacity, retired
+// model) the next one is tried.
+const DEFAULT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+const FALLBACK_MODELS = ["@cf/meta/llama-3.1-8b-instruct-fast", "@cf/meta/llama-3.1-8b-instruct"];
+const MAX_MESSAGES = 20, MAX_CHARS = 4000, ADMIN_MAX_CHARS = 12000;
 const USER_MAX = 20, USER_WINDOW = 10 * 60 * 1000, USER_LOCK = 10 * 60 * 1000;
 const IP_MAX = 60, IP_WINDOW = 60 * 60 * 1000, IP_LOCK = 30 * 60 * 1000;
 
@@ -55,7 +57,7 @@ export async function onRequestPost(context) {
   const messages = raw
     .filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim())
     .slice(-MAX_MESSAGES)
-    .map(m => ({ role: m.role, content: m.content.slice(0, MAX_CHARS) }));
+    .map(m => ({ role: m.role, content: m.content.slice(0, user.is_admin ? ADMIN_MAX_CHARS : MAX_CHARS) }));
   if (!messages.length || messages[messages.length - 1].role !== "user") {
     return json({ error: "Send a message first." }, 400);
   }
@@ -76,9 +78,9 @@ export async function onRequestPost(context) {
   const games = await loadGames(request, env);
   const admin = !!user.is_admin;
   const sp = systemPrompt(games, messages[messages.length - 1].content, user.username, { admin, files: admin ? await repoFiles(env) : [] });
-  const tried = [], input = { messages: [{ role: "system", content: sp.text }, ...messages], stream: true, max_tokens: admin ? 2048 : 1024 };
-  // Admins get the larger model first: it follows the action/proposal formats more reliably.
-  const order = admin ? [ADMIN_MODEL, model(env), ...FALLBACK_MODELS] : [model(env), ...FALLBACK_MODELS];
+  const tried = [], input = { messages: [{ role: "system", content: sp.text }, ...messages], stream: true, max_tokens: admin ? 4096 : 1024 };
+  // Admins get room for whole files in a code proposal.
+  const order = [model(env), ...FALLBACK_MODELS];
   let stream = null, reason = "";
   for (const m of [...new Set(order)]) {
     try {

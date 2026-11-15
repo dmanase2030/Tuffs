@@ -618,10 +618,60 @@ function mdBlocks(t){const L=t.split('\n');let h='',i=0;
  return h}
 function md(src){return String(src||'').split('```').map((p,i)=>{if(!(i%2))return mdBlocks(p);const nl=p.indexOf('\n');let lang=nl>=0?p.slice(0,nl).trim():'',code=nl>=0?p.slice(nl+1):p;if(!/^[\w+#.-]{0,20}$/.test(lang)){lang='';code=p}code=code.replace(/\n$/,'');return `<div class=aicb><div class=aicbh><span>${esc(lang||'code')}</span><button type=button data-cc>Copy</button></div><pre><code>${esc(code)}</code></pre></div>`}).join('')}
 function copyText(t){const ok=()=>toast('Copied');if(navigator.clipboard&&isSecureContext)return navigator.clipboard.writeText(t).then(ok).catch(()=>fb());fb();function fb(){const x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;opacity:0';document.body.append(x);x.select();try{document.execCommand('copy');ok()}catch(e){toast('Copy failed')}x.remove()}}
-/* Parse a reply: [[open:...]] tags → buttons, ```lumio-admin / ```lumio-code blocks → cards (admins only). */
+/* Admin action / code proposal parsing.
+ * Code proposals use a plain-text block so file contents never sit inside JSON:
+ *   @@@lumio-code
+ *   title: …
+ *   summary: …
+ *   @@@file public/x.html      (full content of a new file follows)
+ *   @@@find public/y.js        (exact existing text follows)
+ *   @@@replace                 (new text follows)
+ *   @@@end
+ * Older ```lumio-code {json}``` blocks and ```lumio-admin {json}``` still work and
+ * go through a forgiving JSON reader (fences, smart quotes, raw newlines, stray
+ * quotes from HTML, trailing commas, text around the object). */
+const AI_MK=/^[ \t]*@@@[ \t]*(lumio-code|file|find|replace|end)\b[ \t]*(.*?)[ \t]*$/i;
+function aiJSON(src){let s=String(src||'').trim().replace(/^```[\w-]*[ \t]*\n?/,'').replace(/\n?```\s*$/,'').trim().replace(/[\u201c\u201d]/g,'"');
+ const tryP=t=>{try{const v=JSON.parse(t);return v&&typeof v=='object'&&!Array.isArray(v)?v:null}catch(e){return null}};
+ let v=tryP(s);if(v)return v;
+ const a=s.indexOf('{');if(a<0)return null;
+ // Walk the text once, rebuilding it as valid JSON where the intent is clear.
+ let o='',depth=0,inS=false,end=-1;
+ for(let i=a;i<s.length;i++){const c=s[i];
+  if(inS){
+   if(c=='\\'){const n=s[i+1];if(n!==undefined&&'"\\/bfnrtu'.includes(n)&&!(n=='u'&&!/^[0-9a-fA-F]{4}$/.test(s.slice(i+2,i+6)))){o+=c+n;i++}else o+='\\\\';continue}
+   if(c=='"'){let j=i+1;while(j<s.length&&' \t\r\n'.includes(s[j]))j++;const nx=s[j];if(nx===undefined||',}]:'.includes(nx)){inS=false;o+=c}else o+='\\"';continue}
+   if(c=='\n'){o+='\\n';continue}if(c=='\r')continue;if(c=='\t'){o+='\\t';continue}
+   if(c<' ')continue;o+=c;continue}
+  if(c=='"'){inS=true;o+=c;continue}
+  if(c=='{'||c=='[')depth++;
+  if(c=='}'||c==']'){depth--;o=o.replace(/,\s*$/,'');o+=c;if(!depth){end=i;break}continue}
+  o+=c}
+ return end<0?null:tryP(o)}
+function aiCodeText(body){const L=String(body||'').replace(/\r\n?/g,'\n').split('\n');const d={title:'',summary:'',edits:[]};let sec=null,buf=[],ended=false,head=true,sum=[];
+ const unfence=b=>{let x=b.slice();while(x.length&&!x[0].trim())x.shift();while(x.length&&!x[x.length-1].trim())x.pop();if(x.length>=2&&/^```[\w+#.-]*\s*$/.test(x[0])&&/^```\s*$/.test(x[x.length-1]))x=x.slice(1,-1);return x.join('\n')};
+ const close=()=>{if(!sec)return;const t=unfence(buf);if(sec.k=='file')d.edits.push({path:sec.p,content:t+(t?'\n':'')});else if(sec.k=='find')d.edits.push({path:sec.p,find:t,replace:null});else if(sec.k=='replace'){const e=[...d.edits].reverse().find(e=>e.replace===null);if(e)e.replace=t}sec=null;buf=[]};
+ for(const l of L){const m=l.match(AI_MK);
+  if(m){const k=m[1].toLowerCase();if(k=='lumio-code')continue;close();head=false;if(k=='end'){ended=true;break}sec={k,p:m[2].replace(/^path\s*[:=]\s*/i,'').replace(/^["'`]|["'`]$/g,'').trim()};continue}
+  if(head){const h=l.match(/^\s*(title|summary)\s*:\s*(.*)$/i);if(h){if(h[1].toLowerCase()=='title')d.title=h[2].trim();else sum.push(h[2])}else if(sum.length&&l.trim())sum.push(l.trim());continue}
+  if(sec)buf.push(l)}
+ if(!ended)close();d.summary=sum.join(' ').trim();
+ const bad=d.edits.find(e=>!e.path||e.replace===null);
+ if(!ended)return {data:null,err:'The proposal was cut off before it finished.',cut:1};
+ if(!d.edits.length)return {data:null,err:'The proposal had no file changes.'};
+ if(bad)return {data:null,err:bad.path?'A change in '+bad.path+' had text to find but no replacement.':'A change was missing its file path.'};
+ if(!d.title)d.title=d.summary.slice(0,70)||'Code change from Lumio AI';
+ return {data:d,err:''}}
+/* Parse a reply: [[open:...]] tags → buttons, admin actions and code proposals → cards (admins only). */
 function aiParse(t,admin){const acts=[],seen=new Set(),cards=[];let pending=false;
- let txt=String(t||'').replace(/```lumio-(admin|code)[^\n]*\n?([\s\S]*?)```/g,(m,k,body)=>{let data=null,err='';try{data=JSON.parse(body.trim())}catch(e){err='The action was not valid JSON.'}if(admin)cards.push({k,data,err});return '\n'});
- txt=txt.replace(/```lumio-(admin|code)[\s\S]*$/,()=>{pending=admin;return ''});
+ let txt=String(t||'');
+ // Plain-text proposals, optionally wrapped in a ``` fence by the model.
+ txt=txt.replace(/(?:^|\n)(?:[ \t]*```[\w-]*[ \t]*\n)?[ \t]*@@@[ \t]*lumio-code\b[^\n]*\n?([\s\S]*?)(?:(\n[ \t]*@@@[ \t]*end\b[^\n]*)(?:\n[ \t]*```[ \t]*(?=\n|$))?|$)/gi,(m,body,endl)=>{const r=aiCodeText(body+(endl||''));if(r.cut)pending=admin;if(admin)cards.push({k:'code',data:r.data,err:r.err,cut:r.cut});return '\n'});
+ txt=txt.replace(/```lumio-(admin|code)[^\n]*\n?([\s\S]*?)```/g,(m,k,body)=>{let data=null,err='';
+  if(k=='code'&&AI_MK.test(body.split('\n').find(l=>l.trim())||'')||/\n[ \t]*@@@[ \t]*(file|find)\b/i.test(body)){const r=aiCodeText(body.includes('@@@end')?body:body+'\n@@@end');data=r.data;err=r.err}
+  else{data=aiJSON(body);if(!data)err=k=='code'?'The proposal text was garbled (often quotes or line breaks inside the file contents).':'The action wasn\'t in a format I could read.'}
+  if(admin)cards.push({k,data,err});return '\n'});
+ txt=txt.replace(/```lumio-(admin|code)[\s\S]*$/,(m,k)=>{pending=admin;if(admin)cards.push({k,data:null,err:'The '+(k=='code'?'proposal':'action')+' was cut off before it finished.',cut:1});return ''});
  txt=txt.replace(/\[\[\s*open\s*:\s*(game|app)\s*:\s*([^\[\]\n]{1,80}?)\s*\]\]/gi,(m,k,id)=>{k=k.toLowerCase();const key=k+':'+id;if(!seen.has(key)&&acts.length<3){seen.add(key);acts.push({k,id})}return ''}).replace(/\[\[[^\]\n]{0,90}\]?$/,'').replace(/\n{3,}/g,'\n\n').trim();
  return {txt,pending,cards,acts:acts.map(a=>{if(a.k=='app')return AI_APPS.includes(a.id)&&APPS[a.id]?{...a,label:'Open '+APPS[a.id].n}:null;
   if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
@@ -661,7 +711,7 @@ function lumioAI(b){
  const drawer=v=>A.classList.toggle('dopen',v);
  // ---- cards ----
  const cardHtml=(m,mi,c,ci)=>{const st=(m.cs||{})[ci]||{};
-  if(c.err||!c.data)return `<div class="aicard bad"><b>Couldn't read this action</b><p>${esc(c.err||'Missing details.')}</p></div>`;
+  if(c.err||!c.data)return `<div class="aicard bad"><b>Couldn't read this ${c.k=='code'?'proposal':'action'}</b><p>${esc(c.err||'Missing details.')}</p>${st.s=='asked'?'<p class=aicm>Asked Lumio AI to send it again.</p>':`<div class=aicbtn><button type=button class=btn data-fix="${mi}:${ci}">Ask Lumio AI to send it again</button></div>`}</div>`;
   if(c.k=='admin'){const d=c.data,lab=AI_ADMIN_LABEL[d.action];if(!lab)return `<div class="aicard bad"><b>Unknown admin action</b><p>${esc(String(d.action||''))}</p></div>`;
    const rows=aiAdminDesc(d).map(r=>`<div class=aikv><span>${esc(r[0])}</span><b>${esc(String(r[1]))}</b></div>`).join('');
    const foot=st.s=='done'?`<div class="aistat ok">${ic('<path d="M5 12.5l4.5 4.5L19 7.5"/>')}<span>${esc(st.msg)}</span></div>${st.stats?`<div class=aistats>${st.stats.map(x=>`<div><b>${x[1]}</b><small>${esc(x[0])}</small></div>`).join('')}</div>`:''}`
@@ -749,6 +799,8 @@ function lumioAI(b){
   if('clear' in d){if(confirm('Delete all saved Lumio AI chats on this device?')){D={chats:[],cur:null};persist();hist();draw()}return}
   if('copy' in d){const c=cur();if(c&&c.msgs[+d.copy])copyText(aiParse(c.msgs[+d.copy].c,false).txt);return}
   if('act' in d){aiRun(d.act,d.id);return}
+  if('fix' in d){const c=cur();if(!c||!isAdmin()||busy)return;const [mi,ci]=d.fix.split(':').map(Number);const m=c.msgs[mi];const cd=m&&aiParse(m.c,true).cards[ci];if(!cd)return;m.cs=m.cs||{};m.cs[ci]={s:'asked'};persist();
+   send(cd.k=='code'?(cd.cut?'Your code proposal was cut off. Send it again in full, keeping the changes as small as you can. Use the @@@lumio-code format exactly: file text goes as plain lines after @@@file, @@@find and @@@replace, and finish with @@@end. No JSON.':'I couldn\'t read your code proposal ('+cd.err+') Send it again using the @@@lumio-code format exactly: file text goes as plain lines after @@@file, @@@find and @@@replace, and finish with @@@end. No JSON.'):'I couldn\'t read that admin action. Send it again as one valid JSON object in a lumio-admin block.');return}
   if('card' in d){const c=cur();if(!c||!isAdmin())return;const [mi,ci]=d.card.split(':').map(Number);runCard(c,mi,ci,'go' in d?'go':'pr' in d?'pr':'diff' in d?'diff':'no');return}
   if('cc' in d){copyText(t.closest('.aicb').querySelector('code').textContent);return}
   if('retry' in d){const c=cur();if(c&&!busy){c.msgs=c.msgs.filter(m=>!m.err);if(c.msgs.length&&c.msgs[c.msgs.length-1].r=='assistant')c.msgs.pop();persist();draw();ask()}return}
