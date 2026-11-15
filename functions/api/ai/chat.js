@@ -17,7 +17,8 @@ import { clientIp, throttleCheck, throttleFail } from "../auth/_throttle.js";
  * (then a 10 min pause) and 60 / hour per IP (then 30 min).
  */
 
-const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct";
+const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
+const FALLBACK_MODELS = ["@cf/meta/llama-3.1-8b-instruct", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"];
 const SYSTEM =
   "You are Lumio AI, the assistant built into the Lumio launcher on the Tuffs site. " +
   "Be friendly, clear and concise. Format answers in Markdown: short paragraphs, bullet or numbered lists, " +
@@ -67,15 +68,23 @@ export async function onRequestPost(context) {
   await throttleFail(env.DB, ukey, USER_MAX, USER_WINDOW, USER_LOCK);
   await throttleFail(env.DB, ikey, IP_MAX, IP_WINDOW, IP_LOCK);
 
-  let stream;
-  try {
-    stream = await env.AI.run(model(env), {
-      messages: [{ role: "system", content: SYSTEM }, ...messages],
-      stream: true,
-      max_tokens: 1024,
-    });
-  } catch (e) {
-    return json({ error: "Lumio AI couldn't answer right now. Try again in a moment.", code: "upstream" }, 502);
+  // Try the configured model first, then current fallbacks, so one retired or
+  // overloaded model doesn't take the whole app down.
+  const tried = [], input = { messages: [{ role: "system", content: SYSTEM }, ...messages], stream: true, max_tokens: 1024 };
+  let stream = null, reason = "";
+  for (const m of [...new Set([model(env), ...FALLBACK_MODELS])]) {
+    try {
+      stream = await env.AI.run(m, input);
+      if (stream) break;
+    } catch (e) {
+      reason = String((e && e.message) || e).slice(0, 240);
+      tried.push(m);
+      console.error("Lumio AI: env.AI.run failed", m, reason);
+    }
+  }
+  if (!stream) {
+    // 503, not 502: Cloudflare swaps a Function's 502 body for its own "error code: 502" page.
+    return json({ error: "Lumio AI couldn't answer right now. Try again in a moment.", code: "upstream", reason, tried }, 503);
   }
   return new Response(stream, {
     headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" },

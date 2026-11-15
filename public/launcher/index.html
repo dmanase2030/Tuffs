@@ -404,17 +404,23 @@ function lumioBrowser(b){
  <div class=lbh><div class=lbg>${IC.globe}</div><p class=lbs>Search with Bing or type an address. Pages load through the Tuffs proxy.</p><div class=lbq>${QUICK.map(q=>`<button class=btn data-u="${esc(q[1])}">${esc(q[0])}</button>`).join('')}</div><p class=lbn>Simple sites work best. Logins, videos and heavy apps often don't load through this proxy.</p></div>
  <div class="lbh lbx" hidden></div><iframe class=lbi hidden allow="fullscreen;autoplay;clipboard-write" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-pointer-lock allow-presentation"></iframe></div>`;
  const fr=$('.lbi',b),home=$('.lbh',b),fail=$('.lbx',b),inp=$('input',b);let url='';
- const showFail=()=>{fr.hidden=true;fail.hidden=false;fail.innerHTML=`<b style="display:block;margin-bottom:8px">Couldn't load that page.</b><p class=lbs>The proxy couldn't open it. Some sites block proxies.</p>`};
+ const showFail=st=>{fr.hidden=true;fail.hidden=false;fail.innerHTML=b.failMsg?b.failMsg(url,st):`<b style="display:block;margin-bottom:8px">Couldn't load that page.</b><p class=lbs>The proxy couldn't open it. Some sites block proxies.</p>`};
  const nav=v=>{const u=parseAddr(v);if(!u)return;url=u;inp.value=u;home.hidden=true;fail.hidden=true;fr.hidden=false;const src=proxify(u);fr.src=src;
-  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);fetch(src,{signal:ctl.signal,method:'GET'}).then(r=>{clearTimeout(tm);if(!r.ok&&url===u)showFail()}).catch(()=>{clearTimeout(tm)})};
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);fetch(src,{signal:ctl.signal,method:'GET'}).then(r=>{clearTimeout(tm);if(!r.ok&&url===u)showFail(r.status)}).catch(()=>{clearTimeout(tm)})};
  fr.onload=()=>{try{const l=fr.contentWindow.location,real=unproxy(l.pathname);if(real){url=real+(/^https?%3A/i.test(l.pathname.slice(PROXY.length))&&real.indexOf('?')>=0?'':l.search);if(document.activeElement!==inp)inp.value=url}}catch(e){}};
  b.nav=nav;
  $('.lbf',b).onsubmit=e=>{e.preventDefault();inp.blur();nav(inp.value)};
  inp.onfocus=()=>inp.select();
- b.onclick=e=>{const q=e.target.closest('[data-u]');if(q){nav(q.dataset.u);return}const t=e.target.closest('[data-b]');if(!t)return;const a=t.dataset.b;
+ b.onclick=e=>{if(b.extra&&b.extra(e))return;const q=e.target.closest('[data-u]');if(q){nav(q.dataset.u);return}const t=e.target.closest('[data-b]');if(!t)return;const a=t.dataset.b;
   try{if(a=='back'){if(fr.hidden)return;fr.contentWindow.history.back()}else if(a=='fwd')fr.contentWindow.history.forward();else if(a=='re'){if(url)nav(url)}else if(a=='ext'){if(url)newTab(proxify(url))}}catch(_){}};
  setTimeout(()=>{if(innerWidth>700)inp.focus()},60)}
 
+/* ---- Manga app: toonkotsu.com inside Lumio through the /service/ proxy ---- */
+const MANGA='https://toonkotsu.com';
+function lumioManga(b){lumioBrowser(b);
+ b.failMsg=(u,st)=>`<div class=lbg>${IC.book}</div><b style="display:block;margin-bottom:8px">toonkotsu.com didn't load through the proxy.</b><p class=lbs>${st==403?'The site answered with Cloudflare\'s bot check (“Just a moment…”). That check can\'t be completed through the Tuffs proxy, so the reader can\'t open here.':'The proxy couldn\'t open it'+(st?' (error '+st+')':'')+'.'}</p><div class=lbq><button class=btn data-direct>Open toonkotsu.com in a new tab</button><button class=btn data-u="${MANGA}">Try again</button></div>`;
+ b.extra=e=>{if(e.target.closest('[data-direct]')){newTab(MANGA);return true}return false};
+ b.nav(MANGA)}
 /* ---- Games app: the real Tuffs catalog (public/data/games.json + admin overrides from /api/games) ---- */
 let CAT_P=null;
 function loadCatalog(){if(CAT_P)return CAT_P;CAT_P=Promise.all([fetch('/data/games.json').then(r=>{if(!r.ok)throw new Error('games.json '+r.status);return r.json()}),fetch('/api/games').then(r=>r.ok?r.json():{}).catch(()=>({}))]).then(([d,o])=>{const ov=(o&&o.overrides)||{};return (d.games||[]).filter(g=>g&&g.id&&!(ov[g.id]&&ov[g.id].hidden)).map(g=>({id:g.id,title:(ov[g.id]&&ov[g.id].title)||g.title||g.id,cat:g.category||'Games',url:g.external?g.entry:'/'+g.entry,ext:!!g.external,thumb:g.thumb?'/'+g.thumb:''})).sort((a,b)=>a.title.localeCompare(b.title,undefined,{numeric:true,sensitivity:'base'}))}).catch(e=>{CAT_P=null;throw e});return CAT_P}
@@ -493,13 +499,14 @@ function lumioAI(b){
   const fail=msg=>{c.msgs.pop();c.msgs.push({r:'assistant',c:msg,err:1});persist();draw()};
   let r;try{r=await fetch('/api/ai/chat',{method:'POST',signal:ctl.signal,headers:{'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')},body:JSON.stringify({messages:msgs})})}
   catch(e){setBusy(null);if(e.name==='AbortError'){c.msgs.pop();persist();draw();return}fail('Couldn\'t reach Lumio AI. Check your connection and try again.');return}
-  if(!r.ok||!/event-stream/.test(r.headers.get('content-type')||'')){setBusy(null);let d={};try{d=await r.json()}catch(e){}
+  if(!r.ok||!/event-stream/.test(r.headers.get('content-type')||'')){setBusy(null);let d={},raw='';try{raw=await r.text();d=JSON.parse(raw)}catch(e){d={reason:raw.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,120)}}
+   const why=d.reason?' Reason: '+d.reason:'';
    if(r.status==401){fail(d.error||'Sign in again to use Lumio AI.');return}
-   fail(explain(d.code||r.status)||d.error||('Lumio AI isn\'t available right now ('+r.status+').'));if(d.code==='no_ai'||r.status==404)avail=false;return}
+   fail((explain(d.code||r.status)||d.error||('Lumio AI isn\'t available right now ('+r.status+').'))+why);if(d.code==='no_ai'||r.status==404)avail=false;return}
   const rd=r.body.getReader(),dec=new TextDecoder();let buf='',raf=0;
   const paint=()=>{raf=0;box.innerHTML=md(ai.c)+'<span class=aicar></span>';const near=M.scrollHeight-M.scrollTop-M.clientHeight<120;if(near)scroll()};
   try{for(;;){const{value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let k;while((k=buf.indexOf('\n'))>=0){const line=buf.slice(0,k).trim();buf=buf.slice(k+1);if(!line.startsWith('data:'))continue;const p=line.slice(5).trim();if(!p||p==='[DONE]')continue;
-   let j;try{j=JSON.parse(p)}catch(e){continue}const tok=j.response!=null?j.response:(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';if(tok){ai.c+=tok;if(!raf)raf=requestAnimationFrame(paint)}}}}
+   let j;try{j=JSON.parse(p)}catch(e){continue}const tok=j.response||(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';if(tok){ai.c+=tok;if(!raf)raf=requestAnimationFrame(paint)}}}}
   catch(e){/* aborted or dropped: keep what arrived */}
   setBusy(null);if(!ai.c.trim()){fail('Lumio AI didn\'t send an answer. Try again.');return}persist();draw()}
  const send=v=>{v=(v||'').trim();if(!v||busy)return;if(AUTH.mode!='user'){banner('Sign in to your Tuffs account to use Lumio AI.','Sign in');return}
