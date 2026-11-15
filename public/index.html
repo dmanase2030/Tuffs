@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name=lumio-build content=e70b15505280><meta charset="utf-8">
+<html lang="en"><head><meta name=lumio-build content=ab8f965023be><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lumio</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
@@ -98,12 +98,7 @@ input[type=color]{width:46px;height:30px;padding:0;border:0;border-radius:8px;ba
 .di{position:absolute;width:88px;padding:6px 0;text-align:center;pointer-events:auto;touch-action:none;font-size:11px;text-shadow:0 1px 6px #000c;border-radius:10px}
 .di:hover{background:rgba(255,255,255,.1)}
 .di i{display:grid;place-items:center;width:var(--is,52px);height:var(--is,52px);margin:0 auto 5px;border-radius:14px;font-style:normal;font-size:calc(var(--is,52px) * .5);background:linear-gradient(145deg,var(--a),color-mix(in srgb,var(--a) 45%,#000));color:#fff;box-shadow:0 6px 16px #0006,inset 0 1px 0 #fff4}
-body.dockonly #desk,body.dockonly #wid{display:none}
-#wid{position:fixed;right:16px;top:calc(46px + env(safe-area-inset-top,0px));width:230px;z-index:3;display:flex;flex-direction:column;gap:10px;pointer-events:none}
-#wid>div{pointer-events:auto;background:rgba(10,12,18,.42);backdrop-filter:blur(var(--bl,18px));border:1px solid var(--line);border-radius:16px;padding:14px}
-#wt{font-size:40px;font-weight:300;line-height:1}#wd{font-size:12px;opacity:.8;margin-top:6px}
-#wid textarea{width:100%;height:90px;resize:none;background:none;border:0;color:#fff;font:13px/1.4 system-ui,sans-serif;outline:0;user-select:text}
-@media(max-width:900px){#wid{display:none}}
+body.dockonly #desk{display:none}
 #dock{bottom:calc(12px + env(safe-area-inset-bottom,0px));gap:6px;padding:8px 10px;border-radius:22px;background:rgba(14,18,26,.45);overflow:visible;z-index:900}
 #dock button{width:46px;height:46px;border-radius:13px;font-size:22px;background:linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);transform:scale(var(--s,1));transform-origin:bottom center;transition:transform .12s;position:relative}
 #dock button:hover{transform:scale(var(--s,1.1))}
@@ -133,9 +128,6 @@ body.dockonly #desk,body.dockonly #wid{display:none}
 #lock .av{width:72px;height:72px;border-radius:50%;margin:26px auto 10px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--a),#0008);box-shadow:0 8px 30px #0006}
 
 /* phone fixes */
-#wid>div{background:rgba(12,14,20,.62)}
-#wid textarea::placeholder{color:rgba(255,255,255,.6)}
-@media(max-width:900px){#wid{display:flex;right:12px;top:calc(40px + env(safe-area-inset-top,0px));width:min(230px,calc(100vw - 124px));gap:8px}#wid>div{padding:12px;border-radius:14px}#wt{font-size:clamp(28px,9vw,40px)}#wid textarea{height:64px}}
 @media(max-width:700px){#dock{overflow:visible;max-width:calc(100vw - 16px);gap:5px;padding:7px 8px}#dock button{width:clamp(32px,calc((100vw - 76px) / 8),44px);height:clamp(32px,calc((100vw - 76px) / 8),44px);font-size:clamp(16px,4.6vw,20px)}#dock button svg{width:60%;height:60%}}
 #clk{white-space:nowrap}#an{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:420px){#mb{gap:2px;padding-left:6px;padding-right:4px}#mb button{padding:3px 6px}}
@@ -424,6 +416,77 @@ body.kbd .ain{display:none}body.kbd .aicomp{padding-bottom:6px}
 .brcb{height:92px;display:grid;place-items:center;padding:8px;font-size:12px;opacity:.6;text-align:center;overflow-wrap:anywhere}
 .brnewbig{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 14px calc(14px + env(safe-area-inset-bottom,0px));min-height:46px;font-size:14.5px;font-weight:600;border-radius:14px}.brnewbig svg{width:18px;height:18px}
 
+/* ===== Lumio Chat + profiles ===== */
+.pfav{width:36px;height:36px;border-radius:50%;flex:none;display:inline-grid;place-items:center;overflow:hidden;color:#2a1608;font-weight:700;font-size:15px;background:linear-gradient(145deg,#ffe0a6,var(--a));box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.pfav img{width:100%;height:100%;object-fit:cover;display:block}.pfav svg{width:58%;height:58%}
+.pfav.pfi{color:#2a1608}
+.ch{position:relative;height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(28,18,12,.35),rgba(14,10,8,.55))}
+.chh{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);flex:none}
+.chrooms{flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.chrooms::-webkit-scrollbar{display:none}
+.chrooms button{flex:none;padding:8px 14px;border-radius:999px;font-size:13.5px;font-weight:600;background:rgba(255,255,255,.07);border:1px solid var(--line);white-space:nowrap}
+.chrooms button.on{background:linear-gradient(150deg,#ffd79a,var(--a));color:#2a1608;border-color:transparent}
+.chme{width:38px;height:38px;border-radius:50%;flex:none;padding:0;display:grid;place-items:center}.chme .pfav{width:34px;height:34px}.chme[hidden]{display:none}
+.chmore{width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center}.chmore:hover{background:rgba(255,255,255,.1)}.chmore svg{width:20px;height:20px}.chmore[hidden]{display:none}
+.chmenu{position:absolute;top:56px;right:10px;z-index:7;min-width:200px;padding:6px;border-radius:14px;background:rgba(36,24,17,.98);border:1px solid var(--line);box-shadow:0 14px 40px rgba(0,0,0,.5)}.chmenu[hidden]{display:none}
+.chmenu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:9px;font-size:13.5px;color:#ffb3a6}.chmenu button:hover{background:rgba(255,255,255,.08)}.chmenu svg{width:18px;height:18px}
+.chban{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:9px 14px;font-size:13px;line-height:1.45;background:rgba(240,160,64,.16);border-bottom:1px solid rgba(240,160,64,.35);flex:none}.chban[hidden]{display:none}.chban .btn{padding:6px 12px;font-size:12.5px}
+.chlist{flex:1;min-height:0;overflow-y:auto;padding:12px 6px 10px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.chempty{margin:auto;text-align:center;padding:40px 18px;display:flex;flex-direction:column;gap:6px;opacity:.85}.chempty b{font-size:15px}.chempty small{opacity:.7;font-size:12.5px}
+.chm{position:relative;display:flex;gap:10px;padding:5px 46px 3px 8px;border-radius:12px;align-items:flex-start}
+.chm:not(.grp){margin-top:8px}.chm:hover,.chm.sel{background:rgba(255,255,255,.045)}
+.chm.mine .cht{background:color-mix(in srgb,var(--a) 22%,rgba(255,255,255,.04));border-color:color-mix(in srgb,var(--a) 40%,transparent)}
+.chav{padding:0;border-radius:50%;flex:none}.chsp{width:36px;flex:none}
+.chb{flex:1;min-width:0}
+.chmeta{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+.chn{padding:0;font-weight:700;font-size:14px;color:#ffe2bd;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chn:hover{text-decoration:underline}
+.chmeta time{font-size:11.5px;opacity:.55;white-space:nowrap}
+.cht{display:inline-block;max-width:100%;padding:7px 11px;border-radius:4px 16px 16px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06);font-size:15px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;user-select:text}
+.chm.grp .cht{border-radius:16px}
+.chdel{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:9px;display:grid;place-items:center;opacity:0;color:#ffb3a6;background:rgba(40,24,18,.9);border:1px solid var(--line)}
+.chdel svg{width:16px;height:16px}.chm:hover .chdel,.chm.sel .chdel,.chdel:focus-visible{opacity:1}
+@media (pointer:coarse){.chm .chdel{pointer-events:none}.chm.sel .chdel{pointer-events:auto}}
+.chnew{position:absolute;left:50%;transform:translateX(-50%);bottom:84px;z-index:5;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;background:var(--a);color:#2a1608;box-shadow:0 8px 24px rgba(0,0,0,.4)}.chnew svg{width:16px;height:16px}.chnew[hidden]{display:none}
+.chf{flex:none;padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px))}.chf[hidden]{display:none}
+.chbox{display:flex;align-items:flex-end;gap:8px;padding:6px 6px 6px 14px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
+.chbox:focus-within{border-color:color-mix(in srgb,var(--a) 70%,transparent)}
+.chbox textarea{flex:1;min-width:0;resize:none;background:none;border:0;outline:0;color:#fff;font:16px/1.4 system-ui,-apple-system,sans-serif;padding:7px 0;max-height:120px;user-select:text}
+.chcnt{align-self:center;font-size:11.5px;opacity:.7}.chcnt[hidden]{display:none}
+.chsend{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--a);color:#2a1608}.chsend svg{width:19px;height:19px}.chsend:disabled{opacity:.5}
+@media(max-width:380px){.chrooms button{padding:7px 11px;font-size:12.5px}.chm{padding-right:40px}}
+/* profile card */
+.pfsheet{position:absolute;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.45);animation:pff .18s ease-out}
+@keyframes pff{from{opacity:0}}
+@media(min-width:620px){.pfsheet{align-items:center}}
+.pfcard{--pa:var(--a);position:relative;width:min(380px,100%);margin:0 auto;padding:0 20px calc(20px + env(safe-area-inset-bottom,0px));border-radius:22px 22px 0 0;background:rgba(30,20,14,.98);border:1px solid var(--line);text-align:center;overflow:hidden;box-shadow:0 -10px 40px rgba(0,0,0,.5);animation:pfu .22s cubic-bezier(.2,.8,.2,1)}
+@media(min-width:620px){.pfcard{border-radius:22px}}
+@keyframes pfu{from{transform:translateY(30px);opacity:.6}}
+.pfban{height:76px;margin:0 -20px;background:linear-gradient(135deg,color-mix(in srgb,var(--pa) 85%,#fff),var(--pa) 55%,color-mix(in srgb,var(--pa) 40%,#000))}
+.pfx{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.35)}.pfx svg{width:16px;height:16px}
+.pfbig{width:88px;height:88px;font-size:36px;margin-top:-44px;box-shadow:0 0 0 4px rgba(30,20,14,1),0 8px 24px rgba(0,0,0,.4)}
+.pfcard .pfn{display:block;font-size:20px;margin-top:10px;overflow-wrap:anywhere}.pfcard .pfu{display:block;opacity:.6;font-size:13px;margin-top:2px}
+.pfbadge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;background:color-mix(in srgb,var(--pa) 30%,transparent);color:#ffe2bd}.pfbadge.bad{background:rgba(255,100,80,.25);color:#ffb3a6}
+.pfbio{margin:12px 0 0;font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.pfbio[hidden]{display:none}
+.pfj{display:block;margin-top:10px;font-size:12px;opacity:.6}
+.pfacts{display:flex;gap:8px;justify-content:center;margin-top:16px}.pfacts:empty{display:none}.pfacts .btn{min-height:42px;padding:10px 18px;font-weight:600}.pfacts .btn.bad{background:rgba(255,100,80,.2);border-color:rgba(255,120,100,.5)}
+.pfload{padding:40px 10px;opacity:.8;font-size:14px}
+/* account tabs + profile editor */
+.actabs{display:flex;gap:6px;padding:10px 12px 0}.actabs button{flex:1;padding:9px;border-radius:11px;font-size:13.5px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid var(--line)}.actabs button.on{background:linear-gradient(150deg,#ffd79a,var(--a));color:#2a1608;border-color:transparent}
+.acbody{min-height:0}.acav2{width:64px;height:64px;margin:8px auto;font-size:28px;display:grid}
+.pfe{padding:14px 16px 18px;display:flex;flex-direction:column;gap:8px}
+.pfeh{display:flex;align-items:center;gap:14px;padding:12px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--pa) 30%,transparent),rgba(255,255,255,.03));border:1px solid var(--line)}
+.pfeh .pfav{width:64px;height:64px;font-size:26px}.pfeh b{display:block;font-size:17px;overflow-wrap:anywhere}.pfeh small{display:block;font-size:12px;opacity:.65;margin-top:2px}
+.pfl{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.7;margin-top:6px;display:flex;justify-content:space-between}.pfl small{font-weight:400;text-transform:none;letter-spacing:0}
+.pfgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.pfgrid button{padding:3px;border-radius:50%;border:2px solid transparent;display:grid;place-items:center}.pfgrid button.on{border-color:var(--a)}.pfgrid .pfav{width:100%;height:auto;aspect-ratio:1}
+.pfrow{display:flex;gap:8px;flex-wrap:wrap}.pfup{cursor:pointer}
+.pfin{width:100%;border-radius:12px;padding:10px 12px;font-size:16px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;user-select:text}textarea.pfin{resize:none;font:15px/1.4 system-ui,-apple-system,sans-serif}
+.pfacc{display:flex;gap:10px;flex-wrap:wrap}.pfacc button{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,.2)}.pfacc button.on{box-shadow:0 0 0 3px rgba(30,20,14,1),0 0 0 5px #fff}
+.pferr{margin:4px 0 0;padding:8px 12px;border-radius:10px;font-size:13px;background:rgba(255,100,80,.16);border:1px solid rgba(255,120,100,.4)}.pferr[hidden]{display:none}
+.pfsave{margin-top:8px;min-height:46px;font-weight:700;font-size:15px}
+@media(max-width:360px){.pfgrid{grid-template-columns:repeat(4,1fr)}}
+#dock button[data-a=chat] svg{stroke-width:1.9}
+/* dock: size icons by how many there are (Chat made it 9, admins get 10) so it never spills off a phone */
+@media(max-width:700px){#dock button{width:clamp(22px,calc((100vw - 36px - var(--dn,9) * 5px) / var(--dn,9)),44px);height:clamp(22px,calc((100vw - 36px - var(--dn,9) * 5px) / var(--dn,9)),44px)}}
+
 </style></head><body>
 <div id="pin" role="dialog" aria-label="Enter PIN"><form id="pinf" autocomplete="off" novalidate>
 <label for="pini">PIN</label>
@@ -466,7 +529,6 @@ html.pin-ok #pin{display:none}
 
 <div id="wall" class="w-forest"></div>
 <div id="desk"></div>
-<div id="wid"><div><div id="wt"></div><div id="wd"></div></div><div><div style="font-size:11px;opacity:.7;margin-bottom:6px">QUICK NOTE</div><textarea id="wn" placeholder="Jot something down..."></textarea></div></div>
 <div id="mb"></div>
 <div id="dock"></div>
 <div id="cc"></div>
@@ -507,7 +569,7 @@ function paintUser(){const n=AUTH.mode=='out'?'':AUTH.name,i=AUTH.mode=='out'?'?
  $('#lav').textContent=i;$('#lname').textContent=n;
  const ca=$('#ccav');if(ca){ca.textContent=i;$('#ccname').textContent=n||'Not signed in';$('#ccsub').textContent=AUTH.mode=='user'?(AUTH.admin?'Tuffs account · admin':'Tuffs account'):'Guest, nothing is saved to an account';const so=$('#cc [data-so]');if(so)so.textContent=AUTH.mode=='user'?'Sign out':'Sign in'}
  if(typeof repaintSettings=='function'&&document.querySelector('.stw'))repaintSettings();
- document.querySelectorAll('[data-acct]').forEach(b=>lumioAccount(b));if(typeof adminDock=='function')adminDock()}
+ document.querySelectorAll('[data-acct]').forEach(b=>lumioAccount(b));document.querySelectorAll('[data-chat]').forEach(b=>b.repaint&&b.repaint());if(typeof adminDock=='function')adminDock()}
 function setAMode(m){AMODE=m;document.querySelectorAll('#af .seg2 button').forEach(b=>b.classList.toggle('on',b.dataset.m==m));$('#ac').hidden=m=='in';$('#ap').autocomplete=m=='in'?'current-password':'new-password';$('#ago').textContent=m=='in'?'Sign in':'Create account';$('#ae').textContent=''}
 function showLock(msg){const L=$('#lock');L.classList.remove('off');const out=AUTH.mode=='out';$('#af').hidden=!out;$('#lin').hidden=out;
  if(out){$('#ap').value='';$('#ac').value='';if(!$('#au').value&&SESSION&&SESSION.u)$('#au').value=SESSION.u;$('#ae').textContent=msg||''}
@@ -543,9 +605,15 @@ async function bootAuth(){
  else showLock()}
 
 /* ---- Account app ---- */
-function lumioAccount(b){b.dataset.acct=1;const u=AUTH.mode=='user';
- b.innerHTML=`<div class=pad style="text-align:center"><div class="acc acav">${esc(initial())}</div><b style="font-size:16px">${esc(AUTH.name||'Guest')}</b><p style="font-size:12px;opacity:.75;margin-top:6px;line-height:1.5">${u?(AUTH.admin?'Signed in to your Tuffs account (admin).':'Signed in to your Tuffs account. It works on the main Tuffs site too.'):'You are using Lumio as a guest. Your settings stay in this browser only.'}</p><div class=row style="justify-content:center;margin-top:14px;flex-wrap:wrap"><button class=btn data-lock>Lock screen</button><button class="btn ${u?'':'acc'}" data-out>${u?'Sign out':'Sign in or create account'}</button></div></div>`;
- b.querySelector('[data-lock]').onclick=()=>lockNow();b.querySelector('[data-out]').onclick=()=>signOut()}
+function lumioAccount(b){b.dataset.acct=1;const u=AUTH.mode=='user';const tab=b.acTab=u?(b.acTab||'account'):'account';
+ b.innerHTML=`${u?`<div class=actabs role=tablist><button type=button role=tab data-act=account class="${tab=='account'?'on':''}">Account</button><button type=button role=tab data-act=profile class="${tab=='profile'?'on':''}">Profile</button></div>`:''}<div class=acbody></div>`;
+ const body=b.querySelector('.acbody');
+ if(tab=='profile'&&typeof lumioProfileEdit=='function')lumioProfileEdit(body);
+ else{body.innerHTML=`<div class=pad style="text-align:center"><div class="acc acav">${esc(initial())}</div><b style="font-size:16px">${esc(AUTH.name||'Guest')}</b><p style="font-size:12px;opacity:.75;margin-top:6px;line-height:1.5">${u?(AUTH.admin?'Signed in to your Lumio account (admin).':'Signed in to your Lumio account. It works on any device.'):'You are using Lumio as a guest. Your settings stay in this browser only.'}</p><div class=row style="justify-content:center;margin-top:14px;flex-wrap:wrap"><button class=btn data-lock>Lock screen</button><button class="btn ${u?'':'acc'}" data-out>${u?'Sign out':'Sign in or create account'}</button></div></div>`;
+  body.querySelector('[data-lock]').onclick=()=>lockNow();body.querySelector('[data-out]').onclick=()=>signOut();
+  if(u&&typeof pfApi=='function')pfApi('/api/profile').then(d=>{const av=body.querySelector('.acav');if(av&&d.profile){const p=d.profile;av.outerHTML=pfAvatar({...p,name:p.displayName},'pfav acav2')}}).catch(()=>{})}
+ b.showTab=t=>{b.acTab=t;lumioAccount(b)};
+ const tb=b.querySelector('.actabs');if(tb)tb.onclick=e=>{const t=e.target.closest('[data-act]');if(t)b.showTab(t.dataset.act)}}
 
 /* ---- Browser app: pages load through the site's /service/ proxy ---- */
 function parseAddr(v){v=(v||'').trim();if(!v)return null;if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(v))return 'https://'+v;return SEARCH+encodeURIComponent(v)}
@@ -598,7 +666,7 @@ function browseTo(u){open('browser');const w=open_['browser'];const body=w&&w.qu
 
 /* ---- Lumio AI: chat UI for /api/ai/chat. Never invents replies. ---- */
 /* Action tags from the server: [[open:game:<id>]] / [[open:app:<id>]]. Only real ids become buttons. */
-const AI_APPS=['browser','games','ai','manga','music','watch','account','settings','snake'];
+const AI_APPS=['browser','games','ai','chat','manga','music','watch','account','settings','snake'];
 let AI_CAT=null;function aiCatalog(){return loadCatalog().then(l=>{AI_CAT=l;return l}).catch(()=>null)}
 function aiRun(k,id){if(k=='app'){if(AI_APPS.includes(id)&&APPS[id])open(id);return true}
  return aiCatalog().then(l=>{const g=l&&l.find(x=>x.id===id);if(g){playGame(g);return true}toast('That game isn\'t in the catalog');return false})}
@@ -1016,6 +1084,129 @@ function lumioTabs(b){
  inp.onfocus=()=>inp.select();
  b.nav=u=>{const t=cur();if(t.url)add(u);else go(t,u)};
  paintTabs();showTab(cur())}
+/* ===== Lumio Chat + profiles =====
+ * Chat: /api/chat/messages (poll every 2.5 s while the window is open and the
+ * page is visible), /api/chat/delete; admins also get /api/admin/chat-clear and
+ * /api/admin/set-banned. Profiles: /api/profile, pictures from /api/avatar.
+ * All user text is inserted with textContent / esc(), never as HTML. */
+const PF_ACCENTS=['#f2a54a','#ff7a59','#ff5d8f','#b07cff','#5b8cff','#3fc1c9','#4cd07d','#e0c341'];
+const PF_GLYPH={star:'<path d="M12 3.6l2.5 5.4 5.9.6-4.4 4 1.2 5.8L12 16.5l-5.2 2.9 1.2-5.8-4.4-4 5.9-.6z"/>',moon:'<path d="M19 14.5A7.5 7.5 0 019.5 5a7.5 7.5 0 109.5 9.5z"/>',bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',heart:'<path d="M12 19.5s-7.5-4.4-7.5-10A4.2 4.2 0 0112 7a4.2 4.2 0 017.5 2.5c0 5.6-7.5 10-7.5 10z"/>',leaf:'<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l8-8"/>',flame:'<path d="M12 21c-3.6 0-6-2.4-6-5.6 0-3.3 2.6-5 3.4-8.4 1.9 1.4 2.4 3.3 2.2 4.8 1-.6 1.7-1.8 1.9-3.2 2.3 1.9 3.5 4.3 3.5 6.8 0 3.2-1.9 5.6-5 5.6z"/>',wave:'<path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/>',pad:'<path d="M7.6 7h8.8a5 5 0 015 5.5l-.4 3.5a2.6 2.6 0 01-4.6 1.3L15 15.6H9l-1.4 1.7A2.6 2.6 0 013 16l-.4-3.5A5 5 0 017.6 7z"/><path d="M8 9.9v4M6 11.9h4"/>',note:'<path d="M9 17.5V6.6l11-2.4v10.9"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.1" r="2.5"/>',planet:'<circle cx="12" cy="12" r="5"/><path d="M4.5 15.5c-2 2.4 6.8-.3 11.5-4.5 4.7-4.2 6.2-8.3 3.5-6.5"/>',flower:'<circle cx="12" cy="12" r="2.4"/><path d="M12 9.6V4.5M12 14.4v5.1M9.6 12H4.5M14.4 12h5.1M10.3 10.3L6.7 6.7M13.7 13.7l3.6 3.6M13.7 10.3l3.6-3.6M10.3 13.7l-3.6 3.6"/>',crown:'<path d="M4 17.5h16M5 15l-1-8 5 4 3-6 3 6 5-4-1 8z"/>'};
+const PF_PRESETS={p1:['star','#ffd27a','#f08a24'],p2:['moon','#9fb4ff','#5b4bd6'],p3:['bolt','#ffe680','#e0a400'],p4:['heart','#ff9db8','#e0386b'],p5:['leaf','#9be7a6','#2f9e57'],p6:['flame','#ffb27a','#e5482b'],p7:['wave','#8fe3f0','#2a8fb8'],p8:['pad','#c9a6ff','#7a3fe0'],p9:['note','#ffb3d9','#c2389a'],p10:['planet','#ffd9a0','#c06a2b'],p11:['flower','#ffe0f0','#e276a8'],p12:['crown','#fff0a8','#c99a1d']};
+/* Avatar HTML for {av, avv, key, name, accent}. Text is escaped; images only come from /api/avatar. */
+function pfAvatar(p,cls){p=p||{};const c=cls||'pfav';
+ if(p.av=='img'&&p.key)return `<span class="${c}"><img src="/api/avatar?u=${encodeURIComponent(p.key)}&v=${encodeURIComponent(p.avv||0)}" alt="" loading=lazy></span>`;
+ const pr=PF_PRESETS[p.av];if(pr)return `<span class="${c}" style="background:linear-gradient(145deg,${pr[1]},${pr[2]})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${PF_GLYPH[pr[0]]}</svg></span>`;
+ const a=PF_ACCENTS.includes(p.accent)?p.accent:'var(--a)';return `<span class="${c} pfi" style="background:linear-gradient(145deg,color-mix(in srgb,${a} 55%,#fff),${a})">${esc(((p.name||p.username||'?').trim()[0]||'?').toUpperCase())}</span>`}
+const pfAuth=()=>({'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')});
+async function pfApi(path,body){const r=await fetch(path,body?{method:'POST',headers:pfAuth(),body:JSON.stringify(body)}:{headers:pfAuth(),cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.error||('Something went wrong ('+r.status+').'));e.status=r.status;e.code=d.code;e.data=d;throw e}return d}
+const pfJoined=ts=>{try{return new Date(ts).toLocaleDateString(undefined,{month:'long',year:'numeric'})}catch(e){return ''}};
+/* Public profile card, shown over the given container. */
+async function pfCard(host,key,onChange){const sh=document.createElement('div');sh.className='pfsheet';sh.innerHTML='<div class=pfcard role=dialog aria-label=Profile><div class=pfload>Loading profile…</div></div>';host.append(sh);
+ const close=()=>sh.remove();sh.onclick=e=>{if(e.target===sh||e.target.closest('[data-pfx]'))close()};
+ const box=sh.firstChild;
+ try{const {profile:p}=await pfApi('/api/profile?u='+encodeURIComponent(key));const ac=PF_ACCENTS.includes(p.accent)?p.accent:'var(--a)';
+  box.style.setProperty('--pa',ac);
+  box.innerHTML=`<div class=pfban></div><button type=button class=pfx data-pfx aria-label=Close>${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button>${pfAvatar({...p,name:p.displayName},'pfav pfbig')}<b class=pfn></b><small class=pfu></small>${p.isAdmin?'<span class=pfbadge>Admin</span>':''}${p.isBanned?'<span class="pfbadge bad">Suspended</span>':''}<p class=pfbio></p><small class=pfj></small><div class=pfacts></div>`;
+  $('.pfn',box).textContent=p.displayName;$('.pfu',box).textContent='@'+p.username;const bio=$('.pfbio',box);bio.textContent=p.bio||'';bio.hidden=!p.bio;$('.pfj',box).textContent='Joined '+pfJoined(p.joined);
+  const acts=$('.pfacts',box);
+  if(p.isMe)acts.innerHTML='<button type=button class="btn on" data-pfe>Edit profile</button>';
+  else if(AUTH.admin&&!p.isAdmin)acts.innerHTML=`<button type=button class="btn ${p.isBanned?'':'bad'}" data-pfb>${p.isBanned?'Unsuspend account':'Suspend account'}</button>`;
+  acts.onclick=async e=>{if(e.target.closest('[data-pfe]')){close();openProfileEditor();return}
+   const b=e.target.closest('[data-pfb]');if(!b)return;const ban=!p.isBanned;if(ban&&!confirm('Suspend @'+p.username+'? They are signed out everywhere and can\'t chat until unsuspended.'))return;
+   b.disabled=true;try{await pfApi('/api/admin/set-banned',{username:p.username,banned:ban});toast(ban?'@'+p.username+' suspended':'@'+p.username+' unsuspended');close();onChange&&onChange()}catch(err){toast(err.message);b.disabled=false}}}
+ catch(err){box.innerHTML=`<button type=button class=pfx data-pfx aria-label=Close>${ic('<path d="M6 6l12 12M18 6L6 18"/>')}</button><div class=pfload></div>`;$('.pfload',box).textContent=err.message}}
+function openProfileEditor(){open('account');setTimeout(()=>{const b=document.querySelector('[data-acct]');if(b&&b.showTab)b.showTab('profile')},60)}
+/* Resize a picked image to a 160px square JPEG data URL small enough for the server cap. */
+function pfShrink(file){return new Promise((res,rej)=>{if(!/^image\//.test(file.type))return rej(new Error('Pick an image file.'));if(file.size>12e6)return rej(new Error('That picture is too big.'));
+ const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const S=160,c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d'),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,S,S);URL.revokeObjectURL(u);
+  let q=.86,d=c.toDataURL('image/jpeg',q);while(d.length>60000&&q>.4){q-=.12;d=c.toDataURL('image/jpeg',q)}d.length>60000?rej(new Error('That picture is too big.')):res(d)};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('That picture couldn\'t be read.'))};im.src=u})}
+
+/* Profile editor, rendered inside the Account app. */
+function lumioProfileEdit(box){box.innerHTML='<div class=pfload>Loading your profile…</div>';let P=null,draft={},busy=false;
+ const paint=()=>{const v={...P,...draft},name=v.displayName??P.displayName;const prev={key:P.key,av:'avatar' in draft?(draft.avatar&&draft.avatar.startsWith('data:')?'tmp':draft.avatar):P.av,avv:P.avv,name:name||P.username,accent:v.accent||P.accent};
+  box.innerHTML=`<div class=pfe style="--pa:${PF_ACCENTS.includes(prev.accent)?prev.accent:'var(--a)'}"><div class=pfeh><span class=pfprev></span><div><b class=pfn></b><small class=pfu></small><small class=pfj></small></div></div>
+  <label class=pfl>Picture</label><div class=pfgrid>${Object.keys(PF_PRESETS).map(k=>`<button type=button data-av=${k} class="${prev.av==k?'on':''}" aria-label="Avatar ${k.slice(1)}">${pfAvatar({av:k})}</button>`).join('')}</div>
+  <div class=pfrow><label class="btn pfup">Upload picture<input type=file accept="image/png,image/jpeg,image/webp" hidden></label>${prev.av?'<button type=button class=btn data-avx>Use my initial</button>':''}</div>
+  <label class=pfl for=pfdn>Display name</label><input id=pfdn class=pfin maxlength=24 autocomplete=nickname placeholder="${esc(P.username)}">
+  <label class=pfl for=pfbio>Bio <small class=pfcnt></small></label><textarea id=pfbio class=pfin rows=3 maxlength=160 placeholder="A line about you (optional)"></textarea>
+  <label class=pfl>Accent</label><div class=pfacc>${PF_ACCENTS.map(c=>`<button type=button data-ac="${c}" style="background:${c}" class="${prev.accent==c?'on':''}" aria-label="Accent ${c}"></button>`).join('')}</div>
+  <p class=pferr role=alert hidden></p><button type=button class="btn on pfsave" ${busy?'disabled':''}>${busy?'Saving…':'Save profile'}</button></div>`;
+  $('.pfprev',box).innerHTML=prev.av=='tmp'?`<span class=pfav><img alt="" src="${draft.avatar}"></span>`:pfAvatar(prev);
+  $('.pfn',box).textContent=name||P.username;$('.pfu',box).textContent='@'+P.username;$('.pfj',box).textContent='Joined '+pfJoined(P.joined);
+  const dn=$('#pfdn',box),bi=$('#pfbio',box),cnt=$('.pfcnt',box);dn.value=name===P.username&&!('displayName' in draft)?(P.displayName===P.username?'':P.displayName):(name||'');bi.value=v.bio||'';cnt.textContent=bi.value.length+'/160';
+  dn.oninput=()=>{draft.displayName=dn.value;$('.pfn',box).textContent=dn.value.trim()||P.username};bi.oninput=()=>{draft.bio=bi.value;cnt.textContent=bi.value.length+'/160'};
+  $('input[type=file]',box).onchange=async e=>{const f=e.target.files[0];if(!f)return;try{draft.avatar=await pfShrink(f);paint()}catch(err){showErr(err.message)}}};
+ const showErr=m=>{const p=$('.pferr',box);if(!p)return;p.hidden=!m;p.textContent=m||''};
+ box.onclick=async e=>{const t=e.target.closest('button');if(!t||!P)return;
+  if(t.dataset.av){draft.avatar=t.dataset.av;paint();return}if('avx' in t.dataset){draft.avatar=null;paint();return}if(t.dataset.ac){draft.accent=t.dataset.ac;paint();return}
+  if(t.classList.contains('pfsave')){const body={};if('displayName' in draft)body.displayName=draft.displayName;if('bio' in draft)body.bio=draft.bio;if('accent' in draft)body.accent=draft.accent;if('avatar' in draft)body.avatar=draft.avatar;
+   if(!Object.keys(body).length){toast('Nothing to save');return}busy=true;paint();
+   try{const d=await pfApi('/api/profile',body);P=d.profile;draft={};busy=false;paint();toast('Profile saved');window.dispatchEvent(new Event('lumio-profile'))}catch(err){busy=false;paint();showErr(err.message)}}};
+ pfApi('/api/profile').then(d=>{P=d.profile;paint()}).catch(err=>{box.innerHTML='<div class=pfload></div>';$('.pfload',box).textContent=err.message})}
+
+/* ---- Chat app ---- */
+function lumioChat(b){b.dataset.chat=1;
+ const CIC={send:ic('<path d="M12 19V5M5 12l7-7 7 7"/>'),more:ic('<circle cx="5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="19" cy="12" r="1.3" fill="currentColor"/>'),del:ic('<path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/>'),down:ic('<path d="M12 5v14M5 12l7 7 7-7"/>')};
+ let room=localStorage.getItem('lumio_chat_room')||'General',rooms=['General','Games','Random'],msgs=[],me=null,timer=0,fails=0,sending=false,stopped=false,lastErr='';
+ b.innerHTML=`<div class=ch><header class=chh><div class=chrooms role=tablist></div><button type=button class=chme aria-label="My profile"></button><button type=button class=chmore aria-label="Chat menu" hidden>${CIC.more}</button></header>
+ <div class=chmenu hidden><button type=button data-cm=clear>${CIC.del}<span>Clear this room</span></button></div>
+ <div class=chban hidden role=status></div><div class=chlist role=log aria-live=polite></div><button type=button class=chnew hidden>${CIC.down}<span>New messages</span></button>
+ <form class=chf><div class=chbox><textarea rows=1 maxlength=500 placeholder="Message #General" enterkeyhint=send aria-label=Message></textarea><small class=chcnt hidden></small><button type=submit class=chsend aria-label=Send>${CIC.send}</button></div></form></div>`;
+ const C=$('.ch',b),L=$('.chlist',b),T=$('textarea',b),F=$('.chf',b),BAN=$('.chban',b),NEW=$('.chnew',b),MORE=$('.chmore',b),MENU=$('.chmenu',b),CNT=$('.chcnt',b);
+ const banner=(t,btn)=>{BAN.hidden=!t;BAN.innerHTML=t?`<span></span>${btn?`<button type=button class=btn data-cb>${esc(btn)}</button>`:''}`:'';if(t)BAN.firstChild.textContent=t};
+ const near=()=>L.scrollHeight-L.scrollTop-L.clientHeight<80;
+ const time=ts=>{const d=new Date(ts),n=new Date();const t=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});return d.toDateString()==n.toDateString()?t:d.toLocaleDateString([],{month:'short',day:'numeric'})+' '+t};
+ const paintRooms=()=>{$('.chrooms',b).innerHTML=rooms.map(r=>`<button type=button role=tab data-room="${esc(r)}" class="${r==room?'on':''}" aria-selected=${r==room}># ${esc(r)}</button>`).join('');T.placeholder='Message #'+room};
+ const paintMe=()=>{const el=$('.chme',b);if(AUTH.mode!='user'){el.hidden=true;return}el.hidden=false;el.innerHTML=pfAvatar(MEP||{name:AUTH.name,key:(AUTH.name||'').toLowerCase()})};
+ let MEP=null;const loadMe=()=>{if(AUTH.mode!='user')return;pfApi('/api/profile').then(d=>{const p=d.profile;MEP={...p,name:p.displayName};paintMe()}).catch(()=>{})};
+ const row=(m,prev)=>{const grp=prev&&prev.key==m.key&&m.ts-prev.ts<5*60e3;const el=document.createElement('div');el.className='chm'+(grp?' grp':'')+(m.mine?' mine':'');el.dataset.id=m.id;
+  const ac=PF_ACCENTS.includes(m.accent)?m.accent:'';
+  el.innerHTML=`${grp?'<span class=chsp></span>':`<button type=button class=chav data-who="${esc(m.key)}" aria-label="Profile">${pfAvatar(m)}</button>`}<div class=chb>${grp?'':`<div class=chmeta><button type=button class=chn data-who="${esc(m.key)}"${ac?` style="color:color-mix(in srgb,${ac} 75%,#fff)"`:''}></button><time></time></div>`}<div class=cht></div></div>${m.mine||(me&&me.isAdmin)?`<button type=button class=chdel data-del=${m.id} aria-label="Delete message">${CIC.del}</button>`:''}`;
+  if(!grp){$('.chn',el).textContent=m.name;$('time',el).textContent=time(m.ts);$('time',el).title=new Date(m.ts).toLocaleString()}
+  $('.cht',el).textContent=m.text;return el};
+ const render=keep=>{const at=near(),top=L.scrollTop;L.innerHTML='';if(!msgs.length){const e=document.createElement('div');e.className='chempty';e.innerHTML=`<b></b><small>Messages here are visible to everyone signed in to Lumio.</small>`;e.firstChild.textContent='No messages in #'+room+' yet. Say hi!';L.append(e);return}
+  msgs.forEach((m,i)=>L.append(row(m,msgs[i-1])));if(!keep||at)L.scrollTop=L.scrollHeight;else L.scrollTop=top};
+ const schedule=ms=>{clearTimeout(timer);if(stopped)return;timer=setTimeout(poll,ms)};
+ async function poll(first){if(stopped)return;if(!b.isConnected){stopped=true;return}
+  if(document.visibilityState!='visible'||(b.closest('.win')||{}).classList?.contains('min')){schedule(2500);return}
+  if(AUTH.mode!='user'){msgs=[];render();banner('Sign in to your Lumio account to read and send messages.','Sign in');F.hidden=true;schedule(5000);return}
+  const lastId=msgs.length?msgs[msgs.length-1].id:0,since=msgs.length?msgs[0].id:0,r0=room;
+  try{const d=await pfApi('/api/chat/messages?room='+encodeURIComponent(room)+(first||!lastId?'':'&after='+lastId+'&since='+since));if(r0!=room)return;
+   me=d.me;rooms=d.rooms||rooms;MORE.hidden=!me.isAdmin;F.hidden=false;fails=0;
+   if(first||!lastId){msgs=d.messages;paintRooms();render()}
+   else{let changed=false;if(d.alive){const al=new Set(d.alive),n=msgs.length;msgs=msgs.filter(m=>m.id<since||al.has(m.id));changed=msgs.length!=n}
+    const add=d.messages.filter(m=>!msgs.some(x=>x.id==m.id));if(add.length){const was=near();msgs=msgs.concat(add).slice(-200);render(true);if(!was&&add.some(m=>!m.mine))NEW.hidden=false}else if(changed)render(true)}
+   banner(d.chatEnabled===false?'Chat is turned off for everyone else right now. Admins can still post.':'');schedule(2500)}
+  catch(err){fails++;if(err.code=='banned'){banner(err.message);F.hidden=true;msgs=[];render();schedule(30000);return}
+   if(err.status==401){banner('Your session ended. Sign in again to chat.','Sign in');F.hidden=true;schedule(10000);return}
+   if(err.code=='off'){banner(err.message);F.hidden=true;msgs=[];render();schedule(15000);return}
+   banner(fails>1?'Can\'t reach chat right now. Retrying…':'');schedule(Math.min(15000,2500*2**fails))}}
+ const setRoom=r=>{if(r==room)return;room=r;try{localStorage.setItem('lumio_chat_room',r)}catch(e){}msgs=[];NEW.hidden=true;paintRooms();L.innerHTML='<div class=chempty><small>Loading…</small></div>';poll(true)};
+ const grow=()=>{T.style.height='auto';T.style.height=Math.min(T.scrollHeight,120)+'px';const n=T.value.length;CNT.hidden=n<400;CNT.textContent=n+'/500'};
+ async function send(){const text=T.value.trim();if(!text||sending)return;sending=true;$('.chsend',b).disabled=true;
+  try{const d=await pfApi('/api/chat/messages',{room,text});T.value='';grow();if(!msgs.some(x=>x.id==d.message.id)){msgs.push(d.message);render()}L.scrollTop=L.scrollHeight;banner('')}
+  catch(err){banner(err.message);if(err.status==401||err.code=='banned')F.hidden=true}finally{sending=false;$('.chsend',b).disabled=false;if(innerWidth>700)T.focus()}}
+ F.onsubmit=e=>{e.preventDefault();send()};T.oninput=grow;
+ T.onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey&&!e.isComposing&&!matchMedia('(pointer:coarse)').matches){e.preventDefault();send()}};
+ L.onscroll=()=>{if(near())NEW.hidden=true};NEW.onclick=()=>{L.scrollTop=L.scrollHeight;NEW.hidden=true};
+ b.onclick=async e=>{const t=e.target.closest('button');
+  if(!e.target.closest('.chmenu,.chmore'))MENU.hidden=true;
+  const m=e.target.closest('.chm');if(m&&!t){b.querySelectorAll('.chm.sel').forEach(x=>x!==m&&x.classList.remove('sel'));m.classList.toggle('sel')}
+  if(!t)return;
+  if(t.dataset.room){setRoom(t.dataset.room);return}
+  if(t.dataset.who){pfCard(C,t.dataset.who,()=>poll(true));return}
+  if(t.classList.contains('chme')){if(MEP)pfCard(C,MEP.key);return}
+  if(t.dataset.del){const id=+t.dataset.del;const mm=msgs.find(x=>x.id==id);if(!confirm(mm&&!mm.mine?'Delete this message from '+mm.name+'?':'Delete your message?'))return;
+   try{await pfApi('/api/chat/delete',{id});msgs=msgs.filter(x=>x.id!=id);render(true)}catch(err){toast(err.message)}return}
+  if(t===MORE){MENU.hidden=!MENU.hidden;return}
+  if(t.dataset.cm=='clear'){MENU.hidden=true;if(!confirm('Clear every message in #'+room+'? This can\'t be undone.'))return;try{const d=await pfApi('/api/admin/chat-clear',{room});toast('Cleared '+d.cleared+' message'+(d.cleared==1?'':'s'));msgs=[];render()}catch(err){toast(err.message)}return}
+  if('cb' in t.dataset){signOut();return}};
+ const onVis=()=>{if(document.visibilityState=='visible')schedule(50)};document.addEventListener('visibilitychange',onVis);
+ const onProf=()=>{loadMe();poll(true)};window.addEventListener('lumio-profile',onProf);
+ const w=b.closest('.win');const prevClose=w&&w.onclose;if(w)w.onclose=()=>{stopped=true;clearTimeout(timer);document.removeEventListener('visibilitychange',onVis);window.removeEventListener('lumio-profile',onProf);prevClose&&prevClose()};
+ b.repaint=()=>{paintMe();loadMe();poll(true)};
+ paintRooms();paintMe();loadMe();poll(true)}
+(function(){const d=document.getElementById('dock');if(!d)return;const fit=()=>d.style.setProperty('--dn',Math.max(1,d.querySelectorAll(':scope>button').length));fit();new MutationObserver(fit).observe(d,{childList:true})})();
 
 </script>
 <script>
@@ -1062,7 +1253,8 @@ $('#sc',b).textContent=go?`Game over · ${sc} · tap or space to restart`:`Score
 b.closest('.win').onclose=()=>{clearInterval(h);removeEventListener('keydown',kd)}}},
 ai:{n:'Lumio AI',i:IC.ai,w:980,h:660,r(b){lumioAI(b)}},
 admin:{n:'Admin',i:ic('<path d="M12 3l7.5 3v5.6c0 4.4-3.1 8.2-7.5 9.4-4.4-1.2-7.5-5-7.5-9.4V6z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/>'),w:900,h:680,hide:1,r(b){lumioAdmin(b)}},
-account:{n:'Account',i:IC.user,w:360,h:330,r(b){lumioAccount(b)}},
+chat:{n:'Chat',i:ic('<path d="M4 6.5A2.5 2.5 0 016.5 4h8A2.5 2.5 0 0117 6.5v5a2.5 2.5 0 01-2.5 2.5H9l-3.5 3v-3h0A2.5 2.5 0 014 11.5z"/><path d="M17 9h.5A2.5 2.5 0 0120 11.5v5a2.5 2.5 0 01-2 2.45V21l-3-2.5h-3.5a2.5 2.5 0 01-2.3-1.5"/>'),w:760,h:620,r(b){lumioChat(b)}},
+account:{n:'Account',i:IC.user,w:420,h:600,r(b){lumioAccount(b)}},
 settings:{n:'Settings',i:IC.gear,w:540,h:560,r(b){const seg=(k,opts)=>`<div class=row style="flex-wrap:wrap">${opts.map(o=>`<button class="btn ${st[k]==o[0]?'on':''}" data-k=${k} data-v=${o[0]}>${o[1]}</button>`).join('')}</div>`;
 const paint=()=>{b.innerHTML=`<div class=pad><h4 style="margin-top:0">Appearance</h4><div class=sw>${ACC.map(c=>`<i data-c=${c} class="${st.a==c?'on':''}" style="background:linear-gradient(${c} 60%,#fff8 60%)"></i>`).join('')}</div>
 <h4>Chrome</h4>${seg('chrome',[['browser','Browser'],['dock','Dock'],['desktop','Desktop']])}
@@ -1153,7 +1345,7 @@ const P={
 Appearance:()=>grp('Accent color',[`<div class=sr><div class=dots>${ACC.map(c=>`<i data-c=${c} class='${st.a==c?'on':''}' style='background:${c}'></i>`).join('')}<label class=dc title='Custom color'><input type=color value=${st.a} data-pick></label></div></div>`])+grp('Windows',[row('Glass blur',sl('blur',0,30,1,'px')),row('Window opacity',sl('op',50,100,100,'%'))])+grp('Display',[row('Brightness',sl('bri',30,100,1,'%')),row('24-hour clock',tg('h24'))]),
 Wallpaper:()=>{const c=st.wall=='custom'&&st.custom,t=st.fit=='tile',tm=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit',hour12:!st.h24});
 return `<div class='prev ${c?'':st.wall}' style='${c?`background:#000 url(${st.custom}) center/${t?'auto':st.fit} ${t?'repeat':'no-repeat'}`:''}'>${tm}</div><div class=row style='gap:8px'><label class='pb acc' style='cursor:pointer'>Upload your own<input id=up type=file accept='image/*' hidden></label>${st.custom?`<button class=pb data-rm>Remove</button>`:''}</div><div class=wg>${st.custom?`<div data-w=custom class='${st.wall=='custom'?'on':''}'><i style='background:url(${st.custom}) center/cover'></i>Custom</div>`:''}${WALLS.map(w=>`<div data-w=${w[0]} class='${st.wall==w[0]?'on':''}'><i class=${w[0]}></i>${w[1]}</div>`).join('')}</div>`+grp('Adjust',[row('Fit',seg('fit',[['cover','Fill'],['contain','Fit'],['tile','Tile']])),row('Dim',sl('dim',0,70,1,'%')),row('Blur',sl('wblur',0,20,1,'px'))])},
-Desktop:()=>grp('Style',[`<div class=sr>${seg('style',[['drift','Lumio'],['chromeos','ChromeOS'],['macos','macOS'],['win11','Windows 11']])}</div>`])+grp('Layout',[row('Auto-hide dock',tg('dah'),'Slides away until you point at the bottom edge (or tap the handle on touch screens)'),row('Desktop icons and widgets',seg('chrome',[['desktop','Show'],['dock','Hide']])),row('Icon size',sl('isz',40,72,1,'px'))])+grp('',[row('Reset desktop icons',`<button class=pb data-rd>Reset</button>`,'Back to Browser and Settings only')]),
+Desktop:()=>grp('Style',[`<div class=sr>${seg('style',[['drift','Lumio'],['chromeos','ChromeOS'],['macos','macOS'],['win11','Windows 11']])}</div>`])+grp('Layout',[row('Auto-hide dock',tg('dah'),'Slides away until you point at the bottom edge (or tap the handle on touch screens)'),row('Desktop icons',seg('chrome',[['desktop','Show'],['dock','Hide']])),row('Icon size',sl('isz',40,72,1,'px'))])+grp('',[row('Reset desktop icons',`<button class=pb data-rd>Reset</button>`,'Back to Browser and Settings only')]),
 About:()=>`<div class=ab><span class=lgx></span><h3>Lumio</h3><small style='opacity:.65'>Version 1.0. A desktop in your browser.</small></div>`+grp('Shortcuts',[row('Search',`<span class=v>Ctrl or Cmd + K</span>`),row('App menu',`<span class=v>Hold or right-click an icon</span>`),row('Snap a window',`<span class=v>Drag its title bar to an edge</span>`)])+grp('',[row('Reset everything',`<button class='pb danger' data-ra>Reset</button>`,'Clears settings, wallpaper and notes')])};
 const paint=(fresh,nt)=>{const y=fresh?0:(($('.sc',b)||{}).scrollTop||0);if(nt)tab=nt;b.innerHTML=`<div class=stw><div class=st><nav class=sn><div class=pf><span class=av2>${esc(initial())}</span><div><b>${esc(AUTH.name||'Guest')}</b><small>${AUTH.mode=='user'?'Tuffs account':'Guest'}</small></div></div>${TABS.map(t=>`<button class='${t[0]==tab?'on':''}' data-tab=${t[0]}><span class=si style='background:${t[1]}'>${ic(t[2])}</span>${t[0]}</button>`).join('')}</nav><main class=sc><h2>${tab}</h2>${P[tab]()}</main></div></div>`;$('.sc',b).scrollTop=y};
 paint(1);repaintSettings=paint;
@@ -1170,7 +1362,7 @@ b.onchange=e=>{if(e.target.id=='up')upload(e.target.files[0]);else{save();if('pi
 /* ---------- Lumio shell ---------- */
 if(st.bri==null)st.bri=100;if(!st.pos)st.pos={};
 tick=function(){const d=new Date(),t=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit',hour12:!st.h24}),dt=d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'});
-[['lt',t],['ld',dt],['wt',t],['wd',dt]].forEach(x=>{const e=$('#'+x[0]);if(e)e.textContent=x[1]});
+[['lt',t],['ld',dt]].forEach(x=>{const e=$('#'+x[0]);if(e)e.textContent=x[1]});
 const c=$('#clk');if(c)c.textContent=d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})+'  '+t};
 const _as=applyStyle;applyStyle=function(){_as();$('#dim').style.opacity=(100-st.bri)/100*.75};
 const sIc=ic(`<circle cx='11' cy='11' r='6'/><path d='M20 20l-4-4'/>`),cIc=ic(`<path d='M4 7h10M18 7h2M4 17h2M10 17h10'/><circle cx='16' cy='7' r='2'/><circle cx='8' cy='17' r='2'/>`);
@@ -1194,7 +1386,7 @@ const tb=$('.tb',w);tb.ondblclick=e=>{if(!e.target.closest('button'))mx()};
 tb.onpointerdown=e=>{if(e.target.closest('button')||innerWidth<=700||w.classList.contains('max'))return;const ox=e.clientX-w.offsetLeft,oy=e.clientY-w.offsetTop;tb.setPointerCapture(e.pointerId);
 tb.onpointermove=m=>{w.style.left=Math.max(-w.offsetWidth+80,Math.min(innerWidth-80,m.clientX-ox))+'px';w.style.top=Math.max(30,Math.min(innerHeight-40,m.clientY-oy))+'px'};
 tb.onpointerup=e=>{tb.onpointermove=null;const x=e.clientX,y=e.clientY,T0=34,hh=innerHeight-T0;if(y<T0+6)w.classList.add('max');else if(x<8)w.style.cssText+=`;left:0;top:${T0}px;width:${innerWidth/2}px;height:${hh}px`;else if(x>innerWidth-8)w.style.cssText+=`;left:${innerWidth/2}px;top:${T0}px;width:${innerWidth/2}px;height:${hh}px`}}}
-const DOCK_ORDER=['browser','games','ai','manga','music','watch','account','settings'];const vis=Object.keys(APPS).filter(k=>!APPS[k].hide).sort((a,b)=>(DOCK_ORDER.indexOf(a)+1||99)-(DOCK_ORDER.indexOf(b)+1||99));
+const DOCK_ORDER=['browser','games','ai','chat','manga','music','watch','account','settings'];const vis=Object.keys(APPS).filter(k=>!APPS[k].hide).sort((a,b)=>(DOCK_ORDER.indexOf(a)+1||99)-(DOCK_ORDER.indexOf(b)+1||99));
 $('#dock').innerHTML=vis.map(k=>`<button data-a=${k} data-n='${APPS[k].n}'>${APPS[k].i}</button>`).join('');
 $('#dock').onpointermove=e=>{if(e.pointerType!='mouse')return;document.querySelectorAll('#dock button').forEach(b=>{const r=b.getBoundingClientRect(),d=Math.abs(e.clientX-(r.left+r.width/2));b.style.setProperty('--s',(1+.55*Math.exp(-(d*d)/6050)).toFixed(2))})};
 $('#dock').onpointerleave=()=>document.querySelectorAll('#dock button').forEach(b=>b.style.removeProperty('--s'));
@@ -1221,7 +1413,7 @@ $('#spq').oninput=e=>spR(e.target.value);
 $('#sp').onclick=e=>{const t=e.target.closest('[data-sa],[data-act]');if(t){$('#sp').classList.remove('on');t.dataset.sa?open(t.dataset.sa):ACTS[+t.dataset.act][1]()}else if(e.target.id=='sp')$('#sp').classList.remove('on')};
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=='k'){e.preventDefault();spOpen()}else if(e.key=='Escape'){$('#sp').classList.remove('on');$('#cc').classList.remove('on')}else if(e.key=='Enter'&&$('#sp').classList.contains('on')){const f=$('#spr .it');f&&f.click()}});
 document.addEventListener('click',e=>{if(!e.target.closest('#cc,#bcc'))$('#cc').classList.remove('on');if(e.target.closest('[data-sp]')){spOpen();return}if(e.target.closest('#bcc')){$('#cc').classList.toggle('on');return}if(lpFired||dragged){lpFired=0;return}const t=e.target.closest('[data-a]');if(t)open(t.dataset.a)});
-$('#wn').value=st.note||'';$('#wn').oninput=e=>{st.note=e.target.value;save()};
+
 renderSide();applyStyle();tick();setInterval(tick,10000);
 const route=()=>{const h=location.hash.slice(1);if(Object.keys(APPS).includes(h)&&!APPS[h].hide){if(AUTH.mode!='out'&&$('#lock').classList.contains('off'))open(h);else PENDING=h}};
 route();addEventListener('hashchange',route);
