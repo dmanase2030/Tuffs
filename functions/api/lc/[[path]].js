@@ -9,7 +9,8 @@
  *  GET  reports?sid=           open reports for moderators (Manage Messages)
  *  POST act {op,...}           every change (see _ops.js)
  *  POST upload?kind=avatar|banner|icon|attach[&sid=]   raw image bytes
- *  GET  admin/servers, admin/reports;  POST admin/act   site admins only
+ *  GET  shop                   Shop catalog + your Orbs, items, equipped slots and daily quests
+ *  GET  admin/servers, admin/reports, admin/shop;  POST admin/act, admin/shop   site admins only
  */
 import { json, guard, sessionUser, bearer, readBody, sha256hex } from "../auth/_shared.js";
 import { throttleCheck, throttleFail, clientIp } from "../auth/_throttle.js";
@@ -18,6 +19,7 @@ import {
   sniff, storeImage, dropImage, serveImage, IMG_CAPS, CODE_RE,
 } from "./_db.js";
 import { runOp, access, deleteMsg, deleteServerRows } from "./_ops.js";
+import { shopState, shopAdmin } from "./_shop.js";
 
 export async function onRequest(context) {
   const { request, env, params } = context;
@@ -47,6 +49,7 @@ export async function onRequest(context) {
       if (!(await access(db, me, c))) return err("You can't see this channel.", 403);
       return json(await history(db, c, Number(q.get("before")) || 0));
     }
+    if (method === "GET" && route === "shop") return json(await shopState(db, user));
     if (method === "GET" && route === "explore") {
       const rows = (await db.prepare("SELECT s.id, s.name, s.color, s.icon, s.descr, (SELECT COUNT(*) FROM lc_members m WHERE m.server_id = s.id) AS members FROM lc_servers s WHERE s.public = 1 ORDER BY members DESC LIMIT 50").all()).results || [];
       return json({ servers: rows.map(r => ({ id: r.id, n: r.name, c: r.color, icon: r.icon || "", desc: r.descr || "", members: r.members })) });
@@ -304,6 +307,7 @@ export async function adminRoute(context, user, sub, method) {
     return json(await reports(db, all ? "" : "WHERE r.status = 'open'", []));
   }
   if (method === "POST" && sub === "act") return adminAct(context, user, await readBody(request));
+  if (sub === "shop") return shopAdmin(context, user, method, method === "POST" ? await readBody(request) : {});
   return err("Not found.", 404);
 }
 export async function adminAct(context, user, body) {

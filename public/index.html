@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name=lumio-build content=9b0544dd6847><meta charset="utf-8">
+<html lang="en"><head><meta name=lumio-build content=7bd75e72b7a3><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lumio</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
@@ -351,6 +351,15 @@ body.kbd .ain{display:none}body.kbd .aicomp{padding-bottom:6px}
 .rsf small{opacity:.7;font-size:12px}
 @media (max-width:600px){.adacts .btn{flex:1 1 auto}}
 .adt[hidden]{display:none}
+.adform{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 14px;padding:12px;margin-bottom:12px;border-radius:12px;border:1px solid color-mix(in srgb,var(--a) 45%,transparent);background:rgba(255,255,255,.05)}
+.adform h4,.adform .adacts,.adform .adfs,.adform .adfc{grid-column:1/-1}
+.adform>label{display:flex;flex-direction:column;gap:4px;font-size:12px;opacity:.9}
+.adform input:not([type=checkbox]):not([type=color]),.adform select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.1);color:#fff;font-size:14px}
+.adform select option{color:#000}
+.adfs,.adfc{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:12px}.adfs>span,.adfc>span{flex-basis:100%;opacity:.9}
+.adck{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.adck input[type=color]{width:38px;height:28px;border:0;background:none;padding:0}
+.adform>label.adck{flex-direction:row;align-items:center}
 
 /* ===== Browser (tabs) ===== */
 .br{position:absolute;inset:0;display:flex;flex-direction:column;background:rgba(18,12,9,.35)}
@@ -932,7 +941,7 @@ function adminDock(){const d=document.getElementById('dock');if(!d)return;let b=
  else{if(b)b.remove();const w=typeof open_!='undefined'&&open_.admin;if(w){w.onclose&&w.onclose();w.remove();delete open_.admin}}}
 async function adminApi(path,body){const r=await fetch(path,{method:body?'POST':'GET',headers:{'content-type':'application/json',authorization:'Bearer '+(SESSION?SESSION.t:'')},body:body?JSON.stringify(body):undefined});
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||('Request failed ('+r.status+')'));return d}
-function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','AI log'];let tab='Overview',alive=true;
+function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Shop','Site','AI log'];let tab='Overview',alive=true;
  b.innerHTML=`<div class=adw><div class=adt role=tablist hidden>${TABS.map(t=>`<button type=button role=tab data-tab="${t}">${t}</button>`).join('')}</div><div class=adn role=status></div><div class=adb><p class=adm>Checking admin access…</p></div></div>`;
  const B=$('.adb',b),N=$('.adn',b);
  const note=(t,bad)=>{N.textContent=t||'';N.className='adn'+(bad?' bad':'')+(t?' on':'')};
@@ -940,7 +949,7 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','
  const day=t=>t?new Date(t).toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'}):'';
  const act=(label,key,attrs,danger)=>`<button type=button class="btn${danger?' adx':''}" data-do="${key}" ${attrs||''}>${esc(label)}</button>`;
  const me=()=>(AUTH.name||'').toLowerCase();
- let users=[],games=[],gov={};
+ let users=[],games=[],gov={},shop=null,shEdit=null;
  const R={
   async Overview(){const o=await adminApi('/api/admin/overview');
    const stat=(n,l)=>`<div class=ads><b>${n}</b><small>${l}</small></div>`;
@@ -966,6 +975,14 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','
    const d=await adminApi('/api/lc/admin/reports'+(view=='All reports'?'?all=1':''));const U=d.users||{},nm=k=>U[k]?U[k].name:k;
    return bar+((d.reports||[]).map(r=>`<div class=adr><div class=adrh><b>${esc(r.server)}${r.chan?' · #'+esc(r.chan):''} · ${esc(nm(r.author))}</b>${r.ai?'<i class=adp>Lumio AI flag</i>':''}${r.status!='open'?`<i class=adp>${esc(r.status)}</i>`:''}</div><p>${esc(r.text)}</p><small>${r.ai?'Auto-moderation':'Reported by '+esc(nm(r.by))}${r.reason?': '+esc(r.reason):''} · ${when(r.ts)}</small>
     ${r.status=='open'?`<div class=adacts>${act('Remove message','lcrr',`data-id=${r.id}`,1)}${act('Dismiss','lcrd',`data-id=${r.id}`)}</div>`:''}</div>`).join('')||`<p class=adm>${view=='Open reports'?'No open reports. Reported messages from every Lumio Chat server show up here.':'No reports yet.'}</p>`)},
+  async Shop(){const cat=($('.adshc',B)||{}).value||'all';const q=(($('.adq',B)||{}).value||'').trim().toLowerCase();shop=await adminApi('/api/lc/admin/shop');const C=shop.cats,now=Date.now();
+   const list=shop.items.filter(x=>(cat=='all'||x.cat==cat)&&(!q||x.n.toLowerCase().includes(q)||x.id.includes(q)));
+   const badge=x=>(!x.on?'<i class="adp bad">Hidden</i>':'')+(x.from&&x.from>now?`<i class=adp>Starts ${day(x.from)}</i>`:'')+(x.until?(x.until<=now?'<i class="adp bad">Ended</i>':`<i class=adp>Until ${day(x.until)}</i>`):'');
+   return `<div class=adbar><select class=adshc aria-label="Category"><option value=all>All categories</option>${Object.entries(C).map(([k,v])=>`<option value="${k}"${k==cat?' selected':''}>${esc(v.n)}</option>`).join('')}</select><input class=adq type=search placeholder="Search items" value="${esc(q)}" aria-label="Search items" autocapitalize=none spellcheck=false></div>
+   <div class=adbar><button type=button class="btn on" data-do=shnew>Add item</button><button type=button class=btn data-do=shgrant>Give Orbs</button><button type=button class=btn data-do=refresh>Refresh</button></div><div class=adform hidden></div>
+   <p class=adm>${shop.items.length} items · ${shop.totals.wallets} wallets holding ${Number(shop.totals.orbs).toLocaleString()} Orbs. Prices and dates change for everyone right away; people keep what they already bought.</p>`+
+   (list.map(x=>`<div class=adr><div class=adrh><b>${esc(x.n)}</b><i class=adp>${x.p?Number(x.p).toLocaleString()+' Orbs':'Free'}</i>${badge(x)}</div><small>${esc(C[x.cat]?C[x.cat].n:x.cat)} · style ${esc(x.v.fx)}${x.v.c?' · '+x.v.c.map(esc).join(' '):''} · owned by ${x.owners}</small>${x.d?`<p>${esc(x.d)}</p>`:''}
+    <div class=adacts>${act('Edit','shedit',`data-s="${esc(x.id)}"`)}${act(x.on?'Hide from shop':'Show in shop','shtog',`data-s="${esc(x.id)}"`)}</div></div>`).join('')||'<p class=adm>No items match.</p>')},
   async 'AI log'(){const d=await adminApi('/api/ai/admin-action');const l=d.log||[];
    return `<p class=adm>Every admin action Lumio AI ran, and every code proposal, newest first.</p>`+(l.map(x=>`<div class=adr><div class=adrh><b>${esc(x.action)}</b>${x.ok?'<i class=adp>Done</i>':'<i class="adp bad">Failed</i>'}</div><p>${esc(x.result||'')}</p><small>${esc(x.username)} · ${when(x.created_at)}</small></div>`).join('')||'<p class=adm>No AI admin actions yet.</p>')},
   async Site(){const s=await adminApi('/api/admin/settings');
@@ -977,7 +994,21 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','
   const keep=$('.adq',B),kv=keep&&keep===document.activeElement;
   try{const h=await R[tab]();if(!alive)return;B.innerHTML=h;if(kv){const q=$('.adq',B);if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}}catch(e){B.innerHTML=`<p class="adm bad">${esc(e.message)}</p>`}};
  let qt;b.oninput=e=>{if(e.target.matches('.adq')){clearTimeout(qt);qt=setTimeout(()=>show(),250)}};
- b.onchange=e=>{if(e.target.matches('.adroom'))show()};
+ b.onchange=e=>{if(e.target.matches('.adroom,.adshc'))show();if(e.target.matches('.adfcat'))shForm({cat:e.target.value,v:{}})};
+ const dtl=t=>{if(!t)return'';const d=new Date(t);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)};
+ const shForm=x=>{shEdit=x;const F=$('.adform',B);if(!F)return;if(!x){F.hidden=true;F.innerHTML='';return}const C=shop.cats,c=C[x.cat]||{fx:[]},cols=(x.v&&x.v.c)||[],ss=(x.v&&x.v.s)||[];
+  F.hidden=false;F.innerHTML=`<h4 style="margin-top:0">${x.id?'Edit '+esc(x.n):'New item'}</h4>
+   <label>Category<select class=adfcat ${x.id?'disabled':''}>${Object.entries(C).map(([k,v])=>`<option value="${k}"${k==x.cat?' selected':''}>${esc(v.n)}</option>`).join('')}</select></label>
+   <label>Name<input class=adfn maxlength=40 value="${esc(x.n||'')}"></label>
+   <label>Description<input class=adfd maxlength=140 value="${esc(x.d||'')}"></label>
+   <label>Price in Orbs<input class=adfp type=number min=0 max=100000 step=10 value="${x.p??100}"></label>
+   <label>Style<select class=adffx>${c.fx.map(f=>`<option${f==(x.v&&x.v.fx)?' selected':''}>${f}</option>`).join('')}</select></label>
+   ${x.cat=='stickers'?`<div class=adfs><span>Stickers in this pack</span>${shop.stickers.map(k=>`<label class=adck><input type=checkbox value="${k}"${ss.includes(k)?' checked':''}>${k}</label>`).join('')}</div>`:
+   `<div class=adfc><span>Colors (optional)</span>${[0,1,2].map(i=>`<label class=adck><input type=checkbox class=adfcu${cols[i]?' checked':''}><input type=color class=adfcv value="${cols[i]||['#f0a040','#5ab8ff','#16171a'][i]}" aria-label="Color ${i+1}"></label>`).join('')}</div>`}
+   <label>Available from (optional)<input class=adff type=datetime-local value="${dtl(x.from)}"></label>
+   <label>Available until (optional)<input class=adfu type=datetime-local value="${dtl(x.until)}"></label>
+   <label class=adck><input type=checkbox class=adfon${x.on!==false?' checked':''}>Show in the shop</label>
+   <div class=adacts><button type=button class="btn on" data-do=shsave>Save item</button><button type=button class=btn data-do=shcancel>Cancel</button></div>`;F.scrollIntoView({block:'nearest'})};
  b.onclick=async e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
   if(d.tab){note('');show(d.tab);return}
   if(d.st!==undefined){t.classList.toggle('on');t.setAttribute('aria-pressed',t.classList.contains('on'));return}
@@ -1002,6 +1033,15 @@ function lumioAdmin(b){const TABS=['Overview','Accounts','Games','Chat','Site','
    case 'lcban':{const u=prompt('Username to ban from '+d.sn+':');if(!u||!u.trim())return;const why=prompt('Reason (optional):','')||'';run(()=>adminApi('/api/lc/admin/act',{op:'serverBan',sid:d.s,username:u.trim(),reason:why}),r=>r.summary);break}
    case 'lctr':{const u=prompt('Give '+d.sn+' to which username?');if(!u||!u.trim())return;run(()=>adminApi('/api/lc/admin/act',{op:'transferServer',sid:d.s,to:u.trim()}),r=>r.summary);break}
    case 'lcdel':if(!confirm('Delete the server '+d.sn+' with all its channels and messages? This cannot be undone.'))return;run(()=>adminApi('/api/lc/admin/act',{op:'deleteServer',sid:d.s}),r=>r.summary);break;
+   case 'shnew':shForm({cat:(($('.adshc',B)||{}).value||'all')=='all'?'name_color':$('.adshc',B).value,v:{},p:100});break;
+   case 'shedit':shForm(shop.items.find(y=>y.id==d.s));break;
+   case 'shcancel':shForm(null);break;
+   case 'shtog':{const y=shop.items.find(z=>z.id==d.s);run(()=>adminApi('/api/lc/admin/shop',{op:'saveItem',id:y.id,cat:y.cat,n:y.n,d:y.d,p:y.p,v:y.v,on:!y.on,from:y.from||null,until:y.until||null}),y.on?y.n+' is hidden from the shop.':y.n+' is back in the shop.');break}
+   case 'shsave':{const F=$('.adform',B),x=shEdit,cat=x.id?x.cat:$('.adfcat',F).value,v={fx:$('.adffx',F).value};
+     if(cat=='stickers')v.s=[...F.querySelectorAll('.adfs input:checked')].map(i=>i.value);else{const c=[...F.querySelectorAll('.adfc .adck')].filter(l=>$('.adfcu',l).checked).map(l=>$('.adfcv',l).value);if(c.length)v.c=c}
+     const ts=s=>s?new Date(s).getTime():null;
+     run(async()=>{const r=await adminApi('/api/lc/admin/shop',{op:'saveItem',id:x.id||'',cat,n:$('.adfn',F).value,d:$('.adfd',F).value,p:+$('.adfp',F).value,v,on:$('.adfon',F).checked,from:ts($('.adff',F).value),until:ts($('.adfu',F).value)});shEdit=null;return r},r=>r.summary);break}
+   case 'shgrant':{const u=prompt('Give Orbs to which username?');if(!u||!u.trim())return;const n=prompt('How many Orbs? (use a minus sign to take Orbs away)','100');if(!n||!+n)return;run(()=>adminApi('/api/lc/admin/shop',{op:'grantOrbs',username:u.trim(),n:+n}),r=>r.summary);break}
    case 'save':{const on=k=>$(`[data-st=${k}]`,B).classList.contains('on');run(()=>adminApi('/api/admin/settings',{announcement:$('.adann',B).value,signupsOpen:on('signupsOpen'),chatEnabled:on('chatEnabled'),maintenance:on('maintenance')}),'Site controls saved.');break}}};
  b.closest('.win').onclose=()=>{alive=false};
  // Ask the server first; the panel only renders for a confirmed admin.
