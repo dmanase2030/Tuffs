@@ -5,7 +5,7 @@
 
 // Apps Lumio AI may open. Keep in sync with APPS in the launcher (admin is never offered).
 export const APP_IDS = {
-  browser: "Browser", games: "Games", ai: "Lumio AI", manga: "Manga", music: "Music",
+  browser: "Browser", games: "Games", ai: "Lumio AI", chat: "Chat", manga: "Manga", music: "Music",
   watch: "Watch", account: "Account", settings: "Settings", snake: "Snake",
 };
 
@@ -136,6 +136,8 @@ export function systemPrompt(games, lastUser, user, opts = {}) {
     "- Manga app: opens the manga site toonkotsu.com through the proxy. That site often shows a bot check the proxy can't pass; then use \"Open toonkotsu.com in a new tab\".",
     "- Music and Watch are simple demo players with built-in sample content (they don't stream real songs or videos).",
     "- Settings: accent color, glass blur and window opacity, 24-hour clock, wallpapers (including your own picture), desktop style and which chrome (dock, desktop icons) to show.",
+    "- Chat app: public chat rooms (General, Games, Random) for signed-in Lumio accounts. Tap a name or picture to see that person's profile; you can delete your own messages. Sending is limited to about 8 messages every 15 seconds.",
+    "- Profiles: in the Account app, the Profile tab sets your display name, picture (a preset or your own photo), bio and accent color. Others see it in Chat.",
     "- Lumio AI (you): chats are saved on this device only. Limit: about 20 messages every 10 minutes.",
     "",
     ...PRIVATE_OPEN(apps),
