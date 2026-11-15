@@ -92,7 +92,9 @@ export async function onRequestPost(context) {
     // 503, not 502: Cloudflare swaps a Function's 502 body for its own "error code: 502" page.
     return json({ error: "Lumio AI couldn't answer right now. Try again in a moment.", code: "upstream", reason }, 503);
   }
-  return new Response(rewrite(stream, games, promptGuard(sp.private)), {
+  const lastText = messages[messages.length - 1].content;
+  const wantsGame = /\b(play|game|games|open|launch|recommend|suggest)\b/i.test(lastText);
+  return new Response(rewrite(stream, games, promptGuard(sp.private), wantsGame), {
     headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" },
   });
 }
@@ -100,14 +102,24 @@ export async function onRequestPost(context) {
 /* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
  * → uniform `data: {"response": "..."}` events, run through the action filter. */
 const REFUSAL = "I can't share how I'm set up, but I'm happy to help with something else.";
-function rewrite(stream, games, pguard) {
+const HOLD = 48; // chars held back so the leak guard can stop a reply before private text goes out
+
+/* Upstream SSE (either {response} or OpenAI-style {choices[0].delta.content})
+ * → uniform `data: {"response": "..."}` events, run through the action filter
+ * and the prompt-leak guard. When the user wanted a game and the reply names
+ * real catalog games without tags, buttons for them are added at the end. */
+function rewrite(stream, games, pguard, wantsGame) {
   const filter = actionFilter(games), dec = new TextDecoder(), enc = new TextEncoder();
-  let buf = "", stopped = false;
-  // If the reply starts echoing the private instructions, stop and tell the app to replace the whole reply.
-  const emit = (ctl, text) => {
-    if (!text || stopped) return;
-    if (!pguard.check(text)) { stopped = true; ctl.enqueue(enc.encode("data: " + JSON.stringify({ replace: REFUSAL }) + "\n\n")); return; }
-    ctl.enqueue(enc.encode("data: " + JSON.stringify({ response: text }) + "\n\n"));
+  let buf = "", stopped = false, hold = "", full = "";
+  const send = (ctl, text) => { if (text) ctl.enqueue(enc.encode("data: " + JSON.stringify({ response: text }) + "\n\n")); };
+  const push = (ctl, text, final) => {
+    if (stopped) return;
+    if (text) {
+      if (!pguard.check(text)) { stopped = true; hold = ""; ctl.enqueue(enc.encode("data: " + JSON.stringify({ replace: REFUSAL }) + "\n\n")); return; }
+      hold += text; full += text;
+    }
+    if (final) { send(ctl, hold); hold = ""; return; }
+    if (hold.length > HOLD) { send(ctl, hold.slice(0, hold.length - HOLD)); hold = hold.slice(-HOLD); }
   };
   return stream.pipeThrough(new TransformStream({
     transform(chunk, ctl) {
@@ -121,11 +133,21 @@ function rewrite(stream, games, pguard) {
         if (!p || p === "[DONE]") continue;
         let j; try { j = JSON.parse(p); } catch { continue; }
         const tok = j.response || (j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content) || "";
-        if (tok) emit(ctl, filter.push(tok, false));
+        if (tok) push(ctl, filter.push(tok, false), false);
       }
     },
     flush(ctl) {
-      emit(ctl, filter.push("", true));
+      push(ctl, filter.push("", true), false);
+      if (!stopped && wantsGame && !/\[\[open:/.test(full)) {
+        const low = full.toLowerCase(), skip = new Set(["browser", "music", "games", "settings", "watch", "manga"]);
+        const hits = games
+          .filter(g => g.title.length >= 4 && !skip.has(g.title.toLowerCase()) && new RegExp("(^|[^a-z0-9])" + g.title.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "($|[^a-z0-9])").test(low))
+          .sort((a, b) => b.title.length - a.title.length)
+          .filter((g, i, arr) => !arr.slice(0, i).some(x => x.title.toLowerCase().includes(g.title.toLowerCase())))
+          .slice(0, 3);
+        if (hits.length) push(ctl, "\n\n" + hits.map(g => `[[open:game:${g.id}]]`).join("\n"), false);
+      }
+      push(ctl, "", true);
       ctl.enqueue(enc.encode("data: [DONE]\n\n"));
     },
   }));
