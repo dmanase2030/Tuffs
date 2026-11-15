@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd58a"/>
+      <stop offset=".55" stop-color="#f59a3c"/>
+      <stop offset="1" stop-color="#d4592a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="256" cy="262" r="210" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff6de" stop-opacity=".9"/>
+      <stop offset=".45" stop-color="#ffe0a0" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#ffe0a0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="h1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a3b1c"/>
+      <stop offset="1" stop-color="#5a2412"/>
+    </linearGradient>
+    <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a1d10"/>
+      <stop offset="1" stop-color="#26100a"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="sq"><rect width="512" height="512" rx="114"/></clipPath>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#sky)"/>
+    <circle cx="256" cy="262" r="210" fill="url(#glow)"/>
+    <g stroke="#fff3d6" stroke-width="14" stroke-linecap="round" opacity=".8">
+      <path d="M256 92v34M150 136l22 24M362 136l-22 24M96 236h32M416 236h-32"/>
+    </g>
+    <circle cx="256" cy="268" r="96" fill="#fff4dc"/>
+    <path d="M0 330c70-46 150-62 236-40 70 18 120 22 186-6 34-14 66-18 90-14V512H0z" fill="url(#h1)"/>
+    <path d="M0 400c96-40 196-46 292-18 84 24 150 18 220-10V512H0z" fill="url(#h2)"/>
+    <rect width="512" height="256" fill="url(#shine)"/>
+  </g>
+</svg>
