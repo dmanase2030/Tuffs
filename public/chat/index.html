@@ -203,7 +203,7 @@ textarea.fld{resize:vertical;min-height:80px}
 .plate-fade::after{background:linear-gradient(90deg,transparent 30%,rgba(255,255,255,.4))}
 .plate-dots::after{background-image:radial-gradient(circle,rgba(255,255,255,.45) 0 2.5px,transparent 3.5px);background-size:18px 18px}
 .mrow.hasplate{position:relative;overflow:hidden}
-.mrow.hasplate>*,.pvrow.hasplate>*,.prow2>*,.bprow>*{position:relative;z-index:1}
+.mrow.hasplate>*:not(.plate),.pvrow.hasplate>*:not(.plate),.prow2>*:not(.plate),.bprow>*:not(.plate){position:relative;z-index:1}
 .mrow.hasplate .nm,.pvrow.hasplate .nm{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
 .mrow.hasplate small,.pvrow.hasplate small{color:rgba(255,255,255,.88)}
 .pvc{position:relative;overflow:hidden}
