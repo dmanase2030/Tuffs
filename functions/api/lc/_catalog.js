@@ -15,7 +15,7 @@ export const CATS = {
   sound: { n: "Notification Sounds", fx: ["chime", "blip", "marimba", "pluck", "retro", "bell", "droplet", "soft"] },
   stickers: { n: "Sticker Packs", fx: ["pack"] },
   react_fx: { n: "Reaction Effects", fx: ["confetti", "hearts", "sparks", "ripple", "stars", "bubbles"] },
-  plate: { n: "Nameplates", fx: ["wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots", "pixel"] },
+  plate: { n: "Nameplates", fx: ["wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots", "pixel", "aurora", "lava", "shine", "twinkle"] },
   pfx: { n: "Profile Effects", fx: ["petals", "rain", "sparks", "snow", "bubbles", "aurora", "pixel"] },
 };
 // The original sticker art lives in the app (SVG); packs reference these ids.
@@ -133,6 +133,15 @@ export const SEED = [
   S("pl_pixel", "plate", "Pixel Pop", 500, "pixel", ["#1a1033", "#ff4fd8"], "Chunky pixels behind your name."),
   S("pl_8bit", "plate", "8-Bit Hero", 550, "pixel", ["#0f2a6b", "#ffd36e"], "Retro game blocks behind your name."),
   S("pf_pixel", "pfx", "Pixel Rain", 800, "pixel", ["#3ddc97", "#5ab8ff"], "Little squares rain over your profile."),
+  // animated nameplates (they move, like a GIF) + more plates
+  S("pl_aurora", "plate", "Aurora Sky", 650, "aurora", ["#0b2a4a", "#3ddc97"], "Moving northern lights behind your name."),
+  S("pl_lava", "plate", "Lava Flow", 600, "lava", ["#2a0a0a", "#ff5a1f"], "Slow lava flowing behind your name."),
+  S("pl_shine", "plate", "Gold Shine", 550, "shine", ["#8a5a12", "#ffd36e"], "A light sweep keeps crossing your name."),
+  S("pl_twinkle", "plate", "Twinkle", 500, "twinkle", ["#141433", "#ffe27a"], "Stars twinkle behind your name."),
+  S("pl_galaxy", "plate", "Galaxy", 550, "stars", ["#12082e", "#b06cff"], "A purple galaxy behind your name."),
+  S("pl_carbon", "plate", "Carbon", 300, "dots", ["#101014", "#3a3f4a"], "Dark carbon dots behind your name."),
+  S("pl_candy", "plate", "Candy", 400, "stripes", ["#ff6f91", "#ffd36e"], "Candy stripes behind your name."),
+  S("pl_forest", "plate", "Forest", 400, "fade", ["#0e2a1a", "#3ddc97"], "A deep forest fade behind your name."),
 ];
 
 /* Bundles: themed sets sold together. The server prices a bundle from the parts the
