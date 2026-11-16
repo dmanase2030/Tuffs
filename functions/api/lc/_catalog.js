@@ -15,8 +15,17 @@ export const CATS = {
   sound: { n: "Notification Sounds", fx: ["chime", "blip", "marimba", "pluck", "retro", "bell", "droplet", "soft"] },
   stickers: { n: "Sticker Packs", fx: ["pack"] },
   react_fx: { n: "Reaction Effects", fx: ["confetti", "hearts", "sparks", "ripple", "stars", "bubbles"] },
+  plate: { n: "Nameplates", fx: ["wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots"] },
+  pfx: { n: "Profile Effects", fx: ["petals", "rain", "sparks", "snow", "bubbles", "aurora"] },
 };
 // The original sticker art lives in the app (SVG); packs reference these ids.
+/* Shop collections: themed groups shown as banners in the shop. Items opt in with data.col. */
+export const COLS = {
+  ocean: { n: "Ocean Deep", c: ["#0b3d5c", "#2aa5a0"] },
+  bloom: { n: "Bloom", c: ["#5c1f3d", "#ff8ac2"] },
+  spooky: { n: "After Dark", c: ["#171226", "#7a4fd0"] },
+  royal: { n: "Royal", c: ["#2a1e5c", "#f0a040"] },
+};
 export const STICKERS = ["hi", "gg", "lol", "brb", "wow", "love", "sleepy", "cool", "cry", "angry", "think", "yes", "no", "fire",
   "party", "trophy", "rocket", "controller", "ghost", "cat", "dog", "pizza", "star", "heart", "thumbs", "clap", "skull", "rain", "sun", "moon"];
 
@@ -102,6 +111,33 @@ export const SEED = [
   S("rx_ripple", "react_fx", "Ripple", 150, "ripple", ["#5ab8ff"], "A soft ripple."),
   S("rx_stars", "react_fx", "Star Pop", 250, "stars", ["#ffe27a"], "Stars pop out."),
   S("rx_bubbles", "react_fx", "Bubbles", 200, "bubbles", ["#7cc4ff"], "Bubbles rise."),
+  // nameplates: a backdrop strip behind your name in member lists
+  S("pl_fin", "plate", "Shark Fin", 450, "wave", ["#0e4d64", "#2aa5a0"], "Ocean water behind your name.", { col: "ocean" }),
+  S("pl_blossom", "plate", "Cherry Blossom", 500, "petals", ["#7a2e4d", "#ff9ec7"], "Soft pink petals behind your name.", { col: "bloom" }),
+  S("pl_stars", "plate", "Starfield", 500, "stars", ["#1b1040", "#7a4fd0"], "A night sky behind your name.", { col: "spooky" }),
+  S("pl_gold", "plate", "Golden Hour", 550, "wave", ["#8a5a12", "#f0a040"], "Warm gold waves behind your name.", { col: "royal" }),
+  S("pl_grid", "plate", "Neon Grid", 400, "grid", ["#10131c", "#3ddc97"], "A retro grid behind your name."),
+  S("pl_sunset", "plate", "Sunset", 350, "stripes", ["#b3402a", "#ffb35c"], "Sunset stripes behind your name."),
+  S("pl_frost", "plate", "Frost", 350, "fade", ["#274b63", "#aee2ff"], "A cool fade behind your name."),
+  S("pl_rose", "plate", "Rose Glow", 450, "glow", ["#5c1f3d", "#ff6f91"], "A rosy glow behind your name."),
+  // profile effects: an animated layer over your profile card
+  S("pf_petals", "pfx", "Falling Petals", 800, "petals", ["#ff9ec7", "#ff6f91"], "Petals drift over your profile.", { col: "bloom" }),
+  S("pf_rain", "pfx", "Rainfall", 700, "rain", ["#7cc4ff", "#3b82f6"], "Soft rain over your profile.", { col: "ocean" }),
+  S("pf_sparks", "pfx", "Ember Sparks", 750, "sparks", ["#ffb02e", "#ff5a1f"], "Embers float up over your profile.", { col: "spooky" }),
+  S("pf_snow", "pfx", "First Snow", 700, "snow", ["#ffffff", "#aee2ff"], "Snow settles over your profile."),
+  S("pf_bubbles", "pfx", "Bubble Rise", 650, "bubbles", ["#7cc4ff", "#3ddc97"], "Bubbles rise over your profile."),
+  S("pf_aurora", "pfx", "Aurora Veil", 950, "aurora", ["#3ddc97", "#9a86ff"], "Northern lights over your profile.", { col: "royal" }),
+  // one more name color, for the Ocean set
+  S("nc_deep", "name_color", "Deep Sea", 260, "gradient", ["#0e4d64", "#2aa5a0"], "A deep ocean gradient.", { col: "ocean" }),
+];
+
+/* Bundles: themed sets sold together. The server prices a bundle from the parts the
+ * buyer does not own yet, with the discount applied, so nobody pays twice. */
+export const BUNDLES = [
+  { id: "bd_ocean", n: "Ocean Bundle", items: ["pl_fin", "pf_rain", "nc_deep"], off: 0.15 },
+  { id: "bd_bloom", n: "Bloom Bundle", items: ["pl_blossom", "pf_petals", "dc_petals"], off: 0.15 },
+  { id: "bd_star", n: "Starlight Bundle", items: ["pl_stars", "pf_sparks", "nc_neon"], off: 0.2 },
+  { id: "bd_royal", n: "Royal Bundle", items: ["pl_gold", "dc_crown", "nc_gold"], off: 0.15 },
 ];
 
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -117,6 +153,7 @@ export function cleanItemData(cat, data) {
     if (!c.every(x => HEX.test(x))) return "Colors must look like #ff7a45.";
     out.c = c.map(x => x.toLowerCase());
   }
+  if (typeof d.col === "string" && COLS[d.col]) out.col = d.col;
   if (cat === "stickers") {
     const s = [...new Set((Array.isArray(d.s) ? d.s : []).map(String))].filter(x => STICKERS.includes(x)).slice(0, 16);
     if (!s.length) return "Pick at least one sticker for the pack.";

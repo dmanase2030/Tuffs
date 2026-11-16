@@ -5,7 +5,7 @@
  * or two tabs can't buy twice or claim twice. Prices always come from D1. */
 import { json } from "../auth/_shared.js";
 import { err } from "./_db.js";
-import { CATS, SEED, QUESTS, WELCOME_ORBS, dayKey, cleanItemData, STICKERS, RETIRED } from "./_catalog.js";
+import { CATS, SEED, QUESTS, WELCOME_ORBS, dayKey, cleanItemData, STICKERS, RETIRED, BUNDLES, COLS } from "./_catalog.js";
 
 let SEEDED = false;
 export async function seedShop(db) {
@@ -35,6 +35,7 @@ async function retire(db, now) {
 const shapeItem = (r, now, admin) => {
   let data = {}; try { data = JSON.parse(r.data); } catch { /* bad row */ }
   const o = { id: r.id, cat: r.cat, n: r.name, d: r.descr || "", p: r.price, v: data, on: !!r.active };
+  if (data.col) o.col = data.col;
   if (r.start_at) o.from = r.start_at;
   if (r.end_at) o.until = r.end_at;
   o.buy = !!r.active && (!r.start_at || r.start_at <= now) && (!r.end_at || r.end_at > now);
@@ -71,7 +72,10 @@ export async function shopState(db, user) {
     db.prepare("SELECT item_id, ts FROM lc_owned WHERE user_key = ?1").bind(me),
     db.prepare("SELECT slot, item_id FROM lc_equip WHERE user_key = ?1").bind(me),
   ]);
+  const priceOf = new Map((items.results || []).map(r => [r.id, r.price]));
   return {
+    bundles: BUNDLES.map(b => ({ id: b.id, n: b.n, items: b.items, off: b.off, full: b.items.reduce((a, id) => a + (priceOf.get(id) || 0), 0) })),
+    cols: COLS,
     cats: Object.fromEntries(Object.entries(CATS).map(([k, v]) => [k, v.n])),
     items: (items.results || []).filter(r => CATS[r.cat]).map(r => shapeItem(r, now, false)),
     owned: Object.fromEntries((owned.results || []).map(r => [r.item_id, r.ts])),
@@ -122,6 +126,64 @@ export async function shopOp(context, user, body) {
       if (o.cat !== slot) return err("That doesn't go in that slot.");
       await db.prepare("INSERT INTO lc_equip (user_key, slot, item_id) VALUES (?1, ?2, ?3) ON CONFLICT(user_key, slot) DO UPDATE SET item_id = excluded.item_id").bind(me, slot, String(body.item)).run();
       return json({ ok: true });
+    }
+    case "shopBuyBundle": {
+      const b = BUNDLES.find(x => x.id === String(body.bundle || ""));
+      if (!b) return err("That bundle isn't in the shop.", 404);
+      const rows = [];
+      for (const id of b.items) { const r = await db.prepare("SELECT * FROM lc_items WHERE id = ?1").bind(id).first(); if (r && r.active && CATS[r.cat]) rows.push(r); }
+      if (rows.length < 2) return err("That bundle isn't available right now.", 409);
+      const oRows = (await db.prepare("SELECT item_id FROM lc_owned WHERE user_key = ?1").bind(me).all()).results || [];
+      const oSet = new Set(oRows.map(r => r.item_id));
+      const missing = rows.filter(r => !oSet.has(r.id));
+      if (!missing.length) return err("You already own everything in that bundle.", 409, "owned");
+      const price = Math.max(0, Math.round(missing.reduce((a, r) => a + r.price, 0) * (1 - b.off)));
+      const w = await wallet(db, me);
+      if (w.orbs < price) return err(`You need ${price - w.orbs} more Orbs for that bundle.`, 402, "orbs");
+      const stmts = [db.prepare("UPDATE lc_wallet SET orbs = orbs - ?2, spent = spent + ?2 WHERE user_key = ?1 AND orbs >= ?2").bind(me, price)];
+      for (const r of missing) stmts.push(db.prepare("INSERT OR IGNORE INTO lc_owned (user_key, item_id, price, ts) SELECT ?1, ?2, ?3, ?4 WHERE changes() = 1").bind(me, r.id, r.price, now));
+      stmts.push(db.prepare("INSERT INTO lc_ledger (user_key, delta, reason, item_id, ts) SELECT ?1, ?2, ?3, NULL, ?4 WHERE changes() = 1").bind(me, -price, "bundle:" + b.id, now));
+      const res = await db.batch(stmts);
+      if (!(res[0].meta && res[0].meta.changes)) return err("That purchase didn't go through. Check your Orbs and try again.", 409);
+      for (const r of missing) if (r.cat !== "stickers") await db.prepare("INSERT OR IGNORE INTO lc_equip (user_key, slot, item_id) VALUES (?1, ?2, ?3)").bind(me, r.cat, r.id).run();
+      const after = await db.prepare("SELECT orbs FROM lc_wallet WHERE user_key = ?1").bind(me).first();
+      return json({ ok: true, orbs: after.orbs, items: missing.map(r => r.id) });
+    }
+    case "shopGift": {
+      const toKey = String(body.to || "").trim().toLowerCase().replace(/^@/, "");
+      if (!toKey || toKey === me) return err("Pick someone else to gift.");
+      const rec = await db.prepare("SELECT username, username_key FROM users WHERE username_key = ?1").bind(toKey).first();
+      if (!rec) return err("No Lumio account with that username.", 404);
+      await wallet(db, rec.username_key);
+      let price = 0, grant = [];
+      if (body.bundle) {
+        const b = BUNDLES.find(x => x.id === String(body.bundle));
+        if (!b) return err("That bundle isn't in the shop.", 404);
+        const rows = [];
+        for (const id of b.items) { const r = await db.prepare("SELECT * FROM lc_items WHERE id = ?1").bind(id).first(); if (r && r.active && CATS[r.cat]) rows.push(r); }
+        const oRows = (await db.prepare("SELECT item_id FROM lc_owned WHERE user_key = ?1").bind(rec.username_key).all()).results || [];
+        const oSet = new Set(oRows.map(r => r.item_id));
+        grant = rows.filter(r => !oSet.has(r.id));
+        if (!grant.length) return err(rec.username + " already owns everything in that bundle.", 409, "owned");
+        price = Math.max(0, Math.round(grant.reduce((a, r) => a + r.price, 0) * (1 - b.off)));
+      } else {
+        const it2 = await db.prepare("SELECT * FROM lc_items WHERE id = ?1").bind(String(body.item || "")).first();
+        if (!it2 || !CATS[it2.cat]) return err("That item isn't in the shop.", 404);
+        if (!it2.active || (it2.start_at && it2.start_at > now) || (it2.end_at && it2.end_at <= now)) return err("That item isn't available right now.", 409);
+        const have = await db.prepare("SELECT 1 FROM lc_owned WHERE user_key = ?1 AND item_id = ?2").bind(rec.username_key, it2.id).first();
+        if (have) return err(rec.username + " already owns that.", 409, "owned");
+        price = it2.price; grant = [it2];
+      }
+      const w = await wallet(db, me);
+      if (w.orbs < price) return err(`You need ${price - w.orbs} more Orbs for that gift.`, 402, "orbs");
+      const stmts = [db.prepare("UPDATE lc_wallet SET orbs = orbs - ?2, spent = spent + ?2 WHERE user_key = ?1 AND orbs >= ?2").bind(me, price)];
+      for (const r of grant) stmts.push(db.prepare("INSERT OR IGNORE INTO lc_owned (user_key, item_id, price, ts) SELECT ?1, ?2, ?3, ?4 WHERE changes() = 1").bind(rec.username_key, r.id, r.price, now));
+      stmts.push(db.prepare("INSERT INTO lc_ledger (user_key, delta, reason, item_id, by_key, ts) SELECT ?1, ?2, 'gift', ?3, ?4, ?5 WHERE changes() = 1").bind(me, -price, body.bundle ? null : grant[0].id, rec.username_key, now));
+      const res = await db.batch(stmts);
+      if (!(res[0].meta && res[0].meta.changes)) return err("That gift didn't go through. Check your Orbs and try again.", 409);
+      for (const r of grant) if (r.cat !== "stickers") await db.prepare("INSERT OR IGNORE INTO lc_equip (user_key, slot, item_id) VALUES (?1, ?2, ?3)").bind(rec.username_key, r.cat, r.id).run();
+      const after = await db.prepare("SELECT orbs FROM lc_wallet WHERE user_key = ?1").bind(me).first();
+      return json({ ok: true, orbs: after.orbs, to: rec.username, items: grant.map(r => r.id) });
     }
     case "shopClaim": {
       const q = QUESTS.find(x => x.id === String(body.q || ""));
