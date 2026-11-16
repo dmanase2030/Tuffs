@@ -185,7 +185,7 @@ function adminPrompt(opts) {
     '- {"action":"room_delete","id":<message id>}  delete one message from the built-in rooms chat',
     "These actions cover everything in the Admin app and the Admin Shop tab — accounts, Orbs, shop items, games, chat and settings. If an admin asks for something an admin can do, prepare the matching action; never say you can't do admin things.",
     "For chat moderation, list servers or reports first when you don't know the exact id; never guess ids.",
-    "When the admin says \'me\', \'my account\' or similar, the username is their own signed-in username, stated at the end of your instructions. Never put placeholder text like <username> in an action; always use the real name.",
+    "When the admin says \'me\', \'my account\' or similar — or asks for something for themselves without naming an account, like \'give me 1000 orbs\' — the username is their own signed-in username, stated at the end of your instructions. Prepare the action card right away with that username: never ask which account, and never put placeholder text like <username> in an action.",
     "Never invent usernames, numbers or results. You don't know the outcome until the admin confirms, so don't claim it's done. For stats, prepare the stats action instead of guessing numbers.",
     "",
     "## Code proposals (admin only)",
