@@ -187,7 +187,7 @@ textarea.fld{resize:vertical;min-height:80px}
 .pop .pav .st::after{background:var(--float)!important}
 .pbody{padding:8px 14px 14px}.pbody h4{margin:4px 0 0;font-size:20px;color:var(--hd);word-break:break-word}.pbody .un{color:var(--mu);font-size:14px}
 .pcard{background:var(--side);border-radius:8px;padding:10px 12px;margin-top:10px}
-.bdgs{display:inline-flex;gap:4px;margin-left:7px;vertical-align:-6px}
+.bdgs{display:flex;gap:4px;margin-top:7px}
 .bdg{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:7px;color:var(--bc);background:color-mix(in srgb,var(--bc) 16%,transparent);border:1px solid color-mix(in srgb,var(--bc) 45%,transparent)}
 .fsview{position:fixed;inset:0;z-index:4200;background:rgba(0,0,0,.93);display:grid;place-items:center;padding:18px;cursor:zoom-out}
 .fsview img.fsimg{max-width:100%;max-height:calc(100% - 64px);border-radius:14px;object-fit:contain;box-shadow:0 20px 60px #000}
@@ -863,7 +863,7 @@ function renderSide(){const keepScroll=side.querySelector(".slist")?.scrollTop||
    ctxOn(b,(x,y)=>memberMenu(null,u,x,y));list.append(b)}
   side.append(list)}
  /* user panel */
- const me=U(ME());const chip=h("button",{class:"uchip","aria-label":"Set status",onclick:e=>{const r=chip.getBoundingClientRect();statusMenu(r.left,r.top-200)}},avatar(ME(),32,true),h("span",{style:"min-width:0"},h("b",null,me.name),h("small",null,me.listen||ST[me.st||"online"])));
+ const me=U(ME());const chip=h("button",{class:"uchip","aria-label":"Your profile",onclick:()=>profilePop(ME(),chip,curS())},avatar(ME(),32,true),h("span",{style:"min-width:0"},h("b",null,me.name),h("small",null,me.listen||ST[me.st||"online"])));
  const bell=h("button",{class:"ib"+(D.pf.muted?" on":""),"aria-label":D.pf.muted?"Unmute notifications":"Mute notifications",onclick:()=>{D.pf.muted=!D.pf.muted;save();renderSide();badgeParent();toast(D.pf.muted?"Notification badges muted":"Notification badges on")}},I(D.pf.muted?"bellx":"bell",19));tip(bell,D.pf.muted?"Unmute":"Mute","top");
  const gear=h("button",{class:"ib","aria-label":"User Settings",onclick:()=>openSettings("user")},I("gear",19));tip(gear,"User Settings","top");
  side.append(h("div",{class:"upanel"},chip,bell,gear))}
@@ -1059,7 +1059,8 @@ function fsView(node){closeFloating();const o=h("div",{class:"fsview",role:"dial
 function profilePop(u,anchor,s){closeFloating();const x=U(u),self=u==ME();const p=h("div",{class:"pop",role:"dialog","aria-label":x.name+" profile"});
  const draw=()=>{clear(p);const bn=h("div",{class:"bnr",style:{background:x.c||hue(x.name)}});if(x.bn){bn.append(h("img",{src:"/api/lc/img/"+x.bn,alt:"",loading:"lazy"}));bn.title="View full screen";bn.onclick=()=>fsView(h("img",{src:"/api/lc/img/"+x.bn,class:"fsimg",alt:"Banner"}))}
   const avEl=avatar(u,84,true,{class:"av pav"});avEl.title="View full screen";avEl.onclick=()=>{if(x.av=="img")fsView(h("img",{src:"/api/avatar?u="+encodeURIComponent(x.id)+"&v="+encodeURIComponent(x.avv||0),class:"fsimg",alt:x.name}));else fsView(avatar(u,280,true))};p.append(bn,avEl);const b=h("div",{class:"pbody"});
-  b.append(h("h4",null,nameIn(s,u)),h("div",{class:"un"},"@"+x.user,badgeRow(u,s),x.bot?" · Lumio AI":"",x.admin?h("span",{style:"color:var(--ac)"}," · Lumio admin"):null,s&&s.ownerId==u?h("span",{style:"color:var(--wa)"}," · Server Owner"):null));
+  b.append(h("h4",null,nameIn(s,u)),h("div",{class:"un"},"@"+x.user,x.bot?" · Lumio AI":"",x.admin?h("span",{style:"color:var(--ac)"}," · Lumio admin"):null,s&&s.ownerId==u?h("span",{style:"color:var(--wa)"}," · Server Owner"):null));
+  const bd=badgeRow(u,s);if(bd)b.append(bd);
   if(x.listen)b.append(h("div",{style:"margin-top:8px;font-size:14px"},x.listen));
   if(x.bio)b.append(h("div",{class:"pcard"},h("div",{class:"fl"},"About Me"),h("div",{class:"txt",style:"font-size:14px"},x.bio)));
   if(!x.bot)b.append(h("div",{class:"pcard"},h("div",{class:"fl"},"Member Since"),h("div",{style:"font-size:14px"},[x.since?"Lumio account: "+fmtDate(x.since):"",s&&s.id!="lumio"&&s.members[u]?s.n+": "+fmtDate(s.members[u].joined):""].filter(Boolean).join(" · ")||"—")));
@@ -1067,7 +1068,8 @@ function profilePop(u,anchor,s){closeFloating();const x=U(u),self=u==ME();const 
    b.append(h("div",{class:"pcard"},h("div",{class:"fl"},rs.length?"Roles":"No Roles"),h("div",{class:"rchips"},rs.map(r=>h("span",{class:"rchip"},h("i",{style:{background:r.color||"#9aa0aa"}}),r.n,roleAssignable(s,r,u)?h("button",{"aria-label":"Remove role "+r.n,onclick:()=>{if(Act.assignRole(s.id,u,r.id,false)){draw();refresh()}}},I("x",12,2.5)):null)),
     assignable.length?h("span",{class:"rchip add",role:"button","aria-label":"Add role",onclick:e=>{const r=e.currentTarget.getBoundingClientRect();rolePicker(s,u,r.left,r.bottom+4,()=>{refresh();profilePop(u,anchor,s)})}},I("plus",12,2.5),"Add Role"):null)))}
   const btns=h("div",{style:"display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"});
-  if(self)btns.append(h("button",{class:"b sm",onclick:()=>{closeFloating();openSettings("user",{tab:"account"})}},I("pen",14),"Edit Profile"));else if(!x.bot)btns.append(h("button",{class:"b sm",onclick:()=>openDM(u)},I("chat",14),"Message"));
+  if(self){btns.append(h("button",{class:"b sm",onclick:()=>{closeFloating();openSettings("user",{tab:"account"})}},I("pen",14),"Edit Profile"));
+   btns.append(h("button",{class:"b sm sec",onclick:e=>{const r=e.currentTarget.getBoundingClientRect();closeFloating();statusMenu(r.left,Math.max(8,r.top-200))}},"Set status"))}else if(!x.bot)btns.append(h("button",{class:"b sm",onclick:()=>openDM(u)},I("chat",14),"Message"));
   if(s&&above(s,u)&&can(s,"KICK"))btns.append(h("button",{class:"b sm sec",onclick:()=>kickDlg(s,u)},"Kick"));if(s&&above(s,u)&&can(s,"BAN"))btns.append(h("button",{class:"b sm dng",onclick:()=>banDlg(s,u)},"Ban"));
   b.append(btns);p.append(b);cosProfile(p,u)};draw();
  if(!D.users[u]&&u&&u!=BOT)api("users?k="+encodeURIComponent(u)).then(d=>{mergeUsers(d.users);if(p.isConnected){Object.assign(x,U(u));draw()}}).catch(()=>{});
