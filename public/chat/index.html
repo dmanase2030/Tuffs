@@ -959,7 +959,7 @@ function openAdminMenu(){
   let d;try{d=await admApi("users")}catch(e){clear(box);box.append(h("div",{class:"empty"},e.message));return}
   clear(box);
   const un=h("input",{class:"fld",placeholder:"Username",style:"flex:1"}),amt=h("input",{class:"fld",placeholder:"Orbs",type:"number",style:"width:96px"});
-  box.append(h("label",{class:"fl"},"Grant Orbs"),h("div",{style:"display:flex;gap:8px"},un,amt,h("button",{class:"b ok",onclick:async()=>{const n=parseInt(amt.value,10);if(!un.value.trim()||!n){toast("Enter a username and an amount.",true);return}try{const r=await api("admin/shop",{op:"grantOrbs",username:un.value.trim(),n});toast("Gave "+n+" Orbs to "+(r.username||un.value.trim())+". New balance: "+r.balance);loadShop()}catch(e){toast(e.message,true)}}},"Give")));
+  box.append(h("label",{class:"fl"},"Grant Orbs"),h("div",{style:"display:flex;gap:8px"},un,amt,h("button",{class:"b ok",onclick:async()=>{const n=parseInt(amt.value,10);if(!un.value.trim()||!n){toast("Enter a username and an amount.",true);return}try{const r=await api("admin/shop",{op:"grantOrbs",username:un.value.trim(),n});toast("Gave "+n+" Orbs to "+(r.username||un.value.trim())+". New balance: "+r.orbs);loadShop()}catch(e){toast(e.message,true)}}},"Give")));
   box.append(h("label",{class:"fl",style:"margin-top:18px"},"Accounts ("+d.users.length+")"));
   const list=h("div");box.append(list);
   for(const u of d.users.slice(0,50)){
