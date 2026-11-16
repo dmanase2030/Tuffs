@@ -775,6 +775,7 @@ const Act={
  createChannel(sid,name,cat){const s=S(sid);if(!s||!can(s,"MANAGE_CHANNELS"))return deny();name=slug(name);if(!name)return false;const c={id:rid("c_"),n:name,cat:cat&&s.cats.some(k=>k.id==cat)?cat:null,topic:"",last:0,lastA:"",all:0};
   let at=-1;s.chans.forEach((x,i)=>{if(x.cat==c.cat)at=i});s.chans.splice(at+1||s.chans.length,0,c);net("createChannel",{sid,id:c.id,n:name,cat:c.cat},()=>quiet(api("act",{op:"orderChans",sid,order:chanOrder(s)}))).catch(()=>{});return c},
  updateChannel(sid,cid,p){const s=S(sid);if(!s||!can(s,"MANAGE_CHANNELS"))return deny();const c=chanOf(s,cid);if(!c)return false;const b={sid,cid};if(p.n!=null){const n=slug(p.n);if(!n)return false;c.n=n;b.n=n}if(p.topic!=null){c.topic=String(p.topic).slice(0,200);b.topic=c.topic}if(p.slow!=null){c.slow=Math.max(0,+p.slow||0);b.slow=c.slow}if(p.cat!==undefined){c.cat=p.cat&&s.cats.some(k=>k.id==p.cat)?p.cat:null;b.cat=c.cat}net("updateChannel",b).catch(()=>{});return true},
+ setChannelPerms(sid,cid,perms){const s=S(sid);if(!s||!can(s,"MANAGE_CHANNELS"))return deny();const c=chanOf(s,cid);if(!c)return false;c.perms=JSON.parse(JSON.stringify(perms));net("setChannelPerms",{sid,cid,perms}).catch(()=>{});return true},
  deleteChannel(sid,cid){const s=S(sid);if(!s||!can(s,"MANAGE_CHANNELS"))return deny();const c=chanOf(s,cid);if(!c)return false;s.chans=s.chans.filter(x=>x!=c);delete D.msgs[cid];net("deleteChannel",{sid,cid}).catch(()=>{});return true},
  moveChannel(sid,cid,dir){const s=S(sid);if(!s||!can(s,"MANAGE_CHANNELS"))return deny();const c=chanOf(s,cid);if(!c)return false;const same=s.chans.filter(x=>x.cat==c.cat),i=same.indexOf(c),o=same[i+dir];if(!o)return false;const a=s.chans.indexOf(c),b=s.chans.indexOf(o);[s.chans[a],s.chans[b]]=[s.chans[b],s.chans[a]];net("orderChans",{sid,order:chanOrder(s)}).catch(()=>{});return true},
  placeChannel(sid,cid,beforeId,cat){const s=S(sid);if(!s||!can(s,"MANAGE_CHANNELS"))return deny();const c=chanOf(s,cid);if(!c||cid==beforeId)return false;s.chans=s.chans.filter(x=>x!=c);c.cat=cat&&s.cats.some(k=>k.id==cat)?cat:null;let i=beforeId?s.chans.findIndex(x=>x.id==beforeId):-1;if(i<0){i=s.chans.length;s.chans.forEach((x,j)=>{if(x.cat==c.cat)i=j+1})}s.chans.splice(i,0,c);net("orderChans",{sid,order:chanOrder(s)}).catch(()=>{});return true},
@@ -890,7 +891,7 @@ const dmOther=k=>k.slice(3).split("|").find(x=>x!=ME())||ME();
 
 /* ---------- navigation ---------- */
 const curS=()=>ui.sid?S(ui.sid):null;
-function curKey(){if(ui.sid){const s=curS();if(!s)return null;let c=ui.cid[s.id]||D.pf.lastC[s.id];if(!chanOf(s,c))c=s.chans[0]?.id;ui.cid[s.id]=c;return c||null}return ui.dm?dmKey(ME(),ui.dm):null}
+function curKey(){if(ui.sid){const s=curS();if(!s)return null;let c=ui.cid[s.id]||D.pf.lastC[s.id];if(!chanOf(s,c)||chanOf(s,c).cv===false)c=(s.chans.find(x=>x.cv!==false)||s.chans[0])?.id;ui.cid[s.id]=c;return c||null}return ui.dm?dmKey(ME(),ui.dm):null}
 function goServer(sid,keepChat){const s=S(sid);if(!s||!s.members[ME()])return;ui.sid=sid;ui.dm=null;ui.reply=null;ui.edit=null;ui.q="";D.pf.last=sid;if(!keepChat)document.body.classList.remove("chatopen");save();renderAll();kickPoll(true)}
 function goChannel(cid){const s=curS();if(!s)return;ui.cid[s.id]=cid;D.pf.lastC[s.id]=cid;save();ui.reply=null;ui.edit=null;ui.q="";document.body.classList.add("chatopen");document.body.classList.remove("memopen");renderAll();focusComposer();kickPoll()}
 function goHome(){ui.sid=null;ui.dm=null;ui.reply=null;ui.edit=null;ui.q="";D.pf.last=null;document.body.classList.remove("chatopen");save();renderAll()}
@@ -917,11 +918,11 @@ function renderSide(){const keepScroll=side.querySelector(".slist")?.scrollTop||
   const chRow=c=>{const k=c.id,unr=unread(k)&&!s.mute,mcount=mentionCount(k,s);const b=h("button",{class:"chn"+(ui.cid[s.id]==c.id&&curKey()==c.id?" on":"")+(unr?" unread":""),"data-cid":c.id,draggable:dragOK,onclick:e=>{if(e.target.closest(".tools"))return;goChannel(c.id)}},h("span",{class:"hash"},"#"),h("span",{class:"nm"},c.n),
     mcount?h("span",{class:"mbadge"},mcount):null,h("span",{class:"tools"},can(s,"INVITE")?h("span",{role:"button",title:"Create Invite","aria-label":"Create Invite",onclick:()=>inviteDlg(s)},I("userplus",16)):null,mc?h("span",{role:"button",title:"Edit Channel","aria-label":"Edit Channel",onclick:()=>openSettings("channel",{sid:s.id,cid:c.id})},I("gear",16)):null));
    ctxOn(b,(x,y)=>channelMenu(s,c,x,y));if(dragOK)dnd(b,s,c);return b};
-  s.chans.filter(c=>!c.cat).forEach(c=>list.append(chRow(c)));
-  for(const k of s.cats){const kids=s.chans.filter(c=>c.cat==k.id);const cat=h("div",{class:"cat"+(k.col?" col":""),"data-kid":k.id,onclick:e=>{if(e.target.closest(".cadd"))return;k.col=!k.col;D.pf.col[k.id]=k.col||undefined;save();renderSide()}},I("chev",12,2.5),h("span",{class:"cn"},k.n),mc?h("button",{class:"cadd","aria-label":"Create Channel",title:"Create Channel",onclick:()=>createChannelDlg(s,k.id)},I("plus",16)):null);
+  s.chans.filter(c=>!c.cat&&c.cv!==false).forEach(c=>list.append(chRow(c)));
+  for(const k of s.cats){const kids=s.chans.filter(c=>c.cat==k.id&&c.cv!==false);const cat=h("div",{class:"cat"+(k.col?" col":""),"data-kid":k.id,onclick:e=>{if(e.target.closest(".cadd"))return;k.col=!k.col;D.pf.col[k.id]=k.col||undefined;save();renderSide()}},I("chev",12,2.5),h("span",{class:"cn"},k.n),mc?h("button",{class:"cadd","aria-label":"Create Channel",title:"Create Channel",onclick:()=>createChannelDlg(s,k.id)},I("plus",16)):null);
    if(mc)tip(cat.querySelector(".cadd")||cat,"Create Channel","top");ctxOn(cat,(x,y)=>categoryMenu(s,k,x,y));if(dragOK)dndCat(cat,s,k);list.append(cat);
    kids.forEach(c=>{if(!k.col||curKey()==c.id||unread(c.id))list.append(chRow(c))})}
-  if(!s.chans.length)list.append(h("div",{class:"empty"},"No channels yet.",mc?h("div",{style:"margin-top:10px"},h("button",{class:"b sm",onclick:()=>createChannelDlg(s,null)},"Create Channel")):null));
+  if(!s.chans.some(c=>c.cv!==false))list.append(h("div",{class:"empty"},"No channels yet.",mc?h("div",{style:"margin-top:10px"},h("button",{class:"b sm",onclick:()=>createChannelDlg(s,null)},"Create Channel")):null));
   side.append(list);setScroll(list,keepScroll)}
  else{side.append(h("div",{class:"shead nohov"},h("span",null,"Direct Messages")));const list=h("div",{class:"slist"});
   list.append(h("button",{class:"homebtn"+(ui.dm?"":" on"),onclick:()=>goHome()},I("users",22),"Home"));
@@ -1063,7 +1064,7 @@ function slashCmd(key,s,text){
   return true}
  return false}
 
-function buildComposer(w,key,s,label){if(s&&!can(s,"SEND")){w.append(h("div",{class:"nosend"},I("lock",16),"You do not have permission to send messages in this channel."));return}
+function buildComposer(w,key,s,label){if(s&&(!can(s,"SEND")||(chanOf(s,key)&&chanOf(s,key).cs===false))){w.append(h("div",{class:"nosend"},I("lock",16),"You do not have permission to send messages in this channel."));return}
  if(ui.reply&&ui.reply.key==key){const o=(D.msgs[key]||[]).find(x=>x.id==ui.reply.id);if(o)w.append(h("div",{class:"rbar"},h("span",null,"Replying to ",h("b",{style:{color:colorIn(s,o.a)}},nameIn(s,o.a))),h("button",{class:"ib",style:"width:24px;height:24px","aria-label":"Cancel reply",onclick:()=>{ui.reply=null;rebuildComposer();focusComposer()}},I("x",16))));else ui.reply=null}
  if(ui.att&&ui.att.key==key)w.append(h("div",{class:"rbar attbar"},h("img",{src:ui.att.url,alt:""}),h("span",{style:"flex:1"},ui.att.id?"Image ready":"Uploading…"),h("button",{class:"ib",style:"width:24px;height:24px","aria-label":"Remove image",onclick:()=>{ui.att=null;rebuildComposer()}},I("x",16))));
  const ta=h("textarea",{id:"inp",rows:1,placeholder:"Message "+label,enterkeyhint:"send",maxlength:2000,"aria-label":"Message "+label,autocomplete:"off"});ta.value=ui.drafts[key]||"";
@@ -1560,7 +1561,7 @@ function renderSettings(){const st=ui.set;let L=$("#set");const keepScroll=L?.qu
  const nav=h("div",null),cont=h("div",{class:"in"});let tabs=[],title="";
  if(st.kind=="server"){const s=S(st.sid);if(!s||!s.members[ME()]){closeSettings();return}tabs=ssTabs(s).map(t=>[t[0],t[1]]);title=s.n;
   if(!tabs.length){closeSettings();toast(NOPE,true);return}nav.append(h("div",{class:"gh"},s.n));}
- else if(st.kind=="channel"){const s=S(st.sid),c=chanOf(s,st.cid);if(!s||!c||!can(s,"MANAGE_CHANNELS")){closeSettings();return}tabs=[["overview","Overview"]];nav.append(h("div",{class:"gh"},"# "+c.n+" · Text Channel"))}
+ else if(st.kind=="channel"){const s=S(st.sid),c=chanOf(s,st.cid);if(!s||!c||!can(s,"MANAGE_CHANNELS")){closeSettings();return}tabs=[["overview","Overview"],["perms","Permissions"]];nav.append(h("div",{class:"gh"},"# "+c.n+" · Text Channel"))}
  else{tabs=[["account","My Profile"],["appearance","Appearance"]];nav.append(h("div",{class:"gh"},"User Settings"))}
  if(!st.tab||!tabs.some(t=>t[0]==st.tab)){st.tab=tabs[0][0];if(isPhone()&&!st.content)st.content=false}
  for(const [k,l] of tabs){nav.append(h("button",{class:st.tab==k&&!isPhone()?"on":"",onclick:()=>{st.tab=k;st.content=true;renderSettings()}},l))}
@@ -1629,7 +1630,21 @@ const SECT={server:{
     h("div",{style:"display:flex;flex-direction:column;gap:6px"},h("button",{class:"b sm dng",onclick:()=>resolveReport(r,true)},"Remove"),h("button",{class:"b sm sec",onclick:()=>resolveReport(r,false)},"Dismiss"))))}).catch(e=>{clear(box);box.append(h("div",{class:"empty"},e.message))})},
  audit(c){const s=S(ui.set.sid);c.append(h("h2",null,"Audit Log"));const a=[...s.audit].reverse();if(!a.length)c.append(h("div",{class:"empty"},"Nothing has happened in this server yet."));
   a.forEach(x=>c.append(h("div",{class:"row"},avatar(x.by,32),h("div",{class:"grow"},h("span",null,h("b",null,U(x.by).name)," "+x.t),h("small",null,fmtFull(x.ts))))))}},
-channel:{overview(c){const s=S(ui.set.sid),ch=chanOf(s,ui.set.cid);const nm=h("input",{class:"fld",value:ch.n,maxlength:32,id:"cnm"}),tp=h("textarea",{class:"fld",maxlength:200,placeholder:"Let everyone know how to use this channel!",id:"ctp"});tp.value=ch.topic||"";
+channel:{perms(c){const s=S(ui.set.sid),ch=chanOf(s,ui.set.cid);let P=JSON.parse(JSON.stringify(ch.perms||{}));
+   const tname=t=>t=="@"+s.id?"@everyone":t.startsWith("u:")?nameIn(s,t.slice(2)):(s.roles.find(r=>r.id==t)||{}).n||t;
+   const seg=(t,k)=>{const cur=P[t]?P[t][k]:undefined;const mk=(v,l)=>h("button",{class:"b sm "+(cur===v?(v===0?"dng":"ok"):"sec"),onclick:()=>{P[t]=P[t]||{};if(v===undefined)delete P[t][k];else P[t][k]=v;if(!Object.keys(P[t]).length)delete P[t];draw()}},l);return h("span",{style:"display:inline-flex;gap:4px"},mk(undefined,"Inherit"),mk(1,"Allow"),mk(0,"Deny"))};
+   const box=h("div");
+   const draw=()=>{clear(box);const ts=[...new Set(["@"+s.id,...Object.keys(P)])];
+    for(const t of ts){box.append(h("div",{class:"row"},h("div",{class:"grow"},h("b",null,tname(t)),h("small",null,t.startsWith("u:")?"Member":"Role")),t=="@"+s.id?null:h("button",{class:"ib","aria-label":"Remove",onclick:()=>{delete P[t];draw()}},I("x",16))));
+     box.append(row("View Channel","See this channel and read its messages.",seg(t,"VIEW")));
+     box.append(row("Send Messages","Post messages in this channel.",seg(t,"SEND")))}
+    const avail=s.roles.filter(r=>r.id!="everyone"&&!P[r.id]);const mems=Object.keys(s.members).filter(u=>u!=BOT&&!P["u:"+u]);
+    if(avail.length){const addR=h("select",{class:"fld"},avail.map(r=>h("option",{value:r.id},r.n)));box.append(h("label",{class:"fl"},"Add a role"),h("div",{style:"display:flex;gap:8px"},addR,h("button",{class:"b sm",onclick:()=>{if(addR.value){P[addR.value]={};draw()}}},"Add")))}
+    if(mems.length){const addM=h("select",{class:"fld"},mems.map(u=>h("option",{value:u},nameIn(s,u))));box.append(h("label",{class:"fl"},"Add a member"),h("div",{style:"display:flex;gap:8px"},addM,h("button",{class:"b sm",onclick:()=>{if(addM.value){P["u:"+addM.value]={};draw()}}},"Add")))}
+    box.append(h("p",{style:"color:var(--mu);font-size:13px;margin-top:14px"},"People with Admin or Manage Channels always keep access."))};
+   draw();
+   c.append(h("h2",null,"Permissions"),h("p",{style:"color:var(--mu);margin:-8px 0 12px"},"Choose who can see and post in #"+ch.n+". Anything not set uses the server defaults."),box,h("div",{style:"display:flex;justify-content:flex-end;margin-top:20px"},h("button",{class:"b ok",onclick:()=>{if(Act.setChannelPerms(s.id,ch.id,P)){toast("Permissions saved");refresh()}}},"Save")))},
+  overview(c){const s=S(ui.set.sid),ch=chanOf(s,ui.set.cid);const nm=h("input",{class:"fld",value:ch.n,maxlength:32,id:"cnm"}),tp=h("textarea",{class:"fld",maxlength:200,placeholder:"Let everyone know how to use this channel!",id:"ctp"});tp.value=ch.topic||"";
   const sel=h("select",{class:"fld",id:"ccat2"},[h("option",{value:""},"No category"),...s.cats.map(k=>{const o=h("option",{value:k.id},k.n);if(k.id==ch.cat)o.selected=true;return o})]);
   const slowSel=h("select",{class:"fld",id:"cslow"},SLOW.map(v=>{const o=h("option",{value:v},v?slowLabel(v):"Off");if(v==(ch.slow||0))o.selected=true;return o}));
   nm.addEventListener("input",()=>{const p=nm.selectionStart;nm.value=nm.value.toLowerCase().replace(/\s/g,"-");nm.setSelectionRange(p,p)});
