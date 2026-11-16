@@ -192,6 +192,54 @@ textarea.fld{resize:vertical;min-height:80px}
 .fsview{position:fixed;inset:0;z-index:4200;background:rgba(0,0,0,.93);display:grid;place-items:center;padding:18px;cursor:zoom-out}
 .fsview img.fsimg{max-width:100%;max-height:calc(100% - 64px);border-radius:14px;object-fit:contain;box-shadow:0 20px 60px #000}
 .fsview .fsx{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:12px;cursor:pointer}
+.plate{position:absolute;inset:0;border-radius:6px;background:linear-gradient(100deg,var(--c1),var(--c2,var(--c1)));overflow:hidden;pointer-events:none}
+.plate::after{content:"";position:absolute;inset:0;opacity:.55}
+.plate-wave::after{background:radial-gradient(circle at 88% 130%,rgba(255,255,255,.55) 0 20%,transparent 21%),radial-gradient(circle at 97% -30%,rgba(255,255,255,.4) 0 26%,transparent 27%)}
+.plate-petals::after{background-image:radial-gradient(circle,rgba(255,255,255,.6) 0 3px,transparent 4.5px),radial-gradient(circle,rgba(255,255,255,.35) 0 2px,transparent 3.5px);background-size:46px 30px,30px 44px}
+.plate-stars::after{background-image:radial-gradient(circle,#fff 0 1.4px,transparent 2px),radial-gradient(circle,rgba(255,255,255,.7) 0 1px,transparent 1.6px);background-size:34px 22px,22px 30px}
+.plate-grid::after{background-image:linear-gradient(rgba(255,255,255,.28) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.28) 1px,transparent 1px);background-size:14px 14px}
+.plate-stripes::after{background:repeating-linear-gradient(115deg,rgba(255,255,255,.22) 0 10px,transparent 10px 22px)}
+.plate-glow::after{background:radial-gradient(ellipse at 82% 50%,rgba(255,255,255,.6),transparent 62%)}
+.plate-fade::after{background:linear-gradient(90deg,transparent 30%,rgba(255,255,255,.4))}
+.plate-dots::after{background-image:radial-gradient(circle,rgba(255,255,255,.45) 0 2.5px,transparent 3.5px);background-size:18px 18px}
+.mrow.hasplate{position:relative;overflow:hidden}
+.mrow.hasplate>*,.pvrow.hasplate>*,.prow2>*,.bprow>*{position:relative;z-index:1}
+.mrow.hasplate .nm,.pvrow.hasplate .nm{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.mrow.hasplate small,.pvrow.hasplate small{color:rgba(255,255,255,.88)}
+.pvc{position:relative;overflow:hidden}
+.pfx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+.pfx i{position:absolute;top:-9%;display:block;animation:pfFall linear infinite}
+@keyframes pfFall{to{transform:translateY(360px) rotate(300deg)}}
+@keyframes pfRise{to{transform:translateY(-360px)}}
+@keyframes pfRain{to{transform:translateY(360px)}}
+.pfx-petals i{width:10px;height:13px;border-radius:100% 6% 100% 6%;background:linear-gradient(140deg,var(--c2),var(--c1));opacity:.9}
+.pfx-rain i{width:2px;height:15px;border-radius:2px;background:linear-gradient(var(--c1),transparent);animation-name:pfRain}
+.pfx-snow i{border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.9)}
+.pfx-bubbles i{border-radius:50%;border:1.5px solid var(--c1);background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.8),transparent 46%);animation-name:pfRise;top:auto;bottom:-9%}
+.pfx-sparks i{width:5px;height:5px;border-radius:50%;background:radial-gradient(circle,#fff,var(--c1) 62%);box-shadow:0 0 8px var(--c1);animation-name:pfRise;top:auto;bottom:-6%}
+.pfx-aurora::before,.pfx-aurora::after{content:"";position:absolute;left:-20%;right:-20%;height:46%;filter:blur(14px);opacity:.5;animation:pfAur 7s ease-in-out infinite alternate}
+.pfx-aurora::before{top:-8%;background:linear-gradient(100deg,transparent,var(--c1),transparent)}
+.pfx-aurora::after{top:16%;background:linear-gradient(100deg,transparent,var(--c2),transparent);animation-delay:-3.5s}
+@keyframes pfAur{from{transform:translateX(-4%) skewX(-8deg)}to{transform:translateX(4%) skewX(8deg)}}
+.wish{position:absolute;top:8px;right:8px;z-index:3;width:30px;height:30px;border-radius:50%;background:var(--float);box-shadow:var(--sh);display:grid;place-items:center;color:var(--mu)}
+.wish.on{color:#ff5f7a}
+.scard{position:relative}
+.disc{background:#2fa557;color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:1px 6px;vertical-align:2px}
+.colban{display:flex;align-items:center;gap:10px;border-radius:12px;padding:14px 16px;margin:18px 0 10px;color:#fff;box-shadow:var(--sh)}
+.colban b{font-size:19px;text-shadow:0 1px 4px rgba(0,0,0,.35);display:block}
+.colban small{opacity:.92}
+.bthumbs{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.bth{position:relative;width:52px;height:52px;border-radius:10px;overflow:hidden;border:2px solid var(--line);display:grid;place-items:center;color:#fff;background:var(--side)}
+.bth.on{border-color:var(--act)}
+.bth .bown{position:absolute;right:2px;bottom:2px;width:15px;height:15px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;z-index:2}
+.pv-bundle{padding:0!important;overflow:hidden}
+.bpban{height:46px}
+.bprow{display:flex;gap:10px;align-items:center;padding:8px 12px 12px;position:relative;margin:6px;border-radius:8px}
+.prow2{display:flex;align-items:center;gap:8px;position:relative;padding:5px 8px;border-radius:6px;overflow:hidden;width:100%}
+.prow2 b{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pgrid .pp.wide{grid-column:span 3;padding:2px}
+.pfcell{position:relative;border-radius:10px;overflow:hidden;display:grid;place-items:center;width:44px;height:44px}
+
 .pav{cursor:zoom-in}.pop .bnr{cursor:zoom-in}
 .pcard .fl{margin:0 0 6px}.pcard+.pcard{margin-top:8px}
 .rchips{display:flex;flex-wrap:wrap;gap:4px}
@@ -590,7 +638,7 @@ function h(tag,props,...kids){const e=document.createElement(tag);if(props)for(c
 function add(e,kids){for(const c of kids.flat(9)){if(c==null||c===false)continue;e.append(c instanceof Node?c:document.createTextNode(String(c)))}return e}
 const clear=e=>{while(e.firstChild)e.firstChild.remove();return e};
 /* icons: constant path data only (never user input) */
-const P={pin:'M9 3h6l-1 6 4 4H6l4-4zM12 13v8',hash:'M5 9h14M5 15h14M10 4L8 20M16 4l-2 16',plus:'M12 5v14M5 12h14',x:'M6 6l12 12M18 6L6 18',back:'M19 12H5M11 6l-6 6 6 6',chev:'M6 9l6 6 6-6',chevr:'M9 6l6 6-6 6',gear:'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z',users:'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20c0-4 3-6 7-6s7 2 7 6M17 5a3.5 3.5 0 0 1 0 6M19 14c2 1 3 3 3 6',userplus:'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c0-4 3-6 7-6s7 2 7 6M19 8v6M16 11h6',smile:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 14c2 3 6 3 8 0M9 9.5v.5M15 9.5v.5',reply:'M10 9V5l-7 7 7 7v-4c5 0 8 1.5 11 5-1-5-4-10-11-11z',pen:'M4 20l1-4L16 5l3 3L8 19zM14 7l3 3',trash:'M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13',dots:'M5 12h.01M12 12h.01M19 12h.01',send:'M4 12l16-8-6 16-3-7z',bell:'M6 17v-6a6 6 0 0 1 12 0v6l2 2H4zM10 21h4',bellx:'M6 17v-6a6 6 0 0 1 12 0v6l2 2H4zM10 21h4M3 3l18 18',crown:'M3 8l4 4 5-7 5 7 4-4-2 11H5z',shield:'M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6z',lock:'M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3',search:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM16 16l5 5',arrow:'M5 12h14M13 6l6 6-6 6',up:'M12 19V5M6 11l6-6 6 6',down:'M12 5v14M6 13l6 6 6-6',check:'M5 12l4 4 10-10',hammer:'M14 4l6 6-3 3-6-6zM12 9L4 17l3 3 8-8',door:'M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10',link:'M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',chat:'M4 5h16v11H9l-5 4z',copy:'M9 9h11v11H9zM5 15H4V4h11v1',compass:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM15 9l-2 5-5 1 2-5z',star:'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',bolt:'M13 2L5 14h6l-1 8 8-12h-6z',code:'M8 7l-5 5 5 5M16 7l5 5-5 5',brush:'M4 20c3 0 4-1 4-3a3 3 0 0 1 3-3l8-8a2.5 2.5 0 0 0-3.5-3.5l-8 8A3 3 0 0 0 4 14z',game:'M6 9h12a4 4 0 0 1 4 4v2a3 3 0 0 1-5 2l-1-1H8l-1 1a3 3 0 0 1-5-2v-2a4 4 0 0 1 4-4zM8 11v4M6 13h4',heart:'M12 20S4 15 4 9.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.5C20 15 12 20 12 20z',info:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v6M12 7.5v.5',bag:'M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0',palette:'M12 3a9 9 0 1 0 0 18c2 0 2-2 1-3s0-3 2-3h3a3 3 0 0 0 3-3 9 9 0 0 0-9-9z',person:'M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 21c0-4 4-6 8-6s8 2 8 6',swap:'M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7',flag:'M5 21V4M5 4h11l-2 4 2 4H5',img:'M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M15 9h.01',spark:'M12 3c.5 4 2 6 6 6.5-4 .5-5.5 2.5-6 6.5-.5-4-2-6-6-6.5 4-.5 5.5-2.5 6-6.5zM19 15c.2 1.6.8 2.4 2.4 2.6-1.6.2-2.2 1-2.4 2.6-.2-1.6-.8-2.4-2.4-2.6 1.6-.2 2.2-1 2.4-2.6z',medal:'M12 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM8.6 12.6L7 21l5-2.6L17 21l-1.6-8.4',gem:'M7 4h10l3.5 5.5L12 20 3.5 9.5zM3.5 9.5h17M12 20L9 9.5 12 4l3 5.5L12 20'};
+const P={gift:'M3 7h18v4H3zM5 11h14v9H5zM12 11v9M12 7c-2.5 0-4-1-4-2.5C8 3.6 10 3.4 11 4.6 11.7 5.4 12 7zm0 0c0-1.6.3-2.4 1-3.2 1-1.2 3-1 3 .4C16 6 14.5 7 12 7z',layers:'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5',wand:'M5 19L15.5 8.5M15.5 3l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8zM19.5 11l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z',pin:'M9 3h6l-1 6 4 4H6l4-4zM12 13v8',hash:'M5 9h14M5 15h14M10 4L8 20M16 4l-2 16',plus:'M12 5v14M5 12h14',x:'M6 6l12 12M18 6L6 18',back:'M19 12H5M11 6l-6 6 6 6',chev:'M6 9l6 6 6-6',chevr:'M9 6l6 6-6 6',gear:'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z',users:'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20c0-4 3-6 7-6s7 2 7 6M17 5a3.5 3.5 0 0 1 0 6M19 14c2 1 3 3 3 6',userplus:'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c0-4 3-6 7-6s7 2 7 6M19 8v6M16 11h6',smile:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 14c2 3 6 3 8 0M9 9.5v.5M15 9.5v.5',reply:'M10 9V5l-7 7 7 7v-4c5 0 8 1.5 11 5-1-5-4-10-11-11z',pen:'M4 20l1-4L16 5l3 3L8 19zM14 7l3 3',trash:'M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13',dots:'M5 12h.01M12 12h.01M19 12h.01',send:'M4 12l16-8-6 16-3-7z',bell:'M6 17v-6a6 6 0 0 1 12 0v6l2 2H4zM10 21h4',bellx:'M6 17v-6a6 6 0 0 1 12 0v6l2 2H4zM10 21h4M3 3l18 18',crown:'M3 8l4 4 5-7 5 7 4-4-2 11H5z',shield:'M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6z',lock:'M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3',search:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM16 16l5 5',arrow:'M5 12h14M13 6l6 6-6 6',up:'M12 19V5M6 11l6-6 6 6',down:'M12 5v14M6 13l6 6 6-6',check:'M5 12l4 4 10-10',hammer:'M14 4l6 6-3 3-6-6zM12 9L4 17l3 3 8-8',door:'M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10',link:'M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',chat:'M4 5h16v11H9l-5 4z',copy:'M9 9h11v11H9zM5 15H4V4h11v1',compass:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM15 9l-2 5-5 1 2-5z',star:'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',bolt:'M13 2L5 14h6l-1 8 8-12h-6z',code:'M8 7l-5 5 5 5M16 7l5 5-5 5',brush:'M4 20c3 0 4-1 4-3a3 3 0 0 1 3-3l8-8a2.5 2.5 0 0 0-3.5-3.5l-8 8A3 3 0 0 0 4 14z',game:'M6 9h12a4 4 0 0 1 4 4v2a3 3 0 0 1-5 2l-1-1H8l-1 1a3 3 0 0 1-5-2v-2a4 4 0 0 1 4-4zM8 11v4M6 13h4',heart:'M12 20S4 15 4 9.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.5C20 15 12 20 12 20z',info:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v6M12 7.5v.5',bag:'M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0',palette:'M12 3a9 9 0 1 0 0 18c2 0 2-2 1-3s0-3 2-3h3a3 3 0 0 0 3-3 9 9 0 0 0-9-9z',person:'M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 21c0-4 4-6 8-6s8 2 8 6',swap:'M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7',flag:'M5 21V4M5 4h11l-2 4 2 4H5',img:'M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M15 9h.01',spark:'M12 3c.5 4 2 6 6 6.5-4 .5-5.5 2.5-6 6.5-.5-4-2-6-6-6.5 4-.5 5.5-2.5 6-6.5zM19 15c.2 1.6.8 2.4 2.4 2.6-1.6.2-2.2 1-2.4 2.6-.2-1.6-.8-2.4-2.4-2.6 1.6-.2 2.2-1 2.4-2.6z',medal:'M12 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM8.6 12.6L7 21l5-2.6L17 21l-1.6-8.4',gem:'M7 4h10l3.5 5.5L12 20 3.5 9.5zM3.5 9.5h17M12 20L9 9.5 12 4l3 5.5L12 20'};
 function I(n,s=20,sw=1.9){const ns="http://www.w3.org/2000/svg",svg=document.createElementNS(ns,"svg");svg.setAttribute("width",s);svg.setAttribute("height",s);svg.setAttribute("viewBox","0 0 24 24");svg.setAttribute("fill","none");svg.setAttribute("stroke","currentColor");svg.setAttribute("stroke-width",sw);svg.setAttribute("stroke-linecap","round");svg.setAttribute("stroke-linejoin","round");svg.setAttribute("aria-hidden","true");const p=document.createElementNS(ns,"path");p.setAttribute("d",P[n]||"");svg.append(p);return svg}
 /* original Lumio mark: a four-point spark */
 function LOGO(s=26){const ns="http://www.w3.org/2000/svg",svg=document.createElementNS(ns,"svg");svg.setAttribute("width",s);svg.setAttribute("height",s);svg.setAttribute("viewBox","0 0 24 24");const p=document.createElementNS(ns,"path");p.setAttribute("d","M12 2c.6 4.6 2.4 7.4 10 10-7.6 2.6-9.4 5.4-10 10-.6-4.6-2.4-7.4-10-10 7.6-2.6 9.4-5.4 10-10z");p.setAttribute("fill","currentColor");svg.append(p);return svg}
@@ -1037,7 +1085,7 @@ function emojiPicker(anchor,fn,host){document.querySelectorAll(".picker").forEac
 function renderMem(){const st=mem.scrollTop;clear(mem);const s=curS();if(!s)return;const ids=Object.keys(s.members);const groups=new Map();const hoisted=[...s.roles].reverse().filter(r=>r.hoist&&r.id!="everyone");
  const sorter=(a,b)=>nameIn(s,a).localeCompare(nameIn(s,b));const on=[],off=[];
  for(const u of ids){if(u==BOT){on.push(u);continue}if(stOf(u)=="off"){off.push(u);continue}const r=hoisted.find(r=>s.members[u].roles.includes(r.id));if(r){if(!groups.has(r))groups.set(r,[]);groups.get(r).push(u)}else on.push(u)}
- const row=u=>{const x=U(u);const b=h("button",{class:"mrow"+(stOf(u)=="off"?" offl":""),onclick:e=>profilePop(u,e.currentTarget,s)},avatar(u,32,true),h("div",{style:"min-width:0;flex:1"},h("div",{class:"nm",style:{color:colorIn(s,u)}},cosName(h("span",null,nameIn(s,u)),u),x.bot?h("span",{class:"tag"},"AI"):null,s.ownerId==u?h("span",{class:"tag own"},"OWNER"):null),x.listen?h("small",null,x.listen):null));ctxOn(b,(x,y)=>memberMenu(s,u,x,y));return b};
+ const row=u=>{const x=U(u);const b=h("button",{class:"mrow"+(stOf(u)=="off"?" offl":""),onclick:e=>profilePop(u,e.currentTarget,s)},avatar(u,32,true),h("div",{style:"min-width:0;flex:1"},h("div",{class:"nm",style:{color:colorIn(s,u)}},cosName(h("span",null,nameIn(s,u)),u),x.bot?h("span",{class:"tag"},"AI"):null,s.ownerId==u?h("span",{class:"tag own"},"OWNER"):null),x.listen?h("small",null,x.listen):null));shopNudge();const _pl=it(eqOf(u).plate);if(_pl){b.classList.add("hasplate");b.prepend(plateEl(_pl))}ctxOn(b,(x,y)=>memberMenu(s,u,x,y));return b};
  for(const r of hoisted){const l=groups.get(r);if(!l)continue;mem.append(h("div",{class:"mgrp"},r.n+" — "+l.length));l.sort(sorter).forEach(u=>mem.append(row(u)))}
  if(on.length){mem.append(h("div",{class:"mgrp"},"Online — "+on.length));on.sort(sorter).forEach(u=>mem.append(row(u)))}
  if(off.length){mem.append(h("div",{class:"mgrp"},"Offline — "+off.length));off.sort(sorter).forEach(u=>mem.append(row(u)))}setScroll(mem,st)}
@@ -1073,7 +1121,7 @@ function profilePop(u,anchor,s){closeFloating();const x=U(u),self=u==ME();const 
   if(self){btns.append(h("button",{class:"b sm",onclick:()=>{closeFloating();openSettings("user",{tab:"account"})}},I("pen",14),"Edit Profile"));
    btns.append(h("button",{class:"b sm sec",onclick:e=>{const r=e.currentTarget.getBoundingClientRect();closeFloating();statusMenu(r.left,Math.max(8,r.top-200))}},"Set status"))}else if(!x.bot)btns.append(h("button",{class:"b sm",onclick:()=>openDM(u)},I("chat",14),"Message"));
   if(s&&above(s,u)&&can(s,"KICK"))btns.append(h("button",{class:"b sm sec",onclick:()=>kickDlg(s,u)},"Kick"));if(s&&above(s,u)&&can(s,"BAN"))btns.append(h("button",{class:"b sm dng",onclick:()=>banDlg(s,u)},"Ban"));
-  b.append(btns);p.append(b);cosProfile(p,u)};draw();
+  b.append(btns);p.append(b);cosProfile(p,u);shopNudge();const _op=p.querySelector(".pfx");_op&&_op.remove();const _pf=it(eqOf(u).pfx);if(_pf)p.append(pfxEl(_pf))};draw();
  if(!D.users[u]&&u&&u!=BOT)api("users?k="+encodeURIComponent(u)).then(d=>{mergeUsers(d.users);if(p.isConnected){Object.assign(x,U(u));draw()}}).catch(()=>{});
  if(sheetMode()||!anchor){if(!sheetMode()){document.body.append(p);p.style.left=(innerWidth-p.offsetWidth)/2+"px";p.style.top=Math.max(8,(innerHeight-p.offsetHeight)/2)+"px";return}p.classList.add("sheet");document.body.append(h("div",{class:"scrim fl",onclick:closeFloating}),p);return}
  document.body.append(p);const r=anchor.getBoundingClientRect(),w=p.offsetWidth,hh=p.offsetHeight;let lx=r.right+12;if(lx+w>innerWidth-8)lx=r.left-w-12;if(lx<8)lx=Math.min(innerWidth-w-8,r.left);p.style.left=lx+"px";p.style.top=Math.max(8,Math.min(r.top,innerHeight-hh-8))+"px"}
@@ -1087,7 +1135,7 @@ const RM=()=>matchMedia("(prefers-reduced-motion:reduce)").matches;
 const SH={items:{},list:[],cats:{},owned:{},eq:{},wallet:null,quests:null,loaded:false};
 const it=id=>id&&SH.items[id];
 const eqOf=u=>u==ME()&&SH.loaded?SH.eq:(U(u).eq||{});
-async function loadShop(){try{const d=await api("shop");SH.list=d.items;SH.items={};for(const x of d.items)SH.items[x.id]=x;Object.assign(SH,{cats:d.cats,owned:d.owned,eq:d.eq,wallet:d.wallet,quests:d.quests,now:d.now,skew:d.now-Date.now(),loaded:true});
+async function loadShop(){try{const d=await api("shop");SH.list=d.items;SH.items={};for(const x of d.items)SH.items[x.id]=x;Object.assign(SH,{cats:d.cats,owned:d.owned,eq:d.eq,wallet:d.wallet,quests:d.quests,now:d.now,skew:d.now-Date.now(),loaded:true,bundles:d.bundles||[],cols:d.cols||{}});
  if(D.users[ME()])D.users[ME()].eq={...SH.eq};applyTheme();return true}catch(e){return false}}
 const cv=(x,i,d)=>(x&&x.v&&x.v.c&&x.v.c[i])||d;
 const cvars=x=>({"--c1":cv(x,0,"#f0a040"),"--c2":cv(x,1,cv(x,0,"#ffd36e")),"--c3":cv(x,2,"#16171a")});
@@ -1217,9 +1265,9 @@ const _renderMain=renderMain;renderMain=function(){_renderMain();const k=curKey(
 /* ===================== the Shop ===================== */
 const ORB=n=>h("span",{class:"orbs"},h("i",{class:"orb","aria-hidden":"true"}),fmtN(n));
 const fmtN=n=>Number(n||0).toLocaleString();
-const CAT_ORDER=["deco","name_color","entrance","flair","name_font","theme","sound","stickers","react_fx"];
-const CAT_ICON={deco:"spark",name_color:"brush",name_font:"pen",entrance:"bolt",flair:"star",theme:"palette",sound:"bell",stickers:"smile",react_fx:"heart"};
-const SLOT_NOTE={theme:"Only changes how Lumio Chat looks for you.",sound:"Plays for your mentions and DMs.",react_fx:"Plays when you react.",entrance:"Plays when someone opens your profile."};
+const CAT_ORDER=["deco","plate","pfx","name_color","entrance","flair","name_font","theme","sound","stickers","react_fx"];
+const CAT_ICON={deco:"spark",name_color:"brush",name_font:"pen",entrance:"bolt",flair:"star",theme:"palette",sound:"bell",stickers:"smile",react_fx:"heart",plate:"layers",pfx:"wand"};
+const SLOT_NOTE={theme:"Only changes how Lumio Chat looks for you.",sound:"Plays for your mentions and DMs.",react_fx:"Plays when you react.",entrance:"Plays when someone opens your profile.",plate:"Shows behind your name in member lists.",pfx:"Floats over your profile card."};
 const shopUI={cat:"all"};
 const fmtWhen=ts=>new Date(ts).toLocaleDateString([],{month:"short",day:"numeric"})+", "+new Date(ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
 function openShop(cat){closeFloating();if(cat)shopUI.cat=cat;let L=$("#shop");if(!L){L=h("div",{class:"shop",id:"shop",role:"dialog","aria-modal":"true","aria-label":"Shop"});document.body.append(L)}
@@ -1227,6 +1275,38 @@ function openShop(cat){closeFloating();if(cat)shopUI.cat=cat;let L=$("#shop");if
 function closeShop(){const L=$("#shop");if(!L)return;L.classList.add("out");setTimeout(()=>L.remove(),RM()?0:200);renderAll()}
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&$("#shop")&&!topLayer()&&!document.querySelector(".ctx,.pop,.picker")){e.stopImmediatePropagation();closeShop()}},true);
 let shopIO=null;
+function plateEl(x){return h("span",{class:"plate plate-"+x.v.fx,style:cvars(x)})}
+function pfxEl(x){const P=h("span",{class:"pfx pfx-"+x.v.fx,style:cvars(x)});if(x.v.fx!="aurora"){const n=x.v.fx=="rain"?14:10;for(let i=0;i<n;i++){const d=h("i",null);if(x.v.fx=="snow"||x.v.fx=="bubbles"){const sz=x.v.fx=="snow"?3+Math.random()*4:6+Math.random()*9;d.style.width=sz+"px";d.style.height=sz+"px"}d.style.left=(Math.random()*96)+"%";d.style.animationDuration=(4.5+Math.random()*5)+"s";d.style.animationDelay=(-Math.random()*7)+"s";P.append(d)}}return P}
+function shopNudge(){if(!SH.loaded&&!SH._tried){SH._tried=1;loadShop().then(ok=>{if(ok)renderAll();else SH._tried=0})}}
+let WISH=new Set();try{WISH=new Set(JSON.parse(localStorage.getItem("lc_wish")||"[]"))}catch(e){}
+function saveWish(){try{localStorage.setItem("lc_wish",JSON.stringify([...WISH]))}catch(e){}}
+function wishBtn(id){return h("button",{class:"wish"+(WISH.has(id)?" on":""),"aria-label":WISH.has(id)?"Remove from wishlist":"Add to wishlist",onclick:e=>{e.stopPropagation();WISH.has(id)?WISH.delete(id):WISH.add(id);saveWish();renderShop()}},I("heart",15,2))}
+function bundlePrice(b){const xs=b.items.map(it).filter(Boolean);const miss=xs.filter(x=>!SH.owned[x.id]);return{full:xs.reduce((a,x)=>a+x.p,0),miss,price:Math.max(0,Math.round(miss.reduce((a,x)=>a+x.p,0)*(1-b.off)))}}
+function bundlePreview(b){const P=h("div",{class:"prev pv-bundle"});const xs=b.items.map(it).filter(Boolean);const f0=xs[0]||{v:{}},cc=f0.v.c||["#f0a040"];const dc=xs.find(x=>x.cat=="deco"),pl=xs.find(x=>x.cat=="plate"),pf=xs.find(x=>x.cat=="pfx"),nc=xs.find(x=>x.cat=="name_color");
+ const a=_avatar(ME(),54);if(dc){a.append(decoEl(dc,54));a.classList.add("hasdc")}
+ const nmEl=h("b",{class:"pvn"},U(ME()).name);if(nc)styleName(nmEl,nc,null,U(ME()).name);
+ const rowm=h("div",{class:"bprow"},a,h("div",{style:"min-width:0"},nmEl,h("small",{style:"display:block;color:var(--mu)"},"@"+U(ME()).user)));
+ if(pl){rowm.prepend(plateEl(pl));rowm.querySelector("small").style.color="rgba(255,255,255,.88)"}
+ P.append(h("div",{class:"bpban",style:{background:"linear-gradient(100deg,"+cc[0]+","+(cc[1]||cc[0])+")"}}),rowm);if(pf)P.append(pfxEl(pf));return P}
+function miniTile(x){if(x.cat=="deco"){const a=_avatar(ME(),44);a.append(decoEl(x,44));a.classList.add("hasdc");return a}
+ if(x.cat=="plate"){return h("div",{style:"width:100%;height:100%;position:relative"},plateEl(x))}
+ const c=x.v.c||[];const d=h("div",{style:{width:"100%",height:"100%",display:"grid",placeItems:"center",background:"linear-gradient(135deg,"+(c[0]||"#3a3f4a")+","+(c[1]||c[0]||"#23252c")+")",color:"#fff",fontWeight:"800"}},x.cat=="name_font"?h("span",{style:"font-size:17px"},"Aa"):I(CAT_ICON[x.cat]||"spark",19));if(x.cat=="pfx")d.append(pfxEl(x));return d}
+function bundleCard(b){const bp=bundlePrice(b);const done=bp.miss.length==0;const xs=b.items.map(it).filter(Boolean);
+ const c=h("article",{class:"scard bndl","data-id":b.id},bundlePreview(b),wishBtn(b.id),h("div",{class:"meta"},h("div",{class:"mrow"},h("b",null,b.n),h("span",{class:"disc"},"-"+Math.round(b.off*100)+"%")),h("p",null,"Bundle · "+xs.length+" items"+(done?" · all owned":bp.miss.length<xs.length?" · you own "+(xs.length-bp.miss.length):"")),
+  h("div",{class:"act"},done?h("span",{class:"qok"},I("check",15,2.5),"All owned"):h("button",{class:"b sm buy",onclick:e=>bundleDlg(b)},h("s",{style:"opacity:.65"},ORB(bp.full))," ",ORB(bp.price)))));return c}
+function bundleDlg(b){if(!SH.wallet)return;const bp=bundlePrice(b);const xs=b.items.map(it).filter(Boolean);let cur=xs[0];
+ const cap=h("p",{style:"text-align:center;color:var(--mu);margin:10px 0 0;font-size:13px"});
+ const setCap=x=>{cur=x;cap.textContent=x.n+" · "+SH.cats[x.cat]+(SH.owned[x.id]?" · owned":"")};
+ const thumbs=h("div",{class:"bthumbs"},xs.map(x=>{const t=h("button",{class:"bth"+(x==cur?" on":""),"aria-label":x.n,onclick:()=>{setCap(x);[...thumbs.children].forEach(c=>c.classList.toggle("on",c==t))}},miniTile(x));if(SH.owned[x.id])t.append(h("span",{class:"bown"},I("check",10,3)));return t}));
+ setCap(cur);
+ const priceLine=bp.miss.length==0?h("p",{style:"text-align:center;margin:12px 0 0"},"You own everything in this bundle."):h("p",{style:"text-align:center;margin:12px 0 0"},h("s",{style:"color:var(--mu)"},ORB(bp.full))," ",h("b",null,ORB(bp.price))," ",h("span",{class:"disc"},"-"+Math.round(b.off*100)+"%"),bp.miss.length<xs.length?h("div",{style:"color:var(--mu);font-size:13px;margin-top:4px"},"You own "+(xs.length-bp.miss.length)+" of "+xs.length+" · the price counts only what's missing."):null);
+ const m=modal({title:b.n,sub:"Bundle · "+xs.length+" items",body:[h("div",{class:"buyp"},bundlePreview(b)),thumbs,cap,priceLine]});
+ m.d.append(h("div",{class:"acts"},h("button",{class:"b lnk",onclick:()=>m.close()},"Cancel"),h("button",{class:"b sec",onclick:()=>{m.close();giftDlg({bundle:b.id,label:b.n,price:bp.price})}},"Gift"),h("button",{class:"b",disabled:bp.miss.length==0,onclick:async e=>{const btn=e.currentTarget;btn.disabled=true;try{const d=await api("act",{op:"shopBuyBundle",bundle:b.id});m.close();SH.wallet.orbs=d.orbs;await loadShop();renderShop();burst("confetti",innerWidth/2,innerHeight/3,null,{v:{c:["#f0a040","#ffd36e","#3ddc97","#5ab8ff"]}});toast(b.n+" is yours. The pieces are in your shop.");refresh()}catch(err){btn.disabled=false;toast(err.message,true)}}},bp.miss.length==0?"All owned":"Buy bundle")))}
+function giftDlg(spec){const us=Object.keys(D.users||{}).filter(u=>u!=ME()&&!U(u).bot);us.sort((a,b)=>(U(a).name||a).localeCompare(U(b).name||b));
+ const body=us.length?us.map(u=>h("button",{class:"fr",style:"width:100%;text-align:left;border:0;background:none",onclick:()=>{m.close();giftConfirm(spec,u)}},avatar(u,36),h("div",{class:"grow"},h("b",null,U(u).name),h("small",null,"@"+U(u).user)))):[h("p",{style:"color:var(--mu);text-align:center"},"No one to gift yet. People you share a server with show up here.")];
+ const m=modal({title:"Gift "+spec.label,sub:"Pick who gets it",body})}
+function giftConfirm(spec,u){const x=U(u);const m=modal({title:"Send this gift?",sub:spec.label,body:[h("p",{style:"text-align:center"},"To ",h("b",null,x.name)," (@" +x.user+")"),spec.bundle?h("p",{style:"text-align:center;color:var(--mu);font-size:13px"},"You pay for the parts they don't own yet, with the bundle discount."):h("p",{style:"text-align:center"},"Costs ",ORB(spec.price))]});
+ m.d.append(h("div",{class:"acts"},h("button",{class:"b lnk",onclick:()=>m.close()},"Cancel"),h("button",{class:"b",onclick:async e=>{const btn=e.currentTarget;btn.disabled=true;try{const body={op:"shopGift",to:x.user};if(spec.item)body.item=spec.item;if(spec.bundle)body.bundle=spec.bundle;const d=await api("act",body);m.close();if(SH.wallet)SH.wallet.orbs=d.orbs;if($("#shop"))renderShop();toast("Gift sent to @"+x.user+".")}catch(err){btn.disabled=false;toast(err.message,true)}}},"Send gift")))}
 function renderShop(skeleton){const L=$("#shop");if(!L)return;const keep=L.querySelector(".shbody")?.scrollTop||0;clear(L);
  const wal=h("div",{class:"wal",id:"wal"},SH.wallet?ORB(SH.wallet.orbs):h("i",{class:"skl",style:"width:70px;height:18px"}));
  L.append(h("header",{class:"shhd"},h("button",{class:"ib","aria-label":"Close the Shop",onclick:closeShop},I("back",22)),h("div",{class:"shttl"},h("b",null,"Shop"),h("small",null,"Spend Orbs on looks for your profile and chat")),wal));
@@ -1239,19 +1319,21 @@ function renderShop(skeleton){const L=$("#shop");if(!L)return;const keep=L.query
     x.claimed?h("span",{class:"qok"},I("check",16,2.5),"Claimed"):h("button",{class:"b sm"+(done?"":" sec"),disabled:!done,onclick:e=>claimQuest(x,e.currentTarget)},"+",fmtN(x.reward))))}
   body.append(box)}
  // categories
- const chips=h("div",{class:"shcats",role:"tablist"});const cats=[["all","All",null],...CAT_ORDER.filter(k=>SH.cats[k]).map(k=>[k,SH.cats[k],CAT_ICON[k]]),["owned","Owned","check"]];
+ const chips=h("div",{class:"shcats",role:"tablist"});const cats=[["all","All",null],...CAT_ORDER.filter(k=>SH.cats[k]).map(k=>[k,SH.cats[k],CAT_ICON[k]]),["wish","Wishlist","heart"],["owned","Owned","check"]];
  for(const [k,l,ic] of cats)chips.append(h("button",{class:shopUI.cat==k?"on":"",role:"tab","aria-selected":shopUI.cat==k?"true":"false",onclick:()=>{shopUI.cat=k;renderShop();$("#shop .shbody")?.scrollTo({top:0})}},ic?I(ic,16):null,l));
  body.append(chips);
  const now=Date.now()+(SH.skew||0);const vis=SH.list.filter(x=>x.on||SH.owned[x.id]);
  const lim=vis.filter(x=>(x.from||x.until)&&(!x.until||x.until>now));
  if(shopUI.cat=="all"&&lim.length){body.append(h("h3",{class:"shsec"},"Limited time"),h("div",{class:"sgrid"},lim.map(x=>card(x,now))))}
- const sel=shopUI.cat=="owned"?vis.filter(x=>SH.owned[x.id]):shopUI.cat=="all"?vis.filter(x=>!lim.includes(x)):vis.filter(x=>x.cat==shopUI.cat);
+ if(shopUI.cat=="all"&&(SH.bundles||[]).length)add(body,[h("h3",{class:"shsec"},I("bag",18),"Bundles"),h("div",{class:"sgrid"},SH.bundles.map(b=>bundleCard(b)))]);
+ const sel=shopUI.cat=="owned"?vis.filter(x=>SH.owned[x.id]):shopUI.cat=="wish"?vis.filter(x=>WISH.has(x.id)):shopUI.cat=="all"?vis.filter(x=>!lim.includes(x)):vis.filter(x=>x.cat==shopUI.cat);
  if(shopUI.cat=="all"){for(const k of CAT_ORDER){const xs=sel.filter(x=>x.cat==k);if(!xs.length)continue;add(body,[h("h3",{class:"shsec"},I(CAT_ICON[k],18),SH.cats[k]),SLOT_NOTE[k]?h("p",{class:"shnote"},SLOT_NOTE[k]):null,h("div",{class:"sgrid"},xs.map(x=>card(x,now)))])}}
- else{if(SLOT_NOTE[shopUI.cat])body.append(h("p",{class:"shnote"},SLOT_NOTE[shopUI.cat]));body.append(sel.length?h("div",{class:"sgrid"},sel.map(x=>card(x,now))):h("div",{class:"empty"},shopUI.cat=="owned"?"Nothing yet. Claim today's Orbs above and pick something you like.":"Nothing here right now."))}
+ if(shopUI.cat=="all"){const byCol={};for(const x of sel)if(x.col)(byCol[x.col]=byCol[x.col]||[]).push(x);for(const cid of Object.keys(byCol)){const C=(SH.cols||{})[cid];if(!C)continue;body.append(h("div",{class:"colban",style:{background:"linear-gradient(100deg,"+C.c[0]+","+C.c[1]+")"}},h("div",null,h("b",null,C.n),h("small",null,"Collection"))),h("div",{class:"sgrid"},byCol[cid].map(x=>card(x,now))))}}
+ else{if(SLOT_NOTE[shopUI.cat])body.append(h("p",{class:"shnote"},SLOT_NOTE[shopUI.cat]));const wb=shopUI.cat=="wish"?(SH.bundles||[]).filter(b=>WISH.has(b.id)):[];if(wb.length)body.append(h("div",{class:"sgrid"},wb.map(b=>bundleCard(b))));body.append(sel.length?h("div",{class:"sgrid"},sel.map(x=>card(x,now))):wb.length?null:h("div",{class:"empty"},shopUI.cat=="owned"?"Nothing yet. Claim today's Orbs above and pick something you like.":shopUI.cat=="wish"?"Your wishlist is empty. Tap the heart on anything you like.":"Nothing here right now."))}
  body.scrollTop=keep;
  shopIO&&shopIO.disconnect();shopIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle("live",e.isIntersecting)),{root:body,rootMargin:"60px"});body.querySelectorAll(".scard").forEach(c=>shopIO.observe(c))}
 function card(x,now){const own=!!SH.owned[x.id],on=SH.eq[x.cat]==x.id,soon=x.from&&x.from>now,gone=x.until&&x.until<=now;
- const c=h("article",{class:"scard"+(on?" eqd":""),"data-id":x.id},preview(x),h("div",{class:"meta"},h("div",{class:"mrow"},h("b",null,x.n),x.cat=="stickers"?h("small",null,(x.v.s||[]).length+" stickers"):null),h("p",null,x.d),
+ const c=h("article",{class:"scard"+(on?" eqd":""),"data-id":x.id},preview(x),wishBtn(x.id),h("div",{class:"meta"},h("div",{class:"mrow"},h("b",null,x.n),x.cat=="stickers"?h("small",null,(x.v.s||[]).length+" stickers"):null),h("p",null,x.d),
   x.from||x.until?h("div",{class:"lim"},I("bolt",13),soon?"Available "+fmtWhen(x.from):x.until?(gone?"Ended":"Until "+fmtWhen(x.until)):""):null,
   h("div",{class:"act"},own?(x.cat=="stickers"?h("span",{class:"qok"},I("check",15,2.5),"In your sticker picker"):h("button",{class:"b sm"+(on?" sec":""),onclick:e=>equip(x,!on,e.currentTarget)},on?[I("check",14,2.5),"Equipped"]:"Equip"))
    :h("button",{class:"b sm buy",disabled:!x.buy,onclick:e=>buyDlg(x,e.currentTarget)},x.p?ORB(x.p):"Free"))));return c}
@@ -1267,12 +1349,14 @@ function preview(x,big){const me=ME(),u=U(me),f=x.v.fx,P=h("div",{class:"prev pv
  else if(x.cat=="theme"){const s=SKINS[f];if(s){const v=s.v;P.append(h("div",{class:"pvt",style:{background:v[0]}},h("i",{style:{background:v[1]}}),h("div",{class:"pvtm",style:{background:v[2]}},h("span",{style:{background:v[7],width:"55%"}}),h("span",{style:{background:v[5],width:"80%"}}),h("span",{style:{background:v[9],width:"35%"}}))))}}
  else if(x.cat=="sound"){const b=h("button",{class:"pvs","aria-label":"Play "+x.n,onclick:e=>{e.stopPropagation();if(playSound(f)){b.classList.remove("ping");void b.offsetWidth;b.classList.add("ping")}}},I("bell",22));P.append(b,h("small",{class:"pvhint"},"Tap to listen"))}
  else if(x.cat=="stickers")P.append(h("div",{class:"pvk"},(x.v.s||[]).slice(0,big?8:4).map(id=>stickerEl(id,big?64:48))));
+ else if(x.cat=="plate"){const r=h("div",{class:"pvrow hasplate",style:"position:relative;overflow:hidden;border-radius:8px;padding:6px 8px"},_avatar(me,big?40:32),h("div",{style:"min-width:0"},h("div",{class:"nm",style:"font-weight:600"},u.name),h("small",null,"@"+u.user)));r.prepend(plateEl(x));P.append(r)}
+ else if(x.cat=="pfx"){const cardEl=h("div",{class:"pvc"},h("div",{class:"pvcb",style:{background:u.c||hue(u.name)}}),_avatar(me,34,false,{class:"av pvav2"}),h("i",{class:"pvl"}),h("i",{class:"pvl s"}));cardEl.append(pfxEl(x));P.append(cardEl)}
  else if(x.cat=="react_fx"){const chip=h("button",{class:"pvx",onclick:e=>{e.stopPropagation();const r=chip.getBoundingClientRect();burst(f,r.left+r.width/2,r.top+r.height/2,"🔥",x)}},"🔥",h("b",null,"3"));P.append(chip,h("small",{class:"pvhint"},"Tap to try"))}
  return P}
 function buyDlg(x,btn){if(!SH.wallet)return;const short=x.p-SH.wallet.orbs;
  const m=modal({title:x.n,sub:SH.cats[x.cat],body:[h("div",{class:"buyp"},preview(x,true)),h("p",{style:"text-align:center;color:var(--mu);margin:12px 0 0"},x.d),
   short>0?h("div",{class:"note warn",style:"margin-top:12px"},I("info",16),"You need "+fmtN(short)+" more Orbs. Finish today's quests to earn more."):h("p",{style:"text-align:center;margin:12px 0 0;font-size:14px;color:var(--mu)"},"You have ",ORB(SH.wallet.orbs)," · after: ",ORB(SH.wallet.orbs-x.p))],
-  });m.d.append(h("div",{class:"acts"},h("button",{class:"b lnk",onclick:()=>m.close()},"Cancel"),h("button",{class:"b",id:"buyok",disabled:short>0,onclick:async e=>{const b=e.currentTarget;b.disabled=true;
+  });m.d.append(h("div",{class:"acts"},h("button",{class:"b lnk",onclick:()=>m.close()},"Cancel"),h("button",{class:"b sec",onclick:()=>{m.close();giftDlg({item:x.id,label:x.n,price:x.p})}},"Gift"),h("button",{class:"b",id:"buyok",disabled:short>0,onclick:async e=>{const b=e.currentTarget;b.disabled=true;
    try{const d=await api("act",{op:"shopBuy",item:x.id});m.close();const r=btn&&btn.isConnected?btn.getBoundingClientRect():null;SH.wallet.orbs=d.orbs;await loadShop();renderShop();
     const nb=document.querySelector(`#shop .scard[data-id="${CSS.escape(x.id)}"]`);nb&&nb.classList.add("justgot");if(r)burst("confetti",r.left+r.width/2,r.top+r.height/2,null,{v:{c:["#f0a040","#ffd36e","#3ddc97","#5ab8ff"]}});
     toast(x.cat=="stickers"?x.n+" is in your sticker picker.":x.n+(SH.eq[x.cat]==x.id?" is on!":" is yours. Equip it any time."));refresh()}
@@ -1542,8 +1626,12 @@ user:{account(c){const me=U(ME());let P=null,col=me.c||ACCENTS[0],av=me.av;const
    const myDeco=(()=>{const mine=SH.list.filter(x=>x.cat=="deco"&&SH.owned[x.id]);if(!mine.length)return null;
     return h("div",{class:"pgrid",style:"margin-bottom:8px"},mine.map(x=>{const on=SH.eq.deco==x.id;const b=h("button",{class:"pp"+(on?" on":""),title:x.n,"aria-label":x.n,onclick:async()=>{try{await api("act",{op:"shopEquip",slot:"deco",item:on?null:x.id});if(on)delete SH.eq.deco;else SH.eq.deco=x.id;if(D.users[ME()])D.users[ME()].eq={...SH.eq};toast(on?x.n+" taken off.":x.n+" equipped.");draw();refresh()}catch(e){toast(e.message,true)}}});const a=_avatar(ME(),40);a.classList.add("hasdc");a.append(decoEl(x,40));b.append(a);return b}))})();
    const decoSpot=myDeco||h("small",{style:"display:block;color:var(--mu);margin-top:6px"},"Your bought pfp effects show up here. Tap one to put it on.");
+   const wearGrid=(cat,cell)=>{if(!SH.loaded)return null;const mine=SH.list.filter(x=>x.cat==cat&&SH.owned[x.id]);if(!mine.length)return null;return h("div",null,h("div",{class:"fl",style:"margin-top:14px"},SH.cats[cat]),h("div",{class:"pgrid"},mine.map(x=>cell(x))))};
+   const wearBtn=(x,inner)=>{const on=SH.eq[x.cat]==x.id;const b=h("button",{class:"pp"+(x.cat=="plate"?" wide":"")+(on?" on":""),title:x.n,"aria-label":x.n,onclick:async()=>{try{await api("act",{op:"shopEquip",slot:x.cat,item:on?null:x.id});if(on)delete SH.eq[x.cat];else SH.eq[x.cat]=x.id;if(D.users[ME()])D.users[ME()].eq={...SH.eq};toast(on?x.n+" taken off.":x.n+" equipped.");draw();refresh()}catch(e){toast(e.message,true)}}});b.append(inner);return b};
+   const plateSpot=wearGrid("plate",x=>wearBtn(x,(()=>{const r=h("div",{class:"prow2"},_avatar(ME(),26),h("b",null,U(ME()).name));r.prepend(plateEl(x));return r})()));
+   const pfxSpot=wearGrid("pfx",x=>wearBtn(x,(()=>{const w=h("div",{class:"pfcell"},_avatar(ME(),40));w.append(pfxEl(x));return w})()));
    box.append(prev,h("div",{class:"fl"},"Profile picture"),h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},h("button",{class:"b sm",id:"upav",onclick:()=>pick("avatar")},I("img",14),"Upload picture"),me.av?h("button",{class:"b sm lnk",onclick:async()=>{try{await profileSave({avatar:null});renderSettings();refresh()}catch(e){toast(e.message,true)}}},"Remove"):null),
-    h("small",{style:"display:block;color:var(--mu);margin-top:6px"},"PNG, JPEG, WebP or animated GIF, up to 1 MB. GIFs stay animated."),decoSpot,
+    h("small",{style:"display:block;color:var(--mu);margin-top:6px"},"PNG, JPEG, WebP or animated GIF, up to 1 MB. GIFs stay animated."),decoSpot,plateSpot,pfxSpot,
     h("div",{class:"fl"},"Profile banner"),h("div",{style:"display:flex;gap:8px;flex-wrap:wrap"},h("button",{class:"b sm",id:"upbn",onclick:()=>pick("banner")},I("img",14),P.banner?"Change banner":"Upload banner"),P.banner?h("button",{class:"b sm lnk",onclick:async()=>{try{await profileSave({banner:null});renderSettings();refresh()}catch(e){toast(e.message,true)}}},"Remove"):null),
     h("small",{style:"display:block;color:var(--mu);margin-top:6px"},"PNG, JPEG, WebP or animated GIF, up to 2 MB. Shown at the top of your profile card."),
     h("label",{class:"fl",for:"pname"},"Display Name"),nm,h("label",{class:"fl",for:"pbio"},"About Me"),bio,h("label",{class:"fl",for:"pcs"},"Custom Status"),cs,h("label",{class:"fl"},"Accent color"),sw,
