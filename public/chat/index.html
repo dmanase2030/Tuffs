@@ -1049,6 +1049,8 @@ function slashCmd(key,s,text){
   h("div",null,h("b",null,"/kick @user")," \u2014 kick a member (needs Kick permission)"),
   h("div",null,h("b",null,"/unban @user")," \u2014 undo a ban"),
   h("div",null,h("b",null,"/clear [n]")," \u2014 delete the last n messages here (up to 50)"),
+  h("div",null,h("b",null,"/lock")," \u2014 only staff can post here (needs Manage Channels)"),
+  h("div",null,h("b",null,"/unlock")," \u2014 let everyone post here again"),
   h("div",null,h("b",null,"/nick name")," \u2014 set your server nickname"),
   h("div",null,h("b",null,"/shrug [text]")," \u2014 send text with a shrug"),
   h("div",null,h("b",null,"/help")," \u2014 this list"))]});return true}
@@ -1061,6 +1063,16 @@ function slashCmd(key,s,text){
   const t=byName(parts[1]);if(!t){toast("No member named "+(parts[1]||"?")+" here.",true);return true}
   if(cmd=="/ban"){const reason=parts.slice(2).join(" ");if(Act.ban(s.id,t,reason)){toast(U(t).name+" was banned.");refresh()}}
   else if(Act.kick(s.id,t)){toast(U(t).name+" was kicked.");refresh()}
+  return true}
+ if(cmd=="/lock"||cmd=="/unlock"){
+  if(!s){toast("That command works inside a server.",true);return true}
+  if(!can(s,"MANAGE_CHANNELS")){toast("You need the Manage Channels permission.",true);return true}
+  const ch=chanOf(s,key);if(!ch){toast("Open a channel first.",true);return true}
+  const P=JSON.parse(JSON.stringify(ch.perms||{}));const ev="@"+s.id;P[ev]=P[ev]||{};
+  if(cmd=="/lock"){P[ev].SEND=0;toast("#"+ch.n+" is locked. Only staff can post now.")}
+  else{if(P[ev].SEND===0)delete P[ev].SEND;toast("#"+ch.n+" is unlocked.")}
+  if(!Object.keys(P[ev]).length)delete P[ev];
+  if(Act.setChannelPerms(s.id,ch.id,P))refresh();
   return true}
  return false}
 
@@ -1130,7 +1142,7 @@ function fsView(node){closeFloating();const o=h("div",{class:"fsview",role:"dial
 function profilePop(u,anchor,s){closeFloating();const x=U(u),self=u==ME();const p=h("div",{class:"pop",role:"dialog","aria-label":x.name+" profile"});
  const draw=()=>{clear(p);const bn=h("div",{class:"bnr",style:{background:x.c||hue(x.name)}});if(x.bn){bn.append(h("img",{src:"/api/lc/img/"+x.bn,alt:"",loading:"lazy"}));bn.title="View full screen";bn.onclick=()=>fsView(h("img",{src:"/api/lc/img/"+x.bn,class:"fsimg",alt:"Banner"}))}
   const avEl=avatar(u,84,true,{class:"av pav"});avEl.title="View full screen";avEl.onclick=()=>{if(x.av=="img")fsView(h("img",{src:"/api/avatar?u="+encodeURIComponent(x.id)+"&v="+encodeURIComponent(x.avv||0),class:"fsimg",alt:x.name}));else fsView(avatar(u,280,true))};p.append(bn,avEl);const b=h("div",{class:"pbody"});
-  b.append(h("h4",null,nameIn(s,u)),h("div",{class:"un"},"@"+x.user,x.bot?" · Lumio AI":"",x.admin?h("span",{style:"color:var(--ac)"}," · Lumio admin"):null,s&&s.ownerId==u?h("span",{style:"color:var(--wa)"}," · Server Owner"):null));
+  b.append(h("h4",null,nameIn(s,u)),h("div",{class:"un"},"@"+x.user,x.bot?" · Lumio AI":""));
   const bd=badgeRow(u,s);if(bd)b.append(bd);
   if(x.listen)b.append(h("div",{style:"margin-top:8px;font-size:14px"},x.listen));
   if(x.bio)b.append(h("div",{class:"pcard"},h("div",{class:"fl"},"About Me"),h("div",{class:"txt",style:"font-size:14px"},x.bio)));
@@ -1491,7 +1503,7 @@ function serverMenu(s,x,y){const tabs=ssTabs(s),mc=can(s,"MANAGE_CHANNELS");
 function channelMenu(s,c,x,y){const mc=can(s,"MANAGE_CHANNELS");
  menu([{l:"Mark As Read",i:"check",fn:()=>{markRead(c.id);refresh()}},can(s,"INVITE")?{l:"Invite People",i:"userplus",fn:()=>inviteDlg(s)}:null,{l:"Copy Channel Name",i:"copy",fn:()=>copy("#"+c.n,"Copied #"+c.n)},can(s,"MANAGE_SERVER")?{l:"Summarize Channel",i:"spark",fn:()=>summarizeDlg(s,c)}:null,"-",
   mc?{l:"Edit Channel",i:"gear",fn:()=>openSettings("channel",{sid:s.id,cid:c.id})}:null,mc?{l:"Move Up",i:"up",fn:()=>{Act.moveChannel(s.id,c.id,-1)&&renderSide()}}:null,mc?{l:"Move Down",i:"down",fn:()=>{Act.moveChannel(s.id,c.id,1)&&renderSide()}}:null,
-  mc?{l:"Delete Channel",i:"trash",dg:1,fn:()=>deleteChannelDlg(s,c)}:null],x,y)}
+  mc?{l:(c.perms&&c.perms["@"+s.id]&&c.perms["@"+s.id].SEND===0)?"Unlock Channel":"Lock Channel",i:"lock",fn:()=>{const P=JSON.parse(JSON.stringify(c.perms||{}));const ev="@"+s.id;P[ev]=P[ev]||{};const locked=P[ev].SEND===0;if(locked)delete P[ev].SEND;else P[ev].SEND=0;if(!Object.keys(P[ev]).length)delete P[ev];if(Act.setChannelPerms(s.id,c.id,P)){toast(locked?"#"+c.n+" unlocked.":"#"+c.n+" locked. Only staff can post now.");refresh()}}}:null,mc?{l:"Delete Channel",i:"trash",dg:1,fn:()=>deleteChannelDlg(s,c)}:null],x,y)}
 function categoryMenu(s,k,x,y){const mc=can(s,"MANAGE_CHANNELS");
  menu([{l:k.col?"Expand Category":"Collapse Category",i:"chev",fn:()=>{k.col=!k.col;D.pf.col[k.id]=k.col||undefined;save();renderSide()}},"-",mc?{l:"Create Channel",i:"plus",fn:()=>createChannelDlg(s,k.id)}:null,mc?{l:"Rename Category",i:"pen",fn:()=>promptDlg("Rename Category","Category name",k.n,"Save",v=>{Act.renameCategory(s.id,k.id,v)&&renderSide()},{max:32})}:null,
   mc?{l:"Move Up",i:"up",fn:()=>{Act.moveCategory(s.id,k.id,-1)&&renderSide()}}:null,mc?{l:"Move Down",i:"down",fn:()=>{Act.moveCategory(s.id,k.id,1)&&renderSide()}}:null,mc?{l:"Delete Category",i:"trash",dg:1,fn:()=>confirmDlg("Delete Category","Delete "+k.n+"? Its channels will be kept and moved out of the category.","Delete Category",()=>{Act.deleteCategory(s.id,k.id)&&renderSide()})}:null],x,y)}
@@ -1641,6 +1653,7 @@ channel:{perms(c){const s=S(ui.set.sid),ch=chanOf(s,ui.set.cid);let P=JSON.parse
     const avail=s.roles.filter(r=>r.id!="everyone"&&!P[r.id]);const mems=Object.keys(s.members).filter(u=>u!=BOT&&!P["u:"+u]);
     if(avail.length){const addR=h("select",{class:"fld"},avail.map(r=>h("option",{value:r.id},r.n)));box.append(h("label",{class:"fl"},"Add a role"),h("div",{style:"display:flex;gap:8px"},addR,h("button",{class:"b sm",onclick:()=>{if(addR.value){P[addR.value]={};draw()}}},"Add")))}
     if(mems.length){const addM=h("select",{class:"fld"},mems.map(u=>h("option",{value:u},nameIn(s,u))));box.append(h("label",{class:"fl"},"Add a member"),h("div",{style:"display:flex;gap:8px"},addM,h("button",{class:"b sm",onclick:()=>{if(addM.value){P["u:"+addM.value]={};draw()}}},"Add")))}
+    box.append(h("div",{style:"display:flex;gap:8px;margin-top:14px"},h("button",{class:"b sm sec",onclick:()=>{const ev="@"+s.id;P[ev]=P[ev]||{};P[ev].VIEW=0;draw()}},"Make private"),h("button",{class:"b sm sec",onclick:()=>{const ev="@"+s.id;P[ev]=P[ev]||{};P[ev].SEND=0;draw()}},"Make read-only")));
     box.append(h("p",{style:"color:var(--mu);font-size:13px;margin-top:14px"},"People with Admin or Manage Channels always keep access."))};
    draw();
    c.append(h("h2",null,"Permissions"),h("p",{style:"color:var(--mu);margin:-8px 0 12px"},"Choose who can see and post in #"+ch.n+". Anything not set uses the server defaults."),box,h("div",{style:"display:flex;justify-content:flex-end;margin-top:20px"},h("button",{class:"b ok",onclick:()=>{if(Act.setChannelPerms(s.id,ch.id,P)){toast("Permissions saved");refresh()}}},"Save")))},
