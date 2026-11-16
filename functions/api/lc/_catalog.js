@@ -15,8 +15,8 @@ export const CATS = {
   sound: { n: "Notification Sounds", fx: ["chime", "blip", "marimba", "pluck", "retro", "bell", "droplet", "soft"] },
   stickers: { n: "Sticker Packs", fx: ["pack"] },
   react_fx: { n: "Reaction Effects", fx: ["confetti", "hearts", "sparks", "ripple", "stars", "bubbles"] },
-  plate: { n: "Nameplates", fx: ["wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots"] },
-  pfx: { n: "Profile Effects", fx: ["petals", "rain", "sparks", "snow", "bubbles", "aurora"] },
+  plate: { n: "Nameplates", fx: ["wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots", "pixel"] },
+  pfx: { n: "Profile Effects", fx: ["petals", "rain", "sparks", "snow", "bubbles", "aurora", "pixel"] },
 };
 // The original sticker art lives in the app (SVG); packs reference these ids.
 /* Shop collections: themed groups shown as banners in the shop. Items opt in with data.col. */
@@ -129,6 +129,10 @@ export const SEED = [
   S("pf_aurora", "pfx", "Aurora Veil", 950, "aurora", ["#3ddc97", "#9a86ff"], "Northern lights over your profile.", { col: "royal" }),
   // one more name color, for the Ocean set
   S("nc_deep", "name_color", "Deep Sea", 260, "gradient", ["#0e4d64", "#2aa5a0"], "A deep ocean gradient.", { col: "ocean" }),
+  // pixel set
+  S("pl_pixel", "plate", "Pixel Pop", 500, "pixel", ["#1a1033", "#ff4fd8"], "Chunky pixels behind your name."),
+  S("pl_8bit", "plate", "8-Bit Hero", 550, "pixel", ["#0f2a6b", "#ffd36e"], "Retro game blocks behind your name."),
+  S("pf_pixel", "pfx", "Pixel Rain", 800, "pixel", ["#3ddc97", "#5ab8ff"], "Little squares rain over your profile."),
 ];
 
 /* Bundles: themed sets sold together. The server prices a bundle from the parts the
