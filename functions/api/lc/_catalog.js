@@ -16,7 +16,7 @@ export const CATS = {
   stickers: { n: "Sticker Packs", fx: ["pack"] },
   react_fx: { n: "Reaction Effects", fx: ["confetti", "hearts", "sparks", "ripple", "stars", "bubbles"] },
   plate: { n: "Nameplates", fx: ["wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots", "pixel", "aurora", "lava", "shine", "twinkle"] },
-  pfx: { n: "Profile Effects", fx: ["petals", "rain", "sparks", "snow", "bubbles", "aurora", "pixel"] },
+  pfx: { n: "Profile Effects", fx: ["petals", "rain", "sparks", "snow", "bubbles", "aurora", "pixel", "tree"] },
 };
 // The original sticker art lives in the app (SVG); packs reference these ids.
 /* Shop collections: themed groups shown as banners in the shop. Items opt in with data.col. */
@@ -135,6 +135,7 @@ export const SEED = [
   S("pl_pixel", "plate", "Pixel Pop", 500, "pixel", ["#1a1033", "#ff4fd8"], "Chunky pixels behind your name."),
   S("pl_8bit", "plate", "8-Bit Hero", 550, "pixel", ["#0f2a6b", "#ffd36e"], "Retro game blocks behind your name."),
   S("pf_pixel", "pfx", "Pixel Rain", 800, "pixel", ["#3ddc97", "#5ab8ff"], "Little squares rain over your profile."),
+  S("pf_tree", "pfx", "Blossom Tree", 850, "tree", ["#f28bb4", "#f9b7d0"], "A cherry blossom tree on your profile, petals falling.", { col: "bloom" }),
   // animated nameplates (they move, like a GIF) + more plates
   S("pl_aurora", "plate", "Aurora Sky", 650, "aurora", ["#0b2a4a", "#3ddc97"], "Moving northern lights behind your name."),
   S("pl_lava", "plate", "Lava Flow", 600, "lava", ["#2a0a0a", "#ff5a1f"], "Slow lava flowing behind your name."),
