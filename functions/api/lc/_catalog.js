@@ -10,7 +10,7 @@ export const CATS = {
   name_font: { n: "Name Fonts", fx: ["serif", "mono", "rounded", "condensed", "script", "wide", "pixel", "slab"] },
   deco: { n: "Avatar Decorations", fx: ["ring", "dual", "orbit", "halo", "sparkle", "flame", "crown", "petals", "pulse", "dashed"] },
   entrance: { n: "Profile Entrances", fx: ["rise", "zoom", "flip", "slide", "glitch", "burst", "drop", "spin"] },
-  flair: { n: "Profile Flair", fx: ["eq", "pulse", "wave", "orbit", "spark"] },
+  flair: { n: "Profile Flair", fx: ["eq", "pulse", "wave", "orbit", "spark", "comet"] },
   theme: { n: "Chat Themes", fx: ["midnight", "forest", "ember", "ocean", "paper", "rose", "slate", "mono", "dune"] },
   sound: { n: "Notification Sounds", fx: ["chime", "blip", "marimba", "pluck", "retro", "bell", "droplet", "soft"] },
   stickers: { n: "Sticker Packs", fx: ["pack"] },
@@ -79,6 +79,8 @@ export const SEED = [
   S("fl_wave", "flair", "Soundwave", 400, "wave", ["#ff6f91"], "A moving waveform."),
   S("fl_orbit", "flair", "Satellite", 400, "orbit", ["#ffd36e"], "A dot orbiting your name tag."),
   S("fl_spark", "flair", "Spark", 300, "spark", ["#ffe27a"], "Little sparks next to your name."),
+  S("fl_comet", "flair", "Comet Trail", 450, "comet", ["#5ab8ff"], "A little comet keeps flying past your name."),
+  S("fl_eq_neon", "flair", "Neon Equalizer", 400, "eq", ["#ff4fd8"], "Neon bars dancing under your name."),
   // chat themes
   S("th_midnight", "theme", "Midnight", 300, "midnight", null, "Deep navy for late nights."),
   S("th_forest", "theme", "Forest", 300, "forest", null, "Mossy greens."),
