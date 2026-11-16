@@ -221,7 +221,10 @@ textarea.fld{resize:vertical;min-height:80px}
 .pfx-aurora::before{top:-8%;background:linear-gradient(100deg,transparent,var(--c1),transparent)}
 .pfx-aurora::after{top:16%;background:linear-gradient(100deg,transparent,var(--c2),transparent);animation-delay:-3.5s}
 @keyframes pfAur{from{transform:translateX(-4%) skewX(-8deg)}to{transform:translateX(4%) skewX(8deg)}}
-.wish{position:absolute;top:8px;right:8px;z-index:3;width:30px;height:30px;border-radius:50%;background:var(--float);box-shadow:var(--sh);display:grid;place-items:center;color:var(--mu)}
+.wish{position:absolute;top:8px;right:8px;z-index:3;width:28px;height:28px;border-radius:50%;background:color-mix(in srgb,var(--float) 84%,transparent);box-shadow:var(--sh);display:grid;place-items:center;color:var(--mu)}
+.shop .shcats{z-index:6}
+.plate-pixel::after{background-image:repeating-conic-gradient(rgba(255,255,255,.30) 0% 25%,transparent 0% 50%);background-size:12px 12px;opacity:.8}
+.pfx-pixel i{width:7px;height:7px;border-radius:1px;background:var(--c1);box-shadow:0 0 6px var(--c1)}
 .wish.on{color:#ff5f7a}
 .scard{position:relative}
 .disc{background:#2fa557;color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:1px 6px;vertical-align:2px}
@@ -1093,7 +1096,6 @@ function renderMem(){const st=mem.scrollTop;clear(mem);const s=curS();if(!s)retu
 /* profile badges: earned from real account data, shown by the username */
 const BADGES=[
  {n:"Lumio Admin",i:"shield",c:"#3ba55d",has:(u,x,s)=>!!x.admin},
- {n:"Server Owner",i:"crown",c:"#f0a040",has:(u,x,s)=>!!(s&&s.ownerId==u)},
  {n:"Lumio AI",i:"spark",c:"#9a86ff",has:(u,x)=>!!x.bot},
  {n:"OG \u00b7 joined in the first week",i:"star",c:"#ffd36e",has:(u,x)=>!!(x.since&&x.since<Date.UTC(2026,10,11))},
  {n:"Veteran \u00b7 30+ days on Lumio",i:"medal",c:"#7cc7ff",has:(u,x)=>!!(x.since&&Date.now()-x.since>30*864e5)},
