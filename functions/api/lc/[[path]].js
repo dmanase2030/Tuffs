@@ -15,7 +15,7 @@
 import { json, guard, sessionUser, bearer, readBody, sha256hex } from "../auth/_shared.js";
 import { throttleCheck, throttleFail, clientIp } from "../auth/_throttle.js";
 import {
-  BOT, BOT_USER, LUMIO, ensure, err, inList, loadCtx, can, permsOf, usersByKeys, userByName, shapeUser,
+  BOT, BOT_USER, LUMIO, ensure, err, inList, loadCtx, can, permsOf, parseChanPerms, chanCan, usersByKeys, userByName, shapeUser,
   sniff, storeImage, dropImage, serveImage, IMG_CAPS, CODE_RE,
 } from "./_db.js";
 import { runOp, access, deleteMsg, deleteServerRows } from "./_ops.js";
@@ -119,7 +119,7 @@ async function state(db, user, only) {
     const L = inList(ids.length);
     const [cats, chans, roles, mems, bans, invs, aud, reps] = await db.batch([
       db.prepare(`SELECT * FROM lc_cats WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
-      db.prepare(`SELECT id, server_id, cat_id, name, topic, pos, last_id, last_a, all_id, slow FROM lc_chans WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
+      db.prepare(`SELECT id, server_id, cat_id, name, topic, pos, last_id, last_a, all_id, slow, perms FROM lc_chans WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
       db.prepare(`SELECT * FROM lc_roles WHERE server_id IN (${L}) ORDER BY pos, id`).bind(...ids),
       db.prepare(`SELECT m.* FROM lc_members m JOIN users u ON u.username_key = m.user_key WHERE m.server_id IN (${L}) AND u.is_banned = 0`).bind(...ids),
       db.prepare(`SELECT * FROM lc_bans WHERE server_id IN (${L}) ORDER BY ts DESC`).bind(...ids),
@@ -142,7 +142,7 @@ async function state(db, user, only) {
         id: s.id, n: s.name, c: s.color || "#7c5cff", icon: s.icon || "", desc: s.descr || "", ownerId: s.owner_key, ver: s.ver, public: !!s.public,
         set: { pause: !!s.pause, welcome: !!s.welcome, ai: !!s.ai, automod: !!s.automod },
         cats: (C[s.id] || []).map(k => ({ id: k.id, n: k.name, col: false })),
-        chans: (CH[s.id] || []).map(c => ({ id: c.id, n: c.name, cat: c.cat_id || null, topic: c.topic || "", last: c.last_id, lastA: c.last_a || "", all: c.all_id, slow: c.slow || 0 })),
+        chans: (CH[s.id] || []).map(c => { const cp = parseChanPerms(c.perms); const o = { id: c.id, n: c.name, cat: c.cat_id || null, topic: c.topic || "", last: c.last_id, lastA: c.last_a || "", all: c.all_id, slow: c.slow || 0, cv: chanCan(ctx, cp, "VIEW", me), cs: chanCan(ctx, cp, "SEND", me) }; if (P.has("MANAGE_CHANNELS")) o.perms = cp; return o; }),
         roles: rl, members,
         bans: P.has("BAN") ? (B[s.id] || []).map(b => ({ uid: b.user_key, reason: b.reason || "", ts: b.ts, by: b.by_key })) : [],
         invites: (IV[s.id] || []).filter(i => P.has("MANAGE_SERVER") || i.by_key === me).map(i => ({ code: i.code, by: i.by_key, uses: i.uses, max: i.max_uses, exp: i.expires_at, ts: i.created_at })),

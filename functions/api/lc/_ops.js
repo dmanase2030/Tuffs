@@ -6,7 +6,7 @@ import { throttleCheck, throttleFail, clientIp } from "../auth/_throttle.js";
 import { getSettings } from "../auth/_shared.js";
 import {
   BOT, LUMIO, PERMS, PAL, RCOL, MAX_TEXT, ID_RE, CODE_RE, err, cleanLine, cleanText, slug, dmKey, inList,
-  loadCtx, permsOf, can, isOwner, rank, above, roleEditable, roleAssignable, audit, bump, sysMsg, dropImage, userByName,
+  loadCtx, permsOf, can, parseChanPerms, chanCan, isOwner, rank, above, roleEditable, roleAssignable, audit, bump, sysMsg, dropImage, userByName,
 } from "./_db.js";
 import { json } from "../auth/_shared.js";
 import { shopOp, questBump, ownsSticker, STICKER_RE } from "./_shop.js";
@@ -27,10 +27,12 @@ export async function access(db, me, chan, extraKeys = []) {
     if (p.length !== 2 || !p.includes(me) || dmKey(p[0], p[1]) !== chan || p[0] === p[1]) return null;
     return { dm: p, other: p[0] === me ? p[1] : p[0] };
   }
-  const ch = await db.prepare("SELECT c.id, c.server_id, c.name FROM lc_chans c JOIN lc_members m ON m.server_id = c.server_id AND m.user_key = ?1 WHERE c.id = ?2").bind(me, chan).first();
+  const ch = await db.prepare("SELECT c.id, c.server_id, c.name, c.perms FROM lc_chans c JOIN lc_members m ON m.server_id = c.server_id AND m.user_key = ?1 WHERE c.id = ?2").bind(me, chan).first();
   if (!ch) return null;
   const ctx = await loadCtx(db, ch.server_id, [me, ...extraKeys]);
-  return { sid: ch.server_id, chan: ch, ctx };
+  const cp = parseChanPerms(ch.perms);
+  if (ctx && !chanCan(ctx, cp, "VIEW", me)) return null;
+  return { sid: ch.server_id, chan: ch, ctx, cp };
 }
 
 export async function runOp(context, user, body) {
@@ -160,6 +162,24 @@ export async function runOp(context, user, body) {
       if (set.name) await audit(db, c.srv.id, me, `renamed #${ch.name} to #${set.name}`);
       else if (set.slow != null) await audit(db, c.srv.id, me, set.slow ? `set slowmode in #${ch.name} to ${slowLabel(set.slow)}` : `turned off slowmode in #${ch.name}`);
       else await bump(db, c.srv.id);
+      return ok();
+    }
+    case "setChannelPerms": {
+      const c = await S(); if (!c || !can(c, "MANAGE_CHANNELS", me)) return err(NOPE, 403);
+      const ch = await db.prepare("SELECT * FROM lc_chans WHERE id = ?1 AND server_id = ?2").bind(String(body.cid), c.srv.id).first(); if (!ch) return err("That channel is gone.");
+      const raw = body.perms && typeof body.perms === "object" && !Array.isArray(body.perms) ? body.perms : {};
+      const out = {};
+      for (const [t, v] of Object.entries(raw).slice(0, 60)) {
+        if (!v || typeof v !== "object") continue;
+        let okT = t === "@" + c.srv.id || c.roles.some(r => r.id === t);
+        if (!okT && t.startsWith("u:")) okT = !!(await db.prepare("SELECT 1 FROM lc_members WHERE server_id = ?1 AND user_key = ?2").bind(c.srv.id, t.slice(2)).first());
+        if (!okT) continue;
+        const e = {};
+        for (const k of ["VIEW", "SEND"]) if (v[k] === 0 || v[k] === 1) e[k] = v[k];
+        if (Object.keys(e).length) out[t] = e;
+      }
+      await db.prepare("UPDATE lc_chans SET perms = ?2 WHERE id = ?1").bind(ch.id, JSON.stringify(out)).run();
+      await audit(db, c.srv.id, me, "updated permissions for #" + ch.name);
       return ok();
     }
     case "deleteChannel": {
@@ -468,6 +488,7 @@ async function sendMsg(context, user, body) {
   const a = await access(db, me, chan);
   if (!a) return err("You can't send messages here.", 403);
   if (a.ctx && !can(a.ctx, "SEND", me)) return err("You don't have permission to send messages in this channel.", 403);
+  if (a.ctx && a.cp && !chanCan(a.ctx, a.cp, "SEND", me)) return err("You can't send messages in this channel.", 403);
   if (a.ctx) {
     // slowmode: one message per N seconds, except for people who manage the channel or its messages
     const slow = ((await db.prepare("SELECT slow FROM lc_chans WHERE id = ?1").bind(chan).first()) || {}).slow || 0;

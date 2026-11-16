@@ -58,7 +58,7 @@ export async function ensure(db) {
   await db.batch([...SCHEMA, ...SHOP_SCHEMA].map(s => db.prepare(s)));
   try { await db.prepare("ALTER TABLE profiles ADD COLUMN banner TEXT").run(); } catch { /* already there */ }
   // additive columns: pinned messages and per-channel slowmode
-  for (const s of ["ALTER TABLE lc_msgs ADD COLUMN pinned_at INTEGER", "ALTER TABLE lc_msgs ADD COLUMN pinned_by TEXT", "ALTER TABLE lc_chans ADD COLUMN slow INTEGER NOT NULL DEFAULT 0"]) {
+  for (const s of ["ALTER TABLE lc_msgs ADD COLUMN pinned_at INTEGER", "ALTER TABLE lc_msgs ADD COLUMN pinned_by TEXT", "ALTER TABLE lc_chans ADD COLUMN slow INTEGER NOT NULL DEFAULT 0", "ALTER TABLE lc_chans ADD COLUMN perms TEXT NOT NULL DEFAULT ''"]) {
     try { await db.prepare(s).run(); } catch { /* already there */ }
   }
   try { await db.prepare("CREATE INDEX IF NOT EXISTS idx_lc_msgs_pins ON lc_msgs(chan, pinned_at)").run(); } catch { /* fine */ }
@@ -128,6 +128,20 @@ export function permsOf(ctx, u) {
   return set.has("ADMIN") ? new Set(PERMS) : set;
 }
 export const can = (ctx, p, u) => permsOf(ctx, u).has(p);
+/* channel permission overwrites: { target: { VIEW: 0|1, SEND: 0|1 } } - target is "@<serverId>" (@everyone), a role id, or "u:<user_key>". Missing = inherit. */
+export function parseChanPerms(str) { try { const o = JSON.parse(str || "{}"); return o && typeof o === "object" && !Array.isArray(o) ? o : {}; } catch { return {}; } }
+export function chanCan(ctx, cp, key, u) {
+  if (!ctx || !cp) return false;
+  const base = permsOf(ctx, u);
+  if (base.has("ADMIN") || base.has("MANAGE_CHANNELS")) return true;
+  let val = key === "VIEW" ? true : base.has(key);
+  const one = t => { const e = t ? cp[t] : null; return e && (e[key] === 0 || e[key] === 1) ? e[key] === 1 : undefined; };
+  const ev = one("@" + ctx.srv.id); if (ev !== undefined) val = ev;
+  const m = ctx.members[u];
+  if (m) { let allow = false, deny = false; for (const rid of m.roles) { const v = one(rid); if (v === true) allow = true; if (v === false) deny = true; } if (allow) val = true; else if (deny) val = false; }
+  const mine = one("u:" + u); if (mine !== undefined) val = mine;
+  return val;
+}
 export const isOwner = (ctx, u) => !!ctx && ctx.srv.owner_key === u;
 export function rank(ctx, u) {
   if (u === ctx.srv.owner_key) return 1e9;
