@@ -21,7 +21,7 @@ import { onRequest as lcHandler } from "../lc/[[path]].js";
  * GET /api/ai/admin-action → the 30 most recent log rows (admins only). */
 
 const ACTIONS = new Set(["announce", "settings", "ban", "unban", "game_add", "game_edit", "game_hide", "stats",
-  "chat_servers", "chat_reports", "chat_resolve", "chat_delete_message", "chat_server_ban", "chat_transfer", "chat_delete_server",
+  "chat_servers", "chat_reports", "chat_resolve", "chat_delete_message", "chat_server_ban", "chat_add_member", "chat_transfer", "chat_delete_server",
   "grant_orbs", "shop_items", "shop_save_item", "set_admin", "logout_user", "reset_link", "delete_user", "users", "room_clear", "room_delete"]);
 
 export async function onRequestGet(context) {
