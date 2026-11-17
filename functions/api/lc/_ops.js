@@ -10,6 +10,7 @@ import {
 } from "./_db.js";
 import { json } from "../auth/_shared.js";
 import { shopOp, questBump, ownsSticker, STICKER_RE } from "./_shop.js";
+const ROLE_FONTS = ["serif", "mono", "rounded", "condensed", "script", "wide", "pixel", "slab"];
 import { botReply, automodCheck, summarize, wantsBot } from "./_ai.js";
 
 const NOPE = "You don't have permission to do that.";
@@ -222,6 +223,7 @@ export async function runOp(context, user, body) {
       if (body.n != null && !ev) { const n = cleanLine(body.n, 32); if (n) set.name = n; }
       if (body.color != null && !ev) { if (!RCOL.includes(body.color)) return err("Pick one of the role colors."); set.color = body.color; }
       if (body.hoist != null && !ev) set.hoist = body.hoist ? 1 : 0;
+      if (body.font != null && !ev) { const f = String(body.font); if (f === "" || ROLE_FONTS.includes(f) || /^custom:[A-Za-z0-9\s\-']{1,40}$/.test(f)) set.font = f; else return err("Pick one of the fonts."); }
       let note = "";
       if (Array.isArray(body.perm)) {
         const [k, on] = body.perm; if (!PERMS.includes(k)) return err("Unknown permission.");

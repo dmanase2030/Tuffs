@@ -23,7 +23,7 @@ export const SCHEMA = [
   "CREATE INDEX IF NOT EXISTS idx_lc_cats_srv ON lc_cats(server_id)",
   "CREATE TABLE IF NOT EXISTS lc_chans (id TEXT PRIMARY KEY, server_id TEXT NOT NULL, cat_id TEXT, name TEXT NOT NULL, topic TEXT, pos INTEGER NOT NULL DEFAULT 0, last_id INTEGER NOT NULL DEFAULT 0, last_a TEXT, all_id INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL)",
   "CREATE INDEX IF NOT EXISTS idx_lc_chans_srv ON lc_chans(server_id)",
-  "CREATE TABLE IF NOT EXISTS lc_roles (id TEXT PRIMARY KEY, server_id TEXT NOT NULL, name TEXT NOT NULL, color TEXT, perms TEXT NOT NULL DEFAULT '', hoist INTEGER NOT NULL DEFAULT 0, pos INTEGER NOT NULL DEFAULT 0)",
+  "CREATE TABLE IF NOT EXISTS lc_roles (id TEXT PRIMARY KEY, server_id TEXT NOT NULL, name TEXT NOT NULL, color TEXT, perms TEXT NOT NULL DEFAULT '', hoist INTEGER NOT NULL DEFAULT 0, pos INTEGER NOT NULL DEFAULT 0, font TEXT NOT NULL DEFAULT '')",
   "CREATE INDEX IF NOT EXISTS idx_lc_roles_srv ON lc_roles(server_id)",
   "CREATE TABLE IF NOT EXISTS lc_members (server_id TEXT NOT NULL, user_key TEXT NOT NULL, nick TEXT, roles TEXT NOT NULL DEFAULT '', joined_at INTEGER NOT NULL, PRIMARY KEY (server_id, user_key))",
   "CREATE INDEX IF NOT EXISTS idx_lc_members_user ON lc_members(user_key)",
@@ -58,7 +58,7 @@ export async function ensure(db) {
   await db.batch([...SCHEMA, ...SHOP_SCHEMA].map(s => db.prepare(s)));
   try { await db.prepare("ALTER TABLE profiles ADD COLUMN banner TEXT").run(); } catch { /* already there */ }
   // additive columns: pinned messages and per-channel slowmode
-  for (const s of ["ALTER TABLE lc_msgs ADD COLUMN pinned_at INTEGER", "ALTER TABLE lc_msgs ADD COLUMN pinned_by TEXT", "ALTER TABLE lc_chans ADD COLUMN slow INTEGER NOT NULL DEFAULT 0", "ALTER TABLE lc_chans ADD COLUMN perms TEXT NOT NULL DEFAULT ''"]) {
+  for (const s of ["ALTER TABLE lc_msgs ADD COLUMN pinned_at INTEGER", "ALTER TABLE lc_msgs ADD COLUMN pinned_by TEXT", "ALTER TABLE lc_chans ADD COLUMN slow INTEGER NOT NULL DEFAULT 0", "ALTER TABLE lc_chans ADD COLUMN perms TEXT NOT NULL DEFAULT ''", "ALTER TABLE lc_roles ADD COLUMN font TEXT NOT NULL DEFAULT ''"]) {
     try { await db.prepare(s).run(); } catch { /* already there */ }
   }
   try { await db.prepare("CREATE INDEX IF NOT EXISTS idx_lc_msgs_pins ON lc_msgs(chan, pinned_at)").run(); } catch { /* fine */ }
@@ -110,7 +110,7 @@ export async function loadCtx(db, sid, keys) {
     db.prepare("SELECT * FROM lc_roles WHERE server_id = ?1 ORDER BY pos, id").bind(sid),
     db.prepare(`SELECT * FROM lc_members WHERE server_id = ?1 AND user_key IN (${ks.map((_, i) => "?" + (i + 2)).join(",") || "''"})`).bind(sid, ...ks),
   ]);
-  const rl = (roles.results || []).map(r => ({ id: r.id, n: r.name, color: r.color || "", perms: (r.perms || "").split(",").filter(Boolean), hoist: !!r.hoist, pos: r.pos }));
+  const rl = (roles.results || []).map(r => ({ id: r.id, n: r.name, color: r.color || "", perms: (r.perms || "").split(",").filter(Boolean), hoist: !!r.hoist, pos: r.pos, font: r.font || "" }));
   let ev = rl.findIndex(r => r.id === "@" + sid);
   if (ev < 0) { rl.unshift({ id: "@" + sid, n: "@everyone", color: "", perms: [...EVERYONE_DEF], hoist: false, pos: 0 }); ev = 0; }
   if (ev > 0) rl.unshift(rl.splice(ev, 1)[0]);
