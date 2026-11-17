@@ -149,12 +149,7 @@ export const SEED = [
 
 /* Bundles: themed sets sold together. The server prices a bundle from the parts the
  * buyer does not own yet, with the discount applied, so nobody pays twice. */
-export const BUNDLES = [
-  { id: "bd_ocean", n: "Ocean Bundle", items: ["pl_fin", "pf_rain", "nc_deep"], off: 0.15 },
-  { id: "bd_bloom", n: "Bloom Bundle", items: ["pl_blossom", "pf_petals", "dc_petals"], off: 0.15 },
-  { id: "bd_star", n: "Starlight Bundle", items: ["pl_stars", "pf_sparks", "nc_neon"], off: 0.2 },
-  { id: "bd_royal", n: "Royal Bundle", items: ["pl_gold", "dc_crown", "nc_gold"], off: 0.15 },
-];
+export const BUNDLES = []; /* emptied 2026-11-16 at owner direction: shop fully off */
 
 const HEX = /^#[0-9a-f]{6}$/i;
 /* Validate an item's category + visual data (used for seeds and admin edits). Returns clean data or an error string. */
