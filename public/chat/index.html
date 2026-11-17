@@ -195,7 +195,7 @@ textarea.fld{resize:vertical;min-height:80px}
 .plate{position:absolute;inset:0;border-radius:6px;background:linear-gradient(100deg,var(--c1),var(--c2,var(--c1)));overflow:hidden;pointer-events:none}
 .plate::after{content:"";position:absolute;inset:0;opacity:.55}
 .plate-wave::after{background:radial-gradient(circle at 88% 130%,rgba(255,255,255,.55) 0 20%,transparent 21%),radial-gradient(circle at 97% -30%,rgba(255,255,255,.4) 0 26%,transparent 27%)}
-.plate-petals::after{background-image:radial-gradient(circle,rgba(255,255,255,.6) 0 3px,transparent 4.5px),radial-gradient(circle,rgba(255,255,255,.35) 0 2px,transparent 3.5px);background-size:46px 30px,30px 44px}
+.plate-fin::after{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Cpath d='M8 58 C28 28 55 10 90 4 C72 22 63 38 61 58 Z' fill='%2316394f'/%3E%3Cellipse cx='58' cy='57' rx='27' ry='3' fill='%23ffffff' opacity='.4'/%3E%3C/svg%3E") right 8px bottom -4px/auto 150% no-repeat,radial-gradient(ellipse at 50% 118%,rgba(255,255,255,.35),transparent 60%)}.plate-petals::after{background-image:radial-gradient(circle,rgba(255,255,255,.6) 0 3px,transparent 4.5px),radial-gradient(circle,rgba(255,255,255,.35) 0 2px,transparent 3.5px);background-size:46px 30px,30px 44px}
 .plate-stars::after{background-image:radial-gradient(circle,#fff 0 1.4px,transparent 2px),radial-gradient(circle,rgba(255,255,255,.7) 0 1px,transparent 1.6px);background-size:34px 22px,22px 30px}
 .plate-grid::after{background-image:linear-gradient(rgba(255,255,255,.28) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.28) 1px,transparent 1px);background-size:14px 14px}
 .plate-stripes::after{background:repeating-linear-gradient(115deg,rgba(255,255,255,.22) 0 10px,transparent 10px 22px)}
@@ -1382,7 +1382,7 @@ function renderShop(skeleton){const L=$("#shop");if(!L)return;const keep=L.query
     x.claimed?h("span",{class:"qok"},I("check",16,2.5),"Claimed"):h("button",{class:"b sm"+(done?"":" sec"),disabled:!done,onclick:e=>claimQuest(x,e.currentTarget)},"+",fmtN(x.reward))))}
   body.append(box)}
  // categories
- const chips=h("div",{class:"shcats",role:"tablist"});const cats=[["all","All",null],...CAT_ORDER.filter(k=>SH.cats[k]).map(k=>[k,SH.cats[k],CAT_ICON[k]]),["wish","Wishlist","heart"],["owned","Owned","check"]];
+ const chips=h("div",{class:"shcats",role:"tablist"});const cats=[["all","All",null],...CAT_ORDER.filter(k=>SH.cats[k]).map(k=>[k,SH.cats[k],CAT_ICON[k]]),["wish","Wishlist","heart"]];
  for(const [k,l,ic] of cats)chips.append(h("button",{class:shopUI.cat==k?"on":"",role:"tab","aria-selected":shopUI.cat==k?"true":"false",onclick:()=>{shopUI.cat=k;renderShop();$("#shop .shbody")?.scrollTo({top:0})}},ic?I(ic,16):null,l));
  body.append(chips);
  const now=Date.now()+(SH.skew||0);const vis=SH.list.filter(x=>x.on||SH.owned[x.id]);
