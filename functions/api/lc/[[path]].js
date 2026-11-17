@@ -131,7 +131,7 @@ async function state(db, user, only) {
     const C = by(cats), CH = by(chans), R = by(roles), M = by(mems), B = by(bans), IV = by(invs), A = by(aud), RP = by(reps);
     const keys = new Set([BOT]);
     for (const s of srvs) {
-      const rl = (R[s.id] || []).map(r => ({ id: r.id === "@" + s.id ? "everyone" : r.id, n: r.name, color: r.color || "", perms: (r.perms || "").split(",").filter(Boolean), hoist: !!r.hoist }));
+      const rl = (R[s.id] || []).map(r => ({ id: r.id === "@" + s.id ? "everyone" : r.id, n: r.name, color: r.color || "", perms: (r.perms || "").split(",").filter(Boolean), hoist: !!r.hoist, font: r.font || "" }));
       const ei = rl.findIndex(r => r.id === "everyone"); if (ei > 0) rl.unshift(rl.splice(ei, 1)[0]); if (ei < 0) rl.unshift({ id: "everyone", n: "@everyone", color: "", perms: ["SEND", "REACT", "INVITE"], hoist: false });
       const members = {};
       for (const m of M[s.id] || []) { members[m.user_key] = { roles: (m.roles || "").split(",").filter(Boolean), nick: m.nick || "", joined: m.joined_at }; keys.add(m.user_key); }
