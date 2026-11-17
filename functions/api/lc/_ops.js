@@ -75,6 +75,7 @@ export async function runOp(context, user, body) {
     }
     case "leaveServer": {
       const c = await S(); if (!c) return err(NOPE, 403);
+      if (c.srv.id === LUMIO) return err("You can't leave the Lumio server.");
       if (isOwner(c, me)) return err("You own this server. Transfer ownership or delete it instead.");
       await db.prepare("DELETE FROM lc_members WHERE server_id = ?1 AND user_key = ?2").bind(c.srv.id, me).run();
       await audit(db, c.srv.id, me, "left the server");

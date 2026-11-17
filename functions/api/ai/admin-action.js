@@ -137,6 +137,10 @@ export async function onRequestPost(context) {
         const d = await lc("admin/act", "POST", { op: "serverBan", sid: String(params.sid || ""), username: String(params.username || ""), reason: String(params.reason || "") });
         result = d; summary = d.summary; break;
       }
+      case "chat_add_member": {
+        const d = await lc("admin/act", "POST", { op: "addMember", sid: String(params.sid || "lumio"), username: String(params.username || "") });
+        result = d; summary = d.summary; break;
+      }
       case "chat_transfer": {
         const d = await lc("admin/act", "POST", { op: "transferServer", sid: String(params.sid || ""), to: String(params.to || "") });
         result = d; summary = d.summary; break;

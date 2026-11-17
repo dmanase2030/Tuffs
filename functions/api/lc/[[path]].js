@@ -386,6 +386,18 @@ export async function adminAct(context, user, body) {
       await db.prepare("UPDATE lc_reports SET status = ?1, resolved_by = ?2 WHERE id = ?3").bind(body.del ? "removed" : "dismissed", me, r.id).run();
       return json({ ok: true, summary: body.del ? `Removed the reported message (report ${r.id}).` : `Dismissed report ${r.id}.` });
     }
+    case "addMember": {
+      const s = await db.prepare("SELECT * FROM lc_servers WHERE id = ?1 OR lower(name) = lower(?1) ORDER BY (id = ?1) DESC LIMIT 1").bind(String(body.sid || LUMIO)).first();
+      if (!s) return err("No such server.", 404);
+      const t = await userByName(db, body.username);
+      if (!t) return err("No Lumio account with that username.", 404);
+      const ban = await db.prepare("SELECT 1 FROM lc_bans WHERE server_id = ?1 AND user_key = ?2").bind(s.id, t.id).first();
+      if (ban) return err(`${t.user} is banned from ${s.name}. Unban them first.`);
+      const r = await db.prepare("INSERT OR IGNORE INTO lc_members (server_id, user_key, roles, joined_at) VALUES (?1, ?2, '', ?3)").bind(s.id, t.id, Date.now()).run();
+      if (!r.meta.changes) return json({ ok: true, summary: `${t.user} is already a member of ${s.name}.` });
+      await audit(db, s.id, me, `(site admin) re-added ${t.name}`);
+      return json({ ok: true, summary: `${t.user} is back in ${s.name}.` });
+    }
     case "serverBan": {
       const s = await db.prepare("SELECT * FROM lc_servers WHERE id = ?1 OR lower(name) = lower(?1) ORDER BY (id = ?1) DESC LIMIT 1").bind(String(body.sid || "")).first();
       if (!s) return err("No such server.", 404);
