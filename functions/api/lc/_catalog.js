@@ -15,7 +15,7 @@ export const CATS = {
   sound: { n: "Notification Sounds", fx: ["chime", "blip", "marimba", "pluck", "retro", "bell", "droplet", "soft"] },
   stickers: { n: "Sticker Packs", fx: ["pack"] },
   react_fx: { n: "Reaction Effects", fx: ["confetti", "hearts", "sparks", "ripple", "stars", "bubbles"] },
-  plate: { n: "Nameplates", fx: ["wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots", "pixel", "aurora", "lava", "shine", "twinkle"] },
+  plate: { n: "Nameplates", fx: ["fin", "wave", "petals", "stars", "grid", "stripes", "glow", "fade", "dots", "pixel", "aurora", "lava", "shine", "twinkle"] },
   pfx: { n: "Profile Effects", fx: ["petals", "rain", "sparks", "snow", "bubbles", "aurora", "pixel", "tree"] },
 };
 // The original sticker art lives in the app (SVG); packs reference these ids.
@@ -114,7 +114,7 @@ export const SEED = [
   S("rx_stars", "react_fx", "Star Pop", 250, "stars", ["#ffe27a"], "Stars pop out."),
   S("rx_bubbles", "react_fx", "Bubbles", 200, "bubbles", ["#7cc4ff"], "Bubbles rise."),
   // nameplates: a backdrop strip behind your name in member lists
-  S("pl_fin", "plate", "Shark Fin", 450, "wave", ["#0e4d64", "#2aa5a0"], "Ocean water behind your name.", { col: "ocean" }),
+  S("pl_fin", "plate", "Shark Fin", 450, "fin", ["#79bde6", "#eaf9ff"], "Ocean water behind your name.", { col: "ocean" }),
   S("pl_blossom", "plate", "Cherry Blossom", 500, "petals", ["#7a2e4d", "#ff9ec7"], "Soft pink petals behind your name.", { col: "bloom" }),
   S("pl_stars", "plate", "Starfield", 500, "stars", ["#1b1040", "#7a4fd0"], "A night sky behind your name.", { col: "spooky" }),
   S("pl_gold", "plate", "Golden Hour", 550, "wave", ["#8a5a12", "#f0a040"], "Warm gold waves behind your name.", { col: "royal" }),
