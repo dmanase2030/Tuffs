@@ -1386,10 +1386,10 @@ function renderShop(skeleton){const L=$("#shop");if(!L)return;const keep=L.query
  for(const [k,l,ic] of cats)chips.append(h("button",{class:shopUI.cat==k?"on":"",role:"tab","aria-selected":shopUI.cat==k?"true":"false",onclick:()=>{shopUI.cat=k;renderShop();$("#shop .shbody")?.scrollTo({top:0})}},ic?I(ic,16):null,l));
  body.append(chips);
  const now=Date.now()+(SH.skew||0);const vis=SH.list.filter(x=>x.on||SH.owned[x.id]);
- const lim=vis.filter(x=>(x.from||x.until)&&(!x.until||x.until>now));
+ const lim=SH.list.filter(x=>x.on&&(x.from||x.until)&&(!x.until||x.until>now));
  if(shopUI.cat=="all"&&lim.length){body.append(h("h3",{class:"shsec"},"Limited time"),h("div",{class:"sgrid"},lim.map(x=>card(x,now))))}
  if(shopUI.cat=="all"&&(SH.bundles||[]).length)add(body,[h("h3",{class:"shsec"},I("bag",18),"Bundles"),h("div",{class:"sgrid"},SH.bundles.map(b=>bundleCard(b)))]);
- const sel=shopUI.cat=="owned"?vis.filter(x=>SH.owned[x.id]):shopUI.cat=="wish"?vis.filter(x=>WISH.has(x.id)):shopUI.cat=="all"?vis.filter(x=>!lim.includes(x)):vis.filter(x=>x.cat==shopUI.cat);
+ const sel=shopUI.cat=="owned"?vis.filter(x=>SH.owned[x.id]):shopUI.cat=="wish"?SH.list.filter(x=>x.on&&WISH.has(x.id)):shopUI.cat=="all"?SH.list.filter(x=>x.on&&!lim.includes(x)):SH.list.filter(x=>x.on&&x.cat==shopUI.cat);
  if(shopUI.cat=="all"){for(const k of CAT_ORDER){const xs=sel.filter(x=>x.cat==k);if(!xs.length)continue;add(body,[h("h3",{class:"shsec"},I(CAT_ICON[k],18),SH.cats[k]),SLOT_NOTE[k]?h("p",{class:"shnote"},SLOT_NOTE[k]):null,h("div",{class:"sgrid"},xs.map(x=>card(x,now)))])}}
  if(shopUI.cat=="all"){const byCol={};for(const x of sel)if(x.col)(byCol[x.col]=byCol[x.col]||[]).push(x);for(const cid of Object.keys(byCol)){const C=(SH.cols||{})[cid];if(!C)continue;body.append(h("div",{class:"colban",style:{background:"linear-gradient(100deg,"+C.c[0]+","+C.c[1]+")"}},h("div",null,h("b",null,C.n),h("small",null,"Collection"))),h("div",{class:"sgrid"},byCol[cid].map(x=>card(x,now))))}}
  else{if(SLOT_NOTE[shopUI.cat])body.append(h("p",{class:"shnote"},SLOT_NOTE[shopUI.cat]));const wb=shopUI.cat=="wish"?(SH.bundles||[]).filter(b=>WISH.has(b.id)):[];if(wb.length)body.append(h("div",{class:"sgrid"},wb.map(b=>bundleCard(b))));body.append(sel.length?h("div",{class:"sgrid"},sel.map(x=>card(x,now))):wb.length?null:h("div",{class:"empty"},shopUI.cat=="owned"?"Nothing yet. Claim today's Orbs above and pick something you like.":shopUI.cat=="wish"?"Your wishlist is empty. Tap the heart on anything you like.":"Nothing here right now."))}
