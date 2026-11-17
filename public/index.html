@@ -791,7 +791,7 @@ function aiParse(t,admin){const acts=[],seen=new Set(),cards=[];let pending=fals
  return {txt,pending,cards,acts:acts.map(a=>{if(a.k=='app')return AI_APPS.includes(a.id)&&APPS[a.id]?{...a,label:'Open '+APPS[a.id].n}:null;
   if(!AI_CAT)return {...a,label:'Play game'};const g=AI_CAT.find(x=>x.id===a.id);return g?{...a,label:'Play '+g.title}:null}).filter(Boolean)}}
 function aiActs(t){return aiParse(t,false)}
-const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats',chat_servers:'List chat servers',chat_reports:'Show chat reports',chat_resolve:'Resolve a chat report',chat_delete_message:'Delete a chat message',chat_server_ban:'Ban from a chat server',chat_transfer:'Transfer a chat server',chat_delete_server:'Delete a chat server',grant_orbs:'Give or take Orbs',shop_items:'List shop items',shop_save_item:'Save a shop item',set_admin:'Change admin status',logout_user:'Sign out an account',reset_link:'Make a reset link',delete_user:'Delete an account',users:'List accounts',room_clear:'Clear a chat room',room_delete:'Delete a room message'};
+const AI_ADMIN_LABEL={announce:'Post announcement',settings:'Change site settings',ban:'Suspend account',unban:'Unsuspend account',game_add:'Add a game',game_edit:'Rename a game',game_hide:'Hide or show a game',stats:'Show site stats',chat_servers:'List chat servers',chat_reports:'Show chat reports',chat_resolve:'Resolve a chat report',chat_delete_message:'Delete a chat message',chat_server_ban:'Ban from a chat server',chat_add_member:'Add back to the Lumio server',chat_transfer:'Transfer a chat server',chat_delete_server:'Delete a chat server',grant_orbs:'Give or take Orbs',shop_items:'List shop items',shop_save_item:'Save a shop item',set_admin:'Change admin status',logout_user:'Sign out an account',reset_link:'Make a reset link',delete_user:'Delete an account',users:'List accounts',room_clear:'Clear a chat room',room_delete:'Delete a room message'};
 const aiUserName=d=>{const u=String((d&&d.username)||'').trim();return(!u||/[<>]/.test(u)||/^(your[-_ ]?username|username|me|myself)$/i.test(u))?(AUTH.name||u):u};
 function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'announce':return d.text?[['Text',d.text]]:[['Text','(remove the announcement)']];
@@ -806,6 +806,7 @@ function aiAdminDesc(d){const b=v=>v?'on':'off';switch(d.action){
  case 'chat_resolve':return [['Report','#'+(d.id??'?')],['Change',d.delete?'Delete the reported message':'Dismiss the report']];
  case 'chat_delete_message':return [['Message','#'+(d.mid??'?')]];
  case 'chat_server_ban':return [['Server',d.sid||'?'],['Account',aiUserName(d)],['Reason',d.reason||'(none)']];
+  case 'chat_add_member':return [['Account',aiUserName(d)],['Server','Lumio']];
  case 'chat_transfer':return [['Server',d.sid||'?'],['New owner',d.to||'?']];
  case 'chat_delete_server':return [['Server',d.sid||'?'],['Change','Delete the server and its messages']];
  case 'grant_orbs':return [['Account',aiUserName(d)],['Orbs',(Number(d.n)>0?'+':'')+(d.n??'?')]];
